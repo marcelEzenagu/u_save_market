@@ -1,0 +1,72 @@
+import React from "react";
+import { MockData } from "../../data/mockData";
+function GridBox() {
+    const gridColors = [
+      'bg-grid-card-color-1',
+      'bg-grid-card-color-2',
+      'bg-grid-card-color-3',
+      'bg-grid-card-color-4',
+      'bg-grid-card-color-5',
+      'bg-grid-card-color-6',
+      ];
+    const subCategories = MockData.filter((e)=>e?.subcat.length >= 5)
+ 
+  return (
+    <div>
+      <div>
+      {MockData.map((category, index) => {
+        const isEven = parseInt(category.id) % 2 === 0;
+        const hasFiveOrMoreSubcats = category.subcat.length >= 5;
+        const color = gridColors[index % gridColors.length]
+        return (
+          <div key={category.id} className="category-container mb-8">
+            <h2 className="text-lg font-bold mb-4">{category.name}</h2>
+            <div className={`grid grid-cols-2  ${ category.subcat.length == 4 ? 'md:grid-cols-4' : 'md:grid-cols-3' } gap-4`}>
+              {category?.subcat.map((sub, subIndex) => {
+                let additionalClass = '';
+              
+               // Even numbered categories with 5 or more subcats: Apply col-span-2 to the 4th subcat
+
+               if (subCategories[0]?.id === category.id && subIndex === 0 && subIndex !== category.subcat.length - 1 ) {
+                 additionalClass = 'col-span-2';
+                }
+                if (isEven && hasFiveOrMoreSubcats && subIndex === 3) {
+                  additionalClass = 'col-span-2';
+                }
+
+                // Odd numbered categories: Apply col-span-2 to the last subcat
+                if (!isEven && subIndex === category.subcat.length - 1 && subCategories[0]?.id !== category.id) {
+                  additionalClass = 'col-span-2';
+                }
+
+                
+                return (
+                    <div
+                    key={sub.id}
+                    className={`subcat-item relative animate-fade-in rounded-lg transform transition-transform duration-500 ease-in-out hover:scale-105 h-40 hover:shadow-lg overflow-hidden ${color} ${category?.subcat.length  >= 5 && additionalClass}`}
+                  >
+                    {/* Image as background */}
+                    <img 
+                      src={sub.image || ``} 
+                      alt={sub.name} 
+                      className="w-full object-contain absolute bottom-0"
+                    />
+                    
+                    {/* Subcategory name positioned at the top-left corner */}
+                    <span className="absolute top-0 left-0 m-2 text-regal-black  bg-opacity-50 px-2 py-1 text-sm font-[400]">
+                      {sub.name}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+    </div>
+  );
+}
+
+
+export default GridBox;
