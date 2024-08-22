@@ -32,7 +32,7 @@ function ProductCard({item, category}) {
 
     <div className="py-4">
       <Link className="text-sm font-[400] mb-8" to={`/products/${category}/${item.name}`}>{item.name}</Link>
-      <p className="text-regal-sky-blue font-[600] text-sm md:text-lg mt-3">
+      <p className="text-regal-sky-blue font-[600] text-sm md:text-[16px] mt-3">
         ₦{numberWithCommas(item.price)}
       </p>
     </div>

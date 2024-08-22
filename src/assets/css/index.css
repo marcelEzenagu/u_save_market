@@ -82,7 +82,7 @@ body{
   position: absolute;
   top: 0;
   left: 0;
-  width: 24px;
+  width: 20px;
   height: 2px;
   background: #000;
   transform: rotate(0);
@@ -115,3 +115,7 @@ body{
 .product-details ul li{
   margin: 0.5rem 0px;
 }
+
+/* .active-page {
+  color: white!important;
+} */

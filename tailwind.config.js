@@ -10,6 +10,8 @@ export default {
         'responsive': 'clamp(1rem, 5vw, 2.3rem)',
       },
       colors: {
+        
+        'body-color-gray' :'rgba(243, 242, 242, 0.363)',
         'regal-light-blue' : 'rgba(206, 214, 240, 1)',
         'regal-light-item-color' : 'rgba(206, 214, 240, 1)',
         'regal-secondary-light' :'rgba(225, 244, 250, 1)',
@@ -29,6 +31,9 @@ export default {
         'grid-card-color-5' : 'rgba(255, 241, 227, 1)',
         'grid-card-color-6' : 'rgba(251, 226, 239, 1)',
         'regal-auth-bg-color': 'rgba(245, 247, 255, 1)',
+        'regal-paginate-color' : 'rgba(68, 70, 77, 1)',
+        'regal-dashboard-active-tab-gray':'rgba(250, 250, 252, 1)',
+        'regal-track-gray' : 'rgba(201, 203, 209, 1)'
 
       },
       keyframes: {

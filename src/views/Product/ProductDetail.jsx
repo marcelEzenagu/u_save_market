@@ -6,6 +6,7 @@ import {numberWithCommas} from '../../utils'
 import { GoHeart } from "react-icons/go";
 import RelatedProduct from "../../components/RelatedProduct";
 import { BsCart3 } from "react-icons/bs";
+import SidebarMobile from "../../components/Sidebar/SidebarMobile";
 import ProductDescription from "../../components/ProductDescription";
 function ProductDetail() {
   const { name , product} = useParams();
@@ -43,6 +44,7 @@ function ProductDetail() {
           </div>
         </nav>
       </main>
+      <SidebarMobile/>
       <main className="my-4 mb-20 grid grid-cols-1 md:grid-cols-2  gap-4">
             <div className="w-full h-80 relative">
                 <img src={productinfo?.image} alt={productinfo?.name} className="w-full h-full object-contain" />

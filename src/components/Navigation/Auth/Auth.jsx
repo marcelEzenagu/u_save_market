@@ -7,11 +7,9 @@ import icon1 from "../../../assets/images/auth/1.webp"
 import icon2 from "../../../assets/images/auth/3.webp"
 import icon3 from "../../../assets/images/auth/2.webp"
 import { SlArrowDown } from "react-icons/sl";
+// import { HiOutlineUserCircle } from "react-icons/hi2";
 const Modal = ({ isOpen, onClose }) => {
-  const [search, setSearch] = useState("");
-  const filteredCountries = countries.filter((country) =>
-    country.name.toLowerCase().includes(search.toLowerCase())
-  );
+
   const [selectedCountry, setSelectedCountry] = useState(countries[0] || null);
   const [isOpenSelect, setIsOpenSelect] = useState(false);
 
@@ -34,7 +32,7 @@ const Modal = ({ isOpen, onClose }) => {
   }, []);
   return (
     isOpen && (
-      <div className="fixed inset-0 bg-black w-full bg-opacity-75 flex justify-center items-center z-50">
+      <div className="fixed inset-0 bg-black w-full bg-opacity-75 flex justify-center items-center -z-50">
         <div
           className="bg-regal-auth-bg-color py-12 p-8 rounded-2xl overflow-hidden max-w-lg md:max-w-[600px] w-full  z-52 relative animated fadeInDown"
           ref={dropdownRef}
@@ -173,11 +171,12 @@ function AuthModal() {
   return (
     <>
       <button
-        className=" flex items-center hover:text-regal-blue text-xs xl:text-sm text-regal-black cursor-pointer font-[500]"
+        className=" flex items-center hover:text-regal-blue text-sm xl:text-sm text-regal-black cursor-pointer font-[500]"
         onClick={() => setIsModalOpen(true)}
       >
         <img src={Profilecircle} alt="" className=" w-4 md:w-6 mr-1 xl:mr-2" />
-        Login / Signup
+        {/* <HiOutlineUserCircle  className=" text-xl xl:text-2xl mr-1 xl:mr-2"/> */}
+       <span className="hidden lg:block"> Login / Signup  </span>
       </button>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>

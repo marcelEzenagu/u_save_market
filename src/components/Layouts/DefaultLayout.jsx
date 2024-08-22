@@ -1,13 +1,13 @@
 import React from "react";
 import Navigation from "../Navigation/Navigation";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import Like from '../../assets/images/Default/icons/like.webp'
 import New from '../../assets/images/Default/icons/new.webp'
 import Price from '../../assets/images/Default/icons/price.webp'
 import Best from '../../assets/images/Default/icons/best.webp'
 import Footer from "../Footer/Footer";
-import { Link } from "react-router-dom";
+import { dataCategory } from "../../data/mockData";
 function DefaultLayout() {
 
   const data = [
@@ -35,12 +35,12 @@ function DefaultLayout() {
   return (
     <div>
       <Navigation />
-      <div className="w-full py-3 px-1 md:px-4 border-b-[1px] bg-white">
+      <div className="w-full py-3 px-1 md:px-4 hidden lg:block border-b-[1px] bg-white">
         <div className="max-w-[1200px] flex flex-row items-center gap-2 md:gap-8 mx-auto  md:px-4 ">
-          {data && data.map((e,i)=> (
+          {dataCategory && dataCategory.map((e,i)=> (
                      <Link  to={`/products?name=${e.name?.toLowerCase()}`} className="flex flex-row items-center gap-1 md:gap-2 cursor-pointer" key={i}>
                      <img src={e.image} alt="" className="w-5"/>
-                     <span className="text-regal-black text-xs md:text-sm capitalize font-[500]  ">
+                     <span className="text-regal-black text-[10px] xs:text-xs md:text-sm capitalize font-[500]  ">
                       {e.name}
                     </span>
                      </Link>

@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import RelatedProduct from '../../components/RelatedProduct'
-import {MockData, Items as ITemsDiv } from '../../data/mockData'
-import { Link } from 'react-router-dom'
+import {Items as ITemsDiv } from '../../data/mockData'
+import { Link, useNavigate } from 'react-router-dom'
 import { IoIosArrowRoundBack } from 'react-icons/io'
 import { PiTrash } from 'react-icons/pi'
 import {numberWithCommas} from '../../utils'
@@ -14,12 +14,12 @@ function Cart() {
     const toggleModal = () => {
       setIsModalOpen(!isModalOpen);
     };
-
+    const navigate = useNavigate();
   return (
     <div className='w-full'>
         {Items?.length > 0 &&
         <nav>
-        <Link to="/" className='flex items-center gap-2 font-[600] text-regal-sky-blue  text-xs md:text-sm'><IoIosArrowRoundBack className='text-regal-black text-xs md:text-sm'/>Back to categories</Link>
+        <Link to="/" className='flex items-center gap-2 font-[600] text-regal-sky-blue  text-xs md:text-sm'><IoIosArrowRoundBack className='text-regal-black text-sm md:text-xl'/>Back to categories</Link>
     </nav>}
 
     <div className='flex flex-row items-center justify-between my-4'>
@@ -29,7 +29,7 @@ function Cart() {
         onClick={toggleModal}
         className='flex flex-row items-center 
         justify-between gap-2 text-xs md:text-sm p-3 font-[600]
-         text-regal-blue  bg-regal-secondary-light rounded-md
+         text-regal-sky-blue  bg-regal-secondary-light rounded-md
         '>
             <PiTrash />
             Empty Cart
@@ -112,11 +112,11 @@ function Cart() {
                     </div>
                     <p className='text-lg font-[600] text-regal-black px-4'>₦23,585.00</p>
                 </div>
-                <div className='p-4'>
-                <Link 
-                to="/checkout"
-                 className=" text-xs md:text-sm bg-regal-sky-blue text-white px-4  py-2 font-semibold w-full rounded-md hover:bg-blue-600 "
-                >Go to payment</Link>
+                <div className='p-4 w-full'>
+                <button 
+               onClick={()=> {navigate('/checkout')}}
+                 className=" text-xs md:text-sm bg-regal-sky-blue text-white px-4  py-3 font-semibold w-full rounded-md hover:bg-blue-600 "
+                >Go to payment</button>
                 </div>
     
         </div>
@@ -154,24 +154,14 @@ function Cart() {
     }
    
      <RelatedProduct Items={ITemsDiv} cols={'5'} category={''}/>
-     <div className='mt-14 border-t pt-10'>
-        <h6 className="font-[700] text-xl mb-4 ">CATEGORIES</h6>
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-            {MockData && MockData.map((e) => (
-                <div className='flex items-center gap-2 my-2'>
-                    <img src={e.image} alt="" />
-                    <Link to={`/products?name=${name}`} className='text-sm font-[600]'> {e?.name}</Link>
-                </div>
-            ))}
-        </div>
-     </div>
 
+   
        {/* Modal */}
        {isModalOpen && (
-        <div className="fixed inset-0 bg-black w-full bg-opacity-75  z-50 flex justify-center items-center">
+        <div className="fixed inset-0 animated fadeInDown bg-black w-full bg-opacity-75  z-50 flex justify-center items-center">
           <div className="bg-white p-14 rounded-lg shadow-lg w-[400px] text-center">
             <h2 className="text-xl font-bold mb-2">Empty Cart?</h2>
-            <p className="text-gray-600 text-sm mt-4 mb-6">We’re just double checking</p>
+            <p className="text-regal-black text-sm mt-4 mb-6">We’re just double checking</p>
             
             {/* Buttons in flex-col with gap */}
             <div className="flex flex-col gap-4 w-[200px] mx-auto">
@@ -181,13 +171,13 @@ function Cart() {
                   setItems([]);
                   setIsModalOpen(false);
                 }}
-                className="bg-regal-sky-blue text-white py-2 rounded-md hover:bg-blue-900 transition"
+                className="bg-regal-sky-blue text-white py-2 rounded-md hover:bg-blue-900 transition active:scale-95 text-xs md:text-sm"
               >
                 Delete
               </button>
               <button
                 onClick={toggleModal}
-                className=" text-blue-700 py-2 rounded-md hover:bg-gray-400 transition"
+                className=" text-regal-sky-blue py-2 border-2 border-white rounded-md hover:border-regal-sky-blue transition active:scale-95 text-xs md:text-sm"
               >
                 Cancel
               </button>
