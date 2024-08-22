@@ -22,27 +22,27 @@ function Notification() {
             deals.
           </p>
           <div className="flex flex-col gap-8 mt-5">
-          <label class="inline-flex items-center cursor-pointer gap-4 ">
-            <input type="checkbox" value="" class="sr-only peer " />
-            <div class="relative w-8 h-3 bg-gray-200 peer-focus:outline-none peer-focus:ring-0   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full  after:bg-white peer-checked:after:border-blue-600 after:content-[''] after:absolute after:top-[-4px] after:start-[0px] peer-checked:after:bg-blue-600 after:shadow-md after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-200"></div>
-            <span class="text-regal-black text-xs md:text-sm font-[400]">
+          <label className="inline-flex items-center cursor-pointer gap-4 ">
+            <input type="checkbox" value="" className="sr-only peer " />
+            <div className="relative w-8 h-3 bg-gray-200 peer-focus:outline-none peer-focus:ring-0   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full  after:bg-white peer-checked:after:border-blue-600 after:content-[''] after:absolute after:top-[-4px] after:start-[0px] peer-checked:after:bg-blue-600 after:shadow-md after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-200"></div>
+            <span className="text-regal-black text-xs md:text-sm font-[400]">
              Emails
             </span>
           </label>
 
 
-          <label class="inline-flex items-center cursor-pointer gap-4 ">
-            <input type="checkbox" value="" class="sr-only peer" />
-            <div class="relative w-8 h-3 bg-gray-200 peer-focus:outline-none peer-focus:ring-0   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full  after:bg-white peer-checked:after:border-blue-600 after:content-[''] after:absolute after:top-[-4px] after:start-[0px] peer-checked:after:bg-blue-600 after:shadow-md after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-200"></div>
-            <span class="text-regal-black text-xs md:text-sm font-[400]">
+          <label className="inline-flex items-center cursor-pointer gap-4 ">
+            <input type="checkbox" value="" className="sr-only peer" />
+            <div className="relative w-8 h-3 bg-gray-200 peer-focus:outline-none peer-focus:ring-0   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full  after:bg-white peer-checked:after:border-blue-600 after:content-[''] after:absolute after:top-[-4px] after:start-[0px] peer-checked:after:bg-blue-600 after:shadow-md after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-200"></div>
+            <span className="text-regal-black text-xs md:text-sm font-[400]">
             Push notifications
             </span>
           </label>
 
-          <label class="inline-flex items-center cursor-pointer gap-4 ">
-            <input type="checkbox" value="" class="sr-only peer" />
-            <div class="relative w-8 h-3 bg-gray-200 peer-focus:outline-none peer-focus:ring-0   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full  after:bg-white peer-checked:after:border-blue-600 after:content-[''] after:absolute after:top-[-4px] after:start-[0px] peer-checked:after:bg-blue-600 after:shadow-md after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-200"></div>
-            <span class="text-regal-black text-xs md:text-sm font-[400]">
+          <label className="inline-flex items-center cursor-pointer gap-4 ">
+            <input type="checkbox" value="" className="sr-only peer" />
+            <div className="relative w-8 h-3 bg-gray-200 peer-focus:outline-none peer-focus:ring-0   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full  after:bg-white peer-checked:after:border-blue-600 after:content-[''] after:absolute after:top-[-4px] after:start-[0px] peer-checked:after:bg-blue-600 after:shadow-md after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-200"></div>
+            <span className="text-regal-black text-xs md:text-sm font-[400]">
             SMS
             </span>
           </label>
@@ -60,27 +60,27 @@ function Notification() {
           Coupon, restock notifications and community messages.
           </p>
           <div className="flex flex-col gap-8 mt-5">
-          <label class="inline-flex items-center cursor-pointer gap-4 ">
-            <input type="checkbox" value="" class="sr-only peer" />
-            <div class="relative w-8 h-3 bg-gray-200 peer-focus:outline-none peer-focus:ring-0   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full  after:bg-white peer-checked:after:border-blue-600 after:content-[''] after:absolute after:top-[-4px] after:start-[0px] peer-checked:after:bg-blue-600 after:shadow-md after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-200"></div>
-            <span class="text-regal-black text-xs md:text-sm font-[400]">
+          <label className="inline-flex items-center cursor-pointer gap-4 ">
+            <input type="checkbox" value="" className="sr-only peer" />
+            <div className="relative w-8 h-3 bg-gray-200 peer-focus:outline-none peer-focus:ring-0   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full  after:bg-white peer-checked:after:border-blue-600 after:content-[''] after:absolute after:top-[-4px] after:start-[0px] peer-checked:after:bg-blue-600 after:shadow-md after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-200"></div>
+            <span className="text-regal-black text-xs md:text-sm font-[400]">
              Emails
             </span>
           </label>
 
 
-          <label class="inline-flex items-center cursor-pointer gap-4 ">
-            <input type="checkbox" value="" class="sr-only peer" />
-            <div class="relative w-8 h-3 bg-gray-200 peer-focus:outline-none peer-focus:ring-0   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full  after:bg-white peer-checked:after:border-blue-600 after:content-[''] after:absolute after:top-[-4px] after:start-[0px] peer-checked:after:bg-blue-600 after:shadow-md after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-200"></div>
-            <span class="text-regal-black text-xs md:text-sm font-[400]">
+          <label className="inline-flex items-center cursor-pointer gap-4 ">
+            <input type="checkbox" value="" className="sr-only peer" />
+            <div className="relative w-8 h-3 bg-gray-200 peer-focus:outline-none peer-focus:ring-0   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full  after:bg-white peer-checked:after:border-blue-600 after:content-[''] after:absolute after:top-[-4px] after:start-[0px] peer-checked:after:bg-blue-600 after:shadow-md after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-200"></div>
+            <span className="text-regal-black text-xs md:text-sm font-[400]">
             Push notifications
             </span>
           </label>
 
-          <label class="inline-flex items-center cursor-pointer gap-4 ">
-            <input type="checkbox" value="" class="sr-only peer" />
-            <div class="relative w-8 h-3 bg-gray-200 peer-focus:outline-none peer-focus:ring-0   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full  after:bg-white peer-checked:after:border-blue-600 after:content-[''] after:absolute after:top-[-4px] after:start-[0px] peer-checked:after:bg-blue-600 after:shadow-md after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-200"></div>
-            <span class="text-regal-black text-xs md:text-sm font-[400]">
+          <label className="inline-flex items-center cursor-pointer gap-4 ">
+            <input type="checkbox" value="" className="sr-only peer" />
+            <div className="relative w-8 h-3 bg-gray-200 peer-focus:outline-none peer-focus:ring-0   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full  after:bg-white peer-checked:after:border-blue-600 after:content-[''] after:absolute after:top-[-4px] after:start-[0px] peer-checked:after:bg-blue-600 after:shadow-md after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-200"></div>
+            <span className="text-regal-black text-xs md:text-sm font-[400]">
             SMS
             </span>
           </label>
@@ -97,10 +97,10 @@ function Notification() {
           For your convenience, you can't disable email for these notifications.
           </p>
           <div className="flex flex-col gap-8 mt-5">
-          <label class="inline-flex items-center cursor-pointer gap-4 ">
-            <input type="checkbox" value="" class="sr-only peer" />
-            <div class="relative w-8 h-3 bg-gray-200 peer-focus:outline-none peer-focus:ring-0   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full  after:bg-white peer-checked:after:border-blue-600 after:content-[''] after:absolute after:top-[-4px] after:start-[0px] peer-checked:after:bg-blue-600 after:shadow-md after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-200"></div>
-            <span class="text-regal-black text-xs md:text-sm font-[400]">
+          <label className="inline-flex items-center cursor-pointer gap-4 ">
+            <input type="checkbox" value="" className="sr-only peer" />
+            <div className="relative w-8 h-3 bg-gray-200 peer-focus:outline-none peer-focus:ring-0   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full  after:bg-white peer-checked:after:border-blue-600 after:content-[''] after:absolute after:top-[-4px] after:start-[0px] peer-checked:after:bg-blue-600 after:shadow-md after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-200"></div>
+            <span className="text-regal-black text-xs md:text-sm font-[400]">
             Push notifications
             </span>
           </label>

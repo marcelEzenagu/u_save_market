@@ -134,8 +134,8 @@ function EditCard(props) {
     setIsOpenSelect(false); // Close dropdown after selection
   };
   useEffect(() => {
-    setIsModalOpen(props.isModalOpen);
-  }, [props.isModalOpen]);
+    setIsModalOpen(props?.isModalOpen);
+  }, [props?.isModalOpen]);
 
   const dropdownRef = useRef(null);
   useEffect(() => {
