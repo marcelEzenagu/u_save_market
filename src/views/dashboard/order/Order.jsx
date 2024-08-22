@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Status from "../../../components/order/status";
+import Status from "../../../components/order/OrderStatus";
 import { Items } from "../../../data/mockData";
 import ItemsCard from "../../../components/cards/ItemsCard";
 import { useNavigate, Link } from "react-router-dom";
