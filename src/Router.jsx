@@ -1,9 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "./views/Home";
-import Product from "./views/product/Product";
+import Product from "./views/Product/Product";
 import DefaultLayout from "./components/Layouts/DefaultLayout";
 import Notfound from './views/Notfound'
-import ProductDetail from "./views/product/ProductDetail";
+import ProductDetail from "./views/Product/ProductDetail";
 import GuestLayout from "./components/Layouts/GuestLayout";
 import Cart from "./views/cart/Cart";
 import Checkout from "./views/checkout/Checkout";
