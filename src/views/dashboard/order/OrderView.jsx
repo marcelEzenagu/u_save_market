@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import Status from "../../../components/order/Status";
+import Status from "../../../components/order/OrderStatus";
 import { IoInformationCircle } from "react-icons/io5";
 import { Items } from "../../../data/mockData";
 import ItemsCard from "../../../components/cards/ItemsCard";
