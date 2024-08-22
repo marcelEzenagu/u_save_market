@@ -43,6 +43,11 @@ import icon29 from "../assets/images/categories/thumbnail/32 (4).png"
 import icon30 from "../assets/images/categories/thumbnail/32 (3).png"
 import icon31 from "../assets/images/categories/thumbnail/32 (2).png"
 import icon32 from "../assets/images/categories/thumbnail/32 (1).png"
+import icon33 from "../assets/images/categories/thumbnail/32 (33).png"
+import Like from '../assets/images/Default/icons/like.webp'
+import New from '../assets/images/Default/icons/new.webp'
+import Price from '../assets/images/Default/icons/price.webp'
+import Best from '../assets/images/Default/icons/best.webp'
 
 export const MockData = [
     {
@@ -162,7 +167,7 @@ export const MockData = [
     {
         id:'5',
         name:'Oils and Fats',
-        image :'' ,
+        image :icon33 ,
         subcat : [
             {
               id:'f-1',
@@ -412,3 +417,26 @@ export const Items = [
     { code: 'GB', name: 'United Kingdom', number:'+1', flag: 'https://flagcdn.com/w320/gb.png', currency :'$' },
     // Add more countries as needed
   ];
+
+ export  const dataCategory = [
+    {
+      id:'1',
+      name:'Recommended',
+      image: Like
+    },
+    {
+      id:'2',
+      name:'Bestsellers',
+      image: Best
+    },
+    {
+      id:'3',
+      name:'New arrivals',
+      image: New
+    },
+    {
+      id:'4',
+      name:'  Deals ',
+      image: Price
+    }
+  ]

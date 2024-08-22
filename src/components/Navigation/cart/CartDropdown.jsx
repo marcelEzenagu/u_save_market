@@ -10,7 +10,7 @@ import { MdOutlineArrowBackIosNew } from "react-icons/md";
 import Shoppingcart from '../../../assets/images/nav/icons/shoppingcart.webp';
 const CartDropdown = () => {
 
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -35,7 +35,7 @@ const CartDropdown = () => {
       {/* Cart Icon / Button */}
       <button
         onClick={toggleDropdown}
-       className=' flex items-center hover:text-regal-blue text-xs xl:text-sm text-regal-black cursor-pointer font-[500] lg:bg-active-gray py-2 lg:px-3 rounded-md'
+       className=' flex items-center hover:text-regal-blue text-sm xl:text-sm text-regal-black cursor-pointer font-[500] lg:bg-active-gray py-2 lg:px-3 rounded-md'
       >
         <div className='relative'>
         <img src={Shoppingcart} alt=""  className="w-6 lg:w-6 mr-1 xl:mr-2" />
@@ -51,10 +51,10 @@ const CartDropdown = () => {
 
       {/* Dropdown */}
       {isOpen && (
-        <div  className="origin-top-right absolute  right-[-60px] lg:right-0 mt-2  
-        shadow-lg  animated fadeInDown bg-white
+        <div  className="origin-top-right fixed inset-0 lg:inset-auto  lg:absolute z-40 lg:right-0 lg:mt-2  
+        shadow-lg  animated fadeInDown bg-white w-[100vw] lg:w-[400px] h-[100vh] lg:h-auto
         ">
-          <div className='w-[100vw] lg:w-[400px] h-[87vh] bg-white  lg:h-auto relative'>
+          <div className=' bg-white  '>
           <div className="bg-gray-200   w-full flex lg:hidden items-center p-4 gap-3  ">
           <MdOutlineArrowBackIosNew  onClick={toggleDropdown} />
             <span className="font-[500]">
@@ -120,7 +120,7 @@ const CartDropdown = () => {
             {/* Cart Actions */}
         
           </div>
-          <div className='absolute bottom-0 mb-2 w-full px-4 py-2 bg-white'>
+          <div className='absolute lg:relative bottom-0 mb-2 w-full px-4 py-2 bg-white'>
           {Items.length > 0 && (
               <div className="flex justify-between  ">
                 <Link

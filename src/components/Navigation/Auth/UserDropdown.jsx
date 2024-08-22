@@ -18,7 +18,7 @@ function UserDropdown() {
           />
         </div>
         <div className="hidden lg:flex items-center gap-2">
-          <span className="hover:text-regal-blue text-xs xl:text-sm text-regal-black cursor-pointer font-[500] w-[50px] truncate whitespace-nowrap">
+          <span className="hover:text-regal-blue text-sm xl:text-sm text-regal-black cursor-pointer font-[500] w-[50px] truncate whitespace-nowrap">
             {user.name}
           </span>
           <svg

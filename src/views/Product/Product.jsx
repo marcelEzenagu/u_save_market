@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { SlArrowRight } from "react-icons/sl";
 import { LuListFilter } from "react-icons/lu";
 import { Items } from "../../data/mockData";
-
+import SidebarMobile from "../../components/Sidebar/SidebarMobile";
 import ProductCard from "../../components/cards/ProductCard";
 function Product() {
   const location = useLocation();
@@ -38,18 +38,21 @@ function Product() {
             </span>
           </div>
         </nav>
+        <div className="hidden lg:block">
         <FilterDropdown />
+        </div>
 
-     
+
       </main>
       <main>
-      <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 my-8">
+        <SidebarMobile/>
+      <div className="flex flex-row items-center justify-between lg:justify-normal space-y-2 sm:space-y-0 sm:space-x-4 my-2 lg:my-8">
 
         <span className="flex flex-row items-center text-regal-black mr-4">
         <LuListFilter className="text-lg mr-1" />  Filters:
         </span>
       {/* All Results Dropdown */}
-      <div className="relative">
+      <div className="relative hidden lg:block">
         <button
           onClick={toggleResultDropdown}
         className="text-xs md:text-sm w-full px-3 py-2 inline-flex items-center text-regal-black font-[600] bg-active-gray rounded-md focus:outline-none"
@@ -90,7 +93,7 @@ function Product() {
       </div>
 
       {/* Price Dropdown */}
-      <div className="relative">
+      <div className="relative hidden lg:block">
         <button
           onClick={togglePriceDropdown}
            className="text-sm w-full px-3 py-2 inline-flex items-center text-regal-black font-[600] bg-active-gray rounded-md focus:outline-none"
@@ -131,7 +134,7 @@ function Product() {
       </div>
 
       {/* Countries Dropdown */}
-      <div className="relative">
+      <div className="relative hidden lg:block">
         <button
           onClick={toggleCountryDropdown}
         className="text-sm w-full px-3 py-2 inline-flex items-center text-regal-black font-[600] bg-active-gray rounded-md focus:outline-none"
@@ -171,9 +174,13 @@ function Product() {
           </div>
         </Transition>
       </div>
+
+      <div className="block lg:hidden">
+        <FilterDropdown />
+        </div>
     </div>
       </main>
-      <main className="my-6">
+      <main className="lg:my-6">
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
           {Items.map((item) => (
             <ProductCard item={item} key={item.id} category={name} />
@@ -222,12 +229,12 @@ function FilterDropdown() {
   }, []);
   return (
     <div
-      className="relative inline-block text-left w-[230px]"
+      className="relative inline-block text-left md:w-[230px]"
       ref={dropdownRef}
     >
       <button
         type="button"
-        className=" text-sm inline-flex items-center w-full justify-between px-4 py-1 text-regal-black  border border-regal-footer-gray rounded-md  focus:outline-none "
+        className=" text-xs md:text-sm inline-flex items-center w-full justify-between px-4 py-1 text-regal-black  border border-regal-footer-gray rounded-md  focus:outline-none "
         onClick={toggleDropdown}
       >
         <span className=" flex items-center font-[500]">

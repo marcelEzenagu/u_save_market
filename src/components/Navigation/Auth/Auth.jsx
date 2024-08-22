@@ -171,7 +171,7 @@ function AuthModal() {
   return (
     <>
       <button
-        className=" flex items-center hover:text-regal-blue text-xs xl:text-sm text-regal-black cursor-pointer font-[500]"
+        className=" flex items-center hover:text-regal-blue text-sm xl:text-sm text-regal-black cursor-pointer font-[500]"
         onClick={() => setIsModalOpen(true)}
       >
         <img src={Profilecircle} alt="" className=" w-4 md:w-6 mr-1 xl:mr-2" />
