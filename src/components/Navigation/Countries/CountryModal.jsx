@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect} from 'react';
 import { countries } from '../../../data/mockData'; // Assume you have a list of countries
-import Location from '../../../assets/images/nav/icons/location.webp';
+ import Location from '../../../assets/images/nav/icons/location.webp';
+import { HiOutlineLocationMarker } from "react-icons/hi";
 const Modal = ({ isOpen, onClose }) => {
   const [search, setSearch] = useState('');
   const filteredCountries = countries.filter(country =>
@@ -75,7 +76,8 @@ function CountryModal() {
 
   return (
     <>
-      <button className=' flex items-center hover:text-regal-blue text-xs xl:text-sm text-regal-black cursor-pointer font-[500]'  onClick={() => setIsModalOpen(true)}>
+      <button className='hidden lg:flex items-center hover:text-regal-blue text-xs xl:text-sm text-regal-black cursor-pointer font-[500]'  onClick={() => setIsModalOpen(true)}>
+      {/* <HiOutlineLocationMarker     className=" text-xl xl:text-2xl mr-1 xl:mr-2"  /> */}
                 <img src={Location} alt="" className="w-4 md:w-6 mr-1 xl:mr-2" />
                     Enter Country
                 </button>

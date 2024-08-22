@@ -1,13 +1,12 @@
 import React from "react";
 import Navigation from "../Navigation/Navigation";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import Like from '../../assets/images/Default/icons/like.webp'
 import New from '../../assets/images/Default/icons/new.webp'
 import Price from '../../assets/images/Default/icons/price.webp'
 import Best from '../../assets/images/Default/icons/best.webp'
 import Footer from "../Footer/Footer";
-import { Link } from "react-router-dom";
 function DefaultLayout() {
 
   const data = [
@@ -40,7 +39,7 @@ function DefaultLayout() {
           {data && data.map((e,i)=> (
                      <Link  to={`/products?name=${e.name?.toLowerCase()}`} className="flex flex-row items-center gap-1 md:gap-2 cursor-pointer" key={i}>
                      <img src={e.image} alt="" className="w-5"/>
-                     <span className="text-regal-black text-xs md:text-sm capitalize font-[500]  ">
+                     <span className="text-regal-black text-[10px] xs:text-xs md:text-sm capitalize font-[500]  ">
                       {e.name}
                     </span>
                      </Link>

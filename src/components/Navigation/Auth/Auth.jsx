@@ -7,11 +7,9 @@ import icon1 from "../../../assets/images/auth/1.webp"
 import icon2 from "../../../assets/images/auth/3.webp"
 import icon3 from "../../../assets/images/auth/2.webp"
 import { SlArrowDown } from "react-icons/sl";
+// import { HiOutlineUserCircle } from "react-icons/hi2";
 const Modal = ({ isOpen, onClose }) => {
-  const [search, setSearch] = useState("");
-  const filteredCountries = countries.filter((country) =>
-    country.name.toLowerCase().includes(search.toLowerCase())
-  );
+
   const [selectedCountry, setSelectedCountry] = useState(countries[0] || null);
   const [isOpenSelect, setIsOpenSelect] = useState(false);
 
@@ -177,7 +175,8 @@ function AuthModal() {
         onClick={() => setIsModalOpen(true)}
       >
         <img src={Profilecircle} alt="" className=" w-4 md:w-6 mr-1 xl:mr-2" />
-        Login / Signup
+        {/* <HiOutlineUserCircle  className=" text-xl xl:text-2xl mr-1 xl:mr-2"/> */}
+       <span className="hidden lg:block"> Login / Signup  </span>
       </button>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>

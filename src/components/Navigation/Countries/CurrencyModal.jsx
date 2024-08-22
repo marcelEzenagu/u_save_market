@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect} from 'react';
 import { countries } from '../../../data/mockData'; // Assume you have a list of countries
 import Moneys from '../../../assets/images/nav/icons/moneys.webp';
+import { PiMoneyWavy } from "react-icons/pi";
 const Modal = ({ isOpen, onClose }) => {
   const [search, setSearch] = useState('');
   const filteredCountries = countries.filter(country =>
@@ -80,8 +81,9 @@ function CurrencyModal() {
 
   return (
     <>
-      <button className=' flex items-center hover:text-regal-blue text-xs xl:text-sm text-regal-black cursor-pointer font-[500]'  onClick={() => setIsModalOpen(true)}>
+      <button className='hidden lg:flex items-center hover:text-regal-blue text-xs xl:text-sm text-regal-black cursor-pointer font-[500]'  onClick={() => setIsModalOpen(true)}>
                 <img src={Moneys} alt="" className="w-4 md:w-6 mr-1 xl:mr-2" />
+                {/* <PiMoneyWavy   className=" text-xl xl:text-2xl mr-1 xl:mr-2"  /> */}
                 Currency
                 </button>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

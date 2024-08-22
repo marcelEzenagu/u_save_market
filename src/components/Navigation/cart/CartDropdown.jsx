@@ -1,15 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Items } from '../../../data/mockData';
 import { LuCalendarDays } from "react-icons/lu";
-import { PiTrash } from "react-icons/pi";
 import { IoAddOutline } from "react-icons/io5";
-import { PiMinus } from "react-icons/pi";
+import { PiMinus, PiTrash } from "react-icons/pi";
 import { Link } from 'react-router-dom';
 import {numberWithCommas} from '../../../utils'
+import { MdOutlineArrowBackIosNew } from "react-icons/md";
+// import { BsCart2 } from "react-icons/bs";
 import Shoppingcart from '../../../assets/images/nav/icons/shoppingcart.webp';
 const CartDropdown = () => {
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const dropdownRef = useRef(null);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -34,27 +35,42 @@ const CartDropdown = () => {
       {/* Cart Icon / Button */}
       <button
         onClick={toggleDropdown}
-       className=' flex items-center hover:text-regal-blue text-xs xl:text-sm text-regal-black cursor-pointer font-[500] bg-active-gray py-2 px-3 rounded-md'
+       className=' flex items-center hover:text-regal-blue text-xs xl:text-sm text-regal-black cursor-pointer font-[500] lg:bg-active-gray py-2 lg:px-3 rounded-md'
       >
         <div className='relative'>
-        <img src={Shoppingcart} alt=""  className="w-4 md:w-6 mr-1 xl:mr-2" />
-        <span className='absolute bottom-2 right-0 text-white  text-[10px] font-[500] w-5 h-5 rounded-full bg-red-600 flex flex-col items-center justify-center'>
+        <img src={Shoppingcart} alt=""  className="w-6 lg:w-6 mr-1 xl:mr-2" />
+       {/* <BsCart2   className=" text-xl xl:text-2xl mr-1 xl:mr-2"/> */}
+        <span className='absolute bottom-4 right-0 text-white text-[8px]  font-[500] w-4 h-4  rounded-full bg-red-600 flex flex-col items-center justify-center'>
         {Items.length}
         </span>
         </div>
+        <span className="hidden lg:block">
         Cart
+        </span>
       </button>
 
       {/* Dropdown */}
       {isOpen && (
+        <div  className="origin-top-right absolute  right-[-60px] lg:right-0 mt-2  
+        shadow-lg  animated fadeInDown bg-white
+        ">
+          <div className='w-[100vw] lg:w-[400px] h-[87vh] bg-white  lg:h-auto relative'>
+          <div className="bg-gray-200   w-full flex lg:hidden items-center p-4 gap-3  ">
+          <MdOutlineArrowBackIosNew  onClick={toggleDropdown} />
+            <span className="font-[500]">
+            Cart
+            </span>
+          </div>
         <div
-          className="origin-top-right absolute right-0 mt-2 w-[400px] 
-            rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50
-            border border-t-regal-blue border-t-4 animated fadeInDown
+          className="
+         
+              bg-white 
+            border border-t-regal-blue border-t-4 
+            lg:rounded-md 
             "
           ref={dropdownRef}
         >
-            <div className='flex flex-row items-center justify-between p-4 border-b'>
+            <div className='flex flex-row items-center justify-between p-4 border-b '>
             <div className='flex flex-row items-center gap-2'>
                 <span className='w-8 h-8 flex flex-col items-center justify-center bg-regal-light-item-color rounded-full'>
                 <LuCalendarDays />
@@ -66,7 +82,7 @@ const CartDropdown = () => {
             </p>
             </div>
           <div className="p-4 ">
-            <div className=" max-h-96 overflow-y-scroll">
+            <div className="max-h-[500px] lg:max-h-96 overflow-y-scroll">
         {Items.length > 0 ? (
               <div>
                 {Items.map((item) => (
@@ -102,8 +118,11 @@ const CartDropdown = () => {
             )}    
             </div>
             {/* Cart Actions */}
-            {Items.length > 0 && (
-              <div className="flex justify-between mt-4">
+        
+          </div>
+          <div className='absolute bottom-0 mb-2 w-full px-4 py-2 bg-white'>
+          {Items.length > 0 && (
+              <div className="flex justify-between  ">
                 <Link
                 to="/cart"
                   className="bg-regal-sky-blue text-white flex flex-row items-center justify-between px-4  py-2 font-bold w-full rounded-md hover:bg-blue-600 transition"
@@ -113,6 +132,8 @@ const CartDropdown = () => {
               </div>
             )}
           </div>
+        </div>
+        </div>
         </div>
       )}
     </div>
