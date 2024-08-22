@@ -1,6 +1,7 @@
 import React from "react";
 import GridBox from "../components/cards/GridBox";
 import { MockData } from "../data/mockData";
+import { Link } from "react-router-dom";
 function Home() {
   const list = [
     'https://images.pexels.com/photos/95425/pexels-photo-95425.jpeg?auto=compress&cs=tinysrgb&w=600',

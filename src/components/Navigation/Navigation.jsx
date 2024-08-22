@@ -20,7 +20,19 @@ function Navigation() {
   const onToggle = () => {
     setMobileDropdown(!mobileDropdown);
   };
+  const dropdownRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setMobileDropdown(false);
+      }
+    };
 
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <header className="sticky top-0  z-50 ">
       <div className="w-full py-3 px-4 bg-regal-light-blue flex justify-between items-center">
@@ -77,6 +89,7 @@ function Navigation() {
             className={`absolute ${
               mobileDropdown ? "flex" : "hidden"
             }   flex-col bg-white items-start self-end py-8 space-y-6  sm:self-center w-full h-[100vh] drop-shadow-md`}
+            ref={dropdownRef}
           >
             <div className="flex flex-col gap-3 px-4 pb-5 w-full border-b">
             <CountryModal />

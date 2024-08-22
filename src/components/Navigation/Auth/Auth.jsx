@@ -32,7 +32,7 @@ const Modal = ({ isOpen, onClose }) => {
   }, []);
   return (
     isOpen && (
-      <div className="fixed inset-0 bg-black w-full bg-opacity-75 flex justify-center items-center z-50">
+      <div className="fixed inset-0 bg-black w-full bg-opacity-75 flex justify-center items-center -z-50">
         <div
           className="bg-regal-auth-bg-color py-12 p-8 rounded-2xl overflow-hidden max-w-lg md:max-w-[600px] w-full  z-52 relative animated fadeInDown"
           ref={dropdownRef}
