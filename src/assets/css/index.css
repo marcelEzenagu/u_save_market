@@ -115,6 +115,9 @@ body{
 .product-details ul li{
   margin: 0.5rem 0px;
 }
+.hover-trigger:hover .hover-trigger-hover {
+  transform: scaleX(1);
+}
 
 /* .active-page {
   color: white!important;

@@ -66,7 +66,7 @@ const [activeTab, setActiveTab] = useState('1');
                        Show more
                      </button>
                    </div>
-                   <h6 className="text-regal-footer-gray text-xs md:text-sm ">
+                   <h6 className="text-regal-light-gray text-xs md:text-sm ">
                      {e.details}
                    </h6>
                    </div>
@@ -87,7 +87,7 @@ const [activeTab, setActiveTab] = useState('1');
                     <h6 className="text-sm font-[500] text-regal-black">
                       Subtotal
                     </h6>
-                    <p className="text-xs font-[500] text-regal-footer-gray">
+                    <p className="text-xs font-[500] text-regal-light-gray">
                       4 items
                     </p>
                   </div>
@@ -100,7 +100,7 @@ const [activeTab, setActiveTab] = useState('1');
                     <h6 className="text-sm font-[500] text-regal-black">
                       Estimated Shipping
                     </h6>
-                    <p className="text-xs font-[500] text-regal-footer-gray">
+                    <p className="text-xs font-[500] text-regal-light-gray">
                       4 items
                     </p>
                   </div>
@@ -118,10 +118,10 @@ const [activeTab, setActiveTab] = useState('1');
                     ₦23,585.00
                   </p>
                 </div>
-                <div className="p-4 w-full">
+                <div className="px-4 py-2 w-full">
                   <button
                   onClick={()=> {navigate('/payment')}}
-                    className=" bg-regal-sky-blue text-white px-4  py-2 font-semibold w-full rounded-md hover:bg-blue-600 "
+                    className="text-sm bg-regal-sky-blue text-white px-4  py-2 font-semibold w-full rounded-md hover:bg-blue-600 "
                   >
                     Pay now
                   </button>

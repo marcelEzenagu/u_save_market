@@ -26,7 +26,7 @@ function Account() {
             <p className="text-sm text-start text-regal-black font-[700]  w-[150px] truncate whitespace-nowrap capitalize">
               {user.name}
             </p>
-            <p className="text-xs text-regal-footer-gray text-start">{user.email}</p>
+            <p className="text-xs text-regal-light-gray text-start">{user.email}</p>
           </div>
           </div>
           <button className='flex items-center py-1 px-4 gap-1 rounded-md border border-regal-sky-blue text-regal-sky-blue text-xs md:text-sm font-[500]'>
@@ -53,25 +53,25 @@ function Account() {
           <div className='max-w-[400px]'>
             <div className='grid grid-cols-2 w-full'>
               <div className='mt-5'>
-                <h6 className='text-xs  md:text-sm text-regal-footer-gray font-[500]'>First name</h6>
+                <h6 className='text-xs  md:text-sm text-regal-light-gray font-[500]'>First name</h6>
                 <p className='text-xs md:text-sm text-regal-black mt-2 font-[500]'>
                 Mike
                 </p>
               </div>
               <div className='mt-5'>
-                <h6 className='text-xs  md:text-sm text-regal-footer-gray font-[500]'>Last Name</h6>
+                <h6 className='text-xs  md:text-sm text-regal-light-gray font-[500]'>Last Name</h6>
                 <p className='text-xs md:text-sm text-regal-black mt-2 font-[500]'>
                Aba
                 </p>
               </div>
               <div className='mt-7 mb-4'>
-                <h6 className='text-xs  md:text-sm text-regal-footer-gray font-[500]'>Email Address</h6>
+                <h6 className='text-xs  md:text-sm text-regal-light-gray font-[500]'>Email Address</h6>
                 <p className='text-xs md:text-sm text-regal-black mt-2 font-[500]'>
                 mikeaba@gmail.com
                 </p>
               </div>
               <div className='mt-7 mb-4'>
-                <h6 className='text-xs  md:text-sm text-regal-footer-gray font-[500]'>Phone</h6>
+                <h6 className='text-xs  md:text-sm text-regal-light-gray font-[500]'>Phone</h6>
                 <p className='text-xs md:text-sm text-regal-black mt-2 font-[500] flex items-center'>
                 <img src={countries[0]?.flag} alt="" className='w-6 rounded-sm mr-1' /> {countries[0]?.number} 8037048205
                 </p>
@@ -98,25 +98,25 @@ function Account() {
           <div className='max-w-[400px]'>
             <div className='grid grid-cols-2 w-full'>
               <div className='mt-5'>
-                <h6 className='text-xs md:text-sm text-regal-footer-gray font-[500]'>Country</h6>
+                <h6 className='text-xs md:text-sm text-regal-light-gray font-[500]'>Country</h6>
                 <p className='text-xs md:text-sm text-regal-black mt-2 font-[500]'>
                 Nigeria
                 </p>
               </div>
               <div className='mt-5'>
-                <h6 className='text-xs md:text-sm text-regal-footer-gray font-[500]'>State</h6>
+                <h6 className='text-xs md:text-sm text-regal-light-gray font-[500]'>State</h6>
                 <p className='text-xs md:text-sm text-regal-black mt-2 font-[500]'>
                 Adamawa
                 </p>
               </div>
               <div className='mt-7 mb-4'>
-                <h6 className='text-xs md:text-sm text-regal-footer-gray font-[500]'>City</h6>
+                <h6 className='text-xs md:text-sm text-regal-light-gray font-[500]'>City</h6>
                 <p className='text-xs md:text-sm text-regal-black mt-2 font-[500]'>
                 Nguel
                 </p>
               </div>
               <div className='mt-7 mb-4'>
-                <h6 className='text-xs md:text-sm text-regal-footer-gray font-[500]'>ZIP Code</h6>
+                <h6 className='text-xs md:text-sm text-regal-light-gray font-[500]'>ZIP Code</h6>
                 <p className='text-xs md:text-sm text-regal-black mt-2 font-[500] flex items-center'>
                 905794
                 </p>

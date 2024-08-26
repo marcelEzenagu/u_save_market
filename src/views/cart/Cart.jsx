@@ -57,12 +57,12 @@ function Cart() {
                     <div className="flex flex-col">
                       <span className="font-[500] max-w-[150px] md:max-w-[300px] text-xs md:text-sm">{item.name}</span>
                       <div className="flex flex-row items-center gap-2 md:gap-4 mt-3 md:mt-5">
-                        <h1 className='text-regal-footer-gray border-b-2 custom-text-line text-xs md:text-sm'>
+                        <h1 className='text-regal-light-gray border-b-2 custom-text-line text-xs md:text-sm'>
                             Remove
                         </h1>
                         <span className='flex items-center gap-1 text-xs md:text-sm'>
-                            <GoHeart className='text-sm md:text-xl text-regal-footer-gray'/>
-                            <h1 className='text-regal-footer-gray border-b-2 custom-text-line'>
+                            <GoHeart className='text-sm md:text-xl text-regal-light-gray'/>
+                            <h1 className='text-regal-light-gray border-b-2 custom-text-line'>
                             Save for later
                         </h1>
                         </span>
@@ -94,14 +94,14 @@ function Cart() {
                 <div className='flex flex-row justify-between items-start m-4'>
                     <div className=''>
                         <h6 className='text-sm font-[500] text-regal-black'>Subtotal</h6>
-                        <p className='text-xs font-[500] text-regal-footer-gray'>4 items</p>
+                        <p className='text-xs font-[500] text-regal-light-gray'>4 items</p>
                     </div>
                     <p className='text-sm font-[600] text-regal-black'>₦1,585.00</p>
                 </div>
                 <div className='flex flex-row justify-between items-start m-4'>
                     <div className=''>
                         <h6 className='text-sm font-[500] text-regal-black'>Estimated Shipping</h6>
-                        <p className='text-xs font-[500] text-regal-footer-gray'>4 items</p>
+                        <p className='text-xs font-[500] text-regal-light-gray'>4 items</p>
                     </div>
                     <p className='text-sm font-[600] text-regal-black'>₦22,000.00</p>
                 </div>

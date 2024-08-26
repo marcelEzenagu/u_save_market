@@ -52,7 +52,6 @@ function OrderDetails(props) {
     setIsModalOpen(!isModalOpen);
   };
   return (
-    <>
       <div>
         <div className="p-4 ">
           <h6 className="text-regal-black text-sm md:text-lg flex items-center gap-2">
@@ -79,10 +78,10 @@ function OrderDetails(props) {
           <div className="rounded-md border p-5 mt-4">
             <div className="flex flex-col md:flex-row items-start justify-between">
               <div className="">
-                <p className="text-sm md:text-[16px] text-start flex flex-row items-center  gap-2 text-regal-black font-[700]  capitalize cursor-pointer">
+                <p className="text-xs md:text-sm text-start flex flex-row items-center  gap-2 text-regal-black font-[700]  capitalize cursor-pointer">
                   ID: 9065379 <Status key={""} />
                 </p>
-                <p className="text-xs text-regal-footer-gray text-start mt-1">
+                <p className="text-xs text-regal-light-gray text-start mt-1">
                   Order on: 3rd Aug, 2024
                 </p>
                 <p className="text-xs text-regal-black font-[700] text-start mt-1">
@@ -101,7 +100,7 @@ function OrderDetails(props) {
           <div className="rounded-md border p-5 mt-4">
             <div className="flex flex-row items-start justify-between">
               <div className="">
-                <p className="text-sm md:text-[16px] text-start flex flex-row items-center  gap-2 text-regal-black font-[700]  capitalize cursor-pointer">
+                <p className="text-xs md:text-sm text-start flex flex-row items-center  gap-2 text-regal-black font-[700]  capitalize cursor-pointer">
                   Order Tracking
                 </p>
               </div>
@@ -156,7 +155,7 @@ function OrderDetails(props) {
           <div className="rounded-md border p-5 mt-4">
             <div className="flex flex-row items-start justify-between">
               <div className="">
-                <p className="text-sm md:text-[16px] text-start flex flex-row items-center  gap-2 text-regal-black font-[700]  capitalize cursor-pointer">
+                <p className="text-xs md:text-sm text-start flex flex-row items-center  gap-2 text-regal-black font-[700]  capitalize cursor-pointer">
                   Items in this order (5)
                 </p>
               </div>
@@ -178,27 +177,27 @@ function OrderDetails(props) {
           <div className="rounded-md border p-5 mt-4">
             <div className="flex flex-row items-end justify-between border-b pb-5">
               <div className="">
-                <p className="text-sm md:text-[16px]   items-center  gap-2 text-regal-black font-[700]  capitalize ">
+                <p className="text-xs md:text-sm   items-center  gap-2 text-regal-black font-[700]  capitalize ">
                   Checkout details
                 </p>
                 <p className="text-xs md:text-sm text-regal-black  mt-5">
                   Card Payment
                 </p>
               </div>
-              <p className="text-sm md:text-[16px]  items-center  gap-2 text-regal-black font-[700]  ">
+              <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
                 5067 **** **** **** 1235
               </p>
             </div>
             <div className="flex flex-row items-end justify-between border-b pb-5 mt-4">
               <div className="">
-                <p className="text-sm md:text-[16px]   items-center  gap-2 text-regal-black font-[700]  capitalize ">
+                <p className="text-xs md:text-sm   items-center  gap-2 text-regal-black font-[700]  capitalize ">
                   Payment details
                 </p>
                 <p className="text-xs md:text-sm text-regal-black  mt-5">
                   Items Amount
                 </p>
               </div>
-              <p className="text-sm md:text-[16px]  items-center  gap-2 text-regal-black font-[700]  ">
+              <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
                 ₦1,585.00
               </p>
             </div>
@@ -209,7 +208,7 @@ function OrderDetails(props) {
                   Delivery Fee
                 </p>
               </div>
-              <p className="text-sm md:text-[16px]  items-center  gap-2 text-regal-black font-[700]  ">
+              <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
                 ₦1,585.00
               </p>
             </div>
@@ -220,21 +219,21 @@ function OrderDetails(props) {
                   Total
                 </p>
               </div>
-              <p className="text-sm md:text-[16px]  items-center  gap-2 text-regal-black font-[700]  ">
+              <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
                 ₦1,585.00
               </p>
             </div>
 
             <div className="flex flex-row items-end justify-between border-b mt-4 pb-5">
               <div className="">
-                <p className="text-sm md:text-[16px]   items-center  gap-2 text-regal-black font-[700]  capitalize ">
+                <p className="text-xs md:text-sm   items-center  gap-2 text-regal-black font-[700]  capitalize ">
                   Shipping Info
                 </p>
                 <p className="text-xs md:text-sm text-regal-black  mt-5">
                   Address
                 </p>
               </div>
-              <p className="text-sm md:text-[16px]  items-center  gap-2 text-regal-black font-[700] w-[200px]  truncate whitespace-nowrap ">
+              <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700] w-[200px]  truncate whitespace-nowrap ">
                 Idugboe Estate, off Elf Road, Ogunu
               </p>
             </div>
@@ -245,7 +244,7 @@ function OrderDetails(props) {
                   Country
                 </p>
               </div>
-              <p className="text-sm md:text-[16px] flex items-center  gap-2 text-regal-black font-[700]  ">
+              <p className="text-xs md:text-sm flex items-center  gap-2 text-regal-black font-[700]  ">
                 <img src="" alt="" /> Sweden
               </p>
             </div>
@@ -256,7 +255,7 @@ function OrderDetails(props) {
                   ZIP Code
                 </p>
               </div>
-              <p className="text-sm md:text-[16px]  items-center  gap-2 text-regal-black font-[700]  ">
+              <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
                 932724
               </p>
             </div>
@@ -293,7 +292,6 @@ function OrderDetails(props) {
           </div>
         )}
       </div>
-    </>
   );
 }
 function TrackOrder(props) {
@@ -378,7 +376,7 @@ function TrackOrder(props) {
               props.setTrackOrderDetails(false);
             }}
           >
-          <HiOutlineArrowLeft/>  Track History </h6>
+          <HiOutlineArrowLeft/> Track History </h6>
            <button
                 className="font-[600] text-regal-sky-blue text-xs md:text-sm "
                 onClick={toggleModal}
@@ -414,11 +412,9 @@ function TrackOrder(props) {
                     {e.name}
                   </p>
                   {e.id === "1" && (
-                    <>
                       <p className="text-xs md:text-sm text-regal-track-gray  mt-2">
                         16th Aug,2024
                       </p>
-                    </>
                   )}
                 </div>
               ))}

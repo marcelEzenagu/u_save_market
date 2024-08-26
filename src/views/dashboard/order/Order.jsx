@@ -139,11 +139,11 @@ function OrderCard() {
             >
               ID: 9065379 <Status key={""} />
             </p>
-            <p className="text-xs text-regal-footer-gray text-start mt-1">
+            <p className="text-xs text-regal-light-gray text-start mt-1">
               No of Items : 8
             </p>
           </div>
-          <span className="text-xs md:text-sm text-regal-footer-gray">
+          <span className="text-xs md:text-sm text-regal-light-gray">
             Order on: 3rd Aug, 2024
           </span>
         </div>
