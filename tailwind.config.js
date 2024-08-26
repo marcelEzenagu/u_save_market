@@ -8,6 +8,7 @@ export default {
       },
       fontSize: {
         'responsive': 'clamp(1rem, 5vw, 2.3rem)',
+        'tabs-header-text': 'clamp(1rem, 5vw, 3rem)',
       },
       colors: {
         
@@ -21,7 +22,8 @@ export default {
         'regal-black': 'rgba(0, 0, 0, 1)',
         'regal-border-bottom' : 'rgba(255, 255, 255, 1)',
         'active-gray' : 'rgba(232, 233, 237, 1)',
-        'regal-footer-gray': 'rgba(104, 107, 117, 1)',
+        'regal-dark' :'rgba(50, 55, 67, 1)',
+        'regal-light-gray': 'rgba(104, 107, 117, 1)',
         'regal-wishlist-gray' : 'rgba(15, 15, 15, 0.3)',
         'regal-crum-gray': 'rgba(138, 140, 148, 1)',
         'grid-card-color-1' : 'rgba(255, 226, 211, 1)',

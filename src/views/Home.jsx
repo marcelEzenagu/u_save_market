@@ -36,7 +36,7 @@ function Home() {
         ))}
     </div>
 
-    <div className="">
+    <div className="lg:hidden">
       <div className="flex flex-wrap gap-2">
         {MockData.map(category => (
           <Link

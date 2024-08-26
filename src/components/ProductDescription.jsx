@@ -7,7 +7,7 @@ const ProductDescription = ({ description }) => {
 
   return (
     <div
-    className="text-xs text-regal-footer-gray flex flex-col gap-4 product-details"
+    className="text-xs text-regal-light-gray flex flex-col gap-4 product-details"
       dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
     />
   );

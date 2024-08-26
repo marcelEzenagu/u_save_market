@@ -3,8 +3,8 @@ import { numberWithCommas } from "../../utils";
 import { Link } from "react-router-dom";
 function ItemsCard({ item, category }) {
   return (
-    <div key={item.id} className="text-sm font-[500] animate-fade-in w-[170px] ">
-      <div className="relative bg-white  rounded-lg  overflow-hidden h-[200px]">
+    <div key={item.id} className="text-sm font-[500] animate-fade-in w-[150px] ">
+      <div className="relative bg-white  rounded-lg  overflow-hidden ">
         <img
           src={item.image}
           alt={item.name}
@@ -13,17 +13,17 @@ function ItemsCard({ item, category }) {
 
       </div>
 
-      <div className="">
+      <div className="flex flex-col gap-2">
         <Link
-          className="text-sm font-[500] "
+          className="text-xs font-[500] "
           to={`/products/${category}/${item.name}`}
         >
           {item.name}
         </Link>
-        <p  className="text-sm font-[400] mt-2 mb-2">
+        <p  className="text-xs font-[400] ">
             Quantity : 1
         </p>
-        <p className="text-regal-sky-blue font-[600] text-sm md:text-[16px] ">
+        <p className="text-regal-sky-blue font-[600] text-sm md:text-[14px] ">
           ₦{numberWithCommas(item.price)}
         </p>
       </div>

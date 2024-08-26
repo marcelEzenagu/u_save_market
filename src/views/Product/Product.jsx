@@ -234,7 +234,7 @@ function FilterDropdown() {
     >
       <button
         type="button"
-        className=" text-xs md:text-sm inline-flex items-center w-full justify-between px-4 py-1 text-regal-black  border border-regal-footer-gray rounded-md  focus:outline-none "
+        className=" text-xs md:text-sm inline-flex items-center w-full justify-between px-4 py-1 text-regal-black  border border-regal-light-gray rounded-md  focus:outline-none "
         onClick={toggleDropdown}
       >
         <span className=" flex items-center font-[500]">

@@ -62,7 +62,7 @@ function ProductDetail() {
                     </div>
                 </div>
                 <div>
-                <h1 className="text-sm  font-[600] text-regal-footer-gray mb-2">
+                <h1 className="text-sm  font-[600] text-regal-light-gray mb-2">
                     Product description
                 </h1>
                 <ProductDescription description={description}/>

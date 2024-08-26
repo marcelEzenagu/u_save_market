@@ -20,6 +20,16 @@ import PaymentMethod from "./views/dashboard/settings/components/PaymentMethod";
 import DeleteAccount from "./views/dashboard/settings/components/DeleteAccount";
 import ChangePassword from "./views/dashboard/settings/components/ChangePassword";
 import Notification from "./views/dashboard/settings/components/Notification";
+import VendorAuthLayout from "./components/Layouts/VendorAuthLayout";
+import RegisterVendor from "./views/Auth/vendor/RegisterVendor";
+import LoginVendor from "./views/Auth/vendor/LoginVendor";
+import VendorDetails from "./views/Auth/vendor/VendorDetails";
+import VendorLayout from "./components/Layouts/VendorLayout";
+import VendorHome from "./views/Vendor/Home";
+import ProductHome from "./views/Vendor/product/ProductHome";
+import ProductView from "./views/Vendor/product/ProductView";
+import OrderHome from "./views/Vendor/order/OrderHome";
+import VendorOrderview from "./views/Vendor/order/OrderView";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -108,6 +118,51 @@ const Router = createBrowserRouter([
                     }
                 ]
             }
+        ]
+    },
+    {
+        path:'/vendor/auth',
+        element: <VendorAuthLayout/>,
+        children: [
+                {
+                    path:'/vendor/auth/register',
+                    element: <RegisterVendor/>
+                },
+                {
+                    path:'/vendor/auth/login',
+                    element: <LoginVendor/>
+                },
+                {
+                    path:'/vendor/auth/registration',
+                    element: <VendorDetails/>
+                }
+        ]
+    },
+    {
+        path:'/vendor/dashboard',
+        element: <VendorLayout/>,
+        children: [
+                {
+                    path:'/vendor/dashboard/home',
+                    element: <VendorHome/>
+                },
+                {
+                    path:'/vendor/dashboard/products',
+                    element: <ProductHome/>
+                },
+                {
+                    path:'/vendor/dashboard/products/:name',
+                    element: <ProductView/>
+                },
+                {
+                    path:'/vendor/dashboard/orders',
+                    element: <OrderHome/>
+                },
+                {
+                    path:'/vendor/dashboard/orders/:name',
+                    element: <VendorOrderview/>
+                },
+
         ]
     },
     {

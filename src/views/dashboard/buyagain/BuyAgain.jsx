@@ -3,7 +3,7 @@ import EmptyBag from '../../../assets/images/account/emptybag.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { Items } from '../../../data/mockData'
 import ItemsCard from '../../../components/cards/ItemsCard'
-import SaveCard from '../../../components/cards/SavedCard'
+
 function BuyAgain() {
    
     return (
@@ -13,7 +13,7 @@ function BuyAgain() {
                 (
                     <div >
                         {[1,2,3].map((e)=> (
-                            <OrderCard />
+                            <OrderCard key={e}/>
                         ))}
                     </div>
                 ): 
@@ -57,11 +57,11 @@ function OrderCard() {
               >
                 ID: 9065379 
               </p>
-              <p className="text-xs text-regal-footer-gray text-start mt-1">
+              <p className="text-xs text-regal-light-gray text-start mt-1">
                 No of Items : 8
               </p>
             </div>
-            <span className="text-xs md:text-sm text-regal-footer-gray">
+            <span className="text-xs md:text-sm text-regal-light-gray">
               Order on: 3rd Aug, 2024
             </span>
           </div>
