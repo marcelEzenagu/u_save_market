@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import Home from "./views/Home";
 import Product from "./views/Product/Product";
 import DefaultLayout from "./components/Layouts/DefaultLayout";
@@ -30,6 +30,15 @@ import ProductHome from "./views/Vendor/product/ProductHome";
 import ProductView from "./views/Vendor/product/ProductView";
 import OrderHome from "./views/Vendor/order/OrderHome";
 import VendorOrderview from "./views/Vendor/order/OrderView";
+import ForgotPasswordVendor from "./views/Auth/vendor/ForgotPasswordVendor";
+import OtpVendor from "./views/Auth/vendor/OtpVendor";
+import ResetPasswordVendor from "./views/Auth/vendor/ResetPasswordVendor";
+import Profile from "./views/Vendor/profile/Profile";
+import ProfileDetails from "./views/Vendor/profile/Components/ProfileDetails";
+import Identification from "./views/Vendor/profile/Components/Identification";
+import BusinessVerification from "./views/Vendor/profile/Components/Verifications/BusinessVerification";
+import GovernmentIssued from "./views/Vendor/profile/Components/Verifications/GovernmentIssued";
+import InterviewMeeting from "./views/Vendor/profile/Components/Verifications/InterviewMeeting";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -133,6 +142,18 @@ const Router = createBrowserRouter([
                     element: <LoginVendor/>
                 },
                 {
+                    path:'/vendor/auth/forgot-password',
+                    element: <ForgotPasswordVendor/>
+                },
+                {
+                    path:'/vendor/auth/otp',
+                    element: <OtpVendor/>
+                },
+                {
+                    path:'/vendor/auth/reset-password',
+                    element: <ResetPasswordVendor/>
+                },
+                {
                     path:'/vendor/auth/registration',
                     element: <VendorDetails/>
                 }
@@ -157,6 +178,39 @@ const Router = createBrowserRouter([
                 {
                     path:'/vendor/dashboard/orders',
                     element: <OrderHome/>
+                },
+                {
+                    path:'/vendor/dashboard/profile',
+                    element: <Profile/>,
+                    children: [
+                        {
+                            path: '/vendor/dashboard/profile',
+                            element : <Navigate to="/vendor/dashboard/profile/profile-details"/>
+                        },
+                        {   
+                         path:'/vendor/dashboard/profile/profile-details',
+                            element: <ProfileDetails/>,
+                        },
+                        {   
+                            path:'/vendor/dashboard/profile/identification',
+                               element: <Identification/>,
+                               children: [
+                                {   
+                                    path:'/vendor/dashboard/profile/identification/business-verification',
+                                       element: <BusinessVerification/>,
+                                   },
+
+                                   {   
+                                    path:'/vendor/dashboard/profile/identification/government-issued-id',
+                                       element: <GovernmentIssued/>,
+                                   },
+                                   {   
+                                    path:'/vendor/dashboard/profile/identification/interview-meeting',
+                                       element: <InterviewMeeting/>,
+                                   },
+                               ]
+                           }
+                    ]
                 },
                 {
                     path:'/vendor/dashboard/orders/:name',

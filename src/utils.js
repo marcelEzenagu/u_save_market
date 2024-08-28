@@ -79,35 +79,28 @@ export const capitalizeAllFirstLetter = (str) => {
     return "";
   }
 };
-
 export const setCookie = (cname, cvalue, exdays) => {
   const d = new Date();
   d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  let expires = "expires=" + d.toUTCString();
-  
-  document.cookie =
-    cname + "=" + cvalue + `;domain=.${ENV.DOMAIN};` + expires + ";path=/";
+  const expires = "expires=" + d.toUTCString();
+  const domain = window.location.hostname; // Get the current domain
+  document.cookie = `${cname}=${cvalue};domain=${domain};${expires};path=/;Secure;SameSite=Lax`;
 };
 
 export const setRootDomainCookie = (cname, cvalue, exdays) => {
   const d = new Date();
   d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  let expires = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  const expires = "expires=" + d.toUTCString();
+  document.cookie = `${cname}=${cvalue};${expires};path=/;Secure;SameSite=Lax`;
 };
 
 export const setAllCookies = (cname, cvalue, exdays) => {
   const d = new Date();
   d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  let expires = "expires=" + d.toUTCString();
-  document.cookie =
-    cname +
-    "=" +
-    cvalue +
-    `;domain=.${process.env.REACT_APP_DOMAIN};` +
-    expires +
-    ";path=/";
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  const expires = "expires=" + d.toUTCString();
+  const domain = window.location.hostname; // Get the current domain
+  document.cookie = `${cname}=${cvalue};domain=${domain};${expires};path=/;Secure;SameSite=Lax`;
+  document.cookie = `${cname}=${cvalue};${expires};path=/;Secure;SameSite=Lax`;
 };
 
 export const removeCookie = (cname) => {
@@ -115,20 +108,25 @@ export const removeCookie = (cname) => {
 };
 
 export const getCookie = (cname) => {
-  let name = cname + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(";");
+  const name = cname + "=";
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(";");
+  
   for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == " ") {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
+    let c = ca[i].trim(); // Use trim() to remove leading spaces more cleanly
+    
+    if (c.indexOf(name) === 0) {
+      try {
+        return decodeURIComponent(c.substring(name.length, c.length));
+      } catch (error) {
+        console.error("Error decoding cookie:", error);
+        return null;
+      }
     }
   }
-  return "";
-};
+  
+  return null; // Return null if the cookie is not found
+}
 
 export const getItemsAsString = (items) => {
   if (!items || !Array.isArray(items) || items.length == 0) return "";
@@ -196,4 +194,30 @@ const getParameterByNameAction = (name, query) => {
   if (!results) return null;
   if (!results[2]) return "";
   return decodeURIComponent(results[2].replace(/\+/g, " "));
+};
+
+export const validateToken = (token) => {
+  try {
+    const decoded = parseJwt(token); // Ensure parseJwt function is correct
+    const now = Math.floor(Date.now() / 1000);
+    return decoded.exp > now; // Check if the token is expired
+  } catch (e) {
+    return false;
+  }
+};
+
+export const getSecureCookie = (cname) => {
+  const name = cname + "=";
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === " ") {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return null;
 };

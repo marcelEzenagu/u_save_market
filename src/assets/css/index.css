@@ -122,3 +122,19 @@ body{
 /* .active-page {
   color: white!important;
 } */
+
+.otp {
+  /* display: nline-blocki; */
+  width: 56px;
+  height: 56px;
+  text-align: center;
+  border: 1px solid rgba(232, 233, 237, 1);
+  border-radius: 8px;
+  /* margin-right: 11px; */
+  background: white;
+}
+
+.otp:focus {
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 4px;
+}

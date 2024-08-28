@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import Logo from "../../assets/images/nav/logo.webp";
 import Globe from "../../assets/images/nav/icons/globe.webp";
 import { IoCloseOutline, IoSearchOutline } from "react-icons/io5";
@@ -14,12 +14,23 @@ import SearchBarIcon from "../../assets/images/nav/icons/search-normal.webp";
 import SearchIcon from "../../assets/images/nav/icons/mobile-search-normal.webp";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { dataCategory } from "../../data/mockData";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../features/auth/authSlice";
 function Navigation() {
   const [mobileDropdown, setMobileDropdown] = useState(false);
-  const [activeUser, setActiveuser] = useState(true);
+  const [activeUser, setActiveuser] = useState(false);
+  const user = useSelector(selectCurrentUser);
+  useLayoutEffect(()=>{
+    if (user !== null) {
+      setActiveuser(true)
+    }else{
+      setActiveuser(false)
+    }
+}, [user])
   const onToggle = () => {
     setMobileDropdown(!mobileDropdown);
   };
+
   const dropdownRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -72,7 +83,7 @@ function Navigation() {
           </div>
 
           <div className="flex flex-row-reverse lg:flex-row items-center gap-4">
-            {activeUser ? <UserDropdown /> : <AuthModal />}
+            {activeUser && user !== null ? <UserDropdown /> : <AuthModal />}
             <div className="hidden lg:block">
               <CountryModal />
             </div>

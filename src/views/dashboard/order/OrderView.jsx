@@ -71,7 +71,7 @@ function OrderDetails(props) {
             <span className="font-bold">Order Details</span>
           </h6>
 
-          <div className="my-5 flex items-center gap-4 p-4 rounded-md text-orange-400 bg-orange-100 text-xs md:text-sm font-[600]">
+          <div className="my-5 flex items-center gap-4 p-3 rounded-md text-orange-400 bg-orange-100 text-xs  font-[600]">
             <IoInformationCircle className="text-2xl md:text-lg" /> You are
             eligible to cancel an order within 24 hours after placing order
           </div>

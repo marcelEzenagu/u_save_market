@@ -9,6 +9,7 @@ import { TbBrandGoogleAnalytics } from "react-icons/tb";
 import { FaLaptopMedical } from "react-icons/fa6";
 import SearchBarIcon from "../../assets/images/nav/icons/search-normal.webp";
 import { IoSearchOutline } from "react-icons/io5";
+import VendorDropdown from './Auth/VendorDropdown';
 function VendorNavigation() {
     const [active, setActive]= useState('');
     const [searchDiv, setSearchDiv] = useState(false);
@@ -17,7 +18,10 @@ function VendorNavigation() {
         setSearchDiv(!searchDiv)
     }
     useEffect(()=> {
-          setActive(location.pathname);
+      const activeLink = Links.filter((e)=> location?.pathname.includes(e?.url))
+              if (activeLink.length > 0) {
+                setActive(location.pathname);
+              }
     }, [location])
 
     const Links = [
@@ -87,7 +91,8 @@ function VendorNavigation() {
           
          
           <FaRegBell className='text-regal-black text-lg' />
-          <img src="" alt="" className='w-9 h-9 rounded-full object-cover bg-gray-200' />
+          <VendorDropdown/>
+          {/* <img src="" alt="" className='w-9 h-9 rounded-full object-cover bg-gray-200' /> */}
           </div>
          </div>
         </nav>

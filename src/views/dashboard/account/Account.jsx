@@ -1,12 +1,15 @@
 import React from 'react'
 import { countries } from '../../../data/mockData';
 import { BiEditAlt } from "react-icons/bi";
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../../features/auth/authSlice';
 function Account() {
-  const user = {
-    name: "Mike Aba",
-    email: "mikeaba@gmail.com",
-    profilePicture: "https://via.placeholder.com/150",
-  };
+  const user = useSelector(selectCurrentUser);
+  // const user = {
+  //   name: "Mike Aba",
+  //   email: "mikeaba@gmail.com",
+  //   profilePicture: "https://via.placeholder.com/150",
+  // };
   return (
 
       <div className='p-4'>
@@ -18,15 +21,15 @@ function Account() {
         <div className="w-11 h-11 flex flex-col items-center justify-center rounded-full border border-regal-sky-blue">
             <img
               className="w-10 h-10 rounded-full"
-              src={user.profilePicture}
+              src={user?.profilePicture || 'https://as2.ftcdn.net/jpg/02/15/84/43/160_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg'}
               alt="User Profile"
             />
           </div>
           <div>
             <p className="text-sm text-start text-regal-black font-[700]  w-[150px] truncate whitespace-nowrap capitalize">
-              {user.name}
+              {user?.firstName} {user?.lastName}
             </p>
-            <p className="text-xs text-regal-light-gray text-start">{user.email}</p>
+            <p className="text-xs text-regal-light-gray text-start">{user?.email}</p>
           </div>
           </div>
           <button className='flex items-center py-1 px-4 gap-1 rounded-md border border-regal-sky-blue text-regal-sky-blue text-xs md:text-sm font-[500]'>
@@ -54,20 +57,20 @@ function Account() {
             <div className='grid grid-cols-2 w-full'>
               <div className='mt-5'>
                 <h6 className='text-xs  md:text-sm text-regal-light-gray font-[500]'>First name</h6>
-                <p className='text-xs md:text-sm text-regal-black mt-2 font-[500]'>
-                Mike
+                <p className='text-xs md:text-sm text-regal-black mt-2 font-[500] capitalize'>
+               {user?.firstName}
                 </p>
               </div>
               <div className='mt-5'>
                 <h6 className='text-xs  md:text-sm text-regal-light-gray font-[500]'>Last Name</h6>
-                <p className='text-xs md:text-sm text-regal-black mt-2 font-[500]'>
-               Aba
+                <p className='text-xs md:text-sm text-regal-black mt-2 font-[500] capitalize'>
+                {user?.lastName}
                 </p>
               </div>
               <div className='mt-7 mb-4'>
                 <h6 className='text-xs  md:text-sm text-regal-light-gray font-[500]'>Email Address</h6>
                 <p className='text-xs md:text-sm text-regal-black mt-2 font-[500]'>
-                mikeaba@gmail.com
+                {user?.email}
                 </p>
               </div>
               <div className='mt-7 mb-4'>
