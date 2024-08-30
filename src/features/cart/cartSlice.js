@@ -45,13 +45,11 @@ export const updateCartOnBackend = createAsyncThunk(
     'cart/updateCartOnBackend',
     async (cartItems, { getState, dispatch }) => {
       const { auth } = getState();
-      console.log(auth, 'emeka')
       if (auth.token && auth.user) {
         const [updateUserCart] = useUpdateUserCartMutation();
         try {
           await updateUserCart(cartItems).unwrap();
         } catch (error) {
-            console.log(auth, 'emeka')
           console.error('Failed to update cart:', error);
         }
       }
@@ -62,7 +60,6 @@ export const updateCartOnBackend = createAsyncThunk(
     'cart/deleteCartItemOnBackend',
     async (itemId, { getState }) => {
       const { auth } = getState();
-      console.log(auth)
       if (auth.token && auth.user) {
         const [deleteUserCartItem] = useDeleteUserCartItemMutation();
         try {

@@ -2,7 +2,7 @@ import {createSlice}  from "@reduxjs/toolkit"
 import {removeCookie} from "../../utils";
 const authSlice = createSlice({
     name : "auth",
-    initialState: {user:null, token:null},
+    initialState: {user:null, token:null, role:null},
     reducers: {
         setCredentials: (state, action) => {
             const {user, accessToken, role} = action.payload
