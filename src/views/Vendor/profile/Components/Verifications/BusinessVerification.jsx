@@ -4,7 +4,7 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { FaCheck } from "react-icons/fa6";
 function BusinessVerification() {
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8 animate-fade-in">
       <Link
         className=" flex items-center gap-2 text-regal-sky-blue text-sm  mb-4"
         to="/vendor/dashboard/profile/identification"
@@ -26,10 +26,10 @@ function BusinessVerification() {
                 className="w-full flex flex-row items-center justify-between "
               >
                 <div>
-                  <h5 className="text-regal-black text-sm  font-[600] flex flex-row items-center gap-2">
+                  <h5 className="text-regal-black text-[12px] md:text-sm  font-[600] flex flex-row items-center gap-2">
                   Business verification
                   </h5>
-                  <h6 className="text-regal-light-gray text-xs mt-1">
+                  <h6 className="text-regal-light-gray text-[10px] md:text-xs mt-1">
                   Verify your business to keep the marketplace safe for everyone
                   </h6>
                 </div>

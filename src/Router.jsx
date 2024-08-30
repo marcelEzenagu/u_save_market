@@ -39,6 +39,12 @@ import Identification from "./views/Vendor/profile/Components/Identification";
 import BusinessVerification from "./views/Vendor/profile/Components/Verifications/BusinessVerification";
 import GovernmentIssued from "./views/Vendor/profile/Components/Verifications/GovernmentIssued";
 import InterviewMeeting from "./views/Vendor/profile/Components/Verifications/InterviewMeeting";
+import PasswordAndSecurity from "./views/Vendor/profile/Components/PasswordAndSecurity";
+import SettingsVendor from "./views/Vendor/profile/Components/Settings";
+import Performance from "./views/Vendor/profile/Components/Performance";
+import PaymentVendor from "./views/Vendor/PaymentVendor";
+import Analytics from "./views/Vendor/Analytics";
+import RegistrationSuccessful from "./views/Auth/vendor/RegistrationSuccessful";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -156,6 +162,10 @@ const Router = createBrowserRouter([
                 {
                     path:'/vendor/auth/registration',
                     element: <VendorDetails/>
+                },
+                {
+                    path:'/vendor/auth/registration/successful',
+                    element: <RegistrationSuccessful/>
                 }
         ]
     },
@@ -172,12 +182,20 @@ const Router = createBrowserRouter([
                     element: <ProductHome/>
                 },
                 {
+                    path:'/vendor/dashboard/payment',
+                    element: <PaymentVendor/>
+                },
+                {
                     path:'/vendor/dashboard/products/:name',
                     element: <ProductView/>
                 },
                 {
                     path:'/vendor/dashboard/orders',
                     element: <OrderHome/>
+                },
+                {
+                    path:'/vendor/dashboard/analytics',
+                    element: <Analytics/>
                 },
                 {
                     path:'/vendor/dashboard/profile',
@@ -191,6 +209,18 @@ const Router = createBrowserRouter([
                          path:'/vendor/dashboard/profile/profile-details',
                             element: <ProfileDetails/>,
                         },
+                        {   
+                            path:'/vendor/dashboard/profile/password-security',
+                               element: <PasswordAndSecurity/>,
+                           },
+                           {   
+                            path:'/vendor/dashboard/profile/performance',
+                               element: <Performance/>,
+                           },
+                           {   
+                            path:'/vendor/dashboard/profile/settings',
+                               element: <SettingsVendor/>,
+                           },
                         {   
                             path:'/vendor/dashboard/profile/identification',
                                element: <Identification/>,

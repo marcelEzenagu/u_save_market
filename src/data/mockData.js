@@ -289,127 +289,129 @@ export const MockData = [
 ]
 
 export const Items = [
-    {
-      id: 1,
-      name: 'Spice Supreme Curry Powder 85 g',
-      price: '1585.00',
-      image: Product1, 
-    },
-    {
-      id: 2,
-      name: 'Spice Supreme Curry Powder 85 g',
-      price: '1585.00',
-      image: Product2, // Replace with actual image URL
-    },
-    {
-        id: 3,
-        name: 'Spice Supreme Curry Powder 85 g',
-        price: '1585.00',
-        image: Product3, 
-      },
-      {
-        id: 4,
-        name: 'Spice Supreme Curry Powder 85 g',
-        price: '1585.00',
-        image: Product4, // Replace with actual image URL
-      },
-      {
-        id: 5,
-        name: 'Spice Supreme Curry Powder 85 g',
-        price: '1585.00',
-        image: Product5, // Replace with actual image URL
-      },
-      {
-        id: 6,
-        name: 'Spice Supreme Curry Powder 85 g',
-        price: '1585.00',
-        image: Product1, 
-      },
-      {
-        id: 7,
-        name: 'Spice Supreme Curry Powder 85 g',
-        price: '1585.00',
-        image: Product2, // Replace with actual image URL
-      },
-      {
-          id: 8,
-          name: 'Spice Supreme Curry Powder 85 g',
-          price: '1585.00',
-          image: Product3, 
-        },
-        {
-          id: 9,
-          name: 'Spice Supreme Curry Powder 85 g',
-          price: '1585.00',
-          image: Product4, // Replace with actual image URL
-        },
-        {
-          id: 10,
-          name: 'Spice Supreme Curry Powder 85 g',
-          price: '1585.00',
-          image: Product5, // Replace with actual image URL
-        },
-        {
-            id: 11,
-            name: 'Spice Supreme Curry Powder 85 g',
-            price: '1585.00',
-            image: Product1, 
-          },
-          {
-            id: 12,
-            name: 'Spice Supreme Curry Powder 85 g',
-            price: '1585.00',
-            image: Product2, // Replace with actual image URL
-          },
-          {
-              id: 13,
-              name: 'Spice Supreme Curry Powder 85 g',
-              price: '1585.00',
-              image: Product3, 
-            },
-            {
-              id: 14,
-              name: 'Spice Supreme Curry Powder 85 g',
-              price: '1585.00',
-              image: Product4, // Replace with actual image URL
-            },
-            {
-              id: 15,
-              name: 'Spice Supreme Curry Powder 85 g',
-              price: '1585.00',
-              image: Product4, // Replace with actual image URL
-            },
-            {
-              id: 16,
-              name: 'Spice Supreme Curry Powder 85 g',
-              price: '1585.00',
-              image: Product1, 
-            },
-            {
-              id: 17,
-              name: 'Spice Supreme Curry Powder 85 g',
-              price: '1585.00',
-              image: Product2, // Replace with actual image URL
-            },
-            {
-                id: 18,
-                name: 'Spice Supreme Curry Powder 85 g',
-                price: '1585.00',
-                image: Product3, 
-              },
-              {
-                id: 19,
-                name: 'Spice Supreme Curry Powder 85 g',
-                price: '1585.00',
-                image: Product4, // Replace with actual image URL
-              },
-              {
-                id: 20,
-                name: 'Spice Supreme Curry Powder 85 g',
-                price: '1585.00',
-                image: Product5, // Replace with actual image URL
-              },
-  ];
+  {
+    id: 1,
+    name: 'Organic Tri-Color Quinoa with Mixed Herbs 500g',
+    price: '1995.00',
+    image: Product1, 
+  },
+  {
+    id: 2,
+    name: 'Honey Roasted Almonds with Sea Salt and Caramel Glaze 200g',
+    price: '2500.00',
+    image: Product2, 
+  },
+  {
+    id: 3,
+    name: 'Gluten-Free Pancake Mix with Organic Maple Syrup 400g',
+    price: '1799.00',
+    image: Product3, 
+  },
+  {
+    id: 4,
+    name: 'Greek Yogurt with Fresh Berries and Organic Honey 150g',
+    price: '795.00',
+    image: Product4, 
+  },
+  {
+    id: 5,
+    name: 'Chia Seeds with Omega-3 and Fiber-Rich Nutrition 300g',
+    price: '1295.00',
+    image: Product5, 
+  },
+  {
+    id: 6,
+    name: 'Artisan Sourdough Bread with Sun-Dried Tomatoes and Olives 500g',
+    price: '1250.00',
+    image: Product1, 
+  },
+  {
+    id: 7,
+    name: 'Cold-Pressed Organic Coconut Oil for Cooking and Skincare 1L',
+    price: '3150.00',
+    image: Product2, 
+  },
+  {
+    id: 8,
+    name: 'Dark Chocolate with Himalayan Sea Salt and Almond Crunch 100g',
+    price: '950.00',
+    image: Product3, 
+  },
+  {
+    id: 9,
+    name: 'Spicy Salsa with Roasted Peppers and Garlic Infusion 250g',
+    price: '850.00',
+    image: Product4, 
+  },
+  {
+    id: 10,
+    name: 'Whole Grain Oatmeal with Flaxseed and Chia Blend 1kg',
+    price: '1750.00',
+    image: Product5, 
+  },
+  {
+    id: 11,
+    name: 'Creamy Almond Butter with Cinnamon and Honey Swirl 300g',
+    price: '2850.00',
+    image: Product1, 
+  },
+  {
+    id: 12,
+    name: 'Premium Matcha Green Tea Powder with Antioxidants 100g',
+    price: '2350.00',
+    image: Product2, 
+  },
+  {
+    id: 13,
+    name: 'Protein Bars Variety Pack with Dark Chocolate and Nuts (12-pack)',
+    price: '4500.00',
+    image: Product3, 
+  },
+  {
+    id: 14,
+    name: 'Organic Dried Mango Slices with No Added Sugar 200g',
+    price: '1200.00',
+    image: Product4, 
+  },
+  {
+    id: 15,
+    name: 'Cold-Pressed Avocado Oil for Gourmet Cooking 500ml',
+    price: '2900.00',
+    image: Product5, 
+  },
+  {
+    id: 16,
+    name: 'Blueberry Jam with Wild Berries and Organic Cane Sugar 250g',
+    price: '950.00',
+    image: Product1, 
+  },
+  {
+    id: 17,
+    name: 'Mixed Nuts with Dried Cranberries and Dark Chocolate Chunks 300g',
+    price: '1600.00',
+    image: Product2, 
+  },
+  {
+    id: 18,
+    name: 'Organic Brown Rice with Quinoa and Lentils Blend 1kg',
+    price: '1350.00',
+    image: Product3, 
+  },
+  {
+    id: 19,
+    name: 'Kale Chips with Nutritional Yeast and Sea Salt 100g',
+    price: '850.00',
+    image: Product4, 
+  },
+  {
+    id: 20,
+    name: 'Fresh Basil Pesto with Parmesan and Pine Nuts 150g',
+    price: '1100.00',
+    image: Product5, 
+  },
+];
+
+
 
   export const countries = [
     { code: 'US', name: 'United States', number:'+24',flag: 'https://flagcdn.com/w320/us.png', currency :'$'},

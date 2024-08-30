@@ -46,7 +46,7 @@ const [activeTab, setActiveTab] = useState('1');
           </div>
         </nav>
       </header>
-      <main className="container mx-auto  max-w-[1200px]  py-5 px-2  md:px-0  md:flex md:flex-row md:py-10">
+      <main className="container mx-auto  max-w-[1200px]  py-5 px-2  md:px-4  md:flex md:flex-row md:py-10">
         <div className="mb-5 w-full">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 ">
             <div className="flex flex-col gap-4 md:col-span-2">

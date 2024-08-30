@@ -27,13 +27,13 @@ function ProfileDetails() {
     setImage(null); // Remove the image
   };
   return (
-    <div className='p-8'>
+    <div className='p-4 md:p-8 animate-fade-in'>
       <div className="flex items-center space-x-4">
       <div className="relative">
         <img
           src={image || 'https://via.placeholder.com/150'} // Default image if no image is selected
           alt="Profile"
-          className="w-[96px] h-[96px] rounded-full object-cover border border-gray-300"
+          className="w-[70px] h-[70px] rounded-full object-cover border border-gray-300"
         />
         {image && (
           <button
@@ -46,8 +46,8 @@ function ProfileDetails() {
         )}
       </div>
       <div className='flex flex-row items-center gap-4 '>
-        <label className="block text-xs font-medium  text-gray-700">
-          <span className="inline-block px-4 py-3 text-xs text-white border-regal-sky-blue bg-regal-sky-blue rounded-md cursor-pointer">
+        <label className="block text-[10px] md:text-xs font-medium  text-gray-700">
+          <span className="inline-block px-4  py-2 md:py-3  text-[10px] md:text-xs text-white border-regal-sky-blue bg-regal-sky-blue rounded-md cursor-pointer">
             Change Picture
             <input
               type="file"
@@ -60,10 +60,10 @@ function ProfileDetails() {
         {image && (
           <button
             onClick={handleImageRemove}
-            className="flex items-center  px-4 py-2 space-x-1 border-[1.5px] text-regal-light-gray border-regal-light-gray rounded-md"
+            className="flex items-center  px-4 p py-1 md:py-2  space-x-1 border-[1.5px] text-regal-light-gray border-regal-light-gray rounded-md"
           >
             <PiTrash className='text-lg ' />
-            <span className='font-[600] text-xs py-1'>Remove</span>
+            <span className='font-[600] text-[10px] md:text-xs py-1'>Remove</span>
           </button>
         )}
       </div>
@@ -83,7 +83,7 @@ function ProfileDetails() {
                 name="text"
                 id="Name"
                 placeholder="Enter name"
-                className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+                className="w-full p-3 md:p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
               />
             </div>
             <div className="mb-1  col-span-2">
@@ -144,7 +144,7 @@ function ProfileDetails() {
                 type="text"
                 name="phone"
                 id="phone"
-                 className="w-full p-4 text-xs pl-28 md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+                 className="w-full py-3 md:py-4 text-xs pl-28 md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                 placeholder="Phone"
               />
             </div>
@@ -161,7 +161,7 @@ function ProfileDetails() {
                 name="text"
                 id="Email"
                 placeholder="Enter Email"
-                className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+                className="w-full p-3 md:p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
               />
             </div>
 
@@ -177,7 +177,7 @@ function ProfileDetails() {
                 name="HomeAddress"
                 id="HomeAddress"
                 placeholder="Enter Home Address"
-                className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+                className="w-full p-3 md:p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
               />
             </div>
       </div>

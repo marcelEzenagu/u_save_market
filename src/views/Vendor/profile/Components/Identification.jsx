@@ -37,11 +37,11 @@ function Identification() {
   ];
   return (
     <div>
-      <div className="p-8 border-b">
-        <h6 className="text-regal-black text-sm md:text-lg font-[600]">
+      <div className="p-4 md:p-8 border-b animate-fade-in">
+        <h6 className="text-regal-black text-[12px] md:text-lg font-[600]">
           Identity Verification
         </h6>
-        <p className="text-regal-light-gray text-sm font-[400] mt-1">
+        <p className="text-regal-light-gray text-[10px] md:text-sm font-[400] mt-1">
           Verify your business to keep the marketplace safe for everyone
         </p>
       </div>
@@ -49,7 +49,7 @@ function Identification() {
       {activeTab ? (
         <Outlet />
       ) : (
-        <main className="p-8 max-w-[800px]">
+        <main className="p-4 md:p-8 max-w-[800px] animate-fade-in">
           {Links?.map((e) => (
             <div className="flex flex-row items-start gap-4 mt-2" key={e?.id}>
               <div className="flex flex-col items-center gap-2 mt-2">
@@ -61,7 +61,7 @@ function Identification() {
                   <FaCheck className="text-sm" />
                 </div>
                 {Links[Links.length - 1]?.id !== e?.id && (
-                  <span className="h-14 bg-regal-track-gray w-[1px]"></span>
+                  <span className="h-10 bg-regal-track-gray w-[1px]"></span>
                 )}
               </div>
               <Link
@@ -69,15 +69,15 @@ function Identification() {
                 className="w-full flex flex-row items-center justify-between "
               >
                 <div>
-                  <h5 className="text-regal-black text-sm  font-[600] flex flex-row items-center gap-2">
+                  <h5 className="text-regal-black text-[12px] md:text-sm  font-[600] flex flex-row items-center gap-2">
                     {e?.header}{" "}
                     {Links[Links.length - 1]?.id === e?.id && (
-                      <span className="font-bold text-yellow-600 bg-yellow-100 py-1 px-2 text-xs rounded-sm">
+                      <span className="font-bold text-yellow-600 bg-yellow-100 py-1 px-2  text-[10px] md:text-xs rounded-sm">
                         Pending
                       </span>
                     )}{" "}
                   </h5>
-                  <h6 className="text-regal-light-gray text-xs mt-1">
+                  <h6 className="text-regal-light-gray text-[10px] md:text-xs  mt-1">
                     {e?.description}
                   </h6>
                 </div>

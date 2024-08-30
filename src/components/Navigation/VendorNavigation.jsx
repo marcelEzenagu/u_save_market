@@ -52,7 +52,7 @@ function VendorNavigation() {
         {
             id: '5',
             name : ' Payment',
-            url:'/vendor/dashboard/analytics',
+            url:'/vendor/dashboard/payment',
             image:  <TbBrandGoogleAnalytics className='text-lg  font-[600]' /> 
         },
     ]

@@ -1,5 +1,5 @@
 import {createSlice}  from "@reduxjs/toolkit"
-import { getCookie, parseJwt, removeCookie} from "../../utils";
+import {removeCookie} from "../../utils";
 const authSlice = createSlice({
     name : "auth",
     initialState: {user:null, token:null},

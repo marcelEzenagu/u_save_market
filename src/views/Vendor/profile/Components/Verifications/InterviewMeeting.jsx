@@ -6,7 +6,7 @@ import { FiInfo } from "react-icons/fi";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
 function InterviewMeeting() {
     return (
-        <div className="p-8">
+        <div className="p-4 md:p-8 animate-fade-in">
           <Link
             className=" flex items-center gap-2 text-regal-sky-blue text-sm  mb-4"
             to="/vendor/dashboard/profile/identification"
@@ -29,12 +29,12 @@ function InterviewMeeting() {
                     className="w-full flex flex-row items-center justify-between "
                   >
                     <div>
-                      <h5 className="text-regal-black text-sm  font-[600] flex flex-row items-center gap-2">
+                      <h5 className="text-regal-black text-[12px] md:text-sm   font-[600] flex flex-row items-center gap-2">
                       Interview meeting  <span className="font-bold text-yellow-600 bg-yellow-100 py-1 px-2 text-xs rounded-sm">
                         Pending
                       </span>
                       </h5>
-                      <h6 className="text-regal-light-gray text-xs mt-1">
+                      <h6 className="text-regal-light-gray text-[10px] md:text-xs mt-1">
                       Verify your business to keep the marketplace safe for everyone
                       </h6>
                     </div>
@@ -48,7 +48,7 @@ function InterviewMeeting() {
             </div>
 
             <div className="text-xs p-4 mt-4 border border-green-600 rounded bg-green-50 flex flex-row items-center gap-2">
-            <IoCheckmarkCircleOutline  className="text-green-600 text-lg"/>  We’re currently reviewing your details. An interview section will be scheduled <span className="font-bold">2 weeks after submitting details </span>
+            <IoCheckmarkCircleOutline  className="text-green-600 text-lg"/> Your business has been approved
             </div>
           </section>
         </div>
