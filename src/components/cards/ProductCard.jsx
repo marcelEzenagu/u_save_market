@@ -5,11 +5,9 @@ import { IoAddOutline } from "react-icons/io5";
 import {numberWithCommas} from '../../utils'
 import { Link } from 'react-router-dom';
 import {  addToCart, incrementItemInCart, decrementItemInCart, removeItemInCart } from '../../features/cart/cartSlice';
+import { updateCartOnBackend, deleteCartItemOnBackend } from '../../features/cart/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useUpdateUserCartMutation, useDeleteUserCartItemMutation } from '../../features/cart/cartApiSlice';
 const ProductCard = ({ item, category }) => {
-  const [updateUserCart] = useUpdateUserCartMutation();
-  const [deleteUserCartItem] = useDeleteUserCartItemMutation();
 
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.items);
@@ -17,46 +15,26 @@ const ProductCard = ({ item, category }) => {
 
   const handleAddToCart = async () => {
     dispatch(addToCart(item));
-    try {
-      await updateUserCart([...cart, { ...item, quantity: 1 }]).unwrap();
-    } catch (error) {
-      console.error('Failed to update cart:', error);
-    }
+    dispatch(updateCartOnBackend(cart));
   };
 
   const handleIncrement = async () => {
     dispatch(incrementItemInCart(item.id));
-    try {
-      await updateUserCart(cart.map(cartItem => 
-        cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
-      )).unwrap();
-    } catch (error) {
-      console.error('Failed to update cart:', error);
-    }
+    dispatch(updateCartOnBackend(cart));
   };
 
   const handleDecrement = async () => {
     if (cartItem.quantity > 1) {
       dispatch(decrementItemInCart(item.id));
-      try {
-        await updateUserCart(cart.map(cartItem =>
-          cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem
-        )).unwrap();
-      } catch (error) {
-        console.error('Failed to update cart:', error);
-      }
-    } else {
-      handleRemove(item.id);
+      dispatch(updateCartOnBackend(cart));
+    }else{
+      handleRemove(item.id)
     }
   };
 
   const handleRemove = async (itemId) => {
     dispatch(removeItemInCart(itemId));
-    try {
-      await deleteUserCartItem(itemId).unwrap();
-    } catch (error) {
-      console.error('Failed to delete cart item:', error);
-    }
+    dispatch(deleteCartItemOnBackend(itemId));
   };
 
   return (

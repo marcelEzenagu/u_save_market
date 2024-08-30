@@ -51,6 +51,7 @@ export const updateCartOnBackend = createAsyncThunk(
         try {
           await updateUserCart(cartItems).unwrap();
         } catch (error) {
+            console.log(auth, 'emeka')
           console.error('Failed to update cart:', error);
         }
       }

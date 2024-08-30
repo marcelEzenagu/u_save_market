@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCart,incrementItemInCart, decrementItemInCart, removeItemInCart} from "../../features/cart/cartSlice";
 import { IoAddOutline } from "react-icons/io5";
 import { useUpdateUserCartMutation, useDeleteUserCartItemMutation } from '../../features/cart/cartApiSlice';
+import { updateCartOnBackend, deleteCartItemOnBackend } from "../../features/cart/cartSlice";
 import { PiMinus, PiTrash } from "react-icons/pi";
 function ProductDetail() {
   const { name, product } = useParams();
@@ -37,35 +38,19 @@ function ProductDetail() {
 
   const handleAddToCart = async () => {
     dispatch(addToCart(productinfo));
-    try {
-      await updateUserCart([...cart, { ...productinfo, quantity: 1 }]).unwrap();
-    } catch (error) {
-      console.error('Failed to update cart:', error);
-    }
+    dispatch(updateCartOnBackend(cart));
   };
   const handleIncrement = async () => {
     const item = cartItem;
     dispatch(incrementItemInCart(item.id));
-    try {
-      await updateUserCart(cart.map(cartItem => 
-        cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
-      )).unwrap();
-    } catch (error) {
-      console.error('Failed to update cart:', error);
-    }
+    dispatch(updateCartOnBackend(cart));
   };
 
   const handleDecrement = async () => {
     const item = cartItem;
     if (item.quantity > 1) {
       dispatch(decrementItemInCart(item.id));
-      try {
-        await updateUserCart(cart.map(cartItem =>
-          cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem
-        )).unwrap();
-      } catch (error) {
-        console.error('Failed to update cart:', error);
-      }
+      dispatch(updateCartOnBackend(cart));
     } else {
       handleRemove(item.id);
     }
@@ -74,11 +59,7 @@ function ProductDetail() {
   const handleRemove = async () => {
     const itemId = productinfo?.id;
     dispatch(removeItemInCart(itemId));
-    try {
-      await deleteUserCartItem(itemId).unwrap();
-    } catch (error) {
-      console.error('Failed to delete cart item:', error);
-    }
+    dispatch(deleteCartItemOnBackend(itemId));
   };
 
   return (
