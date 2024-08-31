@@ -9,18 +9,13 @@ import { BsCart3 } from "react-icons/bs";
 import SidebarMobile from "../../components/Sidebar/SidebarMobile";
 import ProductDescription from "../../components/ProductDescription";
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart,incrementItemInCart, decrementItemInCart, removeItemInCart} from "../../features/cart/cartSlice";
 import { IoAddOutline } from "react-icons/io5";
-import { useUpdateUserCartMutation, useDeleteUserCartItemMutation } from '../../features/cart/cartApiSlice';
-import { updateCartOnBackend, deleteCartItemOnBackend } from "../../features/cart/cartSlice";
 import { PiMinus, PiTrash } from "react-icons/pi";
+import useCartOperationsHooks from "../../hooks/useCartOperationsHooks";
 function ProductDetail() {
   const { name, product } = useParams();
-  const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.items);
-
-  const [updateUserCart] = useUpdateUserCartMutation();
-  const [deleteUserCartItem] = useDeleteUserCartItemMutation();
+  const {handleAddToCart, handleIncrement, handleDecrement } = useCartOperationsHooks();
 
   const productinfo = Items.find(item => item.name === product); // Adjust based on actual data structure
   const cartItem = cart.find((cartItem) => cartItem.id === productinfo.id);
@@ -36,31 +31,6 @@ function ProductDetail() {
     </ul>
     `;
 
-  const handleAddToCart = async () => {
-    dispatch(addToCart(productinfo));
-    dispatch(updateCartOnBackend(cart));
-  };
-  const handleIncrement = async () => {
-    const item = cartItem;
-    dispatch(incrementItemInCart(item.id));
-    dispatch(updateCartOnBackend(cart));
-  };
-
-  const handleDecrement = async () => {
-    const item = cartItem;
-    if (item.quantity > 1) {
-      dispatch(decrementItemInCart(item.id));
-      dispatch(updateCartOnBackend(cart));
-    } else {
-      handleRemove(item.id);
-    }
-  };
-
-  const handleRemove = async () => {
-    const itemId = productinfo?.id;
-    dispatch(removeItemInCart(itemId));
-    dispatch(deleteCartItemOnBackend(itemId));
-  };
 
   return (
     <div>
@@ -74,11 +44,11 @@ function ProductDetail() {
               Home
             </Link>
             <SlArrowRight className="text-xs md:text-sm" />
-            <span className="text-regal-black text-xs md:text-sm font-[600] inline-flex items-center max-w-36 md:max-w-[180px] truncate whitespace-nowrap">
+            <span className="text-regal-black text-xs md:text-sm font-[600] inline-flex items-center max-w-36 md:max-w-[200px]  truncate whitespace-nowrap">
               {name}
             </span>
             <SlArrowRight className="text-xs md:text-sm" />
-            <span className="text-regal-crum-gray text-xs md:text-sm font-[600] max-w-36 md:max-w-[180px] truncate whitespace-nowrap">{product}</span>
+            <span className="text-regal-crum-gray text-xs md:text-sm font-[600] max-w-36 md:max-w-[400px] truncate whitespace-nowrap">{product}</span>
           </div>
         </nav>
       </main>
@@ -95,7 +65,9 @@ function ProductDetail() {
             {cartItem?.id  ? 
             
             <div  className="w-full px-4 py-3 flex flex-row items-center justify-between text-white bg-regal-sky-blue rounded-md">
-              <button   onClick={handleDecrement}>
+              <button  
+               onClick={() => handleDecrement(cartItem)}
+              >
               {cartItem?.quantity > 1 ? <PiMinus className="w-4 h-4 text-white text-xs" /> : <PiTrash className="w-4 h-4 text-white text-xs" />}
               </button>
 
@@ -103,13 +75,15 @@ function ProductDetail() {
                 {cartItem?.quantity} in Cart 
               </span>
 
-              <button   onClick={handleIncrement}>
+              <button   onClick={() => handleIncrement(cartItem)}
+              
+              >
               <IoAddOutline className="w-4 h-4 text-white text-xs" />
               </button>
             </div>
             : 
                 <button
-                onClick={handleAddToCart}
+                onClick={()=>{handleAddToCart(productinfo)}}
                 className="w-full p-3 flex flex-row items-center justify-center text-white bg-regal-sky-blue rounded-md"
               >
                 <BsCart3 className="mr-2" /> Add to Cart

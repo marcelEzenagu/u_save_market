@@ -267,7 +267,7 @@ function Product() {
     </div>
       </main>
       <main className="lg:my-6">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
           {filteredItems.map((item) => (
             <ProductCard item={item} key={item.id} category={name} />
           ))}

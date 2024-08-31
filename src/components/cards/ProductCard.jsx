@@ -4,38 +4,13 @@ import { GoHeart } from "react-icons/go";
 import { IoAddOutline } from "react-icons/io5";
 import {numberWithCommas} from '../../utils'
 import { Link } from 'react-router-dom';
-import {  addToCart, incrementItemInCart, decrementItemInCart, removeItemInCart } from '../../features/cart/cartSlice';
-import { updateCartOnBackend, deleteCartItemOnBackend } from '../../features/cart/cartSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import useCartOperationsHooks from '../../hooks/useCartOperationsHooks';
 const ProductCard = ({ item, category }) => {
-
-  const dispatch = useDispatch();
+  const {handleAddToCart, handleIncrement, handleDecrement, handleRemove } = useCartOperationsHooks();
+  // const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.items);
   const cartItem = cart.find((cartItem) => cartItem.id === item.id);
-
-  const handleAddToCart = async () => {
-    dispatch(addToCart(item));
-    dispatch(updateCartOnBackend(cart));
-  };
-
-  const handleIncrement = async () => {
-    dispatch(incrementItemInCart(item.id));
-    dispatch(updateCartOnBackend(cart));
-  };
-
-  const handleDecrement = async () => {
-    if (cartItem.quantity > 1) {
-      dispatch(decrementItemInCart(item.id));
-      dispatch(updateCartOnBackend(cart));
-    }else{
-      handleRemove(item.id)
-    }
-  };
-
-  const handleRemove = async (itemId) => {
-    dispatch(removeItemInCart(itemId));
-    dispatch(deleteCartItemOnBackend(itemId));
-  };
 
   return (
     <div key={item.id} className="text-sm font-[500] animate-fade-in">
@@ -57,14 +32,14 @@ const ProductCard = ({ item, category }) => {
             <>
               <button
                 className="p-2 active:scale-95 rounded-full bg-regal-blue border-l-4 border-l-regal-sky-blue"
-                onClick={handleDecrement}
+                onClick={() => {handleDecrement(cartItem)}}
               >
                 <PiMinus className="w-4 h-4 text-white text-xs" />
               </button>
               <span>{cartItem.quantity}</span>
               <button
                 className="p-2 active:scale-95 rounded-full bg-regal-blue border-l-4 border-l-regal-sky-blue"
-                onClick={handleIncrement}
+                onClick={()=>{handleIncrement(cartItem)}}
               >
                 <IoAddOutline className="w-4 h-4 text-white text-xs" />
               </button>
@@ -72,7 +47,7 @@ const ProductCard = ({ item, category }) => {
           ) : (
             <button
               className="p-2 active:scale-95 rounded-full bg-regal-blue border-l-4 border-l-regal-sky-blue"
-              onClick={handleAddToCart}
+              onClick={()=>{handleAddToCart(item)}}
             >
               <IoAddOutline className="w-4 h-4 text-white text-xs" />
             </button>

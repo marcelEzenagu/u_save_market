@@ -41,7 +41,7 @@ function UserDropdown() {
           </svg>
         </div>
       </Menu.Button>
-      <Menu.Items className="absolute right-[-15px] lg:right-0 mt-4 h-[87vh] lg:h-auto w-[100vw] lg:w-80 origin-top-right animated fadeInDown bg-white border lg:rounded-md lg:shadow-lg focus:outline-none">
+      <Menu.Items className="absolute right-[-7px] lg:right-0 mt-4 h-[87vh] lg:h-auto w-[100vw] lg:w-80 origin-top-right animated fadeInDown bg-white border lg:rounded-md lg:shadow-lg focus:outline-none">
         <div className="p-4 flex flex-row justify-between items-center space-x-4">
           <div className="text-start">
             <Link to="/account" className="text-xl text-start text-regal-blue font-[700]  w-[150px] truncate whitespace-nowrap capitalize">

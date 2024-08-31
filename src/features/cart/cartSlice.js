@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { useUpdateUserCartMutation, useDeleteUserCartItemMutation } from './cartApiSlice';
+import { useUpdateUserCartMutation, useAddUserCartMutation, useDeleteUserCartItemMutation } from './cartApiSlice';
 const cartSlice = createSlice({
   name: 'cart',
   initialState: {
@@ -35,12 +35,31 @@ const cartSlice = createSlice({
       const itemId = action.payload;
       state.items = state.items.filter(i => i.id !== itemId);
     },
+    removeAllItemInCart: (state, action) => {
+        const itemId = action.payload;
+        state.items = [];
+      },
     setCartItems: (state, action) => {
       state.items = action.payload;
     }
   },
 });
 
+export const addCartOnBackend = createAsyncThunk(
+    'cart/addCartOnBackend',
+    async ({ cartItems, addUserCart }, { getState }) => {
+      const { auth } = getState();
+      if (auth.token && auth.user) {
+        try {
+          await addUserCart(cartItems).unwrap();
+          console.log(true);
+        } catch (error) {
+          console.log('Failed to add cart:', error);
+        }
+      }
+    }
+  );
+  
 export const updateCartOnBackend = createAsyncThunk(
     'cart/updateCartOnBackend',
     async (cartItems, { getState, dispatch }) => {
@@ -72,6 +91,6 @@ export const updateCartOnBackend = createAsyncThunk(
   );
   
 
-export const { addToCart, incrementItemInCart, decrementItemInCart, removeItemInCart, setCartItems } = cartSlice.actions;
+export const { addToCart, incrementItemInCart, decrementItemInCart, removeItemInCart, setCartItems, removeAllItemInCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

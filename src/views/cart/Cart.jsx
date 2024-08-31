@@ -9,54 +9,19 @@ import { IoAddOutline } from "react-icons/io5";
 import { GoHeart } from "react-icons/go";
 import CartImage from '../../assets/images/cart/Empty-cart.webp'
 import { useDispatch, useSelector } from 'react-redux';
-import { incrementItemInCart, decrementItemInCart, removeItemInCart } from '../../features/cart/cartSlice'; // Adjust import path as needed
-import { useUpdateUserCartMutation, useDeleteUserCartItemMutation } from '../../features/cart/cartApiSlice'; // Adjust import path as needed
-
+import useCartOperationsHooks from '../../hooks/useCartOperationsHooks'
 function Cart() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const Items = useSelector(state => state.cart.items); // Assuming you're using Redux to manage cart state
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [updateUserCart] = useUpdateUserCartMutation();
-  const [deleteUserCartItem] = useDeleteUserCartItemMutation();
+  const {handleIncrement, handleDecrement, handleRemove, handleRemoveAll } = useCartOperationsHooks();
+
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const handleIncrement = async (item) => {
-    dispatch(incrementItemInCart(item.id));
-    try {
-      await updateUserCart(Items.map(cartItem => 
-        cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
-      )).unwrap();
-    } catch (error) {
-      console.error('Failed to update cart:', error);
-    }
-  };
 
-  const handleDecrement = async (item) => {
-    if (item.quantity > 1) {
-      dispatch(decrementItemInCart(item.id));
-      try {
-        await updateUserCart(Items.map(cartItem =>
-          cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem
-        )).unwrap();
-      } catch (error) {
-        console.error('Failed to update cart:', error);
-      }
-    } else {
-      handleRemove(item.id);
-    }
-  };
-
-  const handleRemove = async (itemId) => {
-    dispatch(removeItemInCart(itemId));
-    try {
-      await deleteUserCartItem(itemId).unwrap();
-    } catch (error) {
-      console.error('Failed to delete cart item:', error);
-    }
-  };
 
   return (
     <div className='w-full md:p-4'>
@@ -194,6 +159,36 @@ function Cart() {
       )}
 
       <RelatedProduct Items={ITemsDiv} className='mt-10' cols={'5'} />
+
+       {/* Modal */}
+       {isModalOpen && (
+        <div className="fixed inset-0 animated fadeInDown bg-black w-full bg-opacity-75  z-50 flex justify-center items-center">
+          <div className="bg-white p-14 rounded-lg shadow-lg w-[400px] text-center">
+            <h2 className="text-xl font-bold mb-2">Empty Cart?</h2>
+            <p className="text-regal-black text-sm mt-4 mb-6">We’re just double checking</p>
+            
+            {/* Buttons in flex-col with gap */}
+            <div className="flex flex-col gap-4 w-[200px] mx-auto">
+              <button
+                onClick={() => {
+                  // Handle delete action here
+                  handleRemoveAll();
+                  setIsModalOpen(false);
+                }}
+                className="bg-regal-sky-blue text-white py-2 rounded-md hover:bg-blue-900 transition active:scale-95 text-xs md:text-sm"
+              >
+                Delete
+              </button>
+              <button
+                onClick={toggleModal}
+                className=" text-regal-sky-blue py-2 border-2 border-white rounded-md hover:border-regal-sky-blue transition active:scale-95 text-xs md:text-sm"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
