@@ -22,18 +22,20 @@ function DefaultLayout() {
       setTab(true);
     }
   }, [location?.pathname]);
-
-  // Conditional rendering based on isLoading and userToken
-  if (isLoading && userToken) {
-    return <LoadingScreen />;
-  }
-
   const dataCategory = [
     { id: "1", name: "Recommended", image: Like },
     { id: "2", name: "Bestsellers", image: Best },
     { id: "3", name: "New arrivals", image: New },
     { id: "4", name: "Deals", image: Price },
   ];
+
+  
+  // Conditional rendering based on isLoading and userToken
+  if (isLoading && userToken) {
+    return <LoadingScreen />;
+  }
+
+
 
   return (
     <div>
