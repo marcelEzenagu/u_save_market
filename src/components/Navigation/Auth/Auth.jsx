@@ -39,7 +39,7 @@ const Modal = ({ isOpen, onClose }) => {
     isOpen && (
       <div className="fixed inset-0 bg-black w-full bg-opacity-75 flex justify-center items-center z-50">
         <div
-          className="bg-regal-auth-bg-color py-12 p-8 rounded-2xl overflow-hidden max-w-lg md:max-w-[600px] w-full  z-52 relative animated fadeInDown"
+          className="bg-regal-auth-bg-color p-4 md:py-12 md:p-8 rounded-2xl overflow-hidden max-w-lg md:max-w-[600px] w-full  z-52 relative animated fadeInDown"
           ref={dropdownRef}
         >
           <img
@@ -55,9 +55,9 @@ const Modal = ({ isOpen, onClose }) => {
           <img
             src={icon3}
             alt=""
-            className="absolute bottom-0 right-0 object-contain"
+            className="hidden md:absolute bottom-0 right-0 object-contain z-10"
           />
-          <h2 className="text-xl font-bold text-regal-blue mb-4">
+          <h2 className=" text-[10px]  md:text-xl font-bold text-regal-blue mb-4">
             Log in or Sign up
           </h2>
           {activeTab ? (
@@ -117,7 +117,6 @@ const RegisterModel = (props) => {
         password: data.password,
         phoneNumber: data.phone,
       }).unwrap();
-      console.log(userData);
       dispatch(
         setCredentials({
           accessToken: userData?.access_data?.token,
@@ -200,21 +199,21 @@ const RegisterModel = (props) => {
 
   return (
     <div className="max-w-[400px]  animate-fade-in">
-      <div className="relative w-full mt-4">
-        <button className="w-full rounded-full  bg-white border text-sm font-[700] py-3 ">
+      <div className="relative w-full mt-4 z-10">
+        <button className="w-full rounded-full  bg-white border text-[10px] md: text-[10px] md:text-sm font-[700] py-3 ">
           Continue with Google
         </button>
-        <img src={Googleicon} alt="" className="absolute top-3 left-4" />
+        <img src={Googleicon} alt="" className="absolute top-2 md:top-3 left-4" />
       </div>
-      <div className="relative w-full mt-3">
-        <button className="w-full rounded-full  bg-white border text-sm font-[700] py-3 ">
+      <div className="relative w-full mt-3 z-10">
+        <button className="w-full rounded-full  bg-white border text-[10px] md: text-[10px] md:text-sm font-[700] py-3 ">
           Continue with Facebook
         </button>
-        <img src={Facebookicon} alt="" className="absolute top-3 left-4" />
+        <img src={Facebookicon} alt="" className="absolute  top-2 md:top-3" />
       </div>
-      <div className="flex flex-row items-center my-4">
+      <div className="flex flex-row items-center my-2 md:my-4">
         <hr className="w-full border-b-[1px]" />
-        <span className="mx-2 font-[500] text-regal-crum-gray ">or</span>
+        <span className="mx-2 font-[500] text-regal-crum-gray  text-[10px] md: text-[10px] md:text-sm ">or</span>
         <hr className="w-full border-b-[1px]" />
       </div>
 
@@ -222,7 +221,7 @@ const RegisterModel = (props) => {
         <div className="mb-4">
           <label
             htmlFor="firstName"
-            className="block text-sm font-[700]  leading-6 mb-2 text-regal-black"
+            className="block  text-[10px] md:text-sm font-[700]  leading-6 mb-2 text-regal-black"
           >
             First Name
           </label>
@@ -233,14 +232,14 @@ const RegisterModel = (props) => {
             onChange={handleChange}
             value={data.firstName}
             placeholder="Enter first name"
-            className="w-full p-3 text-sm border  focus:outline-none rounded-sm bg-transparent text-regal-crum-gray"
+            className="w-full p-3  text-[10px] md:text-sm border  focus:outline-none rounded-sm bg-transparent text-regal-crum-gray"
           />
           {handleErrorMessagesList("firstName")}
         </div>
         <div className="mb-4">
           <label
             htmlFor="lastName"
-            className="block text-sm font-[700]  leading-6 mb-2 text-regal-black"
+            className="block  text-[10px] md:text-sm font-[700]  leading-6 mb-2 text-regal-black"
           >
             Last Name
           </label>
@@ -251,14 +250,14 @@ const RegisterModel = (props) => {
             onChange={handleChange}
             value={data.lastName}
             placeholder="Enter last name"
-            className="w-full p-3 text-sm border  focus:outline-none rounded-sm bg-transparent text-regal-crum-gray"
+            className="w-full p-3  text-[10px] md:text-sm border  focus:outline-none rounded-sm bg-transparent text-regal-crum-gray"
           />
           {handleErrorMessagesList("lastName")}
         </div>
         <div className="mb-4">
           <label
             htmlFor="email"
-            className="block text-sm font-[700]  leading-6 mb-2 text-regal-black"
+            className="block  text-[10px] md:text-sm font-[700]  leading-6 mb-2 text-regal-black"
           >
             Email
           </label>
@@ -269,20 +268,20 @@ const RegisterModel = (props) => {
             onChange={handleChange}
             value={data.email}
             placeholder="Enter Email"
-            className="w-full p-3 text-sm border  focus:outline-none rounded-sm bg-transparent text-regal-crum-gray"
+            className="w-full p-3  text-[10px] md:text-sm border  focus:outline-none rounded-sm bg-transparent text-regal-crum-gray"
           />
           {handleErrorMessagesList("email")}
         </div>
         <div className="mb-4">
           <label
             htmlFor="phone"
-            className="block text-sm font-[700]  leading-6 mb-2 text-regal-black"
+            className="block  text-[10px] md:text-sm font-[700]  leading-6 mb-2 text-regal-black"
           >
             Phone
           </label>
           <div className="relative mt-2 rounded-md shadow-sm">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              {/* <span className="text-gray-500 sm:text-sm">$</span> */}
+              {/* <span className="text-gray-500 sm: text-[10px] md:text-sm">$</span> */}
             </div>
             <div className="absolute inset-y-0 left-0 flex items-center">
               <div className="relative">
@@ -293,7 +292,7 @@ const RegisterModel = (props) => {
                   className="w-full flex justify-between items-center border-none  rounded-md px-4 py-2 bg-transparent text-gray-700"
                 >
                   {selectedCountry ? (
-                    <div className="flex items-center text-sm">
+                    <div className="flex items-center  text-[10px] md:text-sm">
                       <img
                         src={selectedCountry.flag}
                         alt="flag"
@@ -315,7 +314,7 @@ const RegisterModel = (props) => {
                       <li
                         key={index}
                         onClick={() => handleSelect(country)}
-                        className="flex items-center text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        className="flex items-center  text-[10px] md:text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       >
                         <img
                           src={country.flag}
@@ -335,7 +334,7 @@ const RegisterModel = (props) => {
               id="phone"
               onChange={handleChange}
               value={data.phone}
-              className="w-full py-3 pl-28 text-sm border rounded-sm bg-transparent text-regal-crum-gray focus:outline-none"
+              className="w-full py-3 pl-28  text-[10px] md:text-sm border rounded-sm bg-transparent text-regal-crum-gray focus:outline-none"
               placeholder="Phone"
             />
           </div>
@@ -344,7 +343,7 @@ const RegisterModel = (props) => {
         <div className="mb-6">
           <label
             htmlFor="Password"
-            className="block text-sm font-[500]  leading-6 mb-2 text-regal-black"
+            className="block  text-[10px] md:text-sm font-[600]  leading-6 mb-2 text-regal-black"
           >
             Password
           </label>
@@ -357,7 +356,7 @@ const RegisterModel = (props) => {
               value={data.password}
               placeholder="Enter password"
               pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-              className="w-full p-3 text-sm border  focus:outline-regal-blue focus:outline-none rounded-sm bg-transparent text-regal-crum-gray"
+              className="w-full p-3  text-[10px] md:text-sm border  focus:outline-regal-blue focus:outline-none rounded-sm bg-transparent text-regal-crum-gray"
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer">
               {data?.eye ? (
@@ -380,8 +379,9 @@ const RegisterModel = (props) => {
         </div>
 
         <p className="text-red-600 text-xs">{errMsg && errMsg}</p>
+        <div className="flex flex-row gap-4">
         <button
-          className="py-2 px-6 text-sm md:text-lg active:scale-95 text-white rounded-md bg-regal-sky-blue"
+          className="py-2 px-6  text-[10px] md:text-lg active:scale-95 text-white rounded-md bg-regal-sky-blue"
           onClick={(e) => {
             handleSubmit(e);
           }}
@@ -394,9 +394,19 @@ const RegisterModel = (props) => {
           )}
         </button>
 
-        <h5 className="text-regal-black text-sm font-[500] text-center mt-4">
+        <button className="block md:hidden text-regal-sky-blue text-xs" 
+          onClick={()=>{
+            props.onClose();
+          }}
+        >
+          Close
+        </button>
+        </div>
+     
+
+        <h5 className="text-regal-black   z-50 text-[10px] md:text-sm font-[500] text-center mt-4">
           Already have an account?{" "}
-          <button className="underline" onClick={props.handleToggle}>
+          <button className="underline z-50 " onClick={props.handleToggle}>
             Log In
           </button>
         </h5>
@@ -427,7 +437,6 @@ const LoginModel = (props) => {
         password: data.password,
       }).unwrap();
       const userData = value.response;
-      console.log(userData);
       dispatch(
         setCredentials({
           accessToken: userData?.access_data?.
@@ -437,11 +446,6 @@ const LoginModel = (props) => {
           role: userData?.access_data?.role,
         })
       );
-      setData({
-        email: "",
-        password: "",
-        eye: false,
-      });
       setCookie("accessToken", userData?.access_data?.access_token);
       props.onClose();
       setData({
@@ -512,21 +516,21 @@ const LoginModel = (props) => {
   };
   return (
     <div className="max-w-[400px]">
-      <div className="relative w-full mt-4 animated  animate-fade-in">
-        <button className="w-full rounded-full  bg-white border text-sm font-[700] py-3 ">
+       <div className="relative w-full mt-4 z-10">
+        <button className="w-full rounded-full  bg-white border text-[10px] md: text-[10px] md:text-sm font-[700] py-3 ">
           Continue with Google
         </button>
-        <img src={Googleicon} alt="" className="absolute top-3 left-4" />
+        <img src={Googleicon} alt="" className="absolute top-2 md:top-3 left-4" />
       </div>
-      <div className="relative w-full mt-3">
-        <button className="w-full rounded-full  bg-white border text-sm font-[700] py-3 ">
+      <div className="relative w-full mt-3 z-10">
+        <button className="w-full rounded-full  bg-white border text-[10px] md: text-[10px] md:text-sm font-[700] py-3 ">
           Continue with Facebook
         </button>
-        <img src={Facebookicon} alt="" className="absolute top-3 left-4" />
+        <img src={Facebookicon} alt="" className="absolute  top-2 md:top-3" />
       </div>
-      <div className="flex flex-row items-center my-4">
+      <div className="flex flex-row items-center my-2 md:my-4">
         <hr className="w-full border-b-[1px]" />
-        <span className="mx-2 font-[500] text-regal-crum-gray ">or</span>
+        <span className="mx-2 font-[500] text-regal-crum-gray  text-[10px]  md:text-sm ">or</span>
         <hr className="w-full border-b-[1px]" />
       </div>
 
@@ -534,7 +538,7 @@ const LoginModel = (props) => {
         <div className="mb-4">
           <label
             htmlFor="email"
-            className="block text-sm font-[700]  leading-6 mb-2 text-regal-black"
+            className="block  text-[10px] md:text-sm font-[700]  leading-6 mb-2 text-regal-black"
           >
             Email
           </label>
@@ -545,7 +549,7 @@ const LoginModel = (props) => {
             onChange={handleChange}
             value={data.email}
             placeholder="Enter Email"
-            className="w-full p-3 text-sm border  focus:outline-none rounded-sm bg-transparent text-regal-crum-gray"
+            className="w-full p-3  text-[10px] md:text-sm border  focus:outline-none rounded-sm bg-transparent text-regal-crum-gray"
           />
                {handleErrorMessagesList("email")}
         </div>
@@ -553,7 +557,7 @@ const LoginModel = (props) => {
         <div className="mb-6">
           <label
             htmlFor="Password"
-            className="block text-sm font-[500]  leading-6 mb-2 text-regal-black"
+            className="block  text-[10px] md:text-sm font-[500]  leading-6 mb-2 text-regal-black"
           >
             Password
           </label>
@@ -565,7 +569,7 @@ const LoginModel = (props) => {
               onChange={handleChange}
               value={data.password}
               placeholder="Enter Password"
-              className="w-full p-3 text-sm border  focus:outline-none rounded-sm bg-transparent text-regal-crum-gray"
+              className="w-full p-3  text-[10px] md:text-sm border  focus:outline-none rounded-sm bg-transparent text-regal-crum-gray"
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer">
               {data.eye ? (
@@ -586,8 +590,9 @@ const LoginModel = (props) => {
           {handleErrorMessagesList("password")}
         </div>
         <p className="text-red-600 text-xs">{errMsg && errMsg}</p>
+        <div className="flex flex-row items-center gap-2">
         <button
-          className="py-2 px-6 text-sm md:text-lg active:scale-95 text-white rounded-md bg-regal-sky-blue"
+          className="py-2 px-6  text-[10px] md:text-lg active:scale-95 text-white rounded-md bg-regal-sky-blue"
           onClick={(e) => {
             handleSubmit(e);
           }}
@@ -599,10 +604,19 @@ const LoginModel = (props) => {
             "Login"
           )}
         </button>
+        <button className="block md:hidden text-regal-sky-blue text-xs" 
+          onClick={()=>{
+            props.onClose();
+          }}
+        >
+          Close
+        </button>
+        </div>
 
-        <h5 className="text-regal-black text-sm font-[500] text-center mt-4">
+
+        <h5 className="text-regal-black z-50  text-[10px] md:text-sm font-[500] text-center mt-4">
           Don't have an account?{" "}
-          <button className="underline" onClick={props.handleToggle}>
+          <button className="underline z-50 " onClick={props.handleToggle}>
             Sign up for free
           </button>
         </h5>
@@ -616,7 +630,7 @@ function AuthModal() {
   return (
     <>
       <button
-        className=" flex items-center hover:text-regal-blue text-sm xl:text-sm text-regal-black cursor-pointer font-[500]"
+        className=" flex items-center hover:text-regal-blue  text-[10px] md:text-sm xl: text-[10px] md:text-sm text-regal-black cursor-pointer font-[500]"
         onClick={() => setIsModalOpen(true)}
       >
         <img src={Profilecircle} alt="" className=" w-7 md:w-6 mr-1 xl:mr-2" />

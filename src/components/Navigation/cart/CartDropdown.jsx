@@ -36,7 +36,7 @@ const CartDropdown = () => {
   useEffect(() => {
     console.log(cartDetails, error);
     if (isSuccess, cartDetails) {
-       dispatch(setCartItems(cartDetails?.products));
+       dispatch(setCartItems(cartDetails?.products || []));
     }
   }, [cartDetails, user]);
   useEffect(() => {
