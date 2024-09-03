@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { useUpdateUserCartMutation, useAddUserCartMutation, useDeleteUserCartItemMutation } from './cartApiSlice';
+import { useUpdateUserCartMutation, useDeleteUserCartItemMutation } from './cartApiSlice';
 const cartSlice = createSlice({
   name: 'cart',
   initialState: {
@@ -8,7 +8,7 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const item = action.payload;
-      const existingItem = state.items.find(i => i.id === item.id);
+      const existingItem = state.items.find(i => i.productID === item.id);
       if (existingItem) {
         existingItem.quantity += 1;
       } else {
@@ -17,26 +17,25 @@ const cartSlice = createSlice({
     },
     incrementItemInCart: (state, action) => {
       const itemId = action.payload;
-      const existingItem = state.items.find(i => i.id === itemId);
+      const existingItem = state.items.find(i => i.productID === itemId);
       if (existingItem) {
         existingItem.quantity += 1;
       }
     },
     decrementItemInCart: (state, action) => {
       const itemId = action.payload;
-      const existingItem = state.items.find(i => i.id === itemId);
+      const existingItem = state.items.find(i => i.productID === itemId);
       if (existingItem && existingItem.quantity > 1) {
         existingItem.quantity -= 1;
       } else {
-        state.items = state.items.filter(i => i.id !== itemId);
+        state.items = state.items.filter(i => i.productID !== itemId);
       }
     },
     removeItemInCart: (state, action) => {
       const itemId = action.payload;
-      state.items = state.items.filter(i => i.id !== itemId);
+      state.items = state.items.filter(i => i.productID !== itemId);
     },
     removeAllItemInCart: (state, action) => {
-        const itemId = action.payload;
         state.items = [];
       },
     setCartItems: (state, action) => {

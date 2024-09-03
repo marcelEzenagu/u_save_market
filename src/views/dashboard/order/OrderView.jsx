@@ -7,19 +7,43 @@ import Cancelicon from "../../../assets/images/order/cancel.png";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { TbMapPinFilled } from "react-icons/tb";
 import { HiOutlineArrowLeft } from "react-icons/hi2";
+import { useParams } from 'react-router-dom';
+import { useGetOrderByIdQuery } from "../../../features/order/orderApiSlice";
+import moment from 'moment';
+import { numberWithCommas } from "../../../utils";
 function OrderView() {
+  const { id } = useParams();
+  const { data: order, error, isLoading } = useGetOrderByIdQuery(id);
   const [TrackOrderDetails, setTrackOrderDetails] = useState(false);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[500px] ">
+      <div className="flex flex-col items-center">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-blue-500 mb-4"></div>
+        <p className="mt-4 text-lg font-medium text-gray-700">Loading...</p>
+      </div>
+    </div>
+    );
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
   return TrackOrderDetails ? (
     <TrackOrder
     setTrackOrderDetails={(e) => {
       setTrackOrderDetails(e)
     }}
+    order={order}
     />
   ) : (
     <OrderDetails
       setTrackOrderDetails={(e) => {
         setTrackOrderDetails(e)
       }}
+      order={order}
     />
   );
 }
@@ -79,18 +103,18 @@ function OrderDetails(props) {
             <div className="flex flex-col md:flex-row items-start justify-between">
               <div className="">
                 <p className="text-xs md:text-sm text-start flex flex-row items-center  gap-2 text-regal-black font-[700]  capitalize cursor-pointer">
-                  ID: 9065379 <Status key={""} />
+                  ID: {props.order?.orderID} <Status key={""} />
                 </p>
                 <p className="text-xs text-regal-light-gray text-start mt-1">
-                  Order on: 3rd Aug, 2024
+                  Order on:  {moment(props.order?.createdAt).format("DD MMM, YYYY : HH:mm")}
                 </p>
                 <p className="text-xs text-regal-black font-[700] text-start mt-1">
-                  Total: ₦1,585.00
+                  Total: ₦{numberWithCommas(props.order?.totalCost)}
                 </p>
               </div>
               <button
                 onClick={toggleModal}
-                className=" py-2 px-6 active:scale-95  md:mt-0 mt-3 w-full md:w-auto items-center font-[600] gap-1 rounded-md border border-regal-sky-blue text-regal-sky-blue text-xs md:text-sm "
+                className=" py-2 px-6 active:scale-95  md:mt-0 mt-3 w-full md:w-auto items-center font-[600] gap-1 rounded-md border border-regal-sky-blue text-regal-sky-blue text-xs"
               >
                 Cancel Order
               </button>
@@ -156,7 +180,7 @@ function OrderDetails(props) {
             <div className="flex flex-row items-start justify-between">
               <div className="">
                 <p className="text-xs md:text-sm text-start flex flex-row items-center  gap-2 text-regal-black font-[700]  capitalize cursor-pointer">
-                  Items in this order (5)
+                  Items in this order ({props.order?.products?.length})
                 </p>
               </div>
               <button className="flex items-center gap-2 font-[600] text-regal-sky-blue text-xs md:text-sm ">
@@ -165,9 +189,9 @@ function OrderDetails(props) {
               </button>
             </div>
             <div className="mt-5  flex flex-row gap-4 overflow-x-scroll">
-              {Items &&
-                Items.map((e) => (
-                  <div className="w-[170px]" key={e.id}>
+              {props.order?.products &&
+                props.order?.products?.map((e, index) => (
+                  <div className="w-[170px]" key={index}>
                     <ItemsCard item={e} />
                   </div>
                 ))}

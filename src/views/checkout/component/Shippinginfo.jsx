@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { countries } from "../../../data/mockData";
-function Shippinginfo() {
+function Shippinginfo(props) {
   const [selectedCountry, setSelectedCountry] = useState(countries[0] || null);
   const [isOpenSelect, setIsOpenSelect] = useState(false);
   const handleSelect = (country) => {
@@ -13,38 +13,44 @@ function Shippinginfo() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4  mt-5">
           <div className="mb-1 col-span-2 md:col-span-1">
             <label
-              htmlFor="FirstName"
+              htmlFor="firstName"
               className="block text-xs md:text-[14px] font-[600]  leading-6 mb-2 text-regal-black"
             >
               First Name
             </label>
             <input
               type="text"
-              name="FirstName"
+              value={props.data?.firstName}
+              onChange={props.handleChange}
+              name="firstName"
               id="text"
               placeholder="Enter First Name"
-              className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
+              className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray "
+              required
             />
           </div>
           <div className="mb-1 col-span-2 md:col-span-1">
             <label
-              htmlFor="LastName"
+              htmlFor="lastName"
               className="block text-xs md:text-[14px] font-[600]  leading-6 mb-2 text-regal-black"
             >
               Last Name
             </label>
             <input
               type="text"
-              name="LastName"
+              name="lastName"
+              value={props.data?.lastName}
+              onChange={props.handleChange}
               id="text"
               placeholder="Enter Last Name"
               className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
-            />
+            required
+              />
           </div>
 
           <div className="mb-1  col-span-2 md:col-span-1">
             <label
-              htmlFor="phone"
+              htmlFor="phoneNumber"
               className="block text-xs md:text-sm  font-[700]  leading-6 mb-2 text-regal-black"
             >
               Phone
@@ -57,6 +63,7 @@ function Shippinginfo() {
                 <div className="relative">
                   {/* Dropdown button */}
                   <button
+                  type="button"
                     onClick={() => setIsOpenSelect(!isOpenSelect)}
                     className="w-full flex justify-between items-center border-none  rounded-md px-4 py-2 bg-transparent text-gray-700"
                   >
@@ -98,10 +105,13 @@ function Shippinginfo() {
               </div>
               <input
                 type="text"
-                name="price"
-                id="price"
+                name="phoneNumber"
+                id="phoneNumber"
+                value={props.data?.phoneNumber}
+                onChange={props.handleChange}
                 className="w-full py-3 pl-28 text-xs md:text-sm border rounded-sm bg-transparent text-regal-crum-gray focus:outline-none"
                 placeholder="Phone"
+                required
               />
             </div>
           </div>
@@ -113,86 +123,106 @@ function Shippinginfo() {
               Email
             </label>
             <input
-              type="text"
+              type="email"
               name="email"
               id="email"
+              value={props.data?.email}
+              onChange={props.handleChange}
               placeholder="Enter Email"
               className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
+                required
             />
           </div>
           <div className="mb-1 col-span-2">
             <label
-              htmlFor="StreetName"
+              htmlFor="street"
               className="block text-xs md:text-[14px] font-[600]  leading-6 mb-2 text-regal-black"
             >
               Street Name
             </label>
             <input
               type="text"
-              name="StreetName"
+              name="street"
+              value={props.data?.street}
+              onChange={props.handleChange}
               id="text"
               placeholder="Enter Street Name"
               className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
+            required
             />
           </div>
           <div className="mb-1">
             <label
-              htmlFor="Country"
+              htmlFor="country"
               className="block text-xs md:text-[14px] font-[600]  leading-6 mb-2 text-regal-black"
             >
               Country
             </label>
             <select
-              name="Country"
-              id="Country"
+              name="country"
+              id="country"
+              value={props.data?.country}
+              onChange={props.handleChange}
               placeholder="Enter Country"
               className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
+           required
             >
               <option value="">Enter Country</option>
+              <option >Nigeria</option>
+              <option >usa</option>
             </select>
           </div>
           <div className="mb-1">
             <label
-              htmlFor="City"
+              htmlFor="city"
               className="block text-xs md:text-[14px] font-[600]  leading-6 mb-2 text-regal-black"
             >
               City
             </label>
             <select
-              name="City"
-              id="City"
+              name="city"
+              id="city"
+              value={props.data?.city}
+              onChange={props.handleChange}
               placeholder="Enter City"
               className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
             >
               <option value="">Enter City</option>
+              <option >oshodi isolo</option>
             </select>
           </div>
           <div className="mb-1">
             <label
-              htmlFor="State/Region"
+              htmlFor="state"
               className="block text-xs md:text-[14px] font-[600]  leading-6 mb-2 text-regal-black"
             >
               State/Region
             </label>
             <select
-              name="State/Region"
-              id="State/Region"
+              name="state"
+              id="state"
+              value={props.data?.state}
+              onChange={props.handleChange}
               placeholder="Enter State/Region"
               className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
             >
               <option value="">Enter State</option>
+              <option>Lagos</option>
+              <option >Imo</option>
             </select>
           </div>
           <div className="mb-1">
             <label
-              htmlFor="Zip Code"
+              htmlFor="zipCode"
               className="block text-xs md:text-[14px] font-[600]  leading-6 mb-2 text-regal-black"
             >
               Zip Code
             </label>
             <input
-              name="Zip Code"
-              id=" Zip Code"
+              name="zipCode"
+              id="zipCode"
+              value={props.data?.zipCode}
+              onChange={props.handleChange}
               placeholder="Enter Zip Code"
               className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
             />
@@ -208,7 +238,10 @@ function Shippinginfo() {
           </label>
         </div>
         <div className="w-full mb-14">
-          <button className="py-3 px-10 float-end text-xs md:text-sm active:scale-95 font-[500] text-white rounded-md bg-regal-sky-blue">
+          <button className="py-3 px-10 float-end text-xs md:text-sm active:scale-95 font-[500] text-white rounded-md bg-regal-sky-blue"
+           type="button"
+          onClick={()=>{props.setActiveTab('2')}}
+          >
             Save and Continue
           </button>
         </div>

@@ -2,22 +2,21 @@ import React from 'react'
 import { PiMinus } from "react-icons/pi";
 import { GoHeart } from "react-icons/go";
 import { IoAddOutline } from "react-icons/io5";
-import {numberWithCommas} from '../../utils'
+import {numberWithCommas, ReplaceImage} from '../../utils'
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import useCartOperationsHooks from '../../hooks/useCartOperationsHooks';
 const ProductCard = ({ item, category }) => {
-  const {handleAddToCart, handleIncrement, handleDecrement, handleRemove } = useCartOperationsHooks();
-  // const dispatch = useDispatch();
+  const {handleAddToCart, handleIncrement, handleDecrement } = useCartOperationsHooks();
   const cart = useSelector((state) => state.cart.items);
-  const cartItem = cart.find((cartItem) => cartItem.id === item.id);
-
+  const cartItem = cart.find((cartItem) => cartItem.productID === item?.productID);
   return (
-    <div key={item.id} className="text-sm font-[500] animate-fade-in">
+    <div key={item.productID} className="text-sm font-[500] animate-fade-in">
       <div className="relative bg-white rounded-lg overflow-hidden h-[200px] group">
         <img
-          src={item.image}
+          src={item.image  || ReplaceImage}
           alt={item.name}
+          onError={ReplaceImage}
           className="w-full h-full object-contain"
         />
 

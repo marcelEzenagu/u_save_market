@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import RelatedProduct from '../../components/RelatedProduct'
 import {Items as ITemsDiv } from '../../data/mockData'
 import { Link, useNavigate } from 'react-router-dom'
@@ -10,19 +10,34 @@ import { GoHeart } from "react-icons/go";
 import CartImage from '../../assets/images/cart/Empty-cart.webp'
 import { useDispatch, useSelector } from 'react-redux';
 import useCartOperationsHooks from '../../hooks/useCartOperationsHooks'
+import { useGetUserCartQuery } from '../../features/cart/cartApiSlice'
+import { setCartItems } from '../../features/cart/cartSlice'
 function Cart() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const Items = useSelector(state => state.cart.items); // Assuming you're using Redux to manage cart state
+  const user = useSelector((state) => state.auth?.user);
+  // const {
+  //   data: cartDetails,
+  //   isLoading,
+  //   isSuccess,
+  //   isError,
+  //   error,
+  //   refetch,
+  // } = useGetUserCartQuery(user, {
+  //   skip : user === null ? true : false
+  // });
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {handleIncrement, handleDecrement, handleRemove, handleRemoveAll } = useCartOperationsHooks();
-
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-
-
-
+  // useEffect(() => {
+  //   console.log(cartDetails, error);
+  //   if (isSuccess, cartDetails) {
+  //      dispatch(setCartItems(cartDetails?.products));
+  //   }
+  // }, [cartDetails, user]);
   return (
     <div className='w-full md:p-4'>
       {Items?.length > 0 && (
@@ -45,14 +60,14 @@ function Cart() {
           </button>
         )}
       </div>
-
-      {Items?.length > 0 ? (
+        {
+        Items?.length > 0 ? (
         <div className='mb-5'>
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:gap-8'>
             <div className="border shadow-sm bg-white md:p-4 rounded-md col-span-2">
               {Items.map((item) => (
                 <div
-                  key={item.id}
+                  key={item.productID}
                   className="flex items-center justify-between md:gap-4 py-8 px-1 md:px-2"
                 >
                   <div className='flex items-center gap-3'>
@@ -68,7 +83,7 @@ function Cart() {
                       <div className="flex flex-row items-center gap-2 md:gap-4 mt-3 md:mt-5">
                         <h1
                           className='text-regal-light-gray border-b-2 custom-text-line text-xs md:text-sm cursor-pointer'
-                          onClick={() => handleRemove(item.id)}
+                          onClick={() => handleRemove(item.productID)}
                         >
                           Remove
                         </h1>
@@ -156,7 +171,8 @@ function Cart() {
             </button>
           </div>
         </div>
-      )}
+      ) }
+ 
 
       <RelatedProduct Items={ITemsDiv} className='mt-10' cols={'5'} />
 

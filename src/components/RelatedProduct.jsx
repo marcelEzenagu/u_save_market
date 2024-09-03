@@ -10,7 +10,7 @@ function RelatedProduct({Items, cols, category}) {
         </h5>
         <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3  ${cols == '5' ? 'lg:grid-cols-5': 'lg:grid-cols-4' } gap-4 `}>
           {Items.map((item) => (
-            <ProductCard item={item} key={item.id} category={category || ''} />
+            <ProductCard item={item} key={item.productID} category={category || ''} />
           ))}
         </div>
       </main>

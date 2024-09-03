@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Items } from "../../../data/mockData";
 import { LuCalendarDays } from "react-icons/lu";
 import { IoAddOutline } from "react-icons/io5";
 import { PiMinus, PiTrash } from "react-icons/pi";
@@ -11,9 +10,6 @@ import { useGetUserCartQuery } from "../../../features/cart/cartApiSlice";
 import Shoppingcart from "../../../assets/images/nav/icons/shoppingcart.webp";
 import {
   setCartItems,
-  incrementItemInCart,
-  decrementItemInCart,
-  removeItemInCart,
 } from "../../../features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import useCartOperationsHooks from "../../../hooks/useCartOperationsHooks";
@@ -27,14 +23,12 @@ const CartDropdown = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  const {handleAddToCart, handleIncrement, handleDecrement, handleRemove } = useCartOperationsHooks();
+  const {handleIncrement, handleDecrement } = useCartOperationsHooks();
   const {
     data: cartDetails,
     isLoading,
     isSuccess,
-    isError,
     error,
-    refetch,
   } = useGetUserCartQuery(user, {
     skip : user === null ? true : false
   });
@@ -44,7 +38,7 @@ const CartDropdown = () => {
     if (isSuccess, cartDetails) {
        dispatch(setCartItems(cartDetails?.products));
     }
-  }, [cartDetails]);
+  }, [cartDetails, user]);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -112,7 +106,7 @@ const CartDropdown = () => {
                     {cart.length > 0 ? (
                       cart.map((item) => (
                         <div
-                          key={item.id}
+                          key={item.productID}
                           className="flex items-center justify-between gap-4 mb-4 pb-2"
                         >
                           {/* Item Image */}
@@ -167,6 +161,7 @@ const CartDropdown = () => {
                     <Link
                       to="/cart"
                       className="bg-regal-sky-blue text-white flex items-center justify-between px-4 py-2 font-bold w-full rounded-md hover:bg-blue-600 transition"
+                      onClick={()=>{setIsOpen(false);}}
                     >
                       Go to cart <span>₦{numberWithCommas(total)}</span>
                     </Link>

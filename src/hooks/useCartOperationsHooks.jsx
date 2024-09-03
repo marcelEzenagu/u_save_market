@@ -17,29 +17,32 @@ const useCartOperationsHooks = () => {
         return;
       }
     try {
-      await addUserCart({
-        products : [{...item, productID : item.id}]
-      }).unwrap();
-      console.log('add');
+      const data = {
+        products : [{...item, productID : item.productID, quantity : 1}]
+      }
+      if (cart?.length > 0) {
+        updateUserCart({products :[...cart, {...item, productID : item.productID, quantity : 1} ]}).unwrap();
+      }else{
+        await addUserCart(data).unwrap();
+      }
     } catch (error) {
       console.error("Failed to add cart:", error);
     }
   };
   const handleIncrement = async (item) => {
 
-    dispatch(incrementItemInCart(item.id));
+    dispatch(incrementItemInCart(item.productID));
     if (!token || !user) {
-        // console.error("User not authenticated");
         return;
       }
     try {
-      await updateUserCart(
-        cart.map((cartItem) =>
-          cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : cartItem
-        )
-      ).unwrap();
+
+      const products = cart.map((cartItem) =>
+        cartItem.productID === item.productID
+          ? { ...cartItem, quantity: cartItem.quantity + 1 }
+          : cartItem
+      )
+      await updateUserCart({products}).unwrap();
     } catch (error) {
       console.error("Failed to update cart:", error);
     }
@@ -49,24 +52,23 @@ const useCartOperationsHooks = () => {
 
 
     if (item.quantity > 1) {
-      dispatch(decrementItemInCart(item.id));
+      dispatch(decrementItemInCart(item.productID));
       if (!token || !user) {
         // console.error("User not authenticated");
         return;
       }
       try {
-        await updateUserCart(
-          cart.map((cartItem) =>
-            cartItem.id === item.id
-              ? { ...cartItem, quantity: cartItem.quantity - 1 }
-              : cartItem
-          )
-        ).unwrap();
+        const products = cart.map((cartItem) =>
+          cartItem.productID === item.productID
+            ? { ...cartItem, quantity: cartItem.quantity - 1 }
+            : cartItem
+        )
+        await updateUserCart({products}).unwrap();
       } catch (error) {
         console.error("Failed to update cart:", error);
       }
     } else {
-      handleRemove(item.id);
+      handleRemove(item.productID);
     }
   };
 
@@ -79,7 +81,8 @@ const useCartOperationsHooks = () => {
         return;
       }
     try {
-      await deleteUserCartItem(itemId).unwrap();
+      const products = cart.filter((cartItem) => cartItem.productID !== itemId )
+      await updateUserCart({products}).unwrap();
     } catch (error) {
       console.error("Failed to delete cart item:", error);
     }
@@ -91,7 +94,9 @@ const useCartOperationsHooks = () => {
         return;
       }
     try {
-      await deleteUserCartItem(itemId).unwrap();
+
+      
+      await deleteUserCartItem({products:[]}).unwrap();
     } catch (error) {
       console.error("Failed to delete cart item:", error);
     }

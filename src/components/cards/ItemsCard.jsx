@@ -1,13 +1,15 @@
 import React from "react";
-import { numberWithCommas } from "../../utils";
+import { numberWithCommas, ReplaceImage } from "../../utils";
 import { Link } from "react-router-dom";
 function ItemsCard({ item, category }) {
+
   return (
     <div key={item.id} className="text-sm font-[500] animate-fade-in w-[150px] ">
       <div className="relative bg-white  rounded-lg  overflow-hidden ">
         <img
-          src={item.image}
+          src={item.image || ReplaceImage}
           alt={item.name}
+          onError={ReplaceImage}
           className="w-full h-full object-contain"
         />
 

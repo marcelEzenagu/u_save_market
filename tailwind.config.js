@@ -44,9 +44,24 @@ export default {
           '0%': { opacity: 0 },
           '100%': { opacity: 1 },
         },
+        bar1: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-50%)" },
+        },
+        bar2: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-75%)" },
+        },
+        bar3: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-50%)" },
+        },
       },
       animation: {
         'fade-in': 'fadeIn 1s ease-out',
+        "bar-1": "bar1 1s ease-in-out infinite",
+        "bar-2": "bar2 1s ease-in-out infinite",
+        "bar-3": "bar3 1s ease-in-out infinite",
       },
     },
   },

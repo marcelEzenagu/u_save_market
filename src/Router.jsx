@@ -45,6 +45,7 @@ import Performance from "./views/Vendor/profile/Components/Performance";
 import PaymentVendor from "./views/Vendor/PaymentVendor";
 import Analytics from "./views/Vendor/Analytics";
 import RegistrationSuccessful from "./views/Auth/vendor/RegistrationSuccessful";
+import SearchVendor from "./views/Vendor/SearchVendor";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -57,6 +58,10 @@ const Router = createBrowserRouter([
             {
                 path:'/products',
                 element:<Product/>,  
+            },
+            {
+                path:'/cart',
+                element:<Cart/>,  
             },
             {
                 path:'/products/:name/:product',
@@ -72,16 +77,16 @@ const Router = createBrowserRouter([
         path:'/payment',
         element: <Payment/>
     },
-    {
-        path:'/',
-        element:<GuestLayout/>,
-        children : [
-            {
-                path:'/cart',
-                element:<Cart/>,  
-            },
-        ]
-    },
+    // {
+    //     path:'/',
+    //     element:<GuestLayout/>,
+    //     children : [
+    //         {
+    //             path:'/cart',
+    //             element:<Cart/>,  
+    //         },
+    //     ]
+    // },
     {
         path:'/',
         element: <AuthLayout/>,
@@ -173,9 +178,17 @@ const Router = createBrowserRouter([
         path:'/vendor/dashboard',
         element: <VendorLayout/>,
         children: [
+            {
+                path: '/vendor/dashboard',
+                element : <Navigate to='/vendor/dashboard/home'/>
+            },
                 {
                     path:'/vendor/dashboard/home',
                     element: <VendorHome/>
+                },
+                {
+                    path:'/vendor/dashboard/search',
+                    element: <SearchVendor/>
                 },
                 {
                     path:'/vendor/dashboard/products',

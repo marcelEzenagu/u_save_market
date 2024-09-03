@@ -21,10 +21,10 @@ export const cartApiSlice = apiSlice.injectEndpoints({
         }),
       }),
     deleteUserCartItem: builder.mutation({
-      query: (itemId) => ({
+      query: (cart) => ({
         url: `carts`,
         method: 'DELETE',
-        body: itemId,
+        body: cart,
         keepUnusedDataFor:5,
         providesTags:['cart']
       }),

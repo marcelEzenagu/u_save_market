@@ -18,17 +18,9 @@ function ProductDetail() {
   const {handleAddToCart, handleIncrement, handleDecrement } = useCartOperationsHooks();
 
   const productinfo = Items.find(item => item.name === product); // Adjust based on actual data structure
-  const cartItem = cart.find((cartItem) => cartItem.id === productinfo.id);
+  const cartItem = cart.find((cartItem) => cartItem.productID === productinfo.productID);
   const description = `
     <p> Our Organic Mediterranean Olive Oil is a premium blend sourced from the finest olives grown in the Mediterranean region. This extra virgin olive oil is cold-pressed to retain its natural flavor and nutritional benefits, making it a perfect addition to any culinary creation.</p>
-    <ul>
-      <li><strong>Origin:</strong> 100% organically grown olives from the Mediterranean basin.</li>
-      <li><strong>Flavor Profile:</strong> Rich, fruity taste with a hint of pepper and a smooth finish.</li>
-      <li><strong>Health Benefits:</strong> High in monounsaturated fats and health.</li>
-      <li><strong>Uses:</strong> Ideal for dressing salads, drizzling over vegetables, or enhancing the flavor of meats and fish.</li>
-      <li><strong>Packaging:</strong> Available in 500ml and 1L bottles.</li>
-      <li><strong>Certification:</strong> USDA Organic and Non-GMO verified.</li>
-    </ul>
     `;
 
 
@@ -62,7 +54,7 @@ function ProductDetail() {
           <h4 className="text-lg font-[500] text-regal-black">{productinfo?.name}</h4>
           <h5 className="text-lg font-[700] text-regal-blue">₦{numberWithCommas(productinfo?.price)}</h5>
           <div className="max-w-[300px] flex items-center gap-2">
-            {cartItem?.id  ? 
+            {cartItem?.productID  ? 
             
             <div  className="w-full px-4 py-3 flex flex-row items-center justify-between text-white bg-regal-sky-blue rounded-md">
               <button  
