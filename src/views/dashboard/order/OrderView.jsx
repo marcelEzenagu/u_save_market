@@ -11,22 +11,15 @@ import { useParams } from 'react-router-dom';
 import { useGetOrderByIdQuery } from "../../../features/order/orderApiSlice";
 import moment from 'moment';
 import { numberWithCommas } from "../../../utils";
+import OrderViewSkeleton from "../../../components/Loading/OrderViewSkeleton";
 function OrderView() {
   const { id } = useParams();
   const { data: order, error, isLoading } = useGetOrderByIdQuery(id);
   const [TrackOrderDetails, setTrackOrderDetails] = useState(false);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-[500px] ">
-      <div className="flex flex-col items-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-blue-500 mb-4"></div>
-        <p className="mt-4 text-lg font-medium text-gray-700">Loading...</p>
-      </div>
-    </div>
-    );
+    return <OrderViewSkeleton/>;
   }
-
   if (error) {
     return <div>Error: {error.message}</div>;
   }

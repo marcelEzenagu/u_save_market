@@ -7,6 +7,7 @@ import EmptyBag from "../../../assets/images/order/empty.png";
 import { useSelector, useDispatch } from "react-redux";
 import { setOrders } from "../../../features/order/orderSlice";
 import { useGetUserOrderQuery } from "../../../features/order/orderApiSlice";
+import SkeletonOrderCard from "../../../components/Loading/SkeletonOrderCard";
 import moment from "moment";
 function Order() {
   const [activeTab, setActiveTab] = useState("1");
@@ -77,12 +78,11 @@ function Order() {
         ))}
       </div>
       {isLoading ? (
-         <div className="flex items-center justify-center h-[500px] ">
-         <div className="flex flex-col items-center">
-         <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-blue-500 mb-4"></div>
-           <p className="mt-4 text-lg font-medium text-gray-700">Loading...</p>
-         </div>
-       </div>
+        <>
+        <SkeletonOrderCard />
+        <SkeletonOrderCard />
+        <SkeletonOrderCard />
+      </>
       ) : currentItems.length > 0 ? (
         <>
         {currentItems.reverse().map((order, i) => (
@@ -159,5 +159,7 @@ function OrderCard({ order }) {
     </div>
   );
 }
+
+
 
 export default Order;
