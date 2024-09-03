@@ -33,6 +33,7 @@ export default {
         'grid-card-color-5' : 'rgba(255, 241, 227, 1)',
         'grid-card-color-6' : 'rgba(251, 226, 239, 1)',
         'regal-auth-bg-color': 'rgba(245, 247, 255, 1)',
+        'regal-disable-red' :'rgba(254, 247, 246, 1)',
         'regal-paginate-color' : 'rgba(68, 70, 77, 1)',
         'regal-dashboard-active-tab-gray':'rgba(250, 250, 252, 1)',
         'regal-track-gray' : 'rgba(201, 203, 209, 1)'
@@ -43,9 +44,24 @@ export default {
           '0%': { opacity: 0 },
           '100%': { opacity: 1 },
         },
+        bar1: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-50%)" },
+        },
+        bar2: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-75%)" },
+        },
+        bar3: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-50%)" },
+        },
       },
       animation: {
         'fade-in': 'fadeIn 1s ease-out',
+        "bar-1": "bar1 1s ease-in-out infinite",
+        "bar-2": "bar2 1s ease-in-out infinite",
+        "bar-3": "bar3 1s ease-in-out infinite",
       },
     },
   },

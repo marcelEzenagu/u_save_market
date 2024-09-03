@@ -10,7 +10,7 @@ function SavedItems() {
             (
                 <div className='grid grid-cols-2 md:grid-cols-5'>
                     {Items.map((e)=> (
-                        <SaveCard item={e}/>
+                        <SaveCard item={e} key={e?.id}/>
                     ))}
                 </div>
             ): 

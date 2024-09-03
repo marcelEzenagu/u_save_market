@@ -3,8 +3,13 @@ import Navigation from "../Navigation/Navigation";
 import { Outlet } from "react-router-dom";
 import Footer from "../Footer/Footer";
 import CategoryList from "../cards/CategoryList";
+import useGuestAuth from "../../hooks/useGuestAuth";
+import LoadingScreen from "../Loading/LoadingScreen";
 function GuestLayout() {
-
+  const {isLoading, userToken} = useGuestAuth()
+  if (isLoading && userToken) {
+    return <LoadingScreen />;
+  }
       return (
         <div>
           <Navigation />

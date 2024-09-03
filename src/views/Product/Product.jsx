@@ -13,10 +13,62 @@ function Product() {
   const [isResultOpen, setIsResultOpen] = useState(false);
   const [isPriceOpen, setIsPriceOpen] = useState(false);
   const [isCountryOpen, setIsCountryOpen] = useState(false);
+  const [selectedResult, setSelectedResult] = useState('');
+  const [selectedPrice, setSelectedPrice] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState('');
 
   const toggleResultDropdown = () => setIsResultOpen(!isResultOpen);
   const togglePriceDropdown = () => setIsPriceOpen(!isPriceOpen);
   const toggleCountryDropdown = () => setIsCountryOpen(!isCountryOpen);
+
+  const handleResultSelect = (result) => {
+    setSelectedResult(result);
+    setIsResultOpen(false);
+  };
+
+  const handlePriceSelect = (price) => {
+    setSelectedPrice(price);
+    setIsPriceOpen(false);
+  };
+
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    setIsCountryOpen(false);
+  };
+
+  // Filter logic
+  const filteredItems = Items.filter(item => {
+    let isMatch = true;
+
+    if (selectedResult) {
+      // Apply result-specific filter logic here
+      isMatch = isMatch && item.name.includes(selectedResult); // Example logic
+    }
+
+    if (selectedPrice) {
+      if (selectedPrice === 'Low to High') {
+        return item; // Sorted separately
+      }
+      if (selectedPrice === 'High to Low') {
+        return item; // Sorted separately
+      }
+    }
+
+    if (selectedCountry) {
+      // Apply country-specific filter logic here
+      isMatch = isMatch && item.name.includes(selectedCountry); // Example logic
+    }
+
+    return isMatch;
+  });
+
+  // Sorting based on Price
+  if (selectedPrice === 'Low to High') {
+    filteredItems.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+  } else if (selectedPrice === 'High to Low') {
+    filteredItems.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+  }
+
   return (
     <div>
       <main className="flex  flex-col md:flex-row gap-4 md:items-center md:justify-between">
@@ -51,139 +103,173 @@ function Product() {
         <span className="flex flex-row items-center text-regal-black mr-4">
         <LuListFilter className="text-lg mr-1" />  Filters:
         </span>
-      {/* All Results Dropdown */}
-      <div className="relative hidden lg:block">
-        <button
-          onClick={toggleResultDropdown}
-        className="text-xs md:text-sm w-full px-3 py-2 inline-flex items-center text-regal-black font-[600] bg-active-gray rounded-md focus:outline-none"
-        >
-          All Results 
-          <svg
-          className="w-5 h-5 ml-2 -mr-1"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-        </button>
-        <Transition
-          as={Fragment}
-          show={isResultOpen}
-          enter="transition ease-out duration-200"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-150"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <div className="absolute mt-2 w-full  z-50 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-            <div className="py-1">
-              <button onClick={() => console.log('Results 1')} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">Results 1</button>
-              <button onClick={() => console.log('Results 2')} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">Results 2</button>
+     {/* All Results Dropdown */}
+     <div className="relative hidden lg:block">
+          <button
+            onClick={toggleResultDropdown}
+            className="text-xs w-full px-3 py-2 inline-flex items-center text-regal-black font-[600] bg-active-gray rounded-md focus:outline-none"
+          >
+            All Results
+            <svg
+              className="w-5 h-5 ml-2 -mr-1"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+          <Transition
+            as={Fragment}
+            show={isResultOpen}
+            enter="transition ease-out duration-200"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-150"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <div className="absolute mt-2 w-full z-50 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+              <div className="py-1">
+                <button
+                  onClick={() => handleResultSelect('Results 1')}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  Results 1
+                </button>
+                <button
+                  onClick={() => handleResultSelect('Results 2')}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  Results 2
+                </button>
+              </div>
             </div>
-          </div>
-        </Transition>
-      </div>
+          </Transition>
+        </div>
 
-      {/* Price Dropdown */}
-      <div className="relative hidden lg:block">
-        <button
-          onClick={togglePriceDropdown}
-           className="text-sm w-full px-3 py-2 inline-flex items-center text-regal-black font-[600] bg-active-gray rounded-md focus:outline-none"
-        >
-          Price
-          <svg
-          className="w-5 h-5 ml-2 -mr-1"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-        </button>
-        <Transition
-          as={Fragment}
-          show={isPriceOpen}
-          enter="transition ease-out duration-200"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-150"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <div className="absolute  z-50 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-            <div className="py-1">
-              <button onClick={() => console.log('Low to High')} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">Low to High</button>
-              <button onClick={() => console.log('High to Low')} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">High to Low</button>
+        {/* Price Dropdown */}
+        <div className="relative hidden lg:block">
+          <button
+            onClick={togglePriceDropdown}
+            className="text-xs w-full px-3 py-2 inline-flex items-center text-regal-black font-[600] bg-active-gray rounded-md focus:outline-none"
+          >
+            Price
+            <svg
+              className="w-5 h-5 ml-2 -mr-1"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+          <Transition
+            as={Fragment}
+            show={isPriceOpen}
+            enter="transition ease-out duration-200"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-150"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <div className="absolute z-50 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+              <div className="py-1">
+                <button
+                  onClick={() => handlePriceSelect('Low to High')}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  Low to High
+                </button>
+                <button
+                  onClick={() => handlePriceSelect('High to Low')}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  High to Low
+                </button>
+              </div>
             </div>
-          </div>
-        </Transition>
-      </div>
+          </Transition>
+        </div>
 
-      {/* Countries Dropdown */}
-      <div className="relative hidden lg:block">
-        <button
-          onClick={toggleCountryDropdown}
-        className="text-sm w-full px-3 py-2 inline-flex items-center text-regal-black font-[600] bg-active-gray rounded-md focus:outline-none"
-        >
-          Countries
-          <svg
-          className="w-5 h-5 ml-2 -mr-1"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-        </button>
-        <Transition
-          as={Fragment}
-          show={isCountryOpen}
-          enter="transition ease-out duration-200"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-150"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <div className="absolute mt-2 w-full  z-50 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-            <div className="py-1">
-              <button onClick={() => console.log('USA')} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">USA</button>
-              <button onClick={() => console.log('Canada')} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">Canada</button>
-              <button onClick={() => console.log('Germany')} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">Germany</button>
+        {/* Countries Dropdown */}
+        <div className="relative hidden lg:block">
+          <button
+            onClick={toggleCountryDropdown}
+            className="text-xs w-full px-3 py-2 inline-flex items-center text-regal-black font-[600] bg-active-gray rounded-md focus:outline-none"
+          >
+            Countries
+            <svg
+              className="w-5 h-5 ml-2 -mr-1"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+          <Transition
+            as={Fragment}
+            show={isCountryOpen}
+            enter="transition ease-out duration-200"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-150"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <div className="absolute mt-2 w-full z-50 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+              <div className="py-1">
+                <button
+                  onClick={() => handleCountrySelect('USA')}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  USA
+                </button>
+                <button
+                  onClick={() => handleCountrySelect('Canada')}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  Canada
+                </button>
+                <button
+                  onClick={() => handleCountrySelect('Germany')}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  Germany
+                </button>
+              </div>
             </div>
-          </div>
-        </Transition>
-      </div>
-
+          </Transition>
+        </div>
       <div className="block lg:hidden">
         <FilterDropdown />
         </div>
     </div>
       </main>
       <main className="lg:my-6">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-          {Items.map((item) => (
-            <ProductCard item={item} key={item.id} category={name} />
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
+          {filteredItems.map((item) => (
+            <ProductCard item={item} key={item.productID} category={name} />
           ))}
         </div>
       </main>

@@ -1,17 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import RightImage from "../../../assets/images/vendor/Auth/login.webp";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Googleicon from "../../../assets/images/auth/google.png"
 import Logo from "../../../assets/images/nav/logo.webp";
+import {useDispatch} from 'react-redux'
+import { setCredentials } from "../../../features/auth/authSlice";
+import { useLoginMutation } from "../../../features/auth/authApiSlice";
 const LoginVendor = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const [data, setData] = useState({
+    email:'',
+    password:'',
+    eye:false,
+  })
 const navigate = useNavigate()
+
+const [errMsg, setErrMsg] = useState('')
+const [login, {isLoading}] = useLoginMutation()
+const dispatch = useDispatch()
+useEffect(()=>{
+  setErrMsg('')
+}, [data.email, data.password])
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  try {
+    const userData = await login({ email : data.email, password : data.password }).unwrap()
+    setCookie("accessToken", userData.authorization)
+    dispatch(setCredentials({ accessToken: userData?.access_data?.access_token, user : userData?.vendor, role: userData?.access_data?.role,}))
+    setData({
+      email:'',
+      password:'',
+      eye:false,
+    })
+    navigate('/dashboard')
+  }catch (err) {
+    console.log(err)
+    if (err?.status === 200) {
+      return
+    } 
+    else if (err?.status >= 400 && err?.status <= 404){
+      setErrMsg(err?.data?.message)
+    }  else if (err?.status >= 500){
+      setErrMsg("Login failed")
+    }else{
+      setErrMsg("Login failed")
+    }
+  }
+}
+const handleChange = e => {
+  const newData = Object.assign({}, data, {
+    [e.target.name]: e.target.value,
+  })
+  setData(newData)
+}
+
   return (
     <div className="block lg:flex  items-start px-4 pt-8 pb-4 max-w-[1366px] mx-auto">
       <div className="lg:w-1/2 animated fadeInDown">
@@ -27,7 +76,7 @@ const navigate = useNavigate()
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras elementum elit eget purus suscipit, sed egestas 
           </p>
 
-          <form action="">
+          <form action="" onSubmit={handleSubmit}>
 
             <div className="mb-4 col-span-2 mt-4">
               <label
@@ -39,7 +88,9 @@ const navigate = useNavigate()
               <input
                 type="text"
                 name="email"
-                id="text"
+                id="email"
+                onChange={handleChange}
+                value={data.email}
                 placeholder="Enter Email"
                 className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
               />
@@ -54,40 +105,44 @@ const navigate = useNavigate()
               </label>
               <div className="mb-4 relative">
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={data.eye ? "text" : "password"}
                   name="password"
+                  onChange={handleChange}
+                  value={data.password}
                   id="text"
                   placeholder="Enter password"
                   className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                 />
                 <div
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
-                  onClick={togglePasswordVisibility}
+               
                 >
-                  {showPassword ? (
+                  {data.eye ? (
                     <AiOutlineEyeInvisible
                       size={20}
                       className="text-regal-light-gray"
+                      onClick={()=> setData({...data, eye:!data.eye})}
                     />
                   ) : (
-                    <AiOutlineEye size={20} className="text-regal-light-gray" />
+                    <AiOutlineEye size={20} className="text-regal-light-gray" onClick={()=> setData({...data, eye:!data.eye})}/>
                   )}
                 </div>
               </div>
             </div>
+            <p className="text-red-600 text-xs">{errMsg && errMsg}</p>
+
+            <Link to="/vendor/auth/forgot-password" className="text-xs text-regal-blue">Forgot Password ?</Link>
 
             <div className="w-full ">
               <button className=" text-xs md:text-[12px] bg-regal-sky-blue text-white px-4  py-3 font-semibold w-full rounded-lg hover:bg-blue-600 mt-4 "
-                          onClick={()=> {
-                            navigate('/vendor/dashboard/home')
-                        }}
-                        type="button"
+                    disabled={isLoading}
+                        type="submit"
               >
-                Sign In
+               {isLoading ? 'Loading...' : 'Sign In'}
               </button>
             </div>
-
-
+                
+         
             <div className="flex flex-row items-center my-6">
                 <hr  className="w-full border-b-[1px]"/>
                 <span className="mx-4 text-[12px] font-[600] text-regal-black ">OR</span>
@@ -95,7 +150,9 @@ const navigate = useNavigate()
             </div>
 
             <div className="relative w-full mt-4">
-                <button className="w-full rounded-md  text-[12px] bg-white border  font-[700] py-3 flex flex-row items-center justify-center  ">
+                <button className="w-full rounded-md  text-[12px] bg-white border  font-[700] py-3 flex flex-row items-center justify-center  "
+                type="button"
+                >
                 <img src={Googleicon} alt="" className=" mr-4" />
                     Log in with Google</button>
             </div>

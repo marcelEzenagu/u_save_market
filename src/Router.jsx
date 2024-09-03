@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import Home from "./views/Home";
 import Product from "./views/Product/Product";
 import DefaultLayout from "./components/Layouts/DefaultLayout";
@@ -30,6 +30,22 @@ import ProductHome from "./views/Vendor/product/ProductHome";
 import ProductView from "./views/Vendor/product/ProductView";
 import OrderHome from "./views/Vendor/order/OrderHome";
 import VendorOrderview from "./views/Vendor/order/OrderView";
+import ForgotPasswordVendor from "./views/Auth/vendor/ForgotPasswordVendor";
+import OtpVendor from "./views/Auth/vendor/OtpVendor";
+import ResetPasswordVendor from "./views/Auth/vendor/ResetPasswordVendor";
+import Profile from "./views/Vendor/profile/Profile";
+import ProfileDetails from "./views/Vendor/profile/Components/ProfileDetails";
+import Identification from "./views/Vendor/profile/Components/Identification";
+import BusinessVerification from "./views/Vendor/profile/Components/Verifications/BusinessVerification";
+import GovernmentIssued from "./views/Vendor/profile/Components/Verifications/GovernmentIssued";
+import InterviewMeeting from "./views/Vendor/profile/Components/Verifications/InterviewMeeting";
+import PasswordAndSecurity from "./views/Vendor/profile/Components/PasswordAndSecurity";
+import SettingsVendor from "./views/Vendor/profile/Components/Settings";
+import Performance from "./views/Vendor/profile/Components/Performance";
+import PaymentVendor from "./views/Vendor/PaymentVendor";
+import Analytics from "./views/Vendor/Analytics";
+import RegistrationSuccessful from "./views/Auth/vendor/RegistrationSuccessful";
+import SearchVendor from "./views/Vendor/SearchVendor";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -42,6 +58,10 @@ const Router = createBrowserRouter([
             {
                 path:'/products',
                 element:<Product/>,  
+            },
+            {
+                path:'/cart',
+                element:<Cart/>,  
             },
             {
                 path:'/products/:name/:product',
@@ -57,16 +77,16 @@ const Router = createBrowserRouter([
         path:'/payment',
         element: <Payment/>
     },
-    {
-        path:'/',
-        element:<GuestLayout/>,
-        children : [
-            {
-                path:'/cart',
-                element:<Cart/>,  
-            },
-        ]
-    },
+    // {
+    //     path:'/',
+    //     element:<GuestLayout/>,
+    //     children : [
+    //         {
+    //             path:'/cart',
+    //             element:<Cart/>,  
+    //         },
+    //     ]
+    // },
     {
         path:'/',
         element: <AuthLayout/>,
@@ -133,8 +153,24 @@ const Router = createBrowserRouter([
                     element: <LoginVendor/>
                 },
                 {
+                    path:'/vendor/auth/forgot-password',
+                    element: <ForgotPasswordVendor/>
+                },
+                {
+                    path:'/vendor/auth/otp',
+                    element: <OtpVendor/>
+                },
+                {
+                    path:'/vendor/auth/reset-password',
+                    element: <ResetPasswordVendor/>
+                },
+                {
                     path:'/vendor/auth/registration',
                     element: <VendorDetails/>
+                },
+                {
+                    path:'/vendor/auth/registration/successful',
+                    element: <RegistrationSuccessful/>
                 }
         ]
     },
@@ -142,13 +178,25 @@ const Router = createBrowserRouter([
         path:'/vendor/dashboard',
         element: <VendorLayout/>,
         children: [
+            {
+                path: '/vendor/dashboard',
+                element : <Navigate to='/vendor/dashboard/home'/>
+            },
                 {
                     path:'/vendor/dashboard/home',
                     element: <VendorHome/>
                 },
                 {
+                    path:'/vendor/dashboard/search',
+                    element: <SearchVendor/>
+                },
+                {
                     path:'/vendor/dashboard/products',
                     element: <ProductHome/>
+                },
+                {
+                    path:'/vendor/dashboard/payment',
+                    element: <PaymentVendor/>
                 },
                 {
                     path:'/vendor/dashboard/products/:name',
@@ -157,6 +205,55 @@ const Router = createBrowserRouter([
                 {
                     path:'/vendor/dashboard/orders',
                     element: <OrderHome/>
+                },
+                {
+                    path:'/vendor/dashboard/analytics',
+                    element: <Analytics/>
+                },
+                {
+                    path:'/vendor/dashboard/profile',
+                    element: <Profile/>,
+                    children: [
+                        {
+                            path: '/vendor/dashboard/profile',
+                            element : <Navigate to="/vendor/dashboard/profile/profile-details"/>
+                        },
+                        {   
+                         path:'/vendor/dashboard/profile/profile-details',
+                            element: <ProfileDetails/>,
+                        },
+                        {   
+                            path:'/vendor/dashboard/profile/password-security',
+                               element: <PasswordAndSecurity/>,
+                           },
+                           {   
+                            path:'/vendor/dashboard/profile/performance',
+                               element: <Performance/>,
+                           },
+                           {   
+                            path:'/vendor/dashboard/profile/settings',
+                               element: <SettingsVendor/>,
+                           },
+                        {   
+                            path:'/vendor/dashboard/profile/identification',
+                               element: <Identification/>,
+                               children: [
+                                {   
+                                    path:'/vendor/dashboard/profile/identification/business-verification',
+                                       element: <BusinessVerification/>,
+                                   },
+
+                                   {   
+                                    path:'/vendor/dashboard/profile/identification/government-issued-id',
+                                       element: <GovernmentIssued/>,
+                                   },
+                                   {   
+                                    path:'/vendor/dashboard/profile/identification/interview-meeting',
+                                       element: <InterviewMeeting/>,
+                                   },
+                               ]
+                           }
+                    ]
                 },
                 {
                     path:'/vendor/dashboard/orders/:name',

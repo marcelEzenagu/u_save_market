@@ -20,9 +20,8 @@ function Home() {
     <div className="">
     <div className="flex flex-row items-center justify-between md:my-4 overflow-x-scroll w-full">
         {list.map((e, i)=> (
-          <div>
+          <div key={i}>
            <div
-           key={i}
            className={`my-3 relative w-[140px] lg:w-[10rem] mr-5 lg:mr-0
            overflow-hidden rounded-[2rem] shadow-lg group h-[150px] animate-fade-in   `}
          >

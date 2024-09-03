@@ -1,0 +1,49 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { selectCurrentToken, selectCurrentUser, setCredentials, logOut } from '../features/auth/authSlice'
+import { useViewUserQuery } from '../features/user/userApiSlice'
+import { getSecureCookie, validateToken }  from '../utils' 
+
+export function useGuestAuth() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const token = useSelector(selectCurrentToken);
+    const userData = useSelector(selectCurrentUser);
+    const userToken = getSecureCookie("accessToken");
+  
+    // Use `skip` to conditionally fetch user data
+    const { data: user, isLoading, isSuccess, isError, error } = useViewUserQuery(userToken, {
+      skip: !userToken || !validateToken(userToken) || (token && userData), // Skip query if conditions are met
+    });
+  
+    useEffect(() => {
+      if (userToken && validateToken(userToken)) {
+        if (!token && !userData) {
+          if (isSuccess) {
+            dispatch(setCredentials({ accessToken: userToken, role: 'user', user }));
+          } else if (isError) {
+            console.error("Error fetching user data:", error);
+            if (error?.status === 401) {
+              dispatch(logOut()); // Clear user data and token
+              navigate('/'); // Redirect to login page
+            } else {
+              // Handle other errors or redirect
+              navigate('/'); // Redirect to an appropriate route
+            }
+          }
+        }
+      } else {
+        // Handle case where userToken is invalid or missing
+        // console.error("Invalid or missing user token.");
+        // navigate('/'); // Redirect to login or another appropriate route
+      }
+    }, [userToken, token, userData, isSuccess, isError, dispatch, user, error, navigate]);
+  
+    return {
+        isLoading,
+        userToken : (userToken && validateToken(userToken))
+    }
+}
+
+export default useGuestAuth

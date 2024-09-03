@@ -1,25 +1,31 @@
 import { Menu } from "@headlessui/react";
-import { Link } from "react-router-dom";
-function UserDropdown() {
-  const user = {
-    name: "Mike Aba",
-    email: "mikeaba@gmail.com",
-    profilePicture: "https://via.placeholder.com/150",
-  };
+import { Link, useNavigate } from "react-router-dom";
 
+import { selectCurrentUser } from "../../../features/auth/authSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { logOut } from "../../../features/auth/authSlice";
+function UserDropdown() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const user = useSelector(selectCurrentUser);
+  const handleLogout = () => {
+    console.log('emeka')
+    dispatch(logOut())
+    navigate('/')
+  }
   return (
     <Menu as="button" className="relative ">
       <Menu.Button className="flex items-center space-x-3  focus:outline-none ">
         <div className="md:w-8 md:h-8 flex flex-col items-center justify-center rounded-full border border-regal-sky-blue">
           <img
             className="w-7 md:h-7 rounded-full "
-            src={user.profilePicture}
+            src={user?.profilePicture || 'https://as2.ftcdn.net/jpg/02/15/84/43/160_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg'}
             alt="User Profile"
           />
         </div>
         <div className="hidden lg:flex items-center gap-2">
-          <span className="hover:text-regal-blue text-sm xl:text-sm text-regal-black cursor-pointer font-[500] w-[50px] truncate whitespace-nowrap">
-            {user.name}
+          <span className="hover:text-regal-blue text-sm xl:text-sm text-regal-black cursor-pointer font-[500] w-[50px] truncate whitespace-nowrap capitalize">
+            {user?.firstName}
           </span>
           <svg
             width="16"
@@ -35,11 +41,11 @@ function UserDropdown() {
           </svg>
         </div>
       </Menu.Button>
-      <Menu.Items className="absolute right-[-15px] lg:right-0 mt-4 h-[87vh] lg:h-auto w-[100vw] lg:w-80 origin-top-right animated fadeInDown bg-white border lg:rounded-md lg:shadow-lg focus:outline-none">
+      <Menu.Items className="absolute right-[-7px] lg:right-0 mt-4 h-[87vh] lg:h-auto w-[100vw] lg:w-80 origin-top-right animated fadeInDown bg-white border lg:rounded-md lg:shadow-lg focus:outline-none">
         <div className="p-4 flex flex-row justify-between items-center space-x-4">
           <div className="text-start">
             <Link to="/account" className="text-xl text-start text-regal-blue font-[700]  w-[150px] truncate whitespace-nowrap capitalize">
-              {user.name}
+              {user?.firstName} {user?.lastName}
             </Link>
             <p className="text-xs text-gray-500 text-start">{user.email}</p>
           </div>
@@ -47,7 +53,7 @@ function UserDropdown() {
           <div className="md:w-11 md:h-11 flex flex-col items-center justify-center rounded-full border border-regal-sky-blue">
             <img
               className="w-10 h-10 rounded-full"
-              src={user.profilePicture}
+              src={user?.profilePicture || 'https://as2.ftcdn.net/jpg/02/15/84/43/160_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg'}
               alt="User Profile"
             />
           </div>
@@ -197,11 +203,11 @@ function UserDropdown() {
         <div className="py-1">
           <Menu.Item>
             {({ active }) => (
-              <Link
-                href="#"
-                className={`flex items-center px-4 py-2 text-sm text-red-600 ${
-                  active ? "bg-gray-100" : ""
-                }`}
+              <button
+                className={`flex items-center px-4 py-2 text-sm text-red-600`}
+                onClick={()=>{
+                  handleLogout()
+                }}
               >
                 <div className="mr-2">
                   <svg
@@ -222,7 +228,7 @@ function UserDropdown() {
                   </svg>
                 </div>
                 Logout
-              </Link>
+              </button>
             )}
           </Menu.Item>
         </div>

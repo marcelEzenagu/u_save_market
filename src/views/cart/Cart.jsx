@@ -1,161 +1,181 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import RelatedProduct from '../../components/RelatedProduct'
 import {Items as ITemsDiv } from '../../data/mockData'
 import { Link, useNavigate } from 'react-router-dom'
 import { IoIosArrowRoundBack } from 'react-icons/io'
-import { PiTrash } from 'react-icons/pi'
+import { PiMinus, PiTrash } from "react-icons/pi";
 import {numberWithCommas} from '../../utils'
 import { IoAddOutline } from "react-icons/io5";
 import { GoHeart } from "react-icons/go";
 import CartImage from '../../assets/images/cart/Empty-cart.webp'
+import { useDispatch, useSelector } from 'react-redux';
+import useCartOperationsHooks from '../../hooks/useCartOperationsHooks'
+import { useGetUserCartQuery } from '../../features/cart/cartApiSlice'
+import { setCartItems } from '../../features/cart/cartSlice'
 function Cart() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [Items, setItems] = useState(ITemsDiv);
-    const toggleModal = () => {
-      setIsModalOpen(!isModalOpen);
-    };
-    const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const Items = useSelector(state => state.cart.items); // Assuming you're using Redux to manage cart state
+  const user = useSelector((state) => state.auth?.user);
+  // const {
+  //   data: cartDetails,
+  //   isLoading,
+  //   isSuccess,
+  //   isError,
+  //   error,
+  //   refetch,
+  // } = useGetUserCartQuery(user, {
+  //   skip : user === null ? true : false
+  // });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {handleIncrement, handleDecrement, handleRemove, handleRemoveAll } = useCartOperationsHooks();
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+  // useEffect(() => {
+  //   console.log(cartDetails, error);
+  //   if (isSuccess, cartDetails) {
+  //      dispatch(setCartItems(cartDetails?.products));
+  //   }
+  // }, [cartDetails, user]);
   return (
-    <div className='w-full'>
-        {Items?.length > 0 &&
+    <div className='w-full md:p-4'>
+      {Items?.length > 0 && (
         <nav>
-        <Link to="/" className='flex items-center gap-2 font-[600] text-regal-sky-blue  text-xs md:text-sm'><IoIosArrowRoundBack className='text-regal-black text-sm md:text-xl'/>Back to categories</Link>
-    </nav>}
+          <Link to="/" className='flex items-center gap-2 font-[600] text-regal-sky-blue  text-xs md:text-sm'>
+            <IoIosArrowRoundBack className='text-regal-black text-sm md:text-xl' />Back to categories
+          </Link>
+        </nav>
+      )}
 
-    <div className='flex flex-row items-center justify-between my-4'>
-        <h5  className='text-xl font-[700]'>Cart</h5>
-        {Items?.length > 0 && 
-        <button 
-        onClick={toggleModal}
-        className='flex flex-row items-center 
-        justify-between gap-2 text-xs md:text-sm p-3 font-[600]
-         text-regal-sky-blue  bg-regal-secondary-light rounded-md
-        '>
+      <div className='flex flex-row items-center justify-between my-4'>
+        <h5 className='text-xl font-[700]'>Cart</h5>
+        {Items?.length > 0 && (
+          <button
+            onClick={toggleModal}
+            className='flex flex-row items-center justify-between gap-2 text-xs md:text-sm p-3 font-[600] text-regal-sky-blue bg-regal-secondary-light rounded-md'
+          >
             <PiTrash />
             Empty Cart
-        </button>}
-     
-    </div>
-    {Items?.length > 0  ?  
-     <div className='mb-5'>
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:gap-8 '>
-            <div className=" border shadow-sm bg-white md:p-4 rounded-md col-span-2">
-            {Items.length > 0 ? (
-              <div>
-                {Items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between md:gap-4 py-8 px-1 md:px-2"
-                  >
-                    {/* Item Image */}
-                    <div className='flex items-center gap-3'>
+          </button>
+        )}
+      </div>
+        {
+        Items?.length > 0 ? (
+        <div className='mb-5'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:gap-8'>
+            <div className="border shadow-sm bg-white md:p-4 rounded-md col-span-2">
+              {Items.map((item) => (
+                <div
+                  key={item.productID}
+                  className="flex items-center justify-between md:gap-4 py-8 px-1 md:px-2"
+                >
+                  <div className='flex items-center gap-3'>
                     <img
                       src={item.image}
                       alt={item.name}
                       className="w-20 h-20 object-contain rounded-md"
                     />
                     <div className="flex flex-col">
-                      <span className="font-[500] max-w-[150px] md:max-w-[300px] text-xs md:text-sm">{item.name}</span>
+                      <span className="font-[500] max-w-[150px] md:max-w-[300px] text-xs md:text-sm">
+                        {item.name}
+                      </span>
                       <div className="flex flex-row items-center gap-2 md:gap-4 mt-3 md:mt-5">
-                        <h1 className='text-regal-light-gray border-b-2 custom-text-line text-xs md:text-sm'>
-                            Remove
+                        <h1
+                          className='text-regal-light-gray border-b-2 custom-text-line text-xs md:text-sm cursor-pointer'
+                          onClick={() => handleRemove(item.productID)}
+                        >
+                          Remove
                         </h1>
                         <span className='flex items-center gap-1 text-xs md:text-sm'>
-                            <GoHeart className='text-sm md:text-xl text-regal-light-gray'/>
-                            <h1 className='text-regal-light-gray border-b-2 custom-text-line'>
+                          <GoHeart className='text-sm md:text-xl text-regal-light-gray' />
+                          <h1 className='text-regal-light-gray border-b-2 custom-text-line cursor-pointer'>
                             Save for later
-                        </h1>
+                          </h1>
                         </span>
                       </div>
                     </div>
-                    </div>
-                 
-                    {/* Item Details */}
-               
-                    <div className="flex flex-row items-center gap-2">
-                        <button className='active:scale-95 '>{item.quantity > 1 ?   <PiMinus /> :<PiTrash /> }</button>
-                    <span className="text-gray-600">1</span>
-                    <button  className='active:scale-95'><IoAddOutline/></button>
-                    </div>
-
-                    <span className="text-regal-black font-[600] text-xs md:text-sm">₦{numberWithCommas(item.price)}</span>
                   </div>
-                ))}
+                  <div className="flex flex-row items-center gap-2">
+                    <button className='active:scale-95' onClick={() => handleDecrement(item)}>
+                      {item.quantity > 1 ? <PiMinus /> : <PiTrash />}
+                    </button>
+                    <span className="text-gray-600">{item.quantity}</span>
+                    <button className='active:scale-95' onClick={() => handleIncrement(item)}>
+                      <IoAddOutline />
+                    </button>
+                  </div>
+                  <span className="text-regal-black font-[600] text-xs md:text-sm">
+                    ₦{numberWithCommas(item.price)}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div>
+              <div className='flex items-center gap-2 font-[500]  text-xs mb-2 p-4'>
+                <Link className='text-regal-sky-blue'>Sign in</Link>
+                to proceed to checkout
               </div>
-            ) : ''} 
-            </div>
-        <div>
-        <div className='flex items-center gap-2 font-[500]  text-xs mb-2 p-4'>
-            <Link className='text-regal-sky-blue'>Sign in</Link>
-            to proceed to checkout
-            </div>
-        <div className=" border shadow-sm bg-white py-4 rounded-md ">
-            <h5 className="text-sm text-regal-blue font-[700] px-4">Order Summary</h5>
+              <div className="border shadow-sm bg-white py-4 rounded-md">
+                <h5 className="text-sm text-regal-blue font-[700] px-4">Order Summary</h5>
                 <div className='flex flex-row justify-between items-start m-4'>
-                    <div className=''>
-                        <h6 className='text-sm font-[500] text-regal-black'>Subtotal</h6>
-                        <p className='text-xs font-[500] text-regal-light-gray'>4 items</p>
-                    </div>
-                    <p className='text-sm font-[600] text-regal-black'>₦1,585.00</p>
+                  <div>
+                    <h6 className='text-sm font-[500] text-regal-black'>Subtotal</h6>
+                    <p className='text-xs font-[500] text-regal-light-gray'>{Items.length} items</p>
+                  </div>
+                  <p className='text-sm font-[600] text-regal-black'>₦{numberWithCommas(Items.reduce((acc, item) => acc + item.price * item.quantity, 0))}</p>
                 </div>
                 <div className='flex flex-row justify-between items-start m-4'>
-                    <div className=''>
-                        <h6 className='text-sm font-[500] text-regal-black'>Estimated Shipping</h6>
-                        <p className='text-xs font-[500] text-regal-light-gray'>4 items</p>
-                    </div>
-                    <p className='text-sm font-[600] text-regal-black'>₦22,000.00</p>
+                  <div>
+                    <h6 className='text-sm font-[500] text-regal-black'>Estimated Shipping</h6>
+                    <p className='text-xs font-[500] text-regal-light-gray'>4 items</p>
+                  </div>
+                  <p className='text-sm font-[600] text-regal-black'>₦22,000.00</p>
                 </div>
                 <div className='flex flex-row justify-between items-start py-4 border-t'>
-                    <div className='px-4'>
-                        <h6 className='text-sm font-[500] text-regal-black'>Est.Total</h6>
-                    
-                    </div>
-                    <p className='text-lg font-[600] text-regal-black px-4'>₦23,585.00</p>
+                  <div className='px-4'>
+                    <h6 className='text-sm font-[500] text-regal-black'>Est.Total</h6>
+                  </div>
+                  <p className='text-lg font-[600] text-regal-black px-4'>₦{numberWithCommas(Items.reduce((acc, item) => acc + item.price * item.quantity, 22000))}</p>
                 </div>
                 <div className='p-4 w-full'>
-                <button 
-               onClick={()=> {navigate('/checkout')}}
-                 className=" text-xs md:text-sm bg-regal-sky-blue text-white px-4  py-3 font-semibold w-full rounded-md hover:bg-blue-600 "
-                >Go to payment</button>
+                  <button
+                    onClick={() => { navigate('/checkout'); }}
+                    className="text-xs md:text-sm bg-regal-sky-blue text-white px-4 py-3 font-semibold w-full rounded-md hover:bg-blue-600"
+                  >
+                    Go to payment
+                  </button>
                 </div>
-    
+              </div>
+            </div>
+          </div>
         </div>
+      ) : (
+        <div className="flex justify-center items-center">
+          <div className="max-w-[400px] w-full p-8 rounded-lg text-center">
+            <img
+              src={CartImage}
+              alt="Empty Cart"
+              className="mx-auto mb-6 h-[150px] object-contain"
+            />
+            <h2 className="text-sm md:text-lg font-semibold mb-2">Your cart is empty</h2>
+            <p className="text-gray-600 mb-6 text-xs md:text-sm">
+              Products you order will appear here.
+            </p>
+            <button
+              onClick={() => { navigate('/'); }}
+              className="text-xs md:text-sm bg-blue-600 text-white px-6 py-3 w-full rounded-sm hover:bg-blue-900 transition"
+            >
+              Back to home
+            </button>
+          </div>
         </div>
-        </div>
-    </div>: 
-      <div className="flex justify-center items-center ">
-      <div className="max-w-[400px] w-full  p-8 rounded-lg  text-center">
-        {/* Cart Image */}
-        <img 
-          src={CartImage} 
-          alt="Empty Cart" 
-          className="mx-auto mb-6 h-[150px] object-contain"
-        />
-        
-        {/* Header Text */}
-        <h2 className="text-sm md:text-lg font-semibold mb-2">Your cart is empty</h2>
+      ) }
+ 
 
-        {/* Subtext */}
-        <p className="text-gray-600 mb-6 text-xs md:text-sm">
-          Products you order will appear here.
-        </p>
+      <RelatedProduct Items={ITemsDiv} className='mt-10' cols={'5'} />
 
-        {/* Back to home button */}
-        <button
-          onClick={() => {
-            // Handle navigation back to home
-          }}
-          className=" text-xs md:text-sm bg-blue-600 text-white px-6 py-3  w-full rounded-sm hover:bg-blue-900 transition"
-        >
-          Back to home
-        </button>
-      </div>
-    </div>
-    }
-   
-     <RelatedProduct Items={ITemsDiv} cols={'5'} category={''}/>
-
-   
        {/* Modal */}
        {isModalOpen && (
         <div className="fixed inset-0 animated fadeInDown bg-black w-full bg-opacity-75  z-50 flex justify-center items-center">
@@ -168,7 +188,7 @@ function Cart() {
               <button
                 onClick={() => {
                   // Handle delete action here
-                  setItems([]);
+                  handleRemoveAll();
                   setIsModalOpen(false);
                 }}
                 className="bg-regal-sky-blue text-white py-2 rounded-md hover:bg-blue-900 transition active:scale-95 text-xs md:text-sm"
@@ -185,8 +205,9 @@ function Cart() {
           </div>
         </div>
       )}
-     </div>
-  )
+    </div>
+  );
 }
+
 
 export default Cart

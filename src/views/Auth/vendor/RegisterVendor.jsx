@@ -1,16 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import RightImage from "../../../assets/images/vendor/Auth/register.webp";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import Googleicon from "../../../assets/images/auth/google.png"
+import {useDispatch} from 'react-redux'
 import Logo from "../../../assets/images/nav/logo.webp";
+import { useRegisterMutation } from "../../../features/auth/authApiSlice";
 const RegisterVendor = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [data, setData] = useState({
+    firstName:'',
+    lastName: '',
+    email:'',
+    password:'',
+    terms:false,
+    eye:false,
+    eyeConfirm:false
+  })
+  const [errMsg, setErrMsg] = useState('')
+  const [modal, setModal] = useState(false)
+  const [Register, {isLoading}] = useRegisterMutation()
+  const dispatch = useDispatch()
+  useEffect(()=>{
+    setErrMsg('')
+  }, [data.email, data.password])
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  try {
+    const userData = await Register({ firstName: data.firstName, lastName:data.lastName,  email : data.email, password : data.password }).unwrap()
+    console.log(userData)
+    dispatch(setCredentials({...userData, user :userData.data}))
+    setData({
+      email:'',
+      password:''
+    })
+    setModal(true)
+    // navigate('/dashboard')
+  }catch (err) {
+    console.log(err)
+    if (err?.status === 200) {
+      return
+    } 
+    else if (err?.status >= 400 && err?.status <= 404){
+      setErrMsg(err?.data?.message)
+    }  else if (err?.status >= 500){
+      setErrMsg("Register failed")
+    }else{
+      setErrMsg("Register failed")
+    }
+  }
+}
+const handleChange = e => {
+  const newData = Object.assign({}, data, {
+    [e.target.name]: e.target.value,
+  })
+  setData(newData)
+}
   const navigate = useNavigate()
+
+
   return (
     <div className="block lg:flex   items-start px-4 pt-8 pb-4 max-w-[1366px] mx-auto">
       <div className=" lg:w-1/2 animated fadeInDown">
@@ -27,7 +75,7 @@ const RegisterVendor = () => {
             elementum elit eget purus suscipit, sed egestas.
           </p>
 
-          <form action="">
+          <form action="" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div className="mb-4 col-span-2 md:col-span-1">
                 <label
@@ -38,8 +86,10 @@ const RegisterVendor = () => {
                 </label>
                 <input
                   type="text"
-                  name="FirstName"
-                  id="text"
+                  name="firstName"
+                  id="FirstName"
+                  onChange={handleChange}
+                  value={data.firstName}
                   placeholder="Enter first name"
                   className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                 />
@@ -53,8 +103,10 @@ const RegisterVendor = () => {
                 </label>
                 <input
                   type="text"
-                  name="LastName"
-                  id="text"
+                  name="lastName"
+                  onChange={handleChange}
+                  value={data.lastName}
+                  id="LastName"
                   placeholder="Enter last name"
                   className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                 />
@@ -70,7 +122,9 @@ const RegisterVendor = () => {
               <input
                 type="text"
                 name="email"
-                id="text"
+                id="email"
+                onChange={handleChange}
+                value={data.email}
                 placeholder="Enter Email"
                 className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
               />
@@ -85,36 +139,39 @@ const RegisterVendor = () => {
               </label>
               <div className="mb-4 relative">
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={data?.eye ? "text" : "password"}
                   name="password"
-                  id="text"
+                  id="password"
+                  onChange={handleChange}
+                  value={data.password}
                   placeholder="Enter password"
+                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
                   className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                 />
                 <div
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
-                  onClick={togglePasswordVisibility}
+                
                 >
-                  {showPassword ? (
+                  {data?.eye ? (
                     <AiOutlineEyeInvisible
                       size={20}
                       className="text-regal-light-gray"
+                      onClick={()=> setData({...data, eye:!data.eye})}
                     />
                   ) : (
-                    <AiOutlineEye size={20} className="text-regal-light-gray" />
+                    <AiOutlineEye size={20} className="text-regal-light-gray" onClick={()=> setData({...data, eye:!data.eye})} />
                   )}
                 </div>
               </div>
             </div>
 
+            <p className="text-red-600 text-xs">{errMsg && errMsg}</p>
             <div className="w-full ">
             <button className=" text-xs md:text-[12px] bg-regal-sky-blue text-white px-4  py-3 font-semibold w-full rounded-lg hover:bg-blue-600 mt-4 "
-            
-            onClick={()=> {
-                navigate('/vendor/auth/registration')
-            }}
+            type="submit"
+            disabled={isLoading}
             >
-                Sign Up
+                 {isLoading ? 'Loading...' : ' Sign Up '}
               </button>
             </div>
 
@@ -126,7 +183,9 @@ const RegisterVendor = () => {
             </div>
 
             <div className="relative w-full mt-4">
-                <button className="w-full rounded-md  text-[12px] bg-white border  font-[700] py-3 flex flex-row items-center justify-center  ">
+                <button className="w-full rounded-md  text-[12px] bg-white border  font-[700] py-3 flex flex-row items-center justify-center  "
+                 type="button"
+                >
                 <img src={Googleicon} alt="" className=" mr-4" />
                     Log in with Google</button>
             </div>

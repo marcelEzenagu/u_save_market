@@ -16,7 +16,7 @@ function GeneralInformation() {
                 name="text"
                 id="text"
                 placeholder="Enter name"
-                className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+                className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
               />
             </div>
               <div className="mb-2 col-span-2 md:col-span-1">
@@ -28,7 +28,7 @@ function GeneralInformation() {
                 </label>
                 <div className="relative ">
                 <select
-                  className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+                  className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                 >
                   <option value="status1">Active</option>
                   <option value="status2">New</option>
@@ -49,7 +49,7 @@ function GeneralInformation() {
                 </label>
                 <div className="relative ">
                 <select
-                  className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+                  className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                 >
                   <option value="status1">Active</option>
                   <option value="status2">New</option>
@@ -69,7 +69,7 @@ function GeneralInformation() {
               >
                 Product Description
               </label>
-              <textarea name="" id=""  rows={'10'} className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black">
+              <textarea name="" id=""  rows={'10'} className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black">
               Write something to describe your product 
               </textarea>
             </div>

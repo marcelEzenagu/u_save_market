@@ -1,13 +1,14 @@
 import React from "react";
-import { numberWithCommas } from "../../utils";
+import { numberWithCommas, ReplaceImage } from "../../utils";
 import { FaTrashAlt } from "react-icons/fa";
 function SaveCard({ item}) {
   return (
     <div key={item.id} className="text-xs font-[500] animate-fade-in w-[150px] mt-4 mx-auto">
       <div className="relative bg-white  rounded-lg  overflow-hidden">
         <img
-          src={item.image}
+          src={item.image  || ReplaceImage}
           alt={item.name}
+          onError={ReplaceImage}
           className="w-full h-full object-contain"
         />
 

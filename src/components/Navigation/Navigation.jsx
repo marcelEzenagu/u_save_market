@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import Logo from "../../assets/images/nav/logo.webp";
 import Globe from "../../assets/images/nav/icons/globe.webp";
 import { IoCloseOutline, IoSearchOutline } from "react-icons/io5";
@@ -14,12 +14,23 @@ import SearchBarIcon from "../../assets/images/nav/icons/search-normal.webp";
 import SearchIcon from "../../assets/images/nav/icons/mobile-search-normal.webp";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { dataCategory } from "../../data/mockData";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../features/auth/authSlice";
 function Navigation() {
   const [mobileDropdown, setMobileDropdown] = useState(false);
-  const [activeUser, setActiveuser] = useState(true);
+  const [activeUser, setActiveuser] = useState(false);
+  const user = useSelector(selectCurrentUser);
+  useLayoutEffect(()=>{
+    if (user !== null) {
+      setActiveuser(true)
+    }else{
+      setActiveuser(false)
+    }
+}, [user])
   const onToggle = () => {
     setMobileDropdown(!mobileDropdown);
   };
+
   const dropdownRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -35,7 +46,7 @@ function Navigation() {
   }, []);
   return (
     <header className="sticky top-0  z-50 ">
-      <div className="w-full py-3 px-4 bg-regal-light-blue flex justify-between items-center">
+      <div className="w-full py-3  px-2 md:px-4 bg-regal-light-blue flex justify-between items-center">
         <div className="flex items-center justify-center flex-grow">
           <img src={Globe} alt="" className="hidden md:block md:mr-2" />
           <h3 className="text-[10px] sm:text-xs  text-regal-black xl:text-sm font-[500] text-center">
@@ -47,7 +58,7 @@ function Navigation() {
         </div>
       </div>
       <nav className="border-b-[1px] bg-white ">
-        <div className="mx-auto py-3 px-4 flex max-w-[1366px]  flex-row justify-between items-center lg:container-fluid  ">
+        <div className="mx-auto py-3 px-2 md:px-4 flex max-w-[1366px]  flex-row justify-between items-center lg:container-fluid  ">
           <div className="flex flex-row justify-between items-center">
             <button
               id="mobile-open-button"
@@ -72,7 +83,7 @@ function Navigation() {
           </div>
 
           <div className="flex flex-row-reverse lg:flex-row items-center gap-4">
-            {activeUser ? <UserDropdown /> : <AuthModal />}
+            {activeUser && user !== null ? <UserDropdown /> : <AuthModal />}
             <div className="hidden lg:block">
               <CountryModal />
             </div>
