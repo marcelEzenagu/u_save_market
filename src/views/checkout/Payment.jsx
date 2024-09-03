@@ -63,11 +63,11 @@ function Payment() {
         userID: userData?.userID
       }).unwrap();
       setErrMsg(null);
-      dispatch(setOrders(orderDetails));
+      dispatch(setOrders([orderDetails]));
       setOrder(orderDetails);
       handleRemoveAll();
     } catch (err) {
-      console.log(err?.data?.message);
+      console.log(err);
       if (err?.status === 200) {
         return;
       } else if (err?.status >= 400 && err?.status <= 404) {
@@ -80,7 +80,7 @@ function Payment() {
     }
   };
 
-  if (isLoading || !isAuthenticated || loadingOrder) {
+  if (isLoading || !isAuthenticated || loadingOrder || loading) {
     return <LoadingScreen />;
   }
 
@@ -121,7 +121,7 @@ function Payment() {
             Back to Home
           </button>
           <button 
-        onClick={()=>{navigate(`/account/view/${order?.orderID}`)}}
+        onClick={()=>{navigate(`/orders/view/${order?.orderID}`)}}
           className=" text-regal-sky-blue py-3 border-2 border-body-color-gray  rounded-md hover:border-regal-sky-blue transition font-[600] text-xs md:text-sm">
             Track Order
           </button>
