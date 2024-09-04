@@ -12,13 +12,14 @@ import {
   useRegisterUserMutation,
   useLoginUserMutation,
 } from "../../../features/auth/authApiSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCookie } from "../../../utils";
 import { setCredentials } from "../../../features/auth/authSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { setLoginModal } from "../../../features/auth/authSlice";
 // import { HiOutlineUserCircle } from "react-icons/hi2";
 const Modal = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState(false);
+  const [activeTab, setActiveTab] = useState(true);
   const dropdownRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -200,20 +201,20 @@ const RegisterModel = (props) => {
   return (
     <div className="max-w-[400px]  animate-fade-in">
       <div className="relative w-full mt-4 z-10">
-        <button className="w-full rounded-full  bg-white border text-[10px] md: text-[10px] md:text-sm font-[700] py-3 ">
+        <button className="w-full rounded-full  bg-white border text-[10px] md:text-sm font-[700] py-3 ">
           Continue with Google
         </button>
         <img src={Googleicon} alt="" className="absolute top-2 md:top-3 left-4" />
       </div>
       <div className="relative w-full mt-3 z-10">
-        <button className="w-full rounded-full  bg-white border text-[10px] md: text-[10px] md:text-sm font-[700] py-3 ">
+        <button className="w-full rounded-full  bg-white borde text-[10px] md:text-sm font-[700] py-3 ">
           Continue with Facebook
         </button>
         <img src={Facebookicon} alt="" className="absolute  top-2 md:top-3" />
       </div>
       <div className="flex flex-row items-center my-2 md:my-4">
         <hr className="w-full border-b-[1px]" />
-        <span className="mx-2 font-[500] text-regal-crum-gray  text-[10px] md: text-[10px] md:text-sm ">or</span>
+        <span className="mx-2 font-[500] text-regal-crum-gray   text-[10px] md:text-sm ">or</span>
         <hr className="w-full border-b-[1px]" />
       </div>
 
@@ -517,13 +518,13 @@ const LoginModel = (props) => {
   return (
     <div className="max-w-[400px]">
        <div className="relative w-full mt-4 z-10">
-        <button className="w-full rounded-full  bg-white border text-[10px] md: text-[10px] md:text-sm font-[700] py-3 ">
+        <button className="w-full rounded-full  bg-white border text-[10px] md:text-sm font-[700] py-3 ">
           Continue with Google
         </button>
         <img src={Googleicon} alt="" className="absolute top-2 md:top-3 left-4" />
       </div>
       <div className="relative w-full mt-3 z-10">
-        <button className="w-full rounded-full  bg-white border text-[10px] md: text-[10px] md:text-sm font-[700] py-3 ">
+        <button className="w-full rounded-full  bg-white border text-[10px] md:text-sm font-[700] py-3 ">
           Continue with Facebook
         </button>
         <img src={Facebookicon} alt="" className="absolute  top-2 md:top-3" />
@@ -624,20 +625,45 @@ const LoginModel = (props) => {
     </div>
   );
 };
+
 function AuthModal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const location = useLocation();
+  const loginModal = useSelector((state) => state.auth.loginModal);
+  const dispatch = useDispatch();
+
+  // Check location state to open modal on initial render if applicable
+  useEffect(() => {
+    if (location.state?.loginModel) {
+      dispatch(setLoginModal(true));
+    }
+  }, [location.state, dispatch]);
+
+  // Sync local state with Redux state
+  useEffect(() => {
+    setIsModalOpen(loginModal);
+  }, [loginModal]);
+
+  // Close modal
+  const onClose = () => {
+    dispatch(setLoginModal(false)); 
+  };
+
+  // Open modal
+  const onOpen = () => {
+    dispatch(setLoginModal(true)); 
+  };
 
   return (
     <>
       <button
-        className=" flex items-center hover:text-regal-blue  text-[10px] md:text-sm xl: text-[10px] md:text-sm text-regal-black cursor-pointer font-[500]"
-        onClick={() => setIsModalOpen(true)}
+        className="flex items-center hover:text-regal-blue text-[10px] md:text-sm text-regal-black cursor-pointer font-[500]"
+        onClick={onOpen}
       >
-        <img src={Profilecircle} alt="" className=" w-7 md:w-6 mr-1 xl:mr-2" />
-        {/* <HiOutlineUserCircle  className=" text-xl xl:text-2xl mr-1 xl:mr-2"/> */}
-        <span className="hidden lg:block"> Login / Signup </span>
+        <img src={Profilecircle} alt="" className="w-7 md:w-6 mr-1 xl:mr-2" />
+        <span className="hidden lg:block">Login / Signup</span>
       </button>
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <Modal isOpen={isModalOpen} onClose={onClose} />
     </>
   );
 }

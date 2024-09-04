@@ -2,13 +2,16 @@ import {createSlice}  from "@reduxjs/toolkit"
 import {removeCookie} from "../../utils";
 const authSlice = createSlice({
     name : "auth",
-    initialState: {user:null, token:null, role:null},
+    initialState: {user:null, token:null, role:null, loginModal:false},
     reducers: {
         setCredentials: (state, action) => {
             const {user, accessToken, role} = action.payload
             state.user = user
             state.token = accessToken
             state.role = role        },
+        setLoginModal:(state, action) => {
+            state.loginModal = action.payload; 
+        },
         logOut: (state, action) => {
             state.user = null
             state.token = null
@@ -18,7 +21,7 @@ const authSlice = createSlice({
     },
 })
 
-export const {setCredentials, logOut} = authSlice.actions
+export const {setCredentials, logOut, setLoginModal} = authSlice.actions
 
 export default authSlice.reducer
 

@@ -47,9 +47,7 @@ function Payment() {
   // useEffect(()=>{
 
   // }, []);
-  function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+
   const handleOrderCreate = async () => {
     try {
       let total = cartDetails?.products?.reduce(
@@ -57,7 +55,7 @@ function Payment() {
         0
       );
       const orderDetails = await createUserOrder({
-        cartID: cartDetails?.cartID + getRandomInt(1, 10000),
+        cartID: cartDetails?.cartID,
         products: cartDetails?.products,
         totalCost :  total + CheckoutDetails?.shippingPay,
         userID: userData?.userID
@@ -65,7 +63,7 @@ function Payment() {
       setErrMsg(null);
       dispatch(setOrders([orderDetails]));
       setOrder(orderDetails);
-      handleRemoveAll();
+      // handleRemoveAll();
     } catch (err) {
       console.log(err);
       if (err?.status === 200) {

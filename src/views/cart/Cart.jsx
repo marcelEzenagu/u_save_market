@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import RelatedProduct from '../../components/RelatedProduct'
 import {Items as ITemsDiv } from '../../data/mockData'
 import { Link, useNavigate } from 'react-router-dom'
@@ -10,34 +10,17 @@ import { GoHeart } from "react-icons/go";
 import CartImage from '../../assets/images/cart/Empty-cart.webp'
 import { useDispatch, useSelector } from 'react-redux';
 import useCartOperationsHooks from '../../hooks/useCartOperationsHooks'
-import { useGetUserCartQuery } from '../../features/cart/cartApiSlice'
-import { setCartItems } from '../../features/cart/cartSlice'
+import { setLoginModal } from '../../features/auth/authSlice'
 function Cart() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const Items = useSelector(state => state.cart.items); // Assuming you're using Redux to manage cart state
   const user = useSelector((state) => state.auth?.user);
-  // const {
-  //   data: cartDetails,
-  //   isLoading,
-  //   isSuccess,
-  //   isError,
-  //   error,
-  //   refetch,
-  // } = useGetUserCartQuery(user, {
-  //   skip : user === null ? true : false
-  // });
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {handleIncrement, handleDecrement, handleRemove, handleRemoveAll } = useCartOperationsHooks();
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-  // useEffect(() => {
-  //   console.log(cartDetails, error);
-  //   if (isSuccess, cartDetails) {
-  //      dispatch(setCartItems(cartDetails?.products));
-  //   }
-  // }, [cartDetails, user]);
   return (
     <div className='w-full md:p-4'>
       {Items?.length > 0 && (
@@ -113,10 +96,15 @@ function Cart() {
             </div>
 
             <div>
-              <div className='flex items-center gap-2 font-[500]  text-xs mb-2 p-4'>
-                <Link className='text-regal-sky-blue'>Sign in</Link>
+                {!user && <div className='flex items-center gap-2 font-[500]  text-xs mb-2 p-4'>
+                <button className='text-regal-sky-blue'
+                  onClick={()=>{
+                    dispatch(setLoginModal(true))
+                  }}
+                >Sign in</button>
                 to proceed to checkout
-              </div>
+              </div> }
+
               <div className="border shadow-sm bg-white py-4 rounded-md">
                 <h5 className="text-sm text-regal-blue font-[700] px-4">Order Summary</h5>
                 <div className='flex flex-row justify-between items-start m-4'>

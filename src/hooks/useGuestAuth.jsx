@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { selectCurrentToken, selectCurrentUser, setCredentials, logOut } from '../features/auth/authSlice'
+import { useNavigate, Navigate } from 'react-router-dom';
+import { selectCurrentToken, selectCurrentUser, setCredentials, logOut, setLoginModal } from '../features/auth/authSlice'
 import { useViewUserQuery } from '../features/user/userApiSlice'
 import { getSecureCookie, validateToken }  from '../utils' 
 
@@ -26,14 +26,15 @@ export function useGuestAuth() {
             console.error("Error fetching user data:", error);
             if (error?.status === 401) {
               dispatch(logOut()); // Clear user data and token
-              navigate('/'); // Redirect to login page
+              navigate('/', { state: { loginModel: true } }); // Redirect to login 
             } else {
               // Handle other errors or redirect
-              navigate('/'); // Redirect to an appropriate route
+              navigate('/', { state: { loginModel: true } }); // Redirect to an appropriate route
             }
           }
         }
       } else {
+        // dispatch(setLoginModal());
         // Handle case where userToken is invalid or missing
         // console.error("Invalid or missing user token.");
         // navigate('/'); // Redirect to login or another appropriate route

@@ -16,37 +16,48 @@ const RegisterVendor = () => {
     eye:false,
     eyeConfirm:false
   })
+  const [errorMessagesList, setErrorMessagesList] = useState([]);
   const [errMsg, setErrMsg] = useState('')
   const [modal, setModal] = useState(false)
   const [Register, {isLoading}] = useRegisterMutation()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   useEffect(()=>{
     setErrMsg('')
   }, [data.email, data.password])
 
 const handleSubmit = async (e) => {
   e.preventDefault()
+  setErrMsg("");
+  setErrorMessagesList([]);
   try {
     const userData = await Register({ firstName: data.firstName, lastName:data.lastName,  email : data.email, password : data.password }).unwrap()
     console.log(userData)
     dispatch(setCredentials({...userData, user :userData.data}))
     setData({
+      firstName:'',
+      lastName: '',
       email:'',
-      password:''
+      password:'',
+      terms:false,
+      eye:false,
+      eyeConfirm:false
     })
+    setCookie("accessToken", userData?.access_data?.token);
     setModal(true)
     // navigate('/dashboard')
   }catch (err) {
-    console.log(err)
+    console.log(err);
     if (err?.status === 200) {
-      return
-    } 
-    else if (err?.status >= 400 && err?.status <= 404){
-      setErrMsg(err?.data?.message)
-    }  else if (err?.status >= 500){
-      setErrMsg("Register failed")
-    }else{
-      setErrMsg("Register failed")
+      return;
+    } else if (err?.status >= 400) {
+      setErrorMessagesList(err?.data?.message);
+    } else if (err?.status >= 401 && err?.status <= 404) {
+      setErrMsg(err?.data?.message);
+    } else if (err?.status >= 500) {
+      setErrMsg("Register failed");
+    } else {
+      setErrMsg("Register failed");
     }
   }
 }
@@ -56,7 +67,46 @@ const handleChange = e => {
   })
   setData(newData)
 }
-  const navigate = useNavigate()
+
+const handleErrorMessagesList = (key) => {
+  if (errorMessagesList[0]?.field) {
+    let message = errorMessagesList.filter((e) =>
+      e?.field.toLowerCase().includes(key.toLowerCase())
+    );
+    return (
+      <div className="mt-2">
+        {message.map((e) => (
+          <p className="text-red-600 text-xs" key={e}>
+            {e?.message.replaceAll("Path ", "").replaceAll("`", "")}
+          </p>
+        ))}
+      </div>
+    );
+  } else if (typeof errorMessagesList === "string") {
+    return (
+      <div className="mt-2">
+        <p className="text-red-600 text-xs">
+          {errorMessagesList.toLowerCase().includes(key.toLowerCase()) &&
+            errorMessagesList.replaceAll(",", " ")}
+        </p>
+      </div>
+    );
+  } else {
+    let message = errorMessagesList.filter((e) =>
+      e.toLowerCase().includes(key.toLowerCase())
+    );
+    return (
+      <div className="mt-2">
+        {message.map((e) => (
+          <p className="text-red-600 text-xs" key={e}>
+            {e}
+          </p>
+        ))}
+      </div>
+    );
+  }
+};
+ 
 
 
   return (
@@ -93,6 +143,7 @@ const handleChange = e => {
                   placeholder="Enter first name"
                   className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                 />
+                 {handleErrorMessagesList("firstName")}
               </div>
               <div className="mb-4 col-span-2 md:col-span-1">
                 <label
@@ -110,6 +161,7 @@ const handleChange = e => {
                   placeholder="Enter last name"
                   className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                 />
+                     {handleErrorMessagesList("lastName")}
               </div>
             </div>
             <div className="mb-4 col-span-2">
@@ -128,6 +180,7 @@ const handleChange = e => {
                 placeholder="Enter Email"
                 className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
               />
+                {handleErrorMessagesList("email")}
             </div>
 
             <div className="mb-4 col-span-2">
@@ -148,6 +201,7 @@ const handleChange = e => {
                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
                   className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                 />
+                 {handleErrorMessagesList("password")}
                 <div
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                 
