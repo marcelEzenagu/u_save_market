@@ -162,7 +162,7 @@ function Checkout() {
     const requiredFields = [
       "firstName", "lastName", "phoneNumber", "email",
       "street", "country", "city", "state", "zipCode",
-      "cardHolderName", "cardNumber", "expiry", "cvv", "shippingPay"
+      "cardHolderName", "cardNumber", "expiry", "cvv", 
     ];
 
     for (const field of requiredFields) {
