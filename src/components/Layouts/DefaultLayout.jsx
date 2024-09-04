@@ -14,6 +14,7 @@ function DefaultLayout() {
   const { isLoading, userToken } = useGuestAuth();
   const [tab, setTab] = useState(true);
   const location = useLocation();
+
   // useLayoutEffect hook should be used unconditionally
   useLayoutEffect(() => {
     if (location?.pathname === "/cart") {
@@ -29,7 +30,7 @@ function DefaultLayout() {
     { id: "4", name: "Deals", image: Price },
   ];
 
-  
+
   // Conditional rendering based on isLoading and userToken
   if (isLoading && userToken) {
     return <LoadingScreen />;
@@ -60,7 +61,7 @@ function DefaultLayout() {
       )}
       <section className="container mx-auto flex-grow max-w-[1200px] py-5 px-2 md:flex md:flex-row md:py-10">
         {tab && (
-          <section className="hidden w-[300px] flex-shrink-0 px-4 lg:block">
+          <section className="hidden w-[280px] flex-shrink-0 px-4 lg:block">
             <Sidebar />
           </section>
         )}
