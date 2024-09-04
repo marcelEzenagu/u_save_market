@@ -37,7 +37,7 @@ function Payment() {
     localStorage.getItem("checkoutDetails")
   );
   useEffect(() => {
-    if (isSuccess, CheckoutDetails) {
+    if (isSuccess, CheckoutDetails, cartDetails) {
       handleOrderCreate();
     }else{
       navigate('/checkout');
