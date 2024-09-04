@@ -49,7 +49,7 @@ function GridBox() {
                 if (!isEven && subIndex === category.subcat.length - 1 && subCategories[0]?.id !== category.id) {
                   additionalClass = 'col-span-2';
                 }
-                console.log(category.subcat.length === 3);
+
                 if (category.subcat.length === 3 && subIndex === 2 ) {
                   additionalClass3 = ' col-span-2 sm:col-span-1';
                 }
