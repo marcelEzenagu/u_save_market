@@ -15,7 +15,7 @@ import useCartOperationsHooks from "../../hooks/useCartOperationsHooks";
 function ProductDetail() {
   const { name, product } = useParams();
   const cart = useSelector((state) => state.cart.items);
-  const {handleAddToCart, handleIncrement, handleDecrement } = useCartOperationsHooks();
+  const {handleAddToCart, handleIncrement, handleDecrement,  } = useCartOperationsHooks();
 
   const productinfo = Items.find(item => item.name === product); // Adjust based on actual data structure
   const cartItem = cart.find((cartItem) => cartItem.productID === productinfo.productID);
@@ -26,6 +26,7 @@ function ProductDetail() {
 
   return (
     <div>
+    
       <main className="flex flex-row items-center justify-between">
         <nav className="flex text-gray-700 " aria-label="Breadcrumb">
           <div className="inline-flex items-center space-x-1 md:space-x-2">

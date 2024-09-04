@@ -4,7 +4,6 @@ import Product from "./views/Product/Product";
 import DefaultLayout from "./components/Layouts/DefaultLayout";
 import Notfound from './views/Notfound'
 import ProductDetail from "./views/Product/ProductDetail";
-import GuestLayout from "./components/Layouts/GuestLayout";
 import Cart from "./views/cart/Cart";
 import Checkout from "./views/checkout/Checkout";
 import Payment from "./views/checkout/Payment";
@@ -77,16 +76,6 @@ const Router = createBrowserRouter([
         path:'/payment',
         element: <Payment/>
     },
-    // {
-    //     path:'/',
-    //     element:<GuestLayout/>,
-    //     children : [
-    //         {
-    //             path:'/cart',
-    //             element:<Cart/>,  
-    //         },
-    //     ]
-    // },
     {
         path:'/',
         element: <AuthLayout/>,

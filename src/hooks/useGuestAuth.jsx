@@ -29,7 +29,7 @@ export function useGuestAuth() {
               navigate('/', { state: { loginModel: true } }); // Redirect to login 
             } else {
               // Handle other errors or redirect
-              navigate('/', { state: { loginModel: true } }); // Redirect to an appropriate route
+              // navigate('/', { state: { loginModel: true } }); // Redirect to an appropriate route
             }
           }
         }

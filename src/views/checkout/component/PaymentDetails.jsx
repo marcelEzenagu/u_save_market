@@ -94,7 +94,7 @@ function PaymentDetails(props) {
         <input type="checkbox" id="checkbox" name="checkbox" />
         <label
           htmlFor="checkbox"
-          class=" text-xs  font-[500]  leading-6 mx-2 text-regal-black"
+          className=" text-xs  font-[500]  leading-6 mx-2 text-regal-black"
         >
           Set as default
         </label>
