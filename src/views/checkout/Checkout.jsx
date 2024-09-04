@@ -15,6 +15,8 @@ function Checkout() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("1");
   const { isLoading, isAuthenticated } = useAuth();
+  const {cart} = useSelector((state)=> state?.cart);
+  console.log(cart);
   const tabs = [
     {
       id: "1",

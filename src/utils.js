@@ -149,6 +149,10 @@ export const getFlatItemsAsString = (items, customName) => {
       .join(", ") + "..."
   );
 };
+export function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 export const getFlatItemsAsStringOrder = (items, customName) => {
   if (!items || !Array.isArray(items) || items.length == 0) return "";
   return (

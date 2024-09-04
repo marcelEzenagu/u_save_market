@@ -2,11 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import { LuCalendarDays } from "react-icons/lu";
 import { IoAddOutline } from "react-icons/io5";
 import { PiMinus, PiTrash } from "react-icons/pi";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { numberWithCommas } from "../../../utils";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
 import { useGetUserCartQuery } from "../../../features/cart/cartApiSlice";
-// import { BsCart2 } from "react-icons/bs";
 import Shoppingcart from "../../../assets/images/nav/icons/shoppingcart.webp";
 import {
   setCartItems,
@@ -19,7 +18,7 @@ const CartDropdown = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.items);
   const user = useSelector((state) => state.auth?.user);
-
+  const location = useLocation();
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -157,15 +156,16 @@ const CartDropdown = () => {
               {/* Cart Actions */}
               <div className="absolute lg:relative bottom-0 mb-2 w-full px-4 py-2 bg-white">
                 {cart.length > 0 && (
-                  <div className="flex justify-between">
-                    <Link
-                      to="/cart"
+                  <Link className="flex justify-between"
+                    to="/cart"
+                    onClick={()=>{setIsOpen(false);}}
+                  >
+                    <div                    
                       className="bg-regal-sky-blue text-white flex items-center justify-between px-4 py-2 font-bold w-full rounded-md hover:bg-blue-600 transition"
-                      onClick={()=>{setIsOpen(false);}}
                     >
-                      Go to cart <span>₦{numberWithCommas(total)}</span>
-                    </Link>
-                  </div>
+                    {location?.pathname === '/cart' ? 'In cart ' : 'Go to cart '}  <span>₦{numberWithCommas(total)}</span>
+                    </div>
+                  </Link>
                 )}
               </div>
             </div>
