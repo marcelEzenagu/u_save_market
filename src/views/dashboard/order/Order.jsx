@@ -1,41 +1,42 @@
-import React, { useState, useEffect } from "react";
-import Status from "../../../components/order/OrderStatus";
-import ItemsCard from "../../../components/cards/ItemsCard";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import ReactPaginate from "react-paginate";
-import EmptyBag from "../../../assets/images/order/empty.png";
 import { useSelector, useDispatch } from "react-redux";
 import { setOrders } from "../../../features/order/orderSlice";
 import { useGetUserOrderQuery } from "../../../features/order/orderApiSlice";
 import SkeletonOrderCard from "../../../components/Loading/SkeletonOrderCard";
+import EmptyBag from "../../../assets/images/order/empty.png";
+import Status from "../../../components/order/OrderStatus";
+import ItemsCard from "../../../components/cards/ItemsCard";
 import moment from "moment";
+
 function Order() {
   const [activeTab, setActiveTab] = useState("1");
+  const [itemOffset, setItemOffset] = useState(0);
+  const itemsPerPage = 5;
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth?.user);
   const { orders, ongoingOrders, pastOrders, cancelledOrders } = useSelector((state) => state.order);
-  const { data: allOrders, isLoading, isSuccess, error } = useGetUserOrderQuery(user, {
-    skip: user === null ? true : false
-  });
-  
-  const itemsPerPage = 5;
-
-  const tab = [
-    { id: "1", name: "All" },
-    { id: "2", name: "Ongoing" },
-    { id: "3", name: "Past" },
-    { id: "4", name: "Cancelled" },
-  ];
+  const { data: allOrders, isLoading, isSuccess } = useGetUserOrderQuery(user, { skip: !user });
 
   useEffect(() => {
-    console.log(allOrders);
     if (isSuccess && allOrders) {
       dispatch(setOrders(allOrders));
     }
-  }, [allOrders, user]);
+  }, [allOrders, dispatch, isSuccess]);
 
-  // Determine which orders to show based on activeTab
-  const getOrdersByTab = () => {
+  const tabOptions = useMemo(
+    () => [
+      { id: "1", name: "All" },
+      { id: "2", name: "Ongoing" },
+      { id: "3", name: "Past" },
+      { id: "4", name: "Cancelled" },
+    ],
+    []
+  );
+
+  const currentOrders = useMemo(() => {
     switch (activeTab) {
       case "2":
         return ongoingOrders;
@@ -46,13 +47,15 @@ function Order() {
       default:
         return orders;
     }
-  };
+  }, [activeTab, orders, ongoingOrders, pastOrders, cancelledOrders]);
 
-  const currentOrders = getOrdersByTab();
-  const [itemOffset, setItemOffset] = useState(0);
-  const endOffset = itemOffset + itemsPerPage;
-  const currentItems = currentOrders.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(currentOrders.length / itemsPerPage);
+  const currentItems = useMemo(() => {
+    return currentOrders.slice(itemOffset, itemOffset + itemsPerPage);
+  }, [currentOrders, itemOffset, itemsPerPage]);
+
+  const pageCount = useMemo(() => {
+    return Math.ceil(currentOrders.length / itemsPerPage);
+  }, [currentOrders.length, itemsPerPage]);
 
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % currentOrders.length;
@@ -63,72 +66,76 @@ function Order() {
     <div className="p-4">
       <h6 className="text-regal-black text-sm md:text-xl font-bold">My Orders</h6>
       <div className="mt-2 flex flex-row gap-4">
-        {tab.map((e) => (
+        {tabOptions.map((tab) => (
           <button
+            key={tab.id}
             className={`shadow-sm rounded-full py-2 px-4 hover:text-white hover:bg-regal-black text-xs md:text-sm font-[600] ${
-              activeTab === e.id
+              activeTab === tab.id
                 ? "bg-regal-black text-white"
                 : "text-regal-black bg-regal-dashboard-active-tab-gray"
             }`}
-            key={e.id}
-            onClick={() => setActiveTab(e.id)}
+            onClick={() => setActiveTab(tab.id)}
           >
-            {e.name}
+            {tab.name}
           </button>
         ))}
       </div>
+
       {isLoading ? (
         <>
-        <SkeletonOrderCard />
-        <SkeletonOrderCard />
-        <SkeletonOrderCard />
-      </>
+          <SkeletonOrderCard />
+          <SkeletonOrderCard />
+          <SkeletonOrderCard />
+        </>
       ) : currentItems.length > 0 ? (
         <>
-        {currentItems.reverse().map((order, i) => (
-            <OrderCard key={i} order={order} />
+          {currentItems.reverse().map((order) => (
+            <OrderCard key={order.orderID} order={order} />
           ))}
           <ReactPaginate
             breakLabel="..."
-            nextLabel=" >"
+            nextLabel=">"
             onPageChange={handlePageClick}
             pageRangeDisplayed={5}
             pageCount={pageCount}
-            previousLabel="< "
-            pageClassName="py-1 px-2 rounded-md text-xs md:text-sm mx-2  border border-regal-paginate-color text-regal-paginate-color"
+            previousLabel="<"
+            containerClassName="flex flex-row items-center justify-center my-10"
+            pageClassName="py-1 px-2 rounded-md text-xs md:text-sm mx-2 border border-regal-paginate-color text-regal-paginate-color"
             previousClassName="py-1 px-2 border border-regal-paginate-color text-regal-paginate-color rounded-md text-xs md:text-sm mx-2"
             nextClassName="py-1 px-2 border border-regal-paginate-color text-regal-paginate-color rounded-md text-xs md:text-sm mx-2"
-            breakClassName="page-item"
-            containerClassName="flex flex-row items-center text-center justify-center my-10"
             activeClassName="border border-regal-sky-blue text-white bg-regal-sky-blue font-[500]"
             renderOnZeroPageCount={null}
           />
         </>
       ) : (
-        <div className="p-14 rounded-lg mx-auto max-w-[400px] text-center">
-          <img src={EmptyBag} alt="Empty Bag" className="text-center my-3 mx-auto" />
-          <h6 className="text-regal-black text-sm mt-4 mb-6 font-[700]">No Orders yet</h6>
-          <div className="flex flex-col gap-4 mx-auto">
-            <Link
-              to="/products"
-              className="bg-regal-sky-blue text-white py-3 rounded-sm hover:bg-blue-900 transition font-[600] text-xs md:text-sm"
-            >
-              Start Shopping
-            </Link>
-            <Link
-              to="/saved-items"
-              className="text-regal-sky-blue py-3 border-2 border-body-color-gray rounded-sm hover:border-regal-sky-blue transition font-[600] text-xs md:text-sm"
-            >
-              Go To Saved Items
-            </Link>
-          </div>
-        </div>
+        <EmptyState />
       )}
     </div>
   );
 }
 
-function OrderCard({ order }) {
+const EmptyState = () => (
+  <div className="p-14 rounded-lg mx-auto max-w-[400px] text-center">
+    <img src={EmptyBag} alt="Empty Bag" className="text-center my-3 mx-auto" />
+    <h6 className="text-regal-black text-sm mt-4 mb-6 font-[700]">No Orders yet</h6>
+    <div className="flex flex-col gap-4 mx-auto">
+      <Link
+        to="/products"
+        className="bg-regal-sky-blue text-white py-3 rounded-sm hover:bg-blue-900 transition font-[600] text-xs md:text-sm"
+      >
+        Start Shopping
+      </Link>
+      <Link
+        to="/saved-items"
+        className="text-regal-sky-blue py-3 border-2 border-body-color-gray rounded-sm hover:border-regal-sky-blue transition font-[600] text-xs md:text-sm"
+      >
+        Go To Saved Items
+      </Link>
+    </div>
+  </div>
+);
+
+const OrderCard = React.memo(({ order }) => {
   const navigate = useNavigate();
   return (
     <div className="rounded-md border p-5 mt-4">
@@ -136,30 +143,28 @@ function OrderCard({ order }) {
         <div>
           <p
             className="text-sm md:text-[16px] text-start flex flex-row items-center gap-2 text-regal-black font-[700] capitalize cursor-pointer"
-            onClick={() => navigate(`/orders/view/${order?.orderID}`)}
+            onClick={() => navigate(`/orders/view/${order.orderID}`)}
           >
-            ID: {order?.orderID} <Status key={order?.status} />
+            ID: {order.orderID} <Status key={order.status} />
           </p>
           <p className="text-xs text-regal-light-gray text-start mt-1">
-            No of Items: {order?.products?.length}
+            No of Items: {order.products.length}
           </p>
         </div>
         <span className="text-xs md:text-sm text-regal-light-gray">
-          Order on: {moment(order?.createdAt).format("DD MMM, YYYY : HH:mm")}
+          Order on: {moment(order.createdAt).format("DD MMM, YYYY : HH:mm")}
         </span>
       </div>
 
       <div className="mt-5 border-t flex flex-row gap-4 overflow-x-scroll">
-        {order?.products?.map((item) => (
-          <div className="w-[170px]" key={item?.productID}>
+        {order.products.map((item) => (
+          <div className="w-[170px]" key={item.productID}>
             <ItemsCard item={item} />
           </div>
         ))}
       </div>
     </div>
   );
-}
-
-
+});
 
 export default Order;

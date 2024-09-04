@@ -63,7 +63,6 @@ function Payment() {
       setErrMsg(null);
       dispatch(setOrders([orderDetails]));
       setOrder(orderDetails);
-      // handleRemoveAll();
     } catch (err) {
       console.log(err);
       if (err?.status === 200) {

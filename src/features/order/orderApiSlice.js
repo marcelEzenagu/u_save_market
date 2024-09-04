@@ -7,39 +7,35 @@ export const orderApiSlice = apiSlice.injectEndpoints({
         url: 'orders',
         method: 'PATCH',
         body: order,
-        keepUnusedDataFor:5,
-        providesTags:['order']
-      }),
+    }),
+    invalidatesTags:['order'],
     }),
     createUserOrder: builder.mutation({
         query: (order) => ({
           url: 'orders',
           method: 'POST',
           body: order,
-          keepUnusedDataFor:5,
-          providesTags:['order']
         }),
+        invalidatesTags:['order'],
       }),
     deleteUserOrder: builder.mutation({
       query: (order) => ({
         url: `orders`,
         method: 'DELETE',
         body: order,
-        keepUnusedDataFor:5,
-        providesTags:['order']
       }),
+      invalidatesTags:['order'],
     }),
 
     getUserOrder: builder.query({
         query: () => '/orders/user',
-       keepUnusedDataFor:5,
-        providesTags:['order']
+       providesTags:['order']
     }),
     getOrderById: builder.query({
         query: (id) => `orders/${id}`,
-       keepUnusedDataFor:5,
         providesTags:['order']
     }),
+    overrideExisting: false,
   }),
 });
 

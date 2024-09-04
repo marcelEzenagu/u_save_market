@@ -24,26 +24,46 @@ function GridBox() {
             <div className={`grid grid-cols-2  ${ category.subcat.length == 4 ? 'md:grid-cols-4' : 'md:grid-cols-3' } gap-4`}>
               {category?.subcat.map((sub, subIndex) => {
                 let additionalClass = '';
-              
+                let additionalClass3 = '';
+
+                   // Mobile view: If subcategory length is 5 or more, set the last child to col-span-2
+                // But skip this rule if it's the first subcategory with 5 or more subcats
+                if (
+                  hasFiveOrMoreSubcats &&
+                  subIndex === category.subcat.length - 1 &&
+                  subCategories[0]?.id !== category.id
+                ) {
+                  additionalClass = 'col-span-2  sm:col-span-1';
+                }
+
                // Even numbered categories with 5 or more subcats: Apply col-span-2 to the 4th subcat
 
                if (subCategories[0]?.id === category.id && subIndex === 0 && subIndex !== category.subcat.length - 1 ) {
                  additionalClass = 'col-span-2';
                 }
                 if (isEven && hasFiveOrMoreSubcats && subIndex === 3) {
-                  additionalClass = 'col-span-2';
+                  additionalClass = 'col-span-1  sm:col-span-2';
                 }
 
                 // Odd numbered categories: Apply col-span-2 to the last subcat
                 if (!isEven && subIndex === category.subcat.length - 1 && subCategories[0]?.id !== category.id) {
                   additionalClass = 'col-span-2';
                 }
+                console.log(category.subcat.length === 3);
+                if (category.subcat.length === 3 && subIndex === 2 ) {
+                  additionalClass3 = ' col-span-2 sm:col-span-1';
+                }
 
                 
                 return (
                     <div
                     key={sub.id}
-                    className={`subcat-item relative animate-fade-in rounded-lg transform transition-transform duration-500 ease-in-out hover:scale-105 h-40 hover:shadow-lg overflow-hidden ${color} ${category?.subcat.length  >= 5 && additionalClass}`}
+                    className={`subcat-item relative animate-fade-in rounded-lg transform transition-transform
+                       duration-500 ease-in-out hover:scale-105 h-40
+                        hover:shadow-lg overflow-hidden
+                         ${color} ${category?.subcat.length  >= 5 && additionalClass}
+                         ${category?.subcat.length  === 3 && additionalClass3}
+                         `}
                   >
                     {/* Image as background */}
                     <img 

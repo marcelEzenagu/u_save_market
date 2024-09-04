@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { LuCalendarDays } from "react-icons/lu";
 import { IoAddOutline } from "react-icons/io5";
 import { PiMinus, PiTrash } from "react-icons/pi";
@@ -7,11 +7,10 @@ import { numberWithCommas } from "../../../utils";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
 import { useGetUserCartQuery } from "../../../features/cart/cartApiSlice";
 import Shoppingcart from "../../../assets/images/nav/icons/shoppingcart.webp";
-import {
-  setCartItems,
-} from "../../../features/cart/cartSlice";
+import { setCartItems } from "../../../features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import useCartOperationsHooks from "../../../hooks/useCartOperationsHooks";
+
 const CartDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -19,40 +18,36 @@ const CartDropdown = () => {
   const cart = useSelector((state) => state.cart.items);
   const user = useSelector((state) => state.auth?.user);
   const location = useLocation();
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-  const {handleIncrement, handleDecrement } = useCartOperationsHooks();
-  const {
-    data: cartDetails,
-    isLoading,
-    isSuccess,
-    error,
-  } = useGetUserCartQuery(user, {
-    skip : user === null ? true : false
+  const { handleIncrement, handleDecrement } = useCartOperationsHooks();
+  
+  const { data: cartDetails, isLoading, isSuccess, error } = useGetUserCartQuery(user, {
+    skip: !user
   });
 
   useEffect(() => {
-    console.log(cartDetails, error);
-    if (isSuccess, cartDetails) {
-       dispatch(setCartItems(cartDetails?.products || []));
+    if (isSuccess && cartDetails) {
+      dispatch(setCartItems(cartDetails?.products || []));
     }
-  }, [cartDetails, user]);
+  }, [cartDetails, isSuccess, dispatch]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
-
+    
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
- 
-  let total = cart?.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const total = useMemo(() => cart?.reduce((acc, item) => acc + item.price * item.quantity, 0), [cart]);
+  const cartLength = useMemo(() => cart?.length, [cart]);
+
+  const toggleDropdown = () => setIsOpen(!isOpen);
+  const closeDropdown = () => setIsOpen(false);
 
   return (
     <div className="relative inline-block text-left">
@@ -60,15 +55,13 @@ const CartDropdown = () => {
       <button
         onClick={toggleDropdown}
         className="flex items-center hover:text-regal-blue text-sm xl:text-sm text-regal-black cursor-pointer font-[500] lg:bg-active-gray py-2 lg:px-3 rounded-md"
+        aria-expanded={isOpen}
+        aria-label="Toggle cart dropdown"
       >
         <div className="relative">
-          <img
-            src={Shoppingcart}
-            alt="Shopping Cart"
-            className="w-6 lg:w-6 mr-1 xl:mr-2"
-          />
+          <img src={Shoppingcart} alt="Shopping Cart" className="w-6 lg:w-6 mr-1 xl:mr-2" />
           <span className="absolute bottom-4 right-0 text-white text-[8px] font-[500] w-4 h-4 rounded-full bg-red-600 flex items-center justify-center">
-            {cart.length}
+            {cartLength}
           </span>
         </div>
         <span className="hidden lg:block">Cart</span>
@@ -76,25 +69,25 @@ const CartDropdown = () => {
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="origin-top-right fixed inset-0 lg:inset-auto lg:absolute z-40 lg:right-0 lg:mt-2 shadow-lg animated fadeInDown bg-white w-[100vw] lg:w-[400px] h-[100vh] lg:h-auto">
+        <div
+          className="origin-top-right fixed inset-0 lg:inset-auto lg:absolute z-40 lg:right-0 lg:mt-2 shadow-lg animated fadeInDown bg-white w-[100vw] lg:w-[400px] h-[100vh] lg:h-auto"
+          ref={dropdownRef}
+        >
           <div className="bg-white">
             <div className="bg-gray-200 w-full flex lg:hidden items-center p-4 gap-3">
-              <MdOutlineArrowBackIosNew onClick={toggleDropdown} />
+              <MdOutlineArrowBackIosNew onClick={closeDropdown} aria-label="Close cart" />
               <span className="font-[500]">Cart</span>
             </div>
-            <div
-              ref={dropdownRef}
-              className="bg-white border border-t-regal-blue border-t-4 lg:rounded-md"
-            >
+            <div className="bg-white border border-t-regal-blue border-t-4 lg:rounded-md">
               <div className="flex flex-row items-center justify-between p-4 border-b">
                 <div className="flex flex-row items-center gap-2">
                   <span className="w-8 h-8 flex items-center justify-center bg-regal-light-item-color rounded-full">
                     <LuCalendarDays />
                   </span>
-                  <h2 className="font-[600] text-sm ">Mon, 16th Aug</h2>
+                  <h2 className="font-[600] text-sm">Mon, 16th Aug</h2>
                 </div>
                 <p className="text-sm font-[600] text-regal-blue">
-                  {cart.length} item{cart.length > 1 ? "s" : ""}
+                  {cartLength} item{cartLength > 1 ? "s" : ""}
                 </p>
               </div>
               {isLoading ? (
@@ -102,7 +95,7 @@ const CartDropdown = () => {
               ) : (
                 <div className="p-4">
                   <div className="max-h-[500px] lg:max-h-96 overflow-y-scroll">
-                    {cart.length > 0 ? (
+                    {cartLength > 0 ? (
                       cart.map((item) => (
                         <div
                           key={item.productID}
@@ -129,15 +122,15 @@ const CartDropdown = () => {
                             <button
                               className="active:scale-95"
                               onClick={() => handleDecrement(item)}
+                              aria-label="Decrement item quantity"
                             >
                               {item.quantity > 1 ? <PiMinus /> : <PiTrash />}
                             </button>
-                            <span className="text-gray-600">
-                              {item.quantity}
-                            </span>
+                            <span className="text-gray-600">{item.quantity}</span>
                             <button
                               className="active:scale-95"
                               onClick={() => handleIncrement(item)}
+                              aria-label="Increment item quantity"
                             >
                               <IoAddOutline />
                             </button>
@@ -145,29 +138,29 @@ const CartDropdown = () => {
                         </div>
                       ))
                     ) : (
-                      <div className="text-center py-2">
-                        Your cart is empty.
-                      </div>
+                      <div className="text-center py-2">Your cart is empty.</div>
                     )}
                   </div>
                 </div>
               )}
 
               {/* Cart Actions */}
-              <div className="absolute lg:relative bottom-0 mb-2 w-full px-4 py-2 bg-white">
-                {cart.length > 0 && (
-                  <Link className="flex justify-between"
+              {cartLength > 0 && (
+                <div className="absolute lg:relative bottom-0 mb-2 w-full px-4 py-2 bg-white">
+                  <Link
                     to="/cart"
-                    onClick={()=>{setIsOpen(false);}}
+                    onClick={closeDropdown}
+                    className="flex justify-between"
                   >
-                    <div                    
+                    <div
                       className="bg-regal-sky-blue text-white flex items-center justify-between px-4 py-2 font-bold w-full rounded-md hover:bg-blue-600 transition"
                     >
-                    {location?.pathname === '/cart' ? 'In cart ' : 'Go to cart '}  <span>₦{numberWithCommas(total)}</span>
+                      {location.pathname === "/cart" ? "In cart" : "Go to cart"}{" "}
+                      <span>₦{numberWithCommas(total)}</span>
                     </div>
                   </Link>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
