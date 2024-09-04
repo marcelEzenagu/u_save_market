@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-
+import { AiFillCloseCircle } from "react-icons/ai";
 const Toaster = ({ message, type, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -28,9 +28,10 @@ const Toaster = ({ message, type, onClose }) => {
       </svg>
     ),
     warning: (
-      <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M12 6v2m0 4v4m-4 4h8a1 1 0 001-1v-7a1 1 0 00-1-1h-8a1 1 0 00-1 1v7a1 1 0 001 1z" />
-      </svg>
+      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01M12 3L4.293 10.293a1 1 0 00-.293.707v6a1 1 0 00.293.707L12 21l7.707-7.707a1 1 0 00.293-.707v-6a1 1 0 00-.293-.707L12 3z" />
+    </svg>
+    
     ),
     error: (
       <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -40,13 +41,13 @@ const Toaster = ({ message, type, onClose }) => {
   };
 
   return (
-<div className={`fixed top-0 left-0 w-full px-4 py-2 z-50 rounded shadow-lg flex items-center justify-center ${toasterStyles[type]}`}>
+<div className={`fixed top-0 left-0 w-full px-4 py-3 z-50  shadow-lg flex items-center   justify-center ${toasterStyles[type]}`}>
   <div className="flex items-center max-w-screen-lg w-full justify-center">
     {icons[type]}
-    <span className="ml-2">{message}</span>
+    <span className="ml-2 text-white text-xs md:text-sm">{message}</span>
   </div>
   <button className="ml-4 text-lg font-bold" onClick={onClose}>
-    &times;
+   <AiFillCloseCircle className='text-2xl text-white'/>
   </button>
 </div>
 

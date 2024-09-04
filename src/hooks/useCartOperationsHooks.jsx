@@ -25,7 +25,7 @@ const useCartOperationsHooks = () => {
   const handleAddToCart = async (item) => {
     dispatch(addToCart(item));
     if (!token || !user) {
-      showToast('Please log in to add items to the cart', 'error');
+      showToast('Oops! Looks like you need to log in before adding items to your cart. Log in to continue shopping!', 'warning');
       return;
     }
     try {
@@ -37,16 +37,16 @@ const useCartOperationsHooks = () => {
       } else {
         await addUserCart(data).unwrap();
       }
-      showToast('Item added to cart successfully', 'success');
+      showToast('Item added to cart successfully!', 'success');
     } catch (error) {
-      showToast('Failed to add item to cart', 'error');
+      showToast('Something went wrong while adding the item to the cart. Please try again later.', 'error');
     }
   };
 
   const handleIncrement = async (item) => {
     dispatch(incrementItemInCart(item.productID));
     if (!token || !user) {
-      showToast('Please log in to update the cart', 'error');
+      showToast('Oops! You need to log in to update your cart. Log in to continue!', 'warning');
       return;
     }
     try {
@@ -56,9 +56,9 @@ const useCartOperationsHooks = () => {
           : cartItem
       );
       await updateUserCart({ products }).unwrap();
-      showToast('Item quantity updated', 'success');
+      showToast('Item quantity updated successfully!', 'success');
     } catch (error) {
-      showToast('Failed to update item quantity', 'error');
+      showToast('Something went wrong while updating the item quantity. Please try again later.', 'error');
     }
   };
 
@@ -66,7 +66,7 @@ const useCartOperationsHooks = () => {
     if (item.quantity > 1) {
       dispatch(decrementItemInCart(item.productID));
       if (!token || !user) {
-        showToast('Please log in to update the cart', 'error');
+        showToast('Oops! You need to log in to update your cart. Log in to continue!', 'warning');
         return;
       }
       try {
@@ -76,9 +76,9 @@ const useCartOperationsHooks = () => {
             : cartItem
         );
         await updateUserCart({ products }).unwrap();
-        showToast('Item quantity updated', 'success');
+        showToast('Item quantity updated successfully!', 'success');
       } catch (error) {
-        showToast('Failed to update item quantity', 'error');
+        showToast('Something went wrong while updating the item quantity. Please try again later.', 'error');
       }
     } else {
       handleRemove(item.productID);
@@ -88,29 +88,29 @@ const useCartOperationsHooks = () => {
   const handleRemove = async (itemId) => {
     dispatch(removeItemInCart(itemId));
     if (!token || !user) {
-      showToast('Please log in to remove items from the cart', 'error');
+      showToast('Oops! You need to log in to remove items from your cart. Log in to continue!', 'warning');
       return;
     }
     try {
       const products = cart.filter((cartItem) => cartItem.productID !== itemId);
       await updateUserCart({ products }).unwrap();
-      showToast('Item removed from cart', 'success');
+      showToast('Item removed from cart successfully!', 'success');
     } catch (error) {
-      showToast('Failed to remove item from cart', 'error');
+      showToast('Something went wrong while removing the item from the cart. Please try again later.', 'error');
     }
   };
 
   const handleRemoveAll = async () => {
     dispatch(removeAllItemInCart());
     if (!token || !user) {
-      showToast('Please log in to clear the cart', 'error');
+      showToast('Oops! You need to log in to clear your cart. Log in to continue!', 'warning');
       return;
     }
     try {
       await deleteUserCartItem({ products: [] }).unwrap();
-      showToast('Cart cleared', 'success');
+      showToast('Cart cleared successfully!', 'success');
     } catch (error) {
-      showToast('Failed to clear cart', 'error');
+      showToast('Something went wrong while clearing the cart. Please try again later.', 'error');
     }
   };
 
