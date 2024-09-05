@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
@@ -9,7 +9,7 @@ import RelatedProduct from "../../components/RelatedProduct";
 import CartImage from "../../assets/images/cart/Empty-cart.webp";
 import { numberWithCommas } from "../../utils";
 import useCartOperationsHooks from "../../hooks/useCartOperationsHooks";
-import { Items as ITemsDiv } from "../../data/mockData";
+import { useProduct } from "../../hooks/useProduct";
 
 const CartItem = React.memo(
   ({ item, onDecrement, onIncrement, onRemove, lastItemId }) => {
@@ -174,7 +174,9 @@ function Cart() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const Items = useSelector((state) => state.cart.items || []);
   const user = useSelector((state) => state?.auth);
+  const [ITemsDiv, setITemsDiv] = useState([])
   const navigate = useNavigate();
+  const {isLoading, userProduct, } = useProduct();
   const { handleIncrement, handleDecrement, handleRemove, handleRemoveAll } =
     useCartOperationsHooks();
 
@@ -190,7 +192,13 @@ function Cart() {
     () => (Items.length > 0 ? Items[Items.length - 1].productID : null),
     [Items]
   );
-
+  useEffect(()=>{
+    if (userProduct.length > 0) {
+      setITemsDiv(userProduct)
+    }else{
+      setITemsDiv([])
+    }
+  }, [userProduct]);
   return (
     <div className="w-full md:p-4">
       {Items.length > 0 && (
