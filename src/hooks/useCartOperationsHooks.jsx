@@ -23,6 +23,8 @@ const useCartOperationsHooks = () => {
   const { showToast } = useToaster(); // Correct usage of showToast from the context
 
   const handleAddToCart = async (item) => {
+
+    if(!item?.in_stock)  return showToast('This product is out of stock it can not be added', 'error');
     dispatch(addToCart(item));
     if (!token || !user) {
       showToast('Oops! Looks like you need to log in before adding items to your cart. Log in to continue shopping!', 'warning');
@@ -44,6 +46,7 @@ const useCartOperationsHooks = () => {
   };
 
   const handleIncrement = async (item) => {
+    if(!item?.in_stock)  return showToast('This product is out of stock it can not be updated', 'error');
     dispatch(incrementItemInCart(item.productID));
     if (!token || !user) {
       showToast('Oops! You need to log in to update your cart. Log in to continue!', 'warning');
@@ -63,6 +66,7 @@ const useCartOperationsHooks = () => {
   };
 
   const handleDecrement = async (item) => {
+    // if(!item?.in_stock)  return showToast('This product is out of stock it can not be updated', 'error');
     if (item.quantity > 1) {
       dispatch(decrementItemInCart(item.productID));
       if (!token || !user) {
@@ -86,6 +90,7 @@ const useCartOperationsHooks = () => {
   };
 
   const handleRemove = async (itemId) => {
+    // if(!item?.in_stock)  return showToast('This product is out of stock it can not be removed', 'error');
     dispatch(removeItemInCart(itemId));
     if (!token || !user) {
       showToast('Oops! You need to log in to remove items from your cart. Log in to continue!', 'warning');
@@ -113,13 +118,16 @@ const useCartOperationsHooks = () => {
       showToast('Something went wrong while clearing the cart. Please try again later.', 'error');
     }
   };
-
+  const handleRemoveAllCartAfterCreateOrder = async () => {
+    dispatch(removeAllItemInCart());
+  };
   return {
     handleIncrement,
     handleDecrement,
     handleAddToCart,
     handleRemove,
     handleRemoveAll,
+    handleRemoveAllCartAfterCreateOrder
   };
 };
 

@@ -20,6 +20,8 @@ function Navigation() {
   const [mobileDropdown, setMobileDropdown] = useState(false);
   const [activeUser, setActiveuser] = useState(false);
   const user = useSelector(selectCurrentUser);
+  const [showMessage, setShowMessage] = useState(false);
+  const preferredCountry = useSelector((state)=> state?.auth?.preferredCountry)
   useLayoutEffect(()=>{
     if (user !== null) {
       setActiveuser(true)
@@ -27,6 +29,14 @@ function Navigation() {
       setActiveuser(false)
     }
 }, [user])
+
+useEffect(()=>{
+  if (!preferredCountry) {
+    setShowMessage(true)
+  }else{
+    setShowMessage(false)
+  }
+}, [preferredCountry])
   const onToggle = () => {
     setMobileDropdown(!mobileDropdown);
   };
@@ -46,7 +56,9 @@ function Navigation() {
   }, []);
   return (
     <header className="sticky top-0  z-50 ">
-      <div className="w-full py-3  px-2 md:px-4 bg-regal-light-blue flex justify-between items-center">
+      {showMessage
+        && 
+        <div className="w-full py-3  px-2 md:px-4 bg-regal-light-blue flex justify-between items-center">
         <div className="flex items-center justify-center flex-grow">
           <img src={Globe} alt="" className="hidden md:block md:mr-2" />
           <h3 className="text-[10px] sm:text-xs  text-regal-black xl:text-sm font-[500] text-center">
@@ -54,9 +66,13 @@ function Navigation() {
           </h3>
         </div>
         <div className="rounded-full w-6 h-6 bg-regal-gray-active flex flex-col items-center justify-center">
-          <IoCloseOutline className="text-white  text-[1rem]" />
+          <IoCloseOutline className="text-white  text-[1rem]" onClick={()=>{
+             setShowMessage(false)
+          }} />
         </div>
       </div>
+        }
+
       <nav className="border-b-[1px] bg-white ">
         <div className="mx-auto py-3 px-2 md:px-4 flex max-w-[1366px]  flex-row justify-between items-center lg:container-fluid  ">
           <div className="flex flex-row justify-between items-center">
