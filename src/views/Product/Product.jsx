@@ -3,7 +3,6 @@ import { Transition } from "@headlessui/react";
 import { Link, useLocation } from "react-router-dom";
 import { SlArrowRight } from "react-icons/sl";
 import { LuListFilter } from "react-icons/lu";
-import { Items } from "../../data/mockData";
 import SidebarMobile from "../../components/Sidebar/SidebarMobile";
 import ProductCard from "../../components/cards/ProductCard";
 import { useProduct } from "../../hooks/useProduct";
