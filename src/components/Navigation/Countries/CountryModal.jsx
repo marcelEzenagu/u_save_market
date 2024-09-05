@@ -13,6 +13,9 @@ const Modal = ({ isOpen, onClose, onCountrySelect, errorMsg, preferredCountry, i
   const filteredCountries = countries.filter((country) =>
     country.name.toLowerCase().includes(search.toLowerCase())
   );
+  useEffect(()=>{
+    setPickedCountry(preferredCountry)
+  }, [preferredCountry])
 
   const dropdownRef = React.useRef(null);
 
@@ -72,7 +75,7 @@ const Modal = ({ isOpen, onClose, onCountrySelect, errorMsg, preferredCountry, i
                 >
                   <img src={country.flag} alt={country.name} className="w-8 h-4 mr-2" />
                   <span className="text-sm font-[400] w-full flex flex-row items-center justify-between">
-                    {country.name} { pickedCountry?.name.toLowerCase()  === country.name.toLowerCase() ? <FaCheckCircle className="text-xl text-green-600" /> : ''}
+                    {country.name} { pickedCountry?.name.toLowerCase()  === country.name.toLowerCase() &&  <FaCheckCircle className="text-xl text-green-600" /> }
                   </span>
                 </li>
               ))}

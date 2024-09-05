@@ -11,9 +11,12 @@ const Modal = ({ isOpen, onClose, onCurrencySelect, errorMsg, preferredCurrency,
   const filteredCurrencies = countries.filter(country =>
     country.currency.toLowerCase().includes(search.toLowerCase())
   );
-  const [pickedCurrency, setPickedCurrency] = useState(preferredCurrency);
-  const dropdownRef = useRef(null);
 
+  const [pickedCurrency, setPickedCurrency] = useState(null);
+  const dropdownRef = useRef(null);
+  useEffect(()=>{
+    setPickedCurrency(pickedCurrency)
+  }, [preferredCurrency])
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -70,7 +73,7 @@ const Modal = ({ isOpen, onClose, onCurrencySelect, errorMsg, preferredCurrency,
                 >
                   <span className='text-sm font-[400] mr-2'>{country.currency}</span>
                   <span className="text-sm font-[400] w-full flex flex-row items-center justify-between">
-                    {country.name} {preferredCurrency?.name.toLowerCase() === country?.name.toLowerCase() && <FaCheckCircle className="text-xl text-green-600" />}
+                    {country.name} {pickedCurrency?.name.toLowerCase() === country?.name.toLowerCase() && <FaCheckCircle className="text-xl text-green-600" />}
                   </span>
                 </li>
               ))}
