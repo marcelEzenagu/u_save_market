@@ -4,7 +4,8 @@ import { useNavigate, Navigate } from 'react-router-dom';
 import { selectCurrentToken, selectCurrentUser, setCredentials, logOut, setLoginModal } from '../features/auth/authSlice'
 import { useViewUserQuery } from '../features/user/userApiSlice'
 import { getSecureCookie, validateToken }  from '../utils' 
-
+import { countries } from '../data/mockData';
+import { setCountry, setCurrency } from '../features/auth/authSlice';
 export function useGuestAuth() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -22,6 +23,13 @@ export function useGuestAuth() {
         if (!token && !userData) {
           if (isSuccess) {
             dispatch(setCredentials({ accessToken: userToken, role: 'user', user }));
+            if (user?.preferredCountry){
+              const country = countries.find((i)=> i.name.toLowerCase() === user?.preferredCountry.toLowerCase());
+              if (country) {
+                dispatch(setCountry(country))
+                dispatch(setCurrency(country))
+              }
+            }
           } else if (isError) {
             console.error("Error fetching user data:", error);
             if (error?.status === 401) {

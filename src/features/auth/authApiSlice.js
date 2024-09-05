@@ -54,6 +54,18 @@ export const authApiSlice =  apiSlice.injectEndpoints({
                     authorization:meta.response.headers.get('Authorization')};
               }
         }),
+        updateUser: builder.mutation({
+            query: credentials => ({
+                url:'users/',
+                method:'PATCH',
+                body: {...credentials},
+            }),
+            transformResponse: (response, meta) => {
+                return {
+                    response,
+                    authorization:meta.response.headers.get('Authorization')};
+              }
+        }),
         registerUser: builder.mutation({
             query: credentials => ({
                 url:'auth/users/register',
@@ -68,6 +80,7 @@ export const {
     useLoginMutation,
     useLoginUserMutation,
      useRegisterMutation, 
+     useUpdateUserMutation,
      useRegisterUserMutation, 
      useForgotPasswordMutation,
      useResetPasswordMutation

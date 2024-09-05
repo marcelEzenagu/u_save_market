@@ -17,6 +17,7 @@ const CartDropdown = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.items);
   const user = useSelector((state) => state.auth?.user);
+  const orderGet = useSelector((state)=> state?.order?.orders)
   const location = useLocation();
   const { handleIncrement, handleDecrement } = useCartOperationsHooks();
   
@@ -25,10 +26,15 @@ const CartDropdown = () => {
   });
 
   useEffect(() => {
+
+    if (user) {
     if (isSuccess && cartDetails) {
       dispatch(setCartItems(cartDetails?.products || []));
+    }else{
+      dispatch(setCartItems([]));
     }
-  }, [cartDetails, isSuccess, dispatch]);
+  }
+  }, [cartDetails, isSuccess, orderGet, dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { selectCurrentToken, selectCurrentUser, setCredentials, logOut , setLoginModal} from '../features/auth/authSlice'
 import { useViewUserQuery } from '../features/user/userApiSlice'
 import { getSecureCookie, validateToken }  from '../utils' 
-
+import { countries } from '../data/mockData';
+import { setCountry, setCurrency } from '../features/auth/authSlice';
 export const useAuth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,6 +29,13 @@ export const useAuth = () => {
         if (isSuccess) {
           if (validateToken(userToken)) {
             dispatch(setCredentials({ accessToken: userToken, role: 'user', user }));
+            if (user?.preferredCountry){
+              const country = countries.find((i)=> i.name.toLowerCase() === user?.preferredCountry.toLowerCase());
+              if (country) {
+                dispatch(setCountry(country))
+                dispatch(setCurrency(country))
+              }
+            }
           } else {
               navigate('/', { state: { loginModel: true } }); // Redirect to login if token is invalid
           }

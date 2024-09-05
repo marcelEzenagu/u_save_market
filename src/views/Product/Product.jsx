@@ -6,6 +6,7 @@ import { LuListFilter } from "react-icons/lu";
 import { Items } from "../../data/mockData";
 import SidebarMobile from "../../components/Sidebar/SidebarMobile";
 import ProductCard from "../../components/cards/ProductCard";
+import { useProduct } from "../../hooks/useProduct";
 function Product() {
   const location = useLocation();
   const query = new URLSearchParams(location.search)
@@ -16,11 +17,11 @@ function Product() {
   const [selectedResult, setSelectedResult] = useState('');
   const [selectedPrice, setSelectedPrice] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
-
+  const {isLoading, userProduct, preferredCountry} = useProduct();
   const toggleResultDropdown = () => setIsResultOpen(!isResultOpen);
   const togglePriceDropdown = () => setIsPriceOpen(!isPriceOpen);
   const toggleCountryDropdown = () => setIsCountryOpen(!isCountryOpen);
-
+  const [Items, setItems] = useState([])
   const handleResultSelect = (result) => {
     setSelectedResult(result);
     setIsResultOpen(false);
@@ -35,6 +36,14 @@ function Product() {
     setSelectedCountry(country);
     setIsCountryOpen(false);
   };
+
+  useEffect(()=>{
+    if (userProduct.length > 0) {
+      setItems(userProduct)
+    }else{
+      setItems([])
+    }
+  }, [userProduct]);
 
   // Filter logic
   const filteredItems = Items.filter(item => {
@@ -267,11 +276,29 @@ function Product() {
     </div>
       </main>
       <main className="lg:my-6">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
-          {filteredItems.map((item) => (
-            <ProductCard item={item} key={item.productID} category={name} />
-          ))}
-        </div>
+     
+          {filteredItems?.length > 0 ?
+             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
+            {filteredItems.map((item) => ( <ProductCard item={item} key={item.productID} category={name} />))  }
+            </div> :
+          <div className="flex flex-col items-center text-center p-8 w-[500px] mx-auto">
+          {/* <img 
+            src={NotFoundImage} 
+            alt="Product Not Found" 
+            className="w-64 h-64 mb-6"
+          /> */}
+          <h1 className="text-xl font-[500] mb-4 mt-5">
+        Products Not Available in Your Selected Country <span className="font-[600]">"{preferredCountry?.name}"</span>
+          </h1>
+          <p className="text-sm mb-6">
+            The product you're looking for, is not currently available in your selected country. 
+            You may need to switch to a different country to access their products.
+          </p>
+          <p className="text-md mb-4">
+            Please use the "Country" button located on the navigation bar to select a new location.
+          </p>
+        </div> }
+       
       </main>
     </div>
   );

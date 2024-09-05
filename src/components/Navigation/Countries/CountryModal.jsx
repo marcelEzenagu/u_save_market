@@ -1,14 +1,21 @@
-import React, { useState, useRef, useEffect } from "react";
-import { countries } from "../../../data/mockData"; // Assume you have a list of countries
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { countries } from "../../../data/mockData";
 import Location from "../../../assets/images/nav/icons/location.webp";
 import { IoCloseCircleOutline } from "react-icons/io5";
-// import { HiOutlineLocationMarker } from "react-icons/hi";
-const Modal = ({ isOpen, onClose }) => {
+import { useUpdateUserMutation } from "../../../features/auth/authApiSlice";
+import { setCountry, setCurrency } from "../../../features/auth/authSlice";
+import { FaCheckCircle } from "react-icons/fa";
+
+const Modal = ({ isOpen, onClose, onCountrySelect, errorMsg, preferredCountry, isLoading }) => {
   const [search, setSearch] = useState("");
+  const [pickedCountry, setPickedCountry] = useState(preferredCountry);
   const filteredCountries = countries.filter((country) =>
     country.name.toLowerCase().includes(search.toLowerCase())
   );
-  const dropdownRef = useRef(null);
+
+  const dropdownRef = React.useRef(null);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -20,53 +27,28 @@ const Modal = ({ isOpen, onClose }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [onClose]);
+
+  const handleSelectedCountry = () => {
+    onCountrySelect(pickedCountry);
+  } 
+
   return (
     isOpen && (
       <div className="fixed inset-0 bg-black w-full bg-opacity-75 flex justify-center lg:items-center z-50 animated fadeInDown">
-        <div
-          className="bg-white  lg:rounded-lg  lg:max-w-[600px] w-full  z-52"
-          ref={dropdownRef}
-        >
-          {/* <button
-          
-            className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button> */}
-          <div className="flex items-center bg-gray-200 py-2 px-4  justify-between lg:hidden">
-            <span className="flex items-center w-10 ">
-              {" "}
-              <img
-                src={Location}
-                alt=""
-                className="w-6 mr-1 xl:mr-2"
-              />{" "}
-              <span className="font-[500] text-sm"> Country</span>{" "}
+        <div className="bg-white lg:rounded-lg overflow-hidden lg:max-w-[600px] w-full z-52" ref={dropdownRef}>
+         
+          <div className="flex items-center bg-gray-200 py-2 px-4 justify-between lg:hidden">
+            <span className="flex items-center w-10">
+              <img src={Location} alt="" className="w-5 mr-1 xl:mr-2" />
+              <span className="font-[500] text-sm">Country</span>
             </span>
-            <button
-              onClick={() => {
-                onClose();
-              }}
-            >
-              {/* Cancel Icon */}
+            <button onClick={onClose}>
               <IoCloseCircleOutline className="text-xl text-regal-black" />
             </button>
           </div>
-          <div className="lg:py-12 p-4 lg:p-8 relative ">
+          
+          <div className="lg:pt-12 lg:pb-8 p-4 lg:p-8 relative">
             <h2 className="text-lg lg:text-xl font-bold text-regal-blue mb-2 lg:mb-3">
               Choose Country
             </h2>
@@ -80,26 +62,34 @@ const Modal = ({ isOpen, onClose }) => {
               onChange={(e) => setSearch(e.target.value)}
               className="w-full py-4 px-4 border text-xs md:text-[14px] rounded-lg mb-4"
             />
-            <ul className="lg:max-h-60  overflow-y-auto">
+             <p className="text-red-700 text-sm mt-4 mb-1">{errorMsg}</p>
+            <ul className="lg:max-h-96 overflow-y-auto w-full">
               {filteredCountries.map((country) => (
-                <li key={country.code} className="flex items-center py-2 ">
-                  <img
-                    src={country.flag}
-                    alt={country.name}
-                    className="w-8 h-6 mr-2"
-                  />
-                  <span className="text-sm font-[400]">{country.name}</span>
+                <li
+                  key={country.code}
+                    className="flex items-center py-2 my-2 px-2 cursor-pointer hover:font-[700] hover:text-regal-blue hover:bg-regal-secondary-light"
+                  onClick={() => setPickedCountry(country)}
+                >
+                  <img src={country.flag} alt={country.name} className="w-8 h-4 mr-2" />
+                  <span className="text-sm font-[400] w-full flex flex-row items-center justify-between">
+                    {country.name} { pickedCountry?.name.toLowerCase()  === country.name.toLowerCase() ? <FaCheckCircle className="text-xl text-green-600" /> : ''}
+                  </span>
                 </li>
               ))}
             </ul>
           </div>
+          <div className=" w-full px-4 pb-8 bg-white">
+            {pickedCountry && 
+                        <button
+              className="bg-regal-sky-blue text-white px-4 py-2 font-bold w-full rounded-md hover:bg-blue-600 transition"
+              onClick={handleSelectedCountry}
+              disabled={isLoading}
+            >
+             {isLoading ? 'Saving...' : 'Apply'} 
+            </button>
+            }
 
-          <div className="absolute lg:hidden bottom-32  w-full  px-4 py-2 bg-white">
-            <div className=" ">
-              <button className="bg-regal-sky-blue text-white  px-4  py-2 font-bold w-full rounded-md hover:bg-blue-600 transition">
-                Apply
-              </button>
-            </div>
+
           </div>
         </div>
       </div>
@@ -109,6 +99,65 @@ const Modal = ({ isOpen, onClose }) => {
 
 function CountryModal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const preferredCountry = useSelector((state) => state.auth?.preferredCountry);
+  const isLoggedIn = useSelector((state) => state.auth?.user);
+  const dispatch = useDispatch();
+  const [updateUser, 
+    {isLoading}
+   ] = useUpdateUserMutation();
+  const [errorMsg, setErrMsg] = useState('');
+
+  useEffect(() => {
+    const lspc = JSON.parse(localStorage.getItem("preferredCountry"));
+    if (lspc) {
+      if (!preferredCountry) {
+        dispatch(setCountry(lspc));
+        dispatch(setCurrency(lspc));
+      }
+    }
+
+    if (!preferredCountry ) {
+      if(!lspc && !isLoggedIn ){
+        setIsModalOpen(true);
+      }
+    }
+  }, [preferredCountry, dispatch]);
+
+  useEffect(() => {
+    if(isLoggedIn && !preferredCountry ){
+      setIsModalOpen(true);
+    }else{
+      setIsModalOpen(false);
+    }
+  }, [isLoggedIn, preferredCountry])
+
+  const handleCountrySelect = async (country) => {
+    if (isLoggedIn) {
+      try {
+        await updateUser({ preferredCountry: country.name }).unwrap();
+        dispatch(setCountry(country));
+        dispatch(setCurrency(country));
+        setIsModalOpen(false);
+      } catch (err) {
+        if (err?.status >= 400 && err?.status <= 404) {
+          setErrMsg(err?.data?.message || "Failed to update user preferred country");
+        } else if (err?.status >= 500) {
+          setErrMsg(err?.data?.message || "Server error");
+        } else {
+          setErrMsg("Failed to update user preferred country");
+        }
+        console.error("Failed to update user preferred country:", err);
+      }
+    } else {
+      localStorage.setItem("preferredCountry", JSON.stringify(country));
+      localStorage.setItem("preferredCurrency", JSON.stringify(country));
+      dispatch(setCountry(country));
+      dispatch(setCurrency(country));
+      setIsModalOpen(false);
+    }
+  
+    // Avoid window.location.reload() if possible; handle state updates instead.
+  };
 
   return (
     <>
@@ -116,11 +165,18 @@ function CountryModal() {
         className="flex items-center hover:text-regal-blue text-sm xl:text-sm text-regal-black cursor-pointer font-[500]"
         onClick={() => setIsModalOpen(true)}
       >
-        {/* <HiOutlineLocationMarker     className=" text-xl xl:text-2xl mr-1 xl:mr-2"  /> */}
-        <img src={Location} alt="" className="w-4 md:w-6 mr-1 xl:mr-2" />
-        Enter Country
+        <img src={preferredCountry?.flag || Location} alt="Location" className="w-4 md:w-6  mr-1 xl:mr-2" />
+        {preferredCountry?.name || 'Enter Country'}
       </button>
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onCountrySelect={handleCountrySelect}
+        errorMsg={errorMsg}
+        preferredCountry={preferredCountry}
+        isLoading={isLoading}
+      />
     </>
   );
 }
