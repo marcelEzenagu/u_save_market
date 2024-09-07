@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { IoInformationCircle } from "react-icons/io5";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import ItemsCard from "../../../components/cards/ItemsCard";
 import Status from "../../../components/order/OrderStatus";
 import Cancelicon from "../../../assets/images/order/cancel.png";
-import moment from 'moment';
+import moment from "moment";
 import { numberWithCommas } from "../../../utils";
+import { useDeleteUserOrderMutation } from "../../../features/order/orderApiSlice";
+import { useToaster } from "../../../components/ToasterContext";
+import { Link, useNavigate } from "react-router-dom";
 
 const orderTracking = [
   { id: "1", name: "Order Accepted" },
@@ -15,253 +18,308 @@ const orderTracking = [
   { id: "6", name: "Delivered" },
 ];
 
-function OrderDetails(props) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const toggleModal = () => {
-      setIsModalOpen(!isModalOpen);
-    };
-    return (
-        <div>
-          <div className="p-4 ">
-            <h6 className="text-regal-black text-sm md:text-lg flex items-center gap-2">
-              All Orders{" "}
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+const CancelOrderModal = ({ isModalOpen, toggleModal, id }) => {
+  const [deleteUserOrder, { isLoading }] = useDeleteUserOrderMutation();
+  const { showToast } = useToaster();
+  const navigate = useNavigate();
+
+  const handleCancelOrder = async () => {
+    try {
+      await deleteUserOrder(id).unwrap();
+      showToast("Order cancelled successfully", "success");
+      navigate("/orders");
+    } catch (err) {
+      if (err?.status >= 400 && err?.status <= 404) {
+        showToast(err?.data?.message || "Order cancellation failed", "error");
+      } else {
+        showToast("Order cancellation failed", "error");
+      }
+    }
+  };
+
+  return (
+    <>
+      {isModalOpen && id && (
+        <div className="fixed inset-0 bg-black w-full bg-opacity-75 z-50 flex justify-center items-center animated fadeInDown">
+          <div className="bg-white p-14 rounded-lg shadow-lg w-[350px] md:w-[500px] text-center">
+            <img
+              src={Cancelicon}
+              alt="Cancel Order"
+              className="w-32 mx-auto mb-2"
+            />
+            <h2 className="text-xl font-bold mb-2">Cancel Order</h2>
+            <p className="text-regal-black text-sm mt-4 mb-6">
+              Are you sure you want to cancel this order?
+            </p>
+            <div className="flex flex-col gap-4 w-[200px] mx-auto">
+              <button
+                onClick={handleCancelOrder}
+                className="bg-regal-sky-blue text-white py-2 rounded-md hover:bg-blue-900 transition active:scale-95"
+                disabled={isLoading}
+                aria-busy={isLoading}
+                aria-label="Cancel Order"
               >
-                <path
-                  d="M12.4142 18.0102L10.9992 16.5972L15.5992 11.9972L10.9992 7.39723L12.4142 5.99023L18.4242 12.0002L12.4152 18.0102H12.4142ZM6.9892 18.0102L5.5752 16.5972L10.1752 11.9972L5.5752 7.40423L6.9892 5.99023L13.0002 12.0002L6.9902 18.0102H6.9892Z"
-                  fill="#262729"
-                />
-              </svg>
-              <span className="font-bold">Order Details</span>
-            </h6>
-  
-            <div className="my-5 flex items-center gap-4 p-3 rounded-md text-orange-400 bg-orange-100 text-xs  font-[600]">
-              <IoInformationCircle className="text-2xl md:text-lg" /> You are
-              eligible to cancel an order within 24 hours after placing order
-            </div>
-            <div className="rounded-md border p-5 mt-4">
-              <div className="flex flex-col md:flex-row items-start justify-between">
-                <div className="">
-                  <p className="text-xs md:text-sm text-start flex flex-row items-center  gap-2 text-regal-black font-[700]  capitalize cursor-pointer">
-                    ID: {props.order?.orderID} <Status key={""} />
-                  </p>
-                  <p className="text-xs text-regal-light-gray text-start mt-1">
-                    Order on:  {moment(props.order?.createdAt).format("DD MMM, YYYY : HH:mm")}
-                  </p>
-                  <p className="text-xs text-regal-black font-[700] text-start mt-1">
-                    Total: ₦{numberWithCommas(props.order?.totalCost)}
-                  </p>
-                </div>
-                <button
-                  onClick={toggleModal}
-                  className=" py-2 px-6 active:scale-95  md:mt-0 mt-3 w-full md:w-auto items-center font-[600] gap-1 rounded-md border border-regal-sky-blue text-regal-sky-blue text-xs"
-                >
-                  Cancel Order
-                </button>
-              </div>
-            </div>
-  
-            <div className="rounded-md border p-5 mt-4">
-              <div className="flex flex-row items-start justify-between">
-                <div className="">
-                  <p className="text-xs md:text-sm text-start flex flex-row items-center  gap-2 text-regal-black font-[700]  capitalize cursor-pointer">
-                    Order Tracking
-                  </p>
-                </div>
-                <button
-                  className="font-[600] text-regal-sky-blue text-xs md:text-sm "
-                  onClick={() => {
-                    props.setTrackOrderDetails(true);
-                  }}
-                >
-                  View History
-                </button>
-              </div>
-  
-              <div className="flex my-4 overflow-x-scroll ">
-                {orderTracking.map((e) => (
-                  <div key={e.id} className="mt-3">
-                    <div className="flex flex-row items-center ">
-                      <div
-                        className={`w-7 h-7 rounded-full ${
-                          e.id === "1" ? "bg-regal-light-blue" : "bg-white"
-                        }  flex flex-col items-center justify-center`}
-                      >
-                        <span
-                          className={`w-4 h-4 rounded-full ${
-                            e.id === "1" ? "bg-regal-blue" : "border bg-white"
-                          } z-10`}
-                        ></span>
-                      </div>
-                      <span className=" w-[100px] md:w-[160px] border-b border-dotted"></span>
-                    </div>
-                    <p
-                      className={`text-xs md:text-sm items-center  gap-2 ${
-                        e.id === "1"
-                          ? "text-regal-black"
-                          : "text-regal-track-gray"
-                      } font-[500]  capitalize  mt-7`}
-                    >
-                      {e.name}
-                    </p>
-                    {e.id === "1" && (
-                      <>
-                        <p className="text-xs md:text-sm text-regal-black  mt-2">
-                          16th Aug,2024
-                        </p>
-                      </>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-  
-            <div className="rounded-md border p-5 mt-4">
-              <div className="flex flex-row items-start justify-between">
-                <div className="">
-                  <p className="text-xs md:text-sm text-start flex flex-row items-center  gap-2 text-regal-black font-[700]  capitalize cursor-pointer">
-                    Items in this order ({props.order?.products?.length})
-                  </p>
-                </div>
-                <button className="flex items-center gap-2 font-[600] text-regal-sky-blue text-xs md:text-sm ">
-                  View <IoIosArrowBack className="text-regal-black text-lg" />{" "}
-                  <IoIosArrowForward className="text-regal-black text-lg" />
-                </button>
-              </div>
-              <div className="mt-5  flex flex-row gap-4 overflow-x-scroll">
-                {props.order?.products &&
-                  props.order?.products?.map((e, index) => (
-                    <div className="w-[170px]" key={index}>
-                      <ItemsCard item={e} />
-                    </div>
-                  ))}
-              </div>
-            </div>
-  
-            <div className="rounded-md border p-5 mt-4">
-              <div className="flex flex-row items-end justify-between border-b pb-5">
-                <div className="">
-                  <p className="text-xs md:text-sm   items-center  gap-2 text-regal-black font-[700]  capitalize ">
-                    Checkout details
-                  </p>
-                  <p className="text-xs md:text-sm text-regal-black  mt-5">
-                    Card Payment
-                  </p>
-                </div>
-                <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
-                  5067 **** **** **** 1235
-                </p>
-              </div>
-              <div className="flex flex-row items-end justify-between border-b pb-5 mt-4">
-                <div className="">
-                  <p className="text-xs md:text-sm   items-center  gap-2 text-regal-black font-[700]  capitalize ">
-                    Payment details
-                  </p>
-                  <p className="text-xs md:text-sm text-regal-black  mt-5">
-                    Items Amount
-                  </p>
-                </div>
-                <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
-                  ₦1,585.00
-                </p>
-              </div>
-  
-              <div className="flex flex-row items-end justify-between border-b pb-5">
-                <div className="">
-                  <p className="text-xs md:text-sm text-regal-black  mt-5">
-                    Delivery Fee
-                  </p>
-                </div>
-                <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
-                  ₦1,585.00
-                </p>
-              </div>
-  
-              <div className="flex flex-row items-end justify-between border-b pb-5">
-                <div className="">
-                  <p className="text-xs md:text-sm text-regal-black  mt-5">
-                    Total
-                  </p>
-                </div>
-                <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
-                  ₦1,585.00
-                </p>
-              </div>
-  
-              <div className="flex flex-row items-end justify-between border-b mt-4 pb-5">
-                <div className="">
-                  <p className="text-xs md:text-sm   items-center  gap-2 text-regal-black font-[700]  capitalize ">
-                    Shipping Info
-                  </p>
-                  <p className="text-xs md:text-sm text-regal-black  mt-5">
-                    Address
-                  </p>
-                </div>
-                <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700] w-[200px]  truncate whitespace-nowrap ">
-                  Idugboe Estate, off Elf Road, Ogunu
-                </p>
-              </div>
-  
-              <div className="flex flex-row items-end justify-between border-b pb-5">
-                <div className="">
-                  <p className="text-xs md:text-sm text-regal-black  mt-5">
-                    Country
-                  </p>
-                </div>
-                <p className="text-xs md:text-sm flex items-center  gap-2 text-regal-black font-[700]  ">
-                  <img src="" alt="" /> Sweden
-                </p>
-              </div>
-  
-              <div className="flex flex-row items-end justify-between  ">
-                <div className="">
-                  <p className="text-xs md:text-sm text-regal-black  mt-5">
-                    ZIP Code
-                  </p>
-                </div>
-                <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
-                  932724
-                </p>
-              </div>
+                {isLoading ? "Cancelling..." : "Proceed"}
+              </button>
+              <button
+                onClick={toggleModal}
+                className="text-regal-sky-blue py-2 border-2 border-white rounded-md hover:border-regal-sky-blue transition font-medium active:scale-95"
+              >
+                Discard
+              </button>
             </div>
           </div>
-          {isModalOpen && (
-            <div className="fixed inset-0 bg-black w-full bg-opacity-75  z-50 flex justify-center items-center animated fadeInDown">
-              <div className="bg-white p-14 rounded-lg shadow-lg w-[350px] md:w-[500px] text-center ">
-                <img src={Cancelicon} alt=""  className="w-32 mx-auto mb-2" />
-                <h2 className="text-xl font-bold mb-2">Cancel Order</h2>
-                <p className="text-regal-black text-sm mt-4 mb-6">
-                  Are you sure you want to cancel order?
-                </p>
-  
-                {/* Buttons in flex-col with gap */}
-                <div className="flex flex-col gap-4 w-[200px] mx-auto">
-                  <button
-                    onClick={() => {
-                      // Handle delete action here
-                      setIsModalOpen(false);
-                    }}
-                    className="bg-regal-sky-blue text-white py-2 rounded-md hover:bg-blue-900 transition active:scale-95"
-                  >
-                    Proceed
-                  </button>
-                  <button
-                    onClick={toggleModal}
-                    className=" text-regal-sky-blue py-2 border-2 border-white rounded-md hover:border-regal-sky-blue transition font-[500] active:scale-95"
-                  >
-                    Discard
-                  </button>
-                </div>
-              </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+function OrderDetails({ order, setTrackOrderDetails }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+
+  const trackingDetails = useMemo(
+    () =>
+      orderTracking.map((stage) => ({
+        ...stage,
+        isActive: stage.id === "1", // Example: logic to highlight active stage
+      })),
+    []
+  );
+
+  const { orderID, createdAt, totalCost, products } = order;
+
+  return (
+    <div className="p-4">
+      <Link
+        to="/orders"
+        className="text-regal-black text-sm md:text-lg flex items-center gap-2"
+      >
+        All Orders{" "}
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12.4142 18.0102L10.9992 16.5972L15.5992 11.9972L10.9992 7.39723L12.4142 5.99023L18.4242 12.0002L12.4152 18.0102H12.4142ZM6.9892 18.0102L5.5752 16.5972L10.1752 11.9972L5.5752 7.40423L6.9892 5.99023L13.0002 12.0002L6.9902 18.0102H6.9892Z"
+            fill="#262729"
+          />
+        </svg>
+        <span className="font-bold">Order Details</span>
+      </Link>
+
+      <div className="my-5 flex items-center gap-4 p-3 rounded-md text-orange-400 bg-orange-100 text-xs font-semibold">
+        <IoInformationCircle className="text-2xl md:text-lg" /> You are eligible
+        to cancel an order within 24 hours of placing it.
+      </div>
+
+      <div className="rounded-md border p-5 mt-4">
+        <div className="flex flex-col md:flex-row items-start justify-between">
+          <div>
+            <p className="text-xs md:text-sm text-start flex gap-2 text-regal-black font-bold">
+              ID: {orderID} <Status />
+            </p>
+            <p className="text-xs text-regal-light-gray text-start mt-1">
+              Order on: {moment(createdAt).format("DD MMM, YYYY : HH:mm")}
+            </p>
+            <p className="text-xs text-regal-black font-bold text-start mt-1">
+              Total: ₦{numberWithCommas(totalCost)}
+            </p>
+          </div>
+          <button
+            onClick={toggleModal}
+            className="py-2 px-6 active:scale-95 mt-3 w-full md:w-auto font-semibold gap-1 rounded-md border border-regal-sky-blue text-regal-sky-blue text-xs"
+          >
+            Cancel Order
+          </button>
+        </div>
+      </div>
+
+      <TrackingComponent
+        trackingDetails={trackingDetails}
+        setTrackOrderDetails={(e) => {
+          setTrackOrderDetails(e);
+        }}
+      />
+
+      <div className="rounded-md border p-5 mt-4">
+        <OrderItems products={products} />
+      </div>
+
+      <CheckoutDetails />
+
+      <CancelOrderModal
+        id={orderID}
+        isModalOpen={isModalOpen}
+        toggleModal={toggleModal}
+      />
+    </div>
+  );
+}
+
+const TrackingComponent = ({ trackingDetails, setTrackOrderDetails }) => (
+  <div className="rounded-md border p-5 mt-4">
+    <div className="flex flex-row items-start justify-between">
+      <p className="text-xs md:text-sm font-bold text-regal-black">
+        Order Tracking
+      </p>
+      <button
+        className="font-[600] text-regal-sky-blue text-xs md:text-sm "
+        onClick={() => {
+          setTrackOrderDetails(true);
+        }}
+      >
+        View History
+      </button>
+    </div>
+    <div className="flex my-4 overflow-x-scroll">
+      {trackingDetails.map(({ id, name, isActive }) => (
+        <div key={id} className="mt-3">
+          <div className="flex items-center">
+            <div
+              className={`w-7 h-7 rounded-full ${
+                isActive ? "bg-regal-light-blue" : "bg-white"
+              } flex items-center justify-center`}
+            >
+              <span
+                className={`w-4 h-4 rounded-full ${
+                  isActive ? "bg-regal-blue" : "border bg-white"
+                } z-10`}
+              ></span>
             </div>
+            <span className="w-[100px] md:w-[160px] border-b border-dotted"></span>
+          </div>
+          <p
+            className={`text-xs md:text-sm font-medium capitalize mt-7 ${
+              isActive ? "text-regal-black" : "text-regal-track-gray"
+            }`}
+          >
+            {name}
+          </p>
+          {isActive && (
+            <p className="text-xs md:text-sm text-regal-black mt-2">
+              16th Aug,2024
+            </p>
           )}
         </div>
-    );
-  }
+      ))}
+    </div>
+  </div>
+);
+
+const OrderItems = ({ products }) => (
+  <>
+    <div className="flex justify-between">
+      <p className="text-xs md:text-sm font-bold text-regal-black">
+        Items in this order ({products?.length})
+      </p>
+      <button className="font-semibold text-regal-sky-blue text-xs md:text-sm flex items-center gap-2">
+        View <IoIosArrowBack className="text-regal-black text-lg" />{" "}
+        <IoIosArrowForward className="text-regal-black text-lg" />
+      </button>
+    </div>
+    <div className="mt-5 flex gap-4 overflow-x-scroll">
+      {products.map((item, index) => (
+        <div className="w-[170px]" key={index}>
+          <ItemsCard item={item} />
+        </div>
+      ))}
+    </div>
+  </>
+);
+
+const CheckoutDetails = () => (
+  <div className="rounded-md border p-5 mt-4">
+  <div className="flex flex-row items-end justify-between border-b pb-5">
+    <div className="">
+      <p className="text-xs md:text-sm   items-center  gap-2 text-regal-black font-[700]  capitalize ">
+        Checkout details
+      </p>
+      <p className="text-xs md:text-sm text-regal-black  mt-5">
+        Card Payment
+      </p>
+    </div>
+    <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
+      5067 **** **** **** 1235
+    </p>
+  </div>
+  <div className="flex flex-row items-end justify-between border-b pb-5 mt-4">
+    <div className="">
+      <p className="text-xs md:text-sm   items-center  gap-2 text-regal-black font-[700]  capitalize ">
+        Payment details
+      </p>
+      <p className="text-xs md:text-sm text-regal-black  mt-5">
+        Items Amount
+      </p>
+    </div>
+    <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
+      ₦1,585.00
+    </p>
+  </div>
+
+  <div className="flex flex-row items-end justify-between border-b pb-5">
+    <div className="">
+      <p className="text-xs md:text-sm text-regal-black  mt-5">
+        Delivery Fee
+      </p>
+    </div>
+    <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
+      ₦1,585.00
+    </p>
+  </div>
+
+  <div className="flex flex-row items-end justify-between border-b pb-5">
+    <div className="">
+      <p className="text-xs md:text-sm text-regal-black  mt-5">
+        Total
+      </p>
+    </div>
+    <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
+      ₦1,585.00
+    </p>
+  </div>
+
+  <div className="flex flex-row items-end justify-between border-b mt-4 pb-5">
+    <div className="">
+      <p className="text-xs md:text-sm   items-center  gap-2 text-regal-black font-[700]  capitalize ">
+        Shipping Info
+      </p>
+      <p className="text-xs md:text-sm text-regal-black  mt-5">
+        Address
+      </p>
+    </div>
+    <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700] w-[200px]  truncate whitespace-nowrap ">
+      Idugboe Estate, off Elf Road, Ogunu
+    </p>
+  </div>
+
+  <div className="flex flex-row items-end justify-between border-b pb-5">
+    <div className="">
+      <p className="text-xs md:text-sm text-regal-black  mt-5">
+        Country
+      </p>
+    </div>
+    <p className="text-xs md:text-sm flex items-center  gap-2 text-regal-black font-[700]  ">
+      <img src="" alt="" /> Sweden
+    </p>
+  </div>
+
+  <div className="flex flex-row items-end justify-between  ">
+    <div className="">
+      <p className="text-xs md:text-sm text-regal-black  mt-5">
+        ZIP Code
+      </p>
+    </div>
+    <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
+      932724
+    </p>
+  </div>
+</div>
+);
+
 
 export default OrderDetails;

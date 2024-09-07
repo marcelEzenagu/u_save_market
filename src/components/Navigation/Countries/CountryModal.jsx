@@ -66,7 +66,7 @@ const Modal = ({ isOpen, onClose, onCountrySelect, errorMsg, preferredCountry, i
               className="w-full py-4 px-4 border text-xs md:text-[14px] rounded-lg mb-4"
             />
              <p className="text-red-700 text-sm mt-4 mb-1">{errorMsg}</p>
-            <ul className="lg:max-h-96 overflow-y-auto w-full">
+            <ul className="max-h-96 lg:max-h-96  overflow-y-auto w-full">
               {filteredCountries.map((country) => (
                 <li
                   key={country.code}

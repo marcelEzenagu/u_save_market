@@ -14,10 +14,10 @@ import {
 } from "../../../features/auth/authApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setCookie } from "../../../utils";
-import { setCredentials } from "../../../features/auth/authSlice";
+import { setCredentials, setLoginModal, setCountry, setCurrency } from "../../../features/auth/authSlice";
 import { useNavigate, useLocation } from "react-router-dom";
-import { setLoginModal } from "../../../features/auth/authSlice";
-// import { HiOutlineUserCircle } from "react-icons/hi2";
+
+
 const Modal = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState(true);
   const dropdownRef = useRef(null);
@@ -447,6 +447,13 @@ const LoginModel = (props) => {
           role: userData?.access_data?.role,
         })
       );
+      if (userData?.user?.preferredCountry){
+        const country = countries.find((i)=> i.name.toLowerCase() === userData?.user?.preferredCountry.toLowerCase());
+        if (country) {
+          dispatch(setCountry(country))
+          dispatch(setCurrency(country))
+        }
+      }
       setCookie("accessToken", userData?.access_data?.access_token);
       props.onClose();
       setData({
