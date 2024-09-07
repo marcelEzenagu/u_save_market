@@ -116,7 +116,7 @@ useEffect(()=>{
             className={`absolute ${
               mobileDropdown ? "flex" : "hidden"
             }   flex-col bg-white items-start self-end py-8 space-y-6  sm:self-center w-full h-[100vh] drop-shadow-md`}
-            ref={dropdownRef}
+            
           >
             <div className="flex flex-col gap-3 px-4 pb-5 w-full border-b">
             <CountryModal />

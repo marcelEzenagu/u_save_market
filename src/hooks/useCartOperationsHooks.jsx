@@ -20,7 +20,7 @@ const useCartOperationsHooks = () => {
   const [addUserCart] = useAddUserCartMutation();
   const [deleteUserCartItem] = useDeleteUserCartItemMutation();
   const cart = useSelector((state) => state.cart.items);
-  const { showToast } = useToaster(); // Correct usage of showToast from the context
+  const { showToast } = useToaster(); 
 
   const handleAddToCart = async (item) => {
 
@@ -46,7 +46,7 @@ const useCartOperationsHooks = () => {
   };
 
   const handleIncrement = async (item) => {
-    if(!item?.in_stock)  return showToast('This product is out of stock it can not be updated', 'error');
+    // if(!item?.in_stock)  return showToast('This product is out of stock it can not be updated', 'error');
     dispatch(incrementItemInCart(item.productID));
     if (!token || !user) {
       showToast('Oops! You need to log in to update your cart. Log in to continue!', 'warning');

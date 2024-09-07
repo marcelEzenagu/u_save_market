@@ -19,14 +19,12 @@ export const orderApiSlice = apiSlice.injectEndpoints({
         invalidatesTags:['order'],
       }),
     deleteUserOrder: builder.mutation({
-      query: (order) => ({
-        url: `orders`,
-        method: 'DELETE',
-        body: order,
+      query: (id) => ({
+        url: `orders/${id}/cancel`,
+        method: 'PATCH',
       }),
       invalidatesTags:['order'],
     }),
-
     getUserOrder: builder.query({
         query: () => '/orders/user',
        providesTags:['order']

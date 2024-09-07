@@ -1,16 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
-import Status from "../../../components/order/OrderStatus";
-import { IoInformationCircle } from "react-icons/io5";
-import { Items } from "../../../data/mockData";
-import ItemsCard from "../../../components/cards/ItemsCard";
-import Cancelicon from "../../../assets/images/order/cancel.png";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { TbMapPinFilled } from "react-icons/tb";
-import { HiOutlineArrowLeft } from "react-icons/hi2";
+import React, { useState } from "react";
 import { useParams } from 'react-router-dom';
 import { useGetOrderByIdQuery } from "../../../features/order/orderApiSlice";
-import moment from 'moment';
-import { numberWithCommas } from "../../../utils";
 import OrderViewSkeleton from "../../../components/Loading/OrderViewSkeleton";
 import OrderDetails from './OrderDetails'
 import TrackOrder from './TrackOrder'

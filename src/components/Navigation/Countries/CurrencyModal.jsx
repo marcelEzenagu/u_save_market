@@ -17,6 +17,7 @@ const Modal = ({ isOpen, onClose, onCurrencySelect, errorMsg, preferredCurrency,
   useEffect(()=>{
     setPickedCurrency(pickedCurrency)
   }, [preferredCurrency])
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -64,7 +65,7 @@ const Modal = ({ isOpen, onClose, onCurrencySelect, errorMsg, preferredCurrency,
             />
             <p className='text-sm text-regal-black font-[600] mb-4'>Recently used currencies</p>
             <p className="text-red-700 text-sm mt-4 mb-1">{errorMsg}</p>
-            <ul className="lg:max-h-96 overflow-y-auto w-full">
+            <ul className="max-h-96  lg:max-h-96 overflow-y-auto w-full">
               {filteredCurrencies.map((country) => (
                 <li
                   key={country.code}
