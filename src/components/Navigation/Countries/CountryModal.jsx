@@ -66,20 +66,24 @@ const Modal = ({ isOpen, onClose, onCountrySelect, errorMsg, preferredCountry, i
               className="w-full py-4 px-4 border text-xs md:text-[14px] rounded-lg mb-4"
             />
              <p className="text-red-700 text-sm mt-4 mb-1">{errorMsg}</p>
-            <ul className="max-h-96 lg:max-h-96  overflow-y-auto w-full">
-              {filteredCountries.map((country) => (
-                <li
-                  key={country.code}
-                    className="flex items-center py-2 my-2 px-2 cursor-pointer hover:font-[700] hover:text-regal-blue hover:bg-regal-secondary-light"
-                  onClick={() => setPickedCountry(country)}
-                >
-                  <img src={country.flag} alt={country.name} className="w-8 h-4 mr-2" />
-                  <span className="text-sm font-[400] w-full flex flex-row items-center justify-between">
-                    {country.name} { pickedCountry?.name.toLowerCase()  === country.name.toLowerCase() &&  <FaCheckCircle className="text-xl text-green-600" /> }
-                  </span>
-                </li>
-              ))}
-            </ul>
+             <ul className="max-h-[50vh] lg:max-h-[300px] overflow-y-scroll w-full">
+  {filteredCountries.map((country) => (
+    <li
+      key={country.code}
+      className="flex items-center py-2 my-2 px-2 cursor-pointer hover:font-[700] hover:text-regal-blue hover:bg-regal-secondary-light"
+      onClick={() => setPickedCountry(country)}
+    >
+      <img src={country.flag} alt={country.name} className="w-8 h-4 mr-2" />
+      <span className="text-sm font-[400] w-full flex flex-row items-center justify-between">
+        {country.name}{' '}
+        {pickedCountry?.name.toLowerCase() === country.name.toLowerCase() && (
+          <FaCheckCircle className="text-xl text-green-600" />
+        )}
+      </span>
+    </li>
+  ))}
+</ul>
+
           </div>
           <div className=" w-full px-4 pb-8 bg-white">
             {pickedCountry && 
@@ -129,7 +133,8 @@ function CountryModal() {
   useEffect(() => {
     if(isLoggedIn && !preferredCountry ){
       setIsModalOpen(true);
-    }else{
+    }
+    if(isLoggedIn && preferredCountry){
       setIsModalOpen(false);
     }
   }, [isLoggedIn, preferredCountry])

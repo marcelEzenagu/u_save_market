@@ -16,10 +16,10 @@ const orderSlice = createSlice({
             );
       
             state.ongoingOrders = action.payload.filter(
-              (order) => order.status !== 'ORDER_DELIVERED' && order.status !== 'ORDER_CANCELLED' 
+              (order) => order.status !== 'ORDER_DELIVERED' && order.status.toLowerCase() !== 'cancelled' 
             );
             state.cancelledOrders = action.payload.filter(
-              (order) => order.status === 'ORDER_CANCELLED' 
+              (order) => order.status.toLowerCase() === 'cancelled' 
             );
           },
     }

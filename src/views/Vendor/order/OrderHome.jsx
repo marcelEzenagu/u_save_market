@@ -184,7 +184,7 @@ function ProductTableTab () {
         </thead>
         <tbody className="bg-white ">
           {currentItems.map((product) => (
-            <tr key={product.id}>
+            <tr key={product.productID}>
                   <td className="px-6 py-2 text-xs font-medium text-regal-black ">
                   <input type="checkbox" />
               </td>

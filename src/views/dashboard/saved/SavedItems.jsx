@@ -1,15 +1,17 @@
 import React from 'react'
 import EmptyBag from '../../../assets/images/account/empty.png'
-import { Items } from '../../../data/mockData'
 import SaveCard from '../../../components/cards/SavedCard'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 function SavedItems() {
+  const wishList = useSelector((state) => state?.user.wishList);
   return (
     <div className='p-4'>
        <h6 className='text-regal-black text-sm md:text-xl font-bold'>Saved Items</h6>
-            {Items.length > 0 ? 
+            {wishList.length > 0 ? 
             (
                 <div className='grid grid-cols-2 md:grid-cols-5'>
-                    {Items.map((e)=> (
+                    {wishList.map((e)=> (
                         <SaveCard item={e} key={e?.id}/>
                     ))}
                 </div>

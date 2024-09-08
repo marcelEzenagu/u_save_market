@@ -1,19 +1,30 @@
 import React from "react";
 import { PiMinus } from "react-icons/pi";
-import { GoHeart } from "react-icons/go";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 import { IoAddOutline } from "react-icons/io5";
 import { numberWithCommas, ReplaceImage } from "../../utils";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ProductStatus from "../ProductStatus";
 import useCartOperationsHooks from "../../hooks/useCartOperationsHooks";
+import useWishListOperationsHooks from "../../hooks/useWishListOperationsHooks";
+
 const ProductCard = ({ item, category }) => {
   const { handleAddToCart, handleIncrement, handleDecrement } =
     useCartOperationsHooks();
+  const {
+    handleAddToWishList,
+    handleRemoveFromWishList,
+  } = useWishListOperationsHooks();
   const cart = useSelector((state) => state.cart.items);
   const cartItem = cart.find(
     (cartItem) => cartItem.productID === item?.productID
   );
+  const wishList = useSelector((state) => state?.user.wishList);
+  const wishListItem = wishList.find(
+    (cartItem) => cartItem.productID === item?.productID
+  );
+
   return (
     <div key={item.productID} className="text-sm font-[500] animate-fade-in">
       <div className="relative bg-white rounded-lg overflow-hidden h-[200px] group">
@@ -24,11 +35,30 @@ const ProductCard = ({ item, category }) => {
           className="w-full h-full object-contain"
         />
         <ProductStatus item={item} />
-        <div className="absolute top-2 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <button className="p-2 rounded-full shadow-md bg-regal-wishlist-gray">
-            <GoHeart className="w-4 h-4 text-white" />
-          </button>
-        </div>
+        {wishListItem ? (
+          <div
+            className="absolute top-2 right-4 flex space-x-2 duration-300"
+            onClick={() => {
+              handleRemoveFromWishList(item);
+            }}
+          >
+            <button className="p-2 rounded-full shadow-md bg-white active:scale-95">
+              <GoHeartFill className="w-4 h-4 text-red-600" />
+            </button>
+          </div>
+        ) : (
+          <div
+            className="absolute top-2 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            onClick={() => {
+              handleAddToWishList(item);
+            }}
+          >
+            <button className="p-2 rounded-full shadow-md bg-regal-wishlist-gray active:scale-95">
+              <GoHeart className="w-4 h-4 text-white" />
+            </button>
+          </div>
+        )}
+
         {item?.in_stock && (
           <div
             className={`absolute bottom-2 right-4 flex flex-row items-center bg-white rounded-full space-x-2 shadow-sm ${
@@ -76,12 +106,18 @@ const ProductCard = ({ item, category }) => {
         >
           {item.name}
         </Link>
-        <span className="text-xs text-regal-light-gray mb-3">{item.country}</span> 
+        <span className="text-xs text-regal-light-gray mb-3">
+          {item.country}
+        </span>
         <p className="text-regal-sky-blue font-[600] text-sm md:text-[16px] flex items-center gap-2 ">
-          ₦{numberWithCommas(item.price)}{" "}
-          <s className="font-[400] text-xs text-regal-light-gray ">
-            {item?.percentageOFF !== 0 ? "₦" + numberWithCommas(item?.old_price) : 0}
-          </s>
+          ₦{numberWithCommas(item?.price)}{" "}
+          {item?.percentageOFF !== null ? (
+            <s className="font-[400] text-xs text-regal-light-gray ">
+              ₦ {numberWithCommas(item?.old_price)}
+            </s>
+          ) : (
+            ""
+          )}
         </p>
       </div>
     </div>

@@ -156,7 +156,7 @@ function Bilingdetails(props) {
             htmlFor="companyName"
             className="block text-xs md:text-[14px] font-[600]  leading-6 mb-2 text-regal-black"
           >
-           companyName (optional)
+           CompanyName (optional)
           </label>
           <input
             type="text"

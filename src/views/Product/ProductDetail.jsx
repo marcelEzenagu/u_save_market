@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { SlArrowRight } from "react-icons/sl";
 import { useProduct } from "../../hooks/useProduct";
 import { numberWithCommas } from "../../utils";
-import { GoHeart } from "react-icons/go";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 import RelatedProduct from "../../components/RelatedProduct";
 import { BsCart3 } from "react-icons/bs";
 import SidebarMobile from "../../components/Sidebar/SidebarMobile";
@@ -13,6 +13,7 @@ import { IoAddOutline } from "react-icons/io5";
 import { PiMinus, PiTrash } from "react-icons/pi";
 import ProductStatus from "../../components/ProductStatus";
 import useCartOperationsHooks from "../../hooks/useCartOperationsHooks";
+import useWishListOperationsHooks from "../../hooks/useWishListOperationsHooks";
 function ProductDetail() {
   const { name, product } = useParams();
   const cart = useSelector((state) => state?.cart?.items);
@@ -20,7 +21,10 @@ function ProductDetail() {
   const [Items, setItems] = useState([])
   const { handleAddToCart, handleIncrement, handleDecrement } =
     useCartOperationsHooks();
-
+    const {
+      handleAddToWishList,
+      handleRemoveFromWishList,
+    } = useWishListOperationsHooks();
     useEffect(()=>{
       if (userProduct.length > 0) {
         setItems(userProduct)
@@ -38,6 +42,10 @@ function ProductDetail() {
     <p> Our Organic Mediterranean Olive Oil is a premium blend sourced from the finest olives grown in the Mediterranean region. This extra virgin olive oil is cold-pressed to retain its natural flavor and nutritional benefits, making it a perfect addition to any culinary creation.</p>
     `;
 
+    const wishList = useSelector((state) => state?.user.wishList);
+    const wishListItem = wishList.find(
+      (item) => item.productID === productinfo?.productID
+    );
   return (
     <div>
       <main className="flex flex-row items-center justify-between">
@@ -79,8 +87,13 @@ function ProductDetail() {
               {productinfo?.name}
             </h4>
             <h5 className="text-lg font-[700] flex items-center gap-2 text-regal-blue">
-              ₦{numberWithCommas(productinfo?.price)} <s className='font-[400] text-xs text-regal-light-gray'>{productinfo?.percentageOFF !== 0 ? '₦'+numberWithCommas(productinfo?.old_price) : 0 }</s>
-            </h5>
+          ₦{numberWithCommas(productinfo?.price)}{" "}
+            {productinfo?.percentageOFF  !== null ?
+          <s className="font-[400] text-xs text-regal-light-gray ">
+            ₦ { numberWithCommas(productinfo?.old_price) }
+          </s>
+           : ''}
+        </h5>
           {productinfo?.in_stock &&  <div className="max-w-[300px] flex items-center gap-2">
               {cartItem?.productID ? (
                 <div className="w-full px-4 py-3 flex flex-row items-center justify-between text-white bg-regal-sky-blue rounded-md">
@@ -111,9 +124,25 @@ function ProductDetail() {
                 </button>
               )}
 
-              <div className="w-16 h-full rounded-full border flex flex-col items-center justify-center bg-white">
-                <GoHeart className="text-2xl" />
-              </div>
+              {wishListItem ? (
+          <button
+         className="w-16 h-full rounded-full border flex flex-col items-center justify-center bg-white"
+            onClick={() => {
+              handleRemoveFromWishList(productinfo);
+            }}
+          >
+              <GoHeartFill className="text-2xl text-red-600" />
+          </button>
+        ) : (
+          <div
+            className="w-16 h-full rounded-full border flex flex-col items-center justify-center bg-white"
+            onClick={() => {
+              handleAddToWishList(productinfo);
+            }}
+          >
+              <GoHeart className="text-2xl" />
+          </div>
+        )}
             </div>}
             <div>
               <h1 className="text-sm font-[600] text-regal-light-gray mb-2">

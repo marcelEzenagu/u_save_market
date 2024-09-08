@@ -36,7 +36,10 @@ export default {
         'regal-disable-red' :'rgba(254, 247, 246, 1)',
         'regal-paginate-color' : 'rgba(68, 70, 77, 1)',
         'regal-dashboard-active-tab-gray':'rgba(250, 250, 252, 1)',
-        'regal-track-gray' : 'rgba(201, 203, 209, 1)'
+        'regal-track-gray' : 'rgba(201, 203, 209, 1)',
+        'regal-light-green' : 'rgba(5, 205, 153, 1)',
+        'regal-price-dark' : 'rgba(66, 84, 102, 1)'
+
 
       },
       keyframes: {

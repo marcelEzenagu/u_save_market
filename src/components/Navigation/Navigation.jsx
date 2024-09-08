@@ -14,29 +14,86 @@ import SearchBarIcon from "../../assets/images/nav/icons/search-normal.webp";
 import SearchIcon from "../../assets/images/nav/icons/mobile-search-normal.webp";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { dataCategory } from "../../data/mockData";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { selectCurrentUser } from "../../features/auth/authSlice";
+import { useUserWishListQuery } from "../../features/user/userApiSlice";
+import { setWishList } from "../../features/user/userSlice";
+import { Items } from "../../data/mockData";
 function Navigation() {
   const [mobileDropdown, setMobileDropdown] = useState(false);
   const [activeUser, setActiveuser] = useState(false);
   const user = useSelector(selectCurrentUser);
   const [showMessage, setShowMessage] = useState(false);
-  const preferredCountry = useSelector((state)=> state?.auth?.preferredCountry)
-  useLayoutEffect(()=>{
-    if (user !== null) {
-      setActiveuser(true)
-    }else{
-      setActiveuser(false)
-    }
-}, [user])
+  const preferredCountry = useSelector(
+    (state) => state?.auth?.preferredCountry
+  );
+  const dispatch = useDispatch();
+  const { data: whishList, isSuccess } = useUserWishListQuery(user, {
+    skip: !user,
+  });
 
-useEffect(()=>{
-  if (!preferredCountry) {
-    setShowMessage(true)
-  }else{
-    setShowMessage(false)
-  }
-}, [preferredCountry])
+  useEffect(() => {
+    if (user) {
+      if (isSuccess && whishList) {
+        const filteredProducts = whishList?.map(product => {
+          const matchingItem = Items?.find(item => item.productID === product.productID);
+          
+          if (matchingItem) {
+            return {
+              ...matchingItem,
+              productID: matchingItem.productID,
+              id: product.id  // Include the id from itemsIDArray
+            };
+          }
+          
+          return null;
+        }).filter(product => product !== null);
+        dispatch(setWishList(filteredProducts || []));
+      } else {
+        dispatch(setWishList([]));
+      }
+    }
+  }, [whishList, isSuccess, dispatch]);
+  useLayoutEffect(() => {
+    if (user !== null) {
+      setActiveuser(true);
+    } else {
+      setActiveuser(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (!preferredCountry) {
+      setShowMessage(true);
+    } else {
+      setShowMessage(false);
+    }
+  }, [preferredCountry]);
+
+  useEffect(() => {
+    const lspc = JSON.parse(localStorage.getItem("preferredCountry"));
+
+    if (!preferredCountry) {
+      if (!lspc && !user) {
+        setMobileDropdown(true);
+      }
+    }
+    if (!preferredCountry ) {
+      if(!lspc && !user ){
+        setMobileDropdown(true);
+      }
+    }
+  }, [preferredCountry, user, dispatch]);
+
+  useEffect(() => {
+    if(user && !preferredCountry ){
+      setMobileDropdown(true);
+    }
+    if(user && preferredCountry){
+      setMobileDropdown(false);
+    }
+  }, [user, preferredCountry])
+
   const onToggle = () => {
     setMobileDropdown(!mobileDropdown);
   };
@@ -54,24 +111,27 @@ useEffect(()=>{
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   return (
     <header className="sticky top-0  z-50 ">
-      {showMessage
-        && 
+      {showMessage && (
         <div className="w-full py-3  px-2 md:px-4 bg-regal-light-blue flex justify-between items-center">
-        <div className="flex items-center justify-center flex-grow">
-          <img src={Globe} alt="" className="hidden md:block md:mr-2" />
-          <h3 className="text-[10px] sm:text-xs  text-regal-black xl:text-sm font-[500] text-center">
-            Select a country to see goods that are allowed in that country
-          </h3>
+          <div className="flex items-center justify-center flex-grow">
+            <img src={Globe} alt="" className="hidden md:block md:mr-2" />
+            <h3 className="text-[10px] sm:text-xs  text-regal-black xl:text-sm font-[500] text-center">
+              Select a country to see goods that are allowed in that country
+            </h3>
+          </div>
+          <div className="rounded-full w-6 h-6 bg-regal-gray-active flex flex-col items-center justify-center">
+            <IoCloseOutline
+              className="text-white  text-[1rem]"
+              onClick={() => {
+                setShowMessage(false);
+              }}
+            />
+          </div>
         </div>
-        <div className="rounded-full w-6 h-6 bg-regal-gray-active flex flex-col items-center justify-center">
-          <IoCloseOutline className="text-white  text-[1rem]" onClick={()=>{
-             setShowMessage(false)
-          }} />
-        </div>
-      </div>
-        }
+      )}
 
       <nav className="border-b-[1px] bg-white ">
         <div className="mx-auto py-3 px-2 md:px-4 flex max-w-[1366px]  flex-row justify-between items-center lg:container-fluid  ">
@@ -116,12 +176,11 @@ useEffect(()=>{
             className={`absolute ${
               mobileDropdown ? "flex" : "hidden"
             }   flex-col bg-white items-start self-end py-8 space-y-6  sm:self-center w-full h-[100vh] drop-shadow-md`}
-            
           >
             <div className="flex flex-col gap-3 px-4 pb-5 w-full border-b">
-            <CountryModal />
+              <CountryModal />
 
-            <CurrencyModal />
+              <CurrencyModal />
             </div>
             <div className=" flex flex-col items-start gap-6 px-4 mb-10">
               {dataCategory &&
@@ -163,7 +222,7 @@ useEffect(()=>{
   );
 }
 
-function SearchForm() {
+const SearchForm = React.memo(() => {
   const [query, setQuery] = useState(""); // State to track the input value
   const dropdownRef = useRef(null);
   // Handle input change
@@ -222,9 +281,9 @@ function SearchForm() {
       </div>
     </form>
   );
-}
+});
 
-function SearchFormMobile() {
+const SearchFormMobile = React.memo(() => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -270,7 +329,6 @@ function SearchFormMobile() {
           } flex justify-center items-start `}
         >
           <div className=" w-full   ">
-      
             <div className=" bg-white flex flex-row py-3 px-4 items-center gap-4 ">
               {/* Input Field with Cancel Button Inside */}
               <div className="relative w-full">
@@ -317,5 +375,5 @@ function SearchFormMobile() {
       )}
     </div>
   );
-}
+});
 export default Navigation;
