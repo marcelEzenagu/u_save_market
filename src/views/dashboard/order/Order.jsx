@@ -138,14 +138,14 @@ const EmptyState = () => (
 const OrderCard = React.memo(({ order }) => {
   const navigate = useNavigate();
   return (
-    <div className="rounded-md border p-5 mt-4">
+    <div className="rounded-md border p-5 mt-4" >
       <div className="flex flex-col md:flex-row items-start justify-between">
         <div>
           <p
             className="text-sm md:text-[16px] text-start flex flex-row items-center gap-2 text-regal-black font-[700] capitalize cursor-pointer"
             onClick={() => navigate(`/orders/view/${order.orderID}`)}
           >
-            ID: {order.orderID} <Status key={order.status} />
+            ID: {order.orderID} <Status status={order?.status} />
           </p>
           <p className="text-xs text-regal-light-gray text-start mt-1">
             No of Items: {order.products.length}

@@ -45,6 +45,11 @@ import PaymentVendor from "./views/Vendor/PaymentVendor";
 import Analytics from "./views/Vendor/Analytics";
 import RegistrationSuccessful from "./views/Auth/vendor/RegistrationSuccessful";
 import SearchVendor from "./views/Vendor/SearchVendor";
+import AdminLayout from "./components/Layouts/AdminLayout";
+import VendorList from "./views/admin/Vendors/VendorList";
+import Overview from "./views/admin/Overview";
+import UsersList from "./views/admin/Users/UsersList";
+import UserView from "./views/admin/Users/UserView";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -249,6 +254,30 @@ const Router = createBrowserRouter([
                     element: <VendorOrderview/>
                 },
 
+        ]
+    },
+    {
+        path:'/admin/',
+        element:<AdminLayout/>,
+        children: [
+            {
+                path:'/admin/vendors',
+                element : <VendorList/>
+            },
+            {
+                path:'/admin/overview',
+                element : <Overview/>
+            },
+            {
+                path:'/admin/users',
+                element : <UsersList/>,
+                children:[
+                    {
+                        path:'/admin/users/:id',
+                        element:<UserView/>
+                    },
+                ],
+            }
         ]
     },
     {

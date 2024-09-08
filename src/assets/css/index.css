@@ -201,7 +201,10 @@ body{
   margin-top: 0;
   margin-bottom: 25px
 }
+.admin-input-shadow{
+  box-shadow: 14px 17px 40px 4px rgba(112, 144, 176, 0.08);
 
+}
 @media only screen and (max-width: 767px) {
   .notfound .notfound-404 {
     height: 200px

@@ -1,5 +1,6 @@
 import React from "react";
 import { MockData } from "../../data/mockData";
+import { Link } from "react-router-dom";
 function GridBox() {
     const gridColors = [
       'bg-grid-card-color-1',
@@ -56,7 +57,8 @@ function GridBox() {
 
                 
                 return (
-                    <div
+                    <Link
+                    to={`/products?name=${category.name.toLowerCase()}subcategory=${sub?.name.toLowerCase()}`}
                     key={sub.id}
                     className={`subcat-item relative animate-fade-in rounded-lg transform transition-transform
                        duration-500 ease-in-out hover:scale-105 h-40
@@ -76,7 +78,7 @@ function GridBox() {
                     <span className="absolute top-0 left-0 m-2 text-regal-black  bg-opacity-50 px-2 py-1 text-sm font-[400]">
                       {sub.name}
                     </span>
-                  </div>
+                  </Link>
                 );
               })}
             </div>

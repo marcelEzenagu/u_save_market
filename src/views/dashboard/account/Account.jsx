@@ -5,11 +5,7 @@ import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../../features/auth/authSlice';
 function Account() {
   const user = useSelector(selectCurrentUser);
-  // const user = {
-  //   name: "Mike Aba",
-  //   email: "mikeaba@gmail.com",
-  //   profilePicture: "https://via.placeholder.com/150",
-  // };
+
   return (
 
       <div className='p-4'>

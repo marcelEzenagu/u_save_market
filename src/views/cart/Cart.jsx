@@ -4,15 +4,24 @@ import { Link, useNavigate } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { PiMinus, PiTrash } from "react-icons/pi";
 import { IoAddOutline } from "react-icons/io5";
-import { GoHeart } from "react-icons/go";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 import RelatedProduct from "../../components/RelatedProduct";
 import CartImage from "../../assets/images/cart/Empty-cart.webp";
 import { numberWithCommas } from "../../utils";
 import useCartOperationsHooks from "../../hooks/useCartOperationsHooks";
 import { useProduct } from "../../hooks/useProduct";
+import useWishListOperationsHooks from "../../hooks/useWishListOperationsHooks";
 
 const CartItem = React.memo(
   ({ item, onDecrement, onIncrement, onRemove, lastItemId }) => {
+    const {
+      handleAddToWishList,
+      handleRemoveFromWishList,
+    } = useWishListOperationsHooks();
+    const wishList = useSelector((state) => state?.user.wishList);
+    const wishListItem = wishList.find(
+      (cartItem) => cartItem.productID === item?.productID
+    );
     return (
       <div
         className={`flex items-center justify-between md:gap-4 py-8 px-1 md:px-2 ${
@@ -36,12 +45,28 @@ const CartItem = React.memo(
               >
                 Remove
               </button>
-              <span className="flex items-center gap-1 text-xs md:text-sm">
+              {wishListItem ? (
+              <button className="flex items-center gap-1 text-xs md:text-sm"
+              onClick={() => {
+                handleRemoveFromWishList(item);
+              }}>
+                <GoHeartFill className="text-sm md:text-xl text-red-600" />
+                <span className="text-regal-light-gray border-b-2 custom-text-line cursor-pointer">
+                  Saved In WishList
+                </span>
+              </button>
+               ) : (
+                <button className="flex items-center gap-1 text-xs md:text-sm"
+                onClick={() => {
+                  handleAddToWishList(item);
+                }}
+                > 
                 <GoHeart className="text-sm md:text-xl text-regal-light-gray" />
-                <button className="text-regal-light-gray border-b-2 custom-text-line cursor-pointer">
+                <span className="text-regal-light-gray border-b-2 custom-text-line cursor-pointer">
                   Save for later
-                </button>
-              </span>
+                </span>
+              </button>
+               )}
             </div>
           </div>
         </div>
