@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import UserAccountTab from "./components/UserAccountTab";
-import UserAddressTab from "./components/userAddressTab";
+import UserAddressTab from "./components/UserAddressTab";
 import UserPasswordTab from "./components/UserPasswordTab";
 import UserOrderTab from "./components/UserOrderTab";
 import UserPaymentMethod from "./components/UserPaymentMethod";
