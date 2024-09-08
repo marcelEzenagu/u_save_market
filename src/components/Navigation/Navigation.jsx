@@ -78,7 +78,21 @@ function Navigation() {
         setMobileDropdown(true);
       }
     }
-  }, [preferredCountry, dispatch]);
+    if (!preferredCountry ) {
+      if(!lspc && !user ){
+        setMobileDropdown(true);
+      }
+    }
+  }, [preferredCountry, user, dispatch]);
+
+  useEffect(() => {
+    if(user && !preferredCountry ){
+      setMobileDropdown(true);
+    }
+    if(user && preferredCountry){
+      setMobileDropdown(false);
+    }
+  }, [user, preferredCountry])
 
   const onToggle = () => {
     setMobileDropdown(!mobileDropdown);
