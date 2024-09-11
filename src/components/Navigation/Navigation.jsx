@@ -19,6 +19,7 @@ import { selectCurrentUser } from "../../features/auth/authSlice";
 import { useUserWishListQuery } from "../../features/user/userApiSlice";
 import { setWishList } from "../../features/user/userSlice";
 import { Items } from "../../data/mockData";
+import BottomLinks from "../Sidebar/BottomLinks";
 function Navigation() {
   const [mobileDropdown, setMobileDropdown] = useState(false);
   const [activeUser, setActiveuser] = useState(false);
@@ -201,20 +202,10 @@ function Navigation() {
                 ))}
             </div>
 
-            <div className="flex flex-col gap-3 px-4">
-              <Link className="font-[500] text-xs text-regal-gray-active">
-                About Us
-              </Link>
-              <Link className="font-[500] text-xs text-regal-gray-active">
-                Help Centre
-              </Link>
-              <Link className="font-[500] text-xs text-regal-gray-active">
-                Privacy
-              </Link>
-              <Link className="font-[500] text-xs text-regal-gray-active">
-                Terms & Conditions
-              </Link>
-            </div>
+                  <div className="px-4">
+                    <BottomLinks/>
+                  </div>
+
           </div>
         </div>
       </nav>

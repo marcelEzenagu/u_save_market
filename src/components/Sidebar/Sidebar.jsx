@@ -2,6 +2,7 @@ import React, {useEffect, useState,useMemo} from 'react'
 import { Link } from 'react-router-dom';
 import { MockData } from '../../data/mockData';
 import { useLocation } from 'react-router-dom';
+import BottomLinks from './BottomLinks';
 function Sidebar() {
     const location = useLocation();
     const query = new URLSearchParams(location.search)
@@ -60,7 +61,7 @@ const FilterSider = ({name}) => {
                   </div>
               ))}
               </div>  
-             <ButtomLinks/>
+             <BottomLinks/>
           </div>    
       </div>
     ) 
@@ -98,22 +99,12 @@ function DefaultSidebar ({name})
                   </div>
               ))}
               </div>  
-             <ButtomLinks/>
+             <BottomLinks/>
           </div>    
       </div>
     ) 
 }
-const ButtomLinks = React.memo(() => {
-    return (
-        <div className='flex flex-col gap-3'>
-        <Link  to="/vendor/dashboard/home" className='font-[500] text-xs text-regal-gray-active'>Vendor</Link>
-            <Link className='font-[500] text-xs text-regal-gray-active'>About Us</Link>
-            <Link className='font-[500] text-xs text-regal-gray-active'>Help Centre</Link>
-            <Link className='font-[500] text-xs text-regal-gray-active'>Privacy</Link>
-            <Link className='font-[500] text-xs text-regal-gray-active'>Terms & Conditions</Link>
-        </div>
-    );
-})
+
 const data = [
     {
       id:'1',
