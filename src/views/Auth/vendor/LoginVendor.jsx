@@ -119,7 +119,7 @@ const handleChange = e => {
                   placeholder="Enter password"
                   className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                 />
-                   {handleErrorMessagesList("password")}
+                  
                 <div
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                
@@ -134,7 +134,9 @@ const handleChange = e => {
                     <AiOutlineEye size={20} className="text-regal-light-gray" onClick={()=> setData({...data, eye:!data.eye})}/>
                   )}
                 </div>
+
               </div>
+              {handleErrorMessagesList("password")}
             </div>
             <p className="text-red-600 text-xs">{errMsg && errMsg}</p>
 
