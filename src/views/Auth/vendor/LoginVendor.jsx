@@ -8,6 +8,8 @@ import Logo from "../../../assets/images/nav/logo.webp";
 import {useDispatch} from 'react-redux'
 import { setCredentials } from "../../../features/auth/authSlice";
 import { useLoginMutation } from "../../../features/auth/authApiSlice";
+import useErrorMessageHooks from "../../../hooks/useErrorMessageHooks";
+import { setCookie } from "../../../utils";
 const LoginVendor = () => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -21,7 +23,7 @@ const LoginVendor = () => {
     eye:false,
   })
 const navigate = useNavigate()
-
+const [errorMessagesList, setErrorMessagesList, handleErrorMessagesList] = useErrorMessageHooks();;
 const [errMsg, setErrMsg] = useState('')
 const [login, {isLoading}] = useLoginMutation()
 const dispatch = useDispatch()
@@ -30,23 +32,26 @@ useEffect(()=>{
 }, [data.email, data.password])
 const handleSubmit = async (e) => {
   e.preventDefault()
+  setErrMsg("");
+  setErrorMessagesList([]);
   try {
-    const userData = await login({ email : data.email, password : data.password }).unwrap()
-    setCookie("accessToken", userData.authorization)
-    dispatch(setCredentials({ accessToken: userData?.access_data?.access_token, user : userData?.vendor, role: userData?.access_data?.role,}))
+    const {response } = await login({ email : data.email, password : data.password }).unwrap()
+    setCookie("accessToken", response?.access_data?.access_token)
+    dispatch(setCredentials({ accessToken: response?.access_data?.access_token, user : response?.vendor, role: response?.access_data?.role,}))
     setData({
       email:'',
       password:'',
       eye:false,
     })
-    navigate('/dashboard')
+    navigate('/vendor/dashboard/home')
   }catch (err) {
     console.log(err)
     if (err?.status === 200) {
-      return
-    } 
-    else if (err?.status >= 400 && err?.status <= 404){
-      setErrMsg(err?.data?.message)
+      return;
+    } else if (err?.status >= 400) {
+      setErrorMessagesList(err?.data?.message);
+    } else if (err?.status >= 401 && err?.status <= 404) {
+      setErrMsg(err?.data?.message);
     }  else if (err?.status >= 500){
       setErrMsg("Login failed")
     }else{
@@ -63,12 +68,12 @@ const handleChange = e => {
 
   return (
     <div className="block lg:flex  items-start px-4 pt-8 pb-4 max-w-[1366px] mx-auto">
-      <div className="lg:w-1/2 animated fadeInDown">
+      <div className=" lg:w-1/2 animated fadeInDown">
         <div className="flex flex-col  justify-center md:w-[440px] mx-auto">
           <Link to="/" className="mb-10">
             <img src={Logo} alt="" className="w-36 mx-auto" />
           </Link>
-          <h1 className="text-2xl md:text-[30px] font-bold text-center mb-5 w-[410px] mx-auto ">
+          <h1 className="text-2xl md:text-[30px] font-bold text-center mb-5 md:w-[410px] mx-auto ">
           Welcome Back
           </h1>
           {/* Description Text */}
@@ -94,6 +99,7 @@ const handleChange = e => {
                 placeholder="Enter Email"
                 className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
               />
+               {handleErrorMessagesList("email")}
             </div>
 
             <div className="mb-4 col-span-2">
@@ -113,6 +119,7 @@ const handleChange = e => {
                   placeholder="Enter password"
                   className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                 />
+                   {handleErrorMessagesList("password")}
                 <div
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                

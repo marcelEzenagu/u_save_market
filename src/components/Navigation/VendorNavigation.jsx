@@ -65,7 +65,7 @@ function VendorNavigation() {
         <div className="mx-auto py-3 px-4 flex max-w-[1366px]  flex-row justify-between items-center lg:container-fluid  ">
 
             
-        <Link to="/">
+        <Link to="/vendor/dashboard/home">
               <img
                 src={Logo}
                 alt=""

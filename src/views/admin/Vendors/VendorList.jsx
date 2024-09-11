@@ -19,7 +19,7 @@ const renderVendorRow = (vendor, selectedItems, handleCheckboxChange, handleDele
                         alt=""
                         className="w-6 h-6 rounded-full object-cover"
                       />
-                      <Link to={`/admin/users/${vendor.productID}`}>Theresa Webb</Link>
+                      <Link to={`/admin/vendors/${vendor.productID}`}>Theresa Webb</Link>
                     </div>
                   </td>
     <td className="px-6 py-2 text-xs font-medium text-regal-black">{vendor.email}</td>

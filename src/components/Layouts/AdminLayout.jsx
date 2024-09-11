@@ -189,6 +189,7 @@ function AdminLayout() {
 
     useLayoutEffect(()=>{
       getActiveTabName();
+      setIsOpen(false)
     }, [location]);
   
     // Function to get the active tab name based on the URL
@@ -209,10 +210,10 @@ function AdminLayout() {
     };
   
     return (
-      <div className="flex h-screen p-4">
+      <div className="flex h-screen md:p-4">
         {/* Sidebar */}
         <aside
-          className={`bg-regal-auth-bg-color text-white w-52 flex-shrink-0 md:block ${
+          className={`bg-regal-auth-bg-color h-[100vh] text-white w-52 flex-shrink-0 md:block ${
             isOpen ? "block" : "hidden"
           } md:block fixed md:relative z-30`}
         >
@@ -324,7 +325,7 @@ const Header = () => {
             <input
               type="text"
               placeholder="Search"
-              className="bg-regal-auth-bg-color  rounded-full text-sm pl-11 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-[300px] font-[500]"
+              className="bg-regal-auth-bg-color  rounded-full text-sm pl-11 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 md:w-[300px] font-[500]"
             />
             <FiSearch className="absolute left-5 top-1/2 transform -translate-y-1/2 text-regal-blue" />
           </div>

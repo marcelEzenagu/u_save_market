@@ -1,6 +1,6 @@
-import EmptyBag from '../../../../assets/images/account/empty.png'
-import { Items } from '../../../../data/mockData'
-import UserSavedCard from '../../../../components/cards/UserSavedCard'
+import EmptyBag from '../../../assets/images/account/empty.png'
+import { Items } from '../../../data/mockData'
+import UserSavedCard from '../../../components/cards/UserSavedCard'
 function UserSavedItemsTab() {
   return (
     <div className='p-4'>
