@@ -19,7 +19,7 @@ import { selectCurrentUser } from "../../features/auth/authSlice";
 import { useUserWishListQuery } from "../../features/user/userApiSlice";
 import { setWishList } from "../../features/user/userSlice";
 import { Items } from "../../data/mockData";
-import ButtomLinks from "../Sidebar/ButtomLinks";
+import BottomLinks from "../Sidebar/BottomLinks";
 function Navigation() {
   const [mobileDropdown, setMobileDropdown] = useState(false);
   const [activeUser, setActiveuser] = useState(false);
@@ -203,7 +203,7 @@ function Navigation() {
             </div>
 
                   <div className="px-4">
-                    <ButtomLinks/>
+                    <BottomLinks/>
                   </div>
 
           </div>

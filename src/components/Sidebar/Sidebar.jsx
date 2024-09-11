@@ -2,7 +2,7 @@ import React, {useEffect, useState,useMemo} from 'react'
 import { Link } from 'react-router-dom';
 import { MockData } from '../../data/mockData';
 import { useLocation } from 'react-router-dom';
-import ButtomLinks from './ButtomLinks';
+import BottomLinks from './BottomLinks';
 function Sidebar() {
     const location = useLocation();
     const query = new URLSearchParams(location.search)
@@ -61,7 +61,7 @@ const FilterSider = ({name}) => {
                   </div>
               ))}
               </div>  
-             <ButtomLinks/>
+             <BottomLinks/>
           </div>    
       </div>
     ) 
@@ -99,7 +99,7 @@ function DefaultSidebar ({name})
                   </div>
               ))}
               </div>  
-             <ButtomLinks/>
+             <BottomLinks/>
           </div>    
       </div>
     ) 

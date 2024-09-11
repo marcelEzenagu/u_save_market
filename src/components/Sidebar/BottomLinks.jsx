@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-const ButtomLinks =() => {
+const BottomLinks =() => {
     return (
         <div className='flex flex-col gap-3'>
         <Link  to="/vendor/dashboard/home" className='font-[500] text-xs text-regal-gray-active'>Vendor</Link>
@@ -10,5 +10,4 @@ const ButtomLinks =() => {
         </div>
     );
 }
-
-export default ButtomLinks;
+export default BottomLinks;

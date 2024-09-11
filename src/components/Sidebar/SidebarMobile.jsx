@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom';
 import { MockData } from '../../data/mockData';
 import { useLocation } from 'react-router-dom';
-import ButtomLinks from './ButtomLinks';
+import BottomLinks from './BottomLinks';
 function SidebarMobile() {
     const location = useLocation();
     const query = new URLSearchParams(location.search)
