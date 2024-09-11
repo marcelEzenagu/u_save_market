@@ -2,10 +2,10 @@ import React, { useMemo, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { SlArrowDown } from "react-icons/sl";
 import ReactPaginate from "react-paginate";
-import { Items } from "../../../../data/mockData";
+import { Items } from "../../../data/mockData";
 import { Link } from "react-router-dom";
-import OrderVendorStatus from "../../../../components/order/OrderVendorStatus";
-import OrderViewComponents from "../../../../components/OrderViewComponents/OrderViewComponents";
+import OrderVendorStatus from "../../../components/order/OrderVendorStatus";
+import OrderViewComponents from "../../../components/OrderViewComponents/OrderViewComponents";
 
 function UserOrderTab() {
   const [dropdownOption, setDropdownOption] = useState("This Month");

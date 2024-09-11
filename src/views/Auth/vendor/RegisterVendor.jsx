@@ -6,6 +6,9 @@ import Googleicon from "../../../assets/images/auth/google.png"
 import {useDispatch} from 'react-redux'
 import Logo from "../../../assets/images/nav/logo.webp";
 import { useRegisterMutation } from "../../../features/auth/authApiSlice";
+import useErrorMessageHooks from "../../../hooks/useErrorMessageHooks";
+import { setCookie } from "../../../utils";
+import { setCredentials } from "../../../features/auth/authSlice";
 const RegisterVendor = () => {
   const [data, setData] = useState({
     firstName:'',
@@ -16,7 +19,7 @@ const RegisterVendor = () => {
     eye:false,
     eyeConfirm:false
   })
-  const [errorMessagesList, setErrorMessagesList] = useState([]);
+  const [errorMessagesList, setErrorMessagesList, handleErrorMessagesList] = useErrorMessageHooks();;
   const [errMsg, setErrMsg] = useState('')
   const [modal, setModal] = useState(false)
   const [Register, {isLoading}] = useRegisterMutation()
@@ -31,9 +34,12 @@ const handleSubmit = async (e) => {
   setErrMsg("");
   setErrorMessagesList([]);
   try {
-    const userData = await Register({ firstName: data.firstName, lastName:data.lastName,  email : data.email, password : data.password }).unwrap()
-    console.log(userData)
-    dispatch(setCredentials({...userData, user :userData.data}))
+    const  {
+      access_data,
+      vendor
+       } = await Register({ firstName: data.firstName, lastName:data.lastName,  email : data.email, password : data.password }).unwrap()
+    setCookie("accessToken", access_data?.token)
+    dispatch(setCredentials({ accessToken: access_data?.token, user : vendor, role: access_data?.role,}))
     setData({
       firstName:'',
       lastName: '',
@@ -43,9 +49,8 @@ const handleSubmit = async (e) => {
       eye:false,
       eyeConfirm:false
     })
-    setCookie("accessToken", userData?.access_data?.token);
-    setModal(true)
-    // navigate('/dashboard')
+    // setModal(true)
+    navigate('/vendor/dashboard/home')
   }catch (err) {
     console.log(err);
     if (err?.status === 200) {
@@ -68,45 +73,7 @@ const handleChange = e => {
   setData(newData)
 }
 
-const handleErrorMessagesList = (key) => {
-  if (errorMessagesList[0]?.field) {
-    let message = errorMessagesList.filter((e) =>
-      e?.field.toLowerCase().includes(key.toLowerCase())
-    );
-    return (
-      <div className="mt-2">
-        {message.map((e) => (
-          <p className="text-red-600 text-xs" key={e}>
-            {e?.message.replaceAll("Path ", "").replaceAll("`", "")}
-          </p>
-        ))}
-      </div>
-    );
-  } else if (typeof errorMessagesList === "string") {
-    return (
-      <div className="mt-2">
-        <p className="text-red-600 text-xs">
-          {errorMessagesList.toLowerCase().includes(key.toLowerCase()) &&
-            errorMessagesList.replaceAll(",", " ")}
-        </p>
-      </div>
-    );
-  } else {
-    let message = errorMessagesList.filter((e) =>
-      e.toLowerCase().includes(key.toLowerCase())
-    );
-    return (
-      <div className="mt-2">
-        {message.map((e) => (
-          <p className="text-red-600 text-xs" key={e}>
-            {e}
-          </p>
-        ))}
-      </div>
-    );
-  }
-};
- 
+
 
 
   return (

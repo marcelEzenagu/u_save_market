@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState,useMemo} from 'react'
 import { Link } from 'react-router-dom';
 import { MockData } from '../../data/mockData';
 import { useLocation } from 'react-router-dom';
@@ -60,12 +60,7 @@ const FilterSider = ({name}) => {
                   </div>
               ))}
               </div>  
-              <div className='flex flex-col gap-3'>
-                  <Link className='font-[500] text-xs text-regal-gray-active'>About Us</Link>
-                  <Link className='font-[500] text-xs text-regal-gray-active'>Help Centre</Link>
-                  <Link className='font-[500] text-xs text-regal-gray-active'>Privacy</Link>
-                  <Link className='font-[500] text-xs text-regal-gray-active'>Terms & Conditions</Link>
-              </div>
+             <ButtomLinks/>
           </div>    
       </div>
     ) 
@@ -103,16 +98,22 @@ function DefaultSidebar ({name})
                   </div>
               ))}
               </div>  
-              <div className='flex flex-col gap-3'>
-                  <Link className='font-[500] text-xs text-regal-gray-active'>About Us</Link>
-                  <Link className='font-[500] text-xs text-regal-gray-active'>Help Centre</Link>
-                  <Link className='font-[500] text-xs text-regal-gray-active'>Privacy</Link>
-                  <Link className='font-[500] text-xs text-regal-gray-active'>Terms & Conditions</Link>
-              </div>
+             <ButtomLinks/>
           </div>    
       </div>
     ) 
 }
+const ButtomLinks = React.memo(() => {
+    return (
+        <div className='flex flex-col gap-3'>
+        <Link  to="/vendor/dashboard/home" className='font-[500] text-xs text-regal-gray-active'>Vendor</Link>
+            <Link className='font-[500] text-xs text-regal-gray-active'>About Us</Link>
+            <Link className='font-[500] text-xs text-regal-gray-active'>Help Centre</Link>
+            <Link className='font-[500] text-xs text-regal-gray-active'>Privacy</Link>
+            <Link className='font-[500] text-xs text-regal-gray-active'>Terms & Conditions</Link>
+        </div>
+    );
+})
 const data = [
     {
       id:'1',

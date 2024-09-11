@@ -35,9 +35,9 @@ import ResetPasswordVendor from "./views/Auth/vendor/ResetPasswordVendor";
 import Profile from "./views/Vendor/profile/Profile";
 import ProfileDetails from "./views/Vendor/profile/Components/ProfileDetails";
 import Identification from "./views/Vendor/profile/Components/Identification";
-import BusinessVerification from "./views/Vendor/profile/Components/Verifications/BusinessVerification";
-import GovernmentIssued from "./views/Vendor/profile/Components/Verifications/GovernmentIssued";
-import InterviewMeeting from "./views/Vendor/profile/Components/Verifications/InterviewMeeting";
+// import BusinessVerification from "./views/Vendor/profile/Components/Verifications/BusinessVerification";
+// import GovernmentIssued from "./views/Vendor/profile/Components/Verifications/GovernmentIssued";
+// import InterviewMeeting from "./views/Vendor/profile/Components/Verifications/InterviewMeeting";
 import PasswordAndSecurity from "./views/Vendor/profile/Components/PasswordAndSecurity";
 import SettingsVendor from "./views/Vendor/profile/Components/Settings";
 import Performance from "./views/Vendor/profile/Components/Performance";
@@ -50,6 +50,10 @@ import VendorList from "./views/admin/Vendors/VendorList";
 import Overview from "./views/admin/Overview";
 import UsersList from "./views/admin/Users/UsersList";
 import UserView from "./views/admin/Users/UserView";
+import VendorView from "./views/admin/Vendors/VendorView";
+import OrderList from "./views/admin/OrderList";
+import PaymentList from "./views/admin/PaymentList";
+import AnalyticsList from "./views/admin/Analytics/AnalyticsList";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -138,6 +142,10 @@ const Router = createBrowserRouter([
         path:'/vendor/auth',
         element: <VendorAuthLayout/>,
         children: [
+            {
+                path: '/vendor/auth/',
+                element : <Navigate to='/vendor/auth/login'/>
+            },
                 {
                     path:'/vendor/auth/register',
                     element: <RegisterVendor/>
@@ -231,21 +239,21 @@ const Router = createBrowserRouter([
                         {   
                             path:'/vendor/dashboard/profile/identification',
                                element: <Identification/>,
-                               children: [
-                                {   
-                                    path:'/vendor/dashboard/profile/identification/business-verification',
-                                       element: <BusinessVerification/>,
-                                   },
+                            //    children: [
+                            //     {   
+                            //         path:'/vendor/dashboard/profile/identification/business-verification',
+                            //            element: <BusinessVerification/>,
+                            //        },
 
-                                   {   
-                                    path:'/vendor/dashboard/profile/identification/government-issued-id',
-                                       element: <GovernmentIssued/>,
-                                   },
-                                   {   
-                                    path:'/vendor/dashboard/profile/identification/interview-meeting',
-                                       element: <InterviewMeeting/>,
-                                   },
-                               ]
+                            //        {   
+                            //         path:'/vendor/dashboard/profile/identification/government-issued-id',
+                            //            element: <GovernmentIssued/>,
+                            //        },
+                            //        {   
+                            //         path:'/vendor/dashboard/profile/identification/interview-meeting',
+                            //            element: <InterviewMeeting/>,
+                            //        },
+                            //    ]
                            }
                     ]
                 },
@@ -261,8 +269,16 @@ const Router = createBrowserRouter([
         element:<AdminLayout/>,
         children: [
             {
+                path: '/admin/',
+                element : <Navigate to='/admin/overview'/>
+            },
+            {
                 path:'/admin/vendors',
                 element : <VendorList/>
+            },
+            {
+                path:'/admin/vendors/:id',
+                element:<VendorView/>
             },
             {
                 path:'/admin/overview',
@@ -271,13 +287,24 @@ const Router = createBrowserRouter([
             {
                 path:'/admin/users',
                 element : <UsersList/>,
-                children:[
-                    {
-                        path:'/admin/users/:id',
-                        element:<UserView/>
-                    },
-                ],
+            },
+            {
+                path:'/admin/users/:id',
+                element:<UserView/>
+            },
+            {
+                path:'/admin/orders',
+                element:<OrderList/>
+            },
+            {
+                path:'/admin/payments',
+                element:<PaymentList/>
+            },
+            {
+                path:'/admin/analytics',
+                element:<AnalyticsList/>
             }
+        
         ]
     },
     {

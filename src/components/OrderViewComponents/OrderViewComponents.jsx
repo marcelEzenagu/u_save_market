@@ -197,30 +197,66 @@ const TrackingComponent = ({ trackingDetails, setTrackOrderDetails }) => (
   </div>
 );
 
-const OrderItems = ({ products }) => (
-  <>
-  <div className="flex justify-between">
-  <p className="text-xs md:text-sm font-bold text-regal-black">
-    Items in this order ({products?.length})
-  </p>
-  <button className="font-semibold text-regal-sky-blue text-xs md:text-sm flex items-center gap-2">
-    View <IoIosArrowBack className="text-regal-black text-lg" />
-    <IoIosArrowForward className="text-regal-black text-lg" />
-  </button>
-</div>
 
-<div className="">
-  <div className="mt-5 flex gap-4  overflow-x-scroll">
-    {products.map((item, index) => (
-      <div className="w-[170px]" key={index}>
-        <ItemsCard item={item} />
+const OrderItems = ({ products }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleModalToggle = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  return (
+    <>
+      <div className="flex justify-between">
+        <p className="text-xs md:text-sm font-bold text-regal-black">
+          Items in this order ({products?.length})
+        </p>
+        <button
+          onClick={handleModalToggle}
+          className="font-semibold text-regal-sky-blue text-xs md:text-sm flex items-center gap-2"
+        >
+          View
+        </button>
       </div>
-    ))}
-  </div>
-</div>
 
-  </>
-);
+      <div className="mt-5 flex gap-4 overflow-x-scroll">
+        {products.map((item, index) => (
+          <div className="w-[170px]" key={index}>
+            <ItemsCard item={item} />
+          </div>
+        ))}
+      </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white w-full max-w-md p-6 rounded-lg">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-bold">Items in this order ({products?.length})</h2>
+              <button onClick={handleModalToggle} className="text-red-500 text-xl">&times;</button>
+            </div>
+
+            <div className="max-h-[500px] md:max-h-[700px] grid grid-cols-2 overflow-y-auto">
+              {products.map((item, index) => (
+                <div className="mb-4" key={index}>
+                  <ItemsCard item={item} />
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={handleModalToggle}
+              className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
 
 const CheckoutDetails = () => (
   <div className="border-b p-5 ">

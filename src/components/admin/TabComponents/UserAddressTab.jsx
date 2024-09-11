@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { countries } from "../../../../data/mockData";
+import { countries } from "../../../data/mockData";
 import ReactPaginate from "react-paginate";
 import { SlArrowDown } from "react-icons/sl";
 function UserAddressTab() {

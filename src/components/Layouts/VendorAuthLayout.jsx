@@ -1,11 +1,18 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
+import React, { useLayoutEffect } from 'react';
+import { getSecureCookie, validateToken } from '../../utils'; 
+import { Outlet, Navigate } from 'react-router-dom';
+
 function VendorAuthLayout() {
+  const userToken = getSecureCookie("accessToken");
+  if (userToken && validateToken(userToken)) {
+  return  <Navigate to='/vendor/dashboard/home'/>
+  }
   return (
     <div>
-        <Outlet/>
+     
+      {!userToken || !validateToken(userToken) ? <Outlet /> : 'emeka'}
     </div>
-  )
+  );
 }
 
-export default VendorAuthLayout
+export default VendorAuthLayout;

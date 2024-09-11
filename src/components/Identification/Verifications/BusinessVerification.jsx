@@ -2,16 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FaCheck } from "react-icons/fa6";
-function BusinessVerification() {
+function BusinessVerification({onClose}) {
   return (
     <div className="p-4 md:p-8 animate-fade-in">
-      <Link
+     <button
         className=" flex items-center gap-2 text-regal-sky-blue text-sm  mb-4"
-        to="/vendor/dashboard/profile/identification"
+       
+        onClick={()=>{
+          onClose()
+        }}
       >
         <IoIosArrowRoundBack className="text-lg" />
         Back
-      </Link>
+      </button>
       <div className="flex flex-row items-start gap-4 mt-2" >
               <div className="flex flex-col items-center gap-2 mt-2">
                 <div

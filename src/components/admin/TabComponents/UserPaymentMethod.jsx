@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Menu } from "@headlessui/react";
-import EmptyList from "../../../dashboard/settings/components/EmptyList";
-import NoCardicon from "../../../../assets/images/settings/nocard.png";
-import MasterCard from "../../../../assets/images/settings/mastercard.png";
-import Cancelicon from "../../../../assets/images/order/cancel.png";
-import { countries } from "../../../../data/mockData";
-import Card from '../../../../assets/images/checkout/card.png'
+import EmptyList from "../../../views/dashboard/settings/components/EmptyList";
+import NoCardicon from "../../../assets/images/settings/nocard.png";
+import MasterCard from "../../../assets/images/settings/mastercard.png";
+import Cancelicon from "../../../assets/images/order/cancel.png";
+import { countries } from "../../../data/mockData";
+import Card from '../../../assets/images/checkout/card.png'
 import { SlArrowDown } from "react-icons/sl";
 import { HiOutlineArrowLeft } from "react-icons/hi2";
 import { Link } from "react-router-dom";

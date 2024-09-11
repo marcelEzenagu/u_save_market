@@ -3,7 +3,6 @@ import { Items } from "../../data/mockData";
 import { Link } from "react-router-dom";
 import OrderVendorStatus from "../../components/order/OrderVendorStatus";
 import { Line } from "react-chartjs-2";
-import { Menu } from "@headlessui/react";
 import ReactPaginate from "react-paginate";
 import {
   Chart as ChartJS,

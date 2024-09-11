@@ -1,9 +1,10 @@
 import React from 'react';
 import { Menu } from '@headlessui/react';
-// import { ChevronDownIcon } from '@heroicons/react/solid';
 import { Link } from 'react-router-dom';
-
+import { useDispatch } from 'react-redux';
+import { logOut } from '../../../features/auth/authSlice';
 const VendorDropdown = () => {
+  const dispatch = useDispatch();
   return (
     <Menu as="div" className="relative">
       <Menu.Button className="flex items-center">
@@ -66,18 +67,19 @@ const VendorDropdown = () => {
               </Link>
             )}
           </Menu.Item>
-          <form method="POST" action="/logout">
             <Menu.Item>
               {({ active }) => (
                 <button
                   type="submit"
                   className={`block w-full px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
-                >
+                  onClick={()=>{
+                    dispatch(logOut());
+                  }}
+                  >
                   Logout
                 </button>
               )}
             </Menu.Item>
-          </form>
         </div>
       </Menu.Items>
     </Menu>
