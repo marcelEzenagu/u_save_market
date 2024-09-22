@@ -55,6 +55,7 @@ function Navigation() {
       }
     }
   }, [whishList, isSuccess, dispatch]);
+ 
   useLayoutEffect(() => {
     if (user !== null) {
       setActiveuser(true);
@@ -119,7 +120,7 @@ function Navigation() {
         <div className="w-full py-3  px-2 md:px-4 bg-regal-light-blue flex justify-between items-center">
           <div className="flex items-center justify-center flex-grow">
             <img src={Globe} alt="" className="hidden md:block md:mr-2" />
-            <h3 className="text-[10px] sm:text-xs  text-regal-black xl:text-sm font-[500] text-center">
+            <h3 className="hidden md:block text-[10px] sm:text-xs  text-regal-black xl:text-sm font-[500] text-center">
               Select a country to see goods that are allowed in that country
             </h3>
           </div>

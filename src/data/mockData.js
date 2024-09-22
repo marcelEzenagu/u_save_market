@@ -299,6 +299,7 @@ export const MockData = [
           ]
     }
 ]
+
 export const countries = [
   { code: 'US', name: 'United States', number: '+1', flag: 'https://flagcdn.com/w320/us.png', currency: '$', currencyName: 'US Dollar' },
   { code: 'CA', name: 'Canada', number: '+1', flag: 'https://flagcdn.com/w320/ca.png', currency: 'CAD', currencyName: 'Canadian Dollar' },
@@ -473,6 +474,7 @@ const randomTrueOrFalse = ()  =>
 {
   return getRandomInt(0, 5) !== 1 ;
 }
+
 const getRandomProductimage = () => {
  let number = getRandomInt(1, 17);
     switch (number) {
@@ -514,6 +516,7 @@ const getRandomProductimage = () => {
         Product1;
     }
 }
+
 // Generates products with configurable count
 function generateProducts(itemCount = 10) {
   const products = [];
