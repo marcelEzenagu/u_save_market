@@ -12,6 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^2.1.2",
     "@reduxjs/toolkit": "^2.2.7",
+    "axios": "^1.7.7",
     "chart.js": "^4.4.4",
     "dompurify": "^3.1.6",
     "moment": "^2.30.1",
