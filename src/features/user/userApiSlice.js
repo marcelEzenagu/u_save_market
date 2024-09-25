@@ -7,6 +7,22 @@ export const userApiSlice =  apiSlice.injectEndpoints({
            keepUnusedDataFor:5,
             providesTags:['user']
         }),
+        updateUserProfilePicture: builder.mutation({
+            query: (credentials) => ({
+                url: 'users/details',
+                method: 'PATCH',
+                body: {...credentials},
+            }),
+            invalidatesTags:['user']
+        }),
+        updateUserProfile: builder.mutation({
+            query: (credentials) => ({
+                url: 'users/details',
+                method: 'PATCH',
+                body: {...credentials},
+            }),
+            invalidatesTags:['user']
+        }),
         userWishList : builder.query({
             query: () => 'saved-items',
             keepUnusedDataFor:5,
@@ -35,5 +51,7 @@ export const {
     useViewUserQuery,
     useAddItemToWishListMutation,
     useRemoveItemFromWishListMutation,
-    useUserWishListQuery
+    useUserWishListQuery,
+    useUpdateUserProfileMutation,
+    useUpdateUserProfilePictureMutation
     } = userApiSlice

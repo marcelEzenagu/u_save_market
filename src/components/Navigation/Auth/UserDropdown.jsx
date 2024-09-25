@@ -1,9 +1,8 @@
 import { Menu } from "@headlessui/react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { selectCurrentUser } from "../../../features/auth/authSlice";
+import { selectCurrentUser, logOut} from "../../../features/auth/authSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { logOut } from "../../../features/auth/authSlice";
 function UserDropdown() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -18,7 +17,7 @@ function UserDropdown() {
       <Menu.Button className="flex items-center space-x-3  focus:outline-none ">
         <div className="md:w-8 md:h-8 flex flex-col items-center justify-center rounded-full border border-regal-sky-blue">
           <img
-            className="w-7 md:h-7 rounded-full "
+            className="w-7 md:h-7 rounded-full object-cover"
             src={user?.profilePicture || 'https://as2.ftcdn.net/jpg/02/15/84/43/160_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg'}
             alt="User Profile"
           />
