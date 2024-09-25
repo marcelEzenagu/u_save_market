@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import ListComponent from '../../../components/admin/ListComponent';
 import { Items } from '../../../data/mockData'; // No need to rename to Users
 import { Link } from 'react-router-dom';
-import { countries } from '../../../data/mockData';
-const renderVendorRow = (User, selectedItems, handleCheckboxChange, handleDeleteClick) => (
+import { useSelector } from 'react-redux';
+const renderVendorRow = (User, selectedItems, handleCheckboxChange, handleDeleteClick, countries) => (
   <tr key={User.id}>
     <td className="px-6 py-2 text-xs font-medium text-regal-black">
       <input
@@ -40,7 +40,7 @@ const renderVendorRow = (User, selectedItems, handleCheckboxChange, handleDelete
 
 const VendorComponent = ({ selectedItems, handleCheckboxChange, handleDeleteClick }) => {
   const headers = ["Name", "Email Address", "Phone Number", "Country", ]; // Added "Actions" to match the User row actions
-
+  const countries = useSelector((state) => state?.auth?.countries);
   return (
     <ListComponent
       data={Items} // Use mock data directly
@@ -48,7 +48,7 @@ const VendorComponent = ({ selectedItems, handleCheckboxChange, handleDeleteClic
       title="Users"
       headers={headers} // Pass the headers
       renderRow={(User) =>
-        renderVendorRow(User, selectedItems, handleCheckboxChange, handleDeleteClick)
+        renderVendorRow(User, selectedItems, handleCheckboxChange, handleDeleteClick, countries)
       }
       selectedItems={selectedItems}
       handleCheckboxChange={handleCheckboxChange}

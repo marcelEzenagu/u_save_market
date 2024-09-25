@@ -13,15 +13,17 @@ import { useProduct } from "../../hooks/useProduct";
 import useWishListOperationsHooks from "../../hooks/useWishListOperationsHooks";
 
 const CartItem = React.memo(
-  ({ item, onDecrement, onIncrement, onRemove, lastItemId }) => {
+  ({ item, onDecrement, onIncrement, onRemove, lastItemId, exchangeRate }) => {
     const {
       handleAddToWishList,
       handleRemoveFromWishList,
     } = useWishListOperationsHooks();
     const wishList = useSelector((state) => state?.user.wishList);
+    
     const wishListItem = wishList.find(
       (cartItem) => cartItem.productID === item?.productID
     );
+ 
     return (
       <div
         className={`flex items-center justify-between md:gap-4 py-8 px-1 md:px-2 ${
@@ -80,14 +82,14 @@ const CartItem = React.memo(
           </button>
         </div>
         <span className="text-regal-black font-[600] text-xs md:text-sm">
-          ₦{numberWithCommas(item.price)}
+        {exchangeRate?.currency}{' '}{ numberWithCommas(item?.price * exchangeRate?.rate)}
         </span>
       </div>
     );
   }
 );
 
-const OrderSummary = ({ total, itemCount, navigate }) => {
+const OrderSummary = ({ total, itemCount, navigate,exchangeRate }) => {
   return (
     <div className="border shadow-sm bg-white py-4 rounded-md">
       <h5 className="text-sm text-regal-blue font-[700] px-4">Order Summary</h5>
@@ -99,7 +101,7 @@ const OrderSummary = ({ total, itemCount, navigate }) => {
           </p>
         </div>
         <p className="text-sm font-[600] text-regal-black">
-          ₦{numberWithCommas(total)}
+        {exchangeRate?.currency}{' '}{ numberWithCommas(total * exchangeRate?.rate)}{" "}
         </p>
       </div>
       <div className="flex flex-row justify-between items-start m-4">
@@ -118,7 +120,7 @@ const OrderSummary = ({ total, itemCount, navigate }) => {
           <h6 className="text-sm font-[500] text-regal-black">Est.Total</h6>
         </div>
         <p className="text-lg font-[600] text-regal-black px-4">
-          ₦{numberWithCommas(total)}
+        {exchangeRate?.currency}{' '}{ numberWithCommas(total * exchangeRate?.rate)}{" "}
         </p>
       </div>
 
@@ -199,6 +201,7 @@ function Cart() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const Items = useSelector((state) => state.cart.items || []);
   const user = useSelector((state) => state?.auth);
+  const exchangeRate = useSelector((state)=> state?.auth?.exchangeRate);
   const [ITemsDiv, setITemsDiv] = useState([])
   const navigate = useNavigate();
   const {isLoading, userProduct, } = useProduct();
@@ -263,6 +266,7 @@ function Cart() {
                   onIncrement={handleIncrement}
                   onRemove={handleRemove}
                   lastItemId={lastItemId}
+                  exchangeRate={exchangeRate}
                 />
               ))}
             </div>
@@ -285,6 +289,7 @@ function Cart() {
                 total={total}
                 itemCount={Items.length}
                 navigate={navigate}
+                exchangeRate={exchangeRate}
               />
             </div>
           </div>
@@ -297,6 +302,7 @@ function Cart() {
         isModalOpen={isModalOpen}
         toggleModal={toggleModal}
         handleRemoveAll={handleRemoveAll}
+        
       />
     </div>
   );
