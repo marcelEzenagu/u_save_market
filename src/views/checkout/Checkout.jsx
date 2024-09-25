@@ -201,7 +201,25 @@ function Checkout() {
         if (cartDetails?.products?.length > 0) {
           localStorage.setItem("checkoutDetails", JSON.stringify(data));
           console.log(cartDetails);
-          const stripe =  await loadStripe("")
+          const stripe =  await loadStripe(import.meta.env.VITE_APP_STRIPE_KEY);
+          const body = {
+            products: cartDetails?.products
+          }
+          const headers={
+              "Content-Type" : "application/json"
+          }
+          const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/create-checkout-session`, {
+            method:"POST",
+            headers:headers,
+            body:JSON.stringify(body)
+          });
+          const session = await response.json();
+          const result = stripe.redirectToCheckout({
+            sessionId:session.id
+          });
+          if(result?.error){
+            console.log(result?.error);
+          }
           // navigate("/payment");
         }
       // } 

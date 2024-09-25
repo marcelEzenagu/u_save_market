@@ -19,6 +19,13 @@ const ProgressFormPage = () => {
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
   const profileInputRef = useRef(null);
+
+
+  const [base64String, setBase64String] = useState('');
+  const [imagePreview, setImagePreview] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState('');
+
+  
   const handleButtonClick = () => {
     fileInputRef.current.click(); // Trigger the file input click event
   };
@@ -65,6 +72,43 @@ const ProgressFormPage = () => {
   };
 
 
+
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]; // Get the selected file
+
+    if (file) {
+      const reader = new FileReader();
+
+      // Define the callback for when the file is read
+      reader.onloadend = () => {
+        const base64String = reader.result; // Get the base64 string
+        setBase64String(base64String);
+        setImagePreview(base64String); // Set image preview
+        setUploadStatus("")
+        console.log("base64String",base64String); // Logs the base64 string of the image      
+      };
+      // Read the file as a Data URL (which contains the base64 string)
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUpload = async () => {
+    try {
+      const response = await axios.patch('http://localhost:3600/vendors', {
+        businessProfilePicture: base64String,
+      });
+
+      if (response.status === 200) {
+        setUploadStatus('Image uploaded successfully!');
+      } else {
+        setUploadStatus('Failed to upload image.');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      setUploadStatus('Error uploading image.');
+    }
+  };
 
   const handleSelect = (country) => {
     setSelectedCountry(country);
@@ -121,7 +165,7 @@ const ProgressFormPage = () => {
               <input
                 type="file"
                 ref={profileInputRef}
-                onChange={handleImageUpload}
+                onChange={handleFileChange}
                 className="w-full p-3 hidden text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
               />
               {profileImage ? (

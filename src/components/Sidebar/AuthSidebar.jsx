@@ -121,13 +121,14 @@ const activeLink = Links.filter((e)=> e.url === location?.pathname)
             setActive(activeLink[0].id)
         }
     }, [location]);
+
   return (
     <div className=''>
         <div className='py-2 flex flex-row md:flex-col overflow-x-scroll md:min-h-[600px]  md:w-44 md:pr-9 md:border-r shadow-md md:shadow-none'>
                 {Links.map((e, i)=> (
-                          <div  key={e.url} className={`my-1 mx-2 md:mx-0 hover:bg-gray-100 ${active === e.id &&  'bg-gray-100 px-3'} hover:px-3 w-auto rounded-md`}>
-                          <Link to={e.url} className='text-regal-black text-xs md:text-sm flex flex-row whitespace-nowrap items-center font-[500] py-1 md:py-2  transition rounded-md '> <span className='mr-2 '>{e.image}</span> {e.name}</Link>
-                      </div>
+                  <div  key={e.url} className={`my-1 mx-2 md:mx-0 hover:bg-gray-100 ${active === e.id &&  'bg-gray-100 px-3'} hover:px-3 w-auto rounded-md`}>
+                    <Link to={e.url} className='text-regal-black text-xs md:text-sm flex flex-row whitespace-nowrap items-center font-[500] py-1 md:py-2  transition rounded-md '> <span className='mr-2 '>{e.image}</span> {e.name}</Link>
+                  </div>
                 ))}
 
         </div>

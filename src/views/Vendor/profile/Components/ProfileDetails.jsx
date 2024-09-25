@@ -2,10 +2,22 @@ import React, { useState } from 'react';
 import { PiTrash } from "react-icons/pi";
 import { SlArrowDown } from "react-icons/sl";
 import { countries } from '../../../../data/mockData';
+import axios from 'axios'
+import { getCookie } from '../../../../utils';
+
 function ProfileDetails() {
   const [image, setImage] = useState(null); // State for the uploaded image
   const [selectedCountry, setSelectedCountry] = useState(countries[0] || null);
   const [isOpenSelect, setIsOpenSelect] = useState(false);
+  const [error, setError] = useState("");
+  
+  const [base64String, setBase64String] = useState('');
+  const [imagePreview, setImagePreview] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState('');
+
+  const MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+
+  
   const handleSelect = (country) => {
     setSelectedCountry(country);
     setIsOpenSelect(false); // Close dropdown after selection
@@ -15,9 +27,19 @@ function ProfileDetails() {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
+      
+      
+      // Define the callback for when the file is read
       reader.onloadend = () => {
-        setImage(reader.result); // Set the selected image
-      };
+          setImage(reader.result); // Set the selected image
+          const base64String = reader.result; // Get the base64 string
+          console.log("base64String",base64String); // Logs the base64 string of the image      
+          setBase64String(base64String);
+          setImagePreview(base64String); // Set image preview
+          setUploadStatus("")
+        };
+        // Read the file as a Data URL (which contains the base64 string)
+        reader.readAsDataURL(file);
       reader.readAsDataURL(file);
     }
   };
@@ -26,15 +48,79 @@ function ProfileDetails() {
   const handleImageRemove = () => {
     setImage(null); // Remove the image
   };
+
+
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]; // Get the selected file
+    if (!file) {
+      console.error('No file selected');
+      return;
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      setError('File size exceeds the 2GB limit. Please choose a smaller file.');
+    }
+    if (file) {
+      const reader = new FileReader();
+
+      // Define the callback for when the file is read
+      reader.onloadend = () => {
+        const base64String = reader.result; // Get the base64 string
+        console.log("base64String",base64String); // Logs the base64 string of the image      
+        setBase64String(base64String);
+        setImagePreview(base64String); // Set image preview
+        setUploadStatus("")
+      };
+      // Read the file as a Data URL (which contains the base64 string)
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUpload = async () => {
+    try {
+
+
+      const accessToken = getCookie("accessToken")
+      console.log("here:::",base64String)
+      const response = await axios.patch('http://localhost:3600/vendors', {
+        profilePicture: base64String,
+      },{
+
+        headers: {
+
+        Authorization:`Bearer ${accessToken}`,
+        'Content-Type': 'application/json', // Optional, depending on your backend
+
+        }
+      });
+
+      if (response.status === 200) {
+        setUploadStatus('Image uploaded successfully!');
+      } else {
+        setUploadStatus('Failed to upload image.');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      setUploadStatus('Error uploading image.');
+    }
+  };
+  
   return (
     <div className='p-4 md:p-8 animate-fade-in'>
       <div className="flex items-center space-x-4">
+      
+      <div className='text-red-500 bg-white p-2'>{error}</div>
       <div className="relative">
         <img
           src={image || 'https://via.placeholder.com/150'} // Default image if no image is selected
           alt="Profile"
+          
           className="w-[70px] h-[70px] rounded-full object-cover border border-gray-300"
+          // onChange={handleFileChange} 
         />
+
+<button className='bg-red-300 rounded p-2'  onClick={handleUpload}>Send</button>
+
         {image && (
           <button
             onClick={handleImageRemove}
@@ -52,7 +138,7 @@ function ProfileDetails() {
             <input
               type="file"
               accept="image/*"
-              onChange={handleImageChange}
+              onChange={handleFileChange}
               className="hidden"
             />
           </span>
