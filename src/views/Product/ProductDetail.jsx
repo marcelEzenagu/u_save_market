@@ -17,6 +17,7 @@ import useWishListOperationsHooks from "../../hooks/useWishListOperationsHooks";
 function ProductDetail() {
   const { name, product } = useParams();
   const cart = useSelector((state) => state?.cart?.items);
+  const exchangeRate = useSelector((state)=> state?.auth?.exchangeRate);
   const {isLoading, userProduct} = useProduct();
   const [Items, setItems] = useState([])
   const { handleAddToCart, handleIncrement, handleDecrement } =
@@ -87,10 +88,10 @@ function ProductDetail() {
               {productinfo?.name}
             </h4>
             <h5 className="text-lg font-[700] flex items-center gap-2 text-regal-blue">
-          ₦{numberWithCommas(productinfo?.price)}{" "}
+            {exchangeRate?.currency}{' '}{ numberWithCommas(productinfo?.price * exchangeRate?.rate)}{" "}
             {productinfo?.percentageOFF  !== null ?
           <s className="font-[400] text-xs text-regal-light-gray ">
-            ₦ { numberWithCommas(productinfo?.old_price) }
+            {exchangeRate?.currency}{' '}{ numberWithCommas(productinfo?.old_price * exchangeRate?.rate)}
           </s>
            : ''}
         </h5>

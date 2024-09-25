@@ -44,10 +44,10 @@ function UserDropdown() {
       <Menu.Items className="absolute right-[-7px] lg:right-0 mt-4 h-[87vh] lg:h-auto w-[100vw] lg:w-80 origin-top-right animated fadeInDown bg-white border lg:rounded-md lg:shadow-lg focus:outline-none">
         <div className="p-4 flex flex-row justify-between items-center space-x-4">
           <div className="text-start">
-            <Link to="/account" className="text-xl text-start text-regal-blue font-[700]  w-[150px] truncate whitespace-nowrap capitalize">
-              {user?.firstName} {user?.lastName}
+            <Link to="/account" className="text-lg text-start text-regal-blue font-[700]  w-[50px] truncate  capitalize">
+             <span> {user?.firstName} {user?.lastName}</span>
             </Link>
-            <p className="text-xs text-gray-500 text-start">{user.email}</p>
+            <p className="text-xs text-gray-500 text-start w-[200px] truncate whitespace-nowrap">{user.email}</p>
           </div>
 
           <div className="md:w-11 md:h-11 flex flex-col items-center justify-center rounded-full border border-regal-sky-blue">

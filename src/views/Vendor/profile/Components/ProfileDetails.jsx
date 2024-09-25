@@ -4,13 +4,13 @@ import { SlArrowDown } from "react-icons/sl";
 import { countries } from '../../../../data/mockData';
 import axios from 'axios'
 import { getCookie } from '../../../../utils';
-
+import { useUpdateVendorProfilePictureMutation } from '../../../../features/vendor/vendorApiSlice';
 function ProfileDetails() {
   const [image, setImage] = useState(null); // State for the uploaded image
   const [selectedCountry, setSelectedCountry] = useState(countries[0] || null);
   const [isOpenSelect, setIsOpenSelect] = useState(false);
   const [error, setError] = useState("");
-  
+  const [updateVendorProfilePicture, {isLoading}] = useUpdateVendorProfilePictureMutation();
   const [base64String, setBase64String] = useState('');
   const [imagePreview, setImagePreview] = useState(null);
   const [uploadStatus, setUploadStatus] = useState('');
@@ -65,8 +65,7 @@ function ProfileDetails() {
 
       // Define the callback for when the file is read
       reader.onloadend = () => {
-        const base64String = reader.result; // Get the base64 string
-        console.log("base64String",base64String); // Logs the base64 string of the image      
+        const base64String = reader.result; // Get the base64 string     
         setBase64String(base64String);
         setImagePreview(base64String); // Set image preview
         setUploadStatus("")
@@ -78,23 +77,10 @@ function ProfileDetails() {
 
   const handleUpload = async () => {
     try {
-
-
-      const accessToken = getCookie("accessToken")
-      console.log("here:::",base64String)
-      const response = await axios.patch('http://localhost:3600/vendors', {
-        profilePicture: base64String,
-      },{
-
-        headers: {
-
-        Authorization:`Bearer ${accessToken}`,
-        'Content-Type': 'application/json', // Optional, depending on your backend
-
-        }
-      });
-
-      if (response.status === 200) {
+      const profilePicture = base64String;
+      const response = updateVendorProfilePicture(profilePicture );
+      console.log(response);
+      if (response?.status === 200) {
         setUploadStatus('Image uploaded successfully!');
       } else {
         setUploadStatus('Failed to upload image.');

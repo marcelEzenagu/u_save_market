@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { selectCurrentToken, selectCurrentUser, setCredentials, logOut , setLoginModal} from '../features/auth/authSlice'
 import { useViewUserQuery } from '../features/user/userApiSlice'
 import { getSecureCookie, validateToken }  from '../utils' 
-import { countries } from '../data/mockData';
 import { setCountry, setCurrency } from '../features/auth/authSlice';
 export const useAuth = () => {
   const dispatch = useDispatch();
@@ -12,7 +11,7 @@ export const useAuth = () => {
   const token = useSelector(selectCurrentToken);
   const userData = useSelector(selectCurrentUser);
   const userToken = getSecureCookie("accessToken");
-
+  const countries = useSelector((state) => state?.auth?.countries);
   const {
     data: user,
     isLoading,

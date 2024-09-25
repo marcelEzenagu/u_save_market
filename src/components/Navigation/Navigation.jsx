@@ -1,25 +1,23 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import Logo from "../../assets/images/nav/logo.webp";
 import Globe from "../../assets/images/nav/icons/globe.webp";
-import { IoCloseOutline, IoSearchOutline } from "react-icons/io5";
+import { IoCloseOutline, IoSearchOutline,IoCloseCircleOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
-// import { HiOutlineUserCircle } from "react-icons/hi2";
 import CountryModal from "./Countries/CountryModal";
 import AuthModal from "./Auth/Auth";
 import CartDropdown from "./cart/CartDropdown";
 import CurrencyModal from "./Countries/CurrencyModal";
 import UserDropdown from "./Auth/UserDropdown";
-// import { BsCart2 } from "react-icons/bs";
 import SearchBarIcon from "../../assets/images/nav/icons/search-normal.webp";
 import SearchIcon from "../../assets/images/nav/icons/mobile-search-normal.webp";
-import { IoCloseCircleOutline } from "react-icons/io5";
-import { dataCategory } from "../../data/mockData";
+import { dataCategory, Items } from "../../data/mockData";
 import { useSelector, useDispatch } from "react-redux";
-import { selectCurrentUser } from "../../features/auth/authSlice";
+import { selectCurrentUser, setCountries } from "../../features/auth/authSlice";
 import { useUserWishListQuery } from "../../features/user/userApiSlice";
 import { setWishList } from "../../features/user/userSlice";
-import { Items } from "../../data/mockData";
 import BottomLinks from "../Sidebar/BottomLinks";
+import { useGetCountriesQuery } from "../../features/auth/authApiSlice";
+
 function Navigation() {
   const [mobileDropdown, setMobileDropdown] = useState(false);
   const [activeUser, setActiveuser] = useState(false);
@@ -32,12 +30,65 @@ function Navigation() {
   const { data: whishList, isSuccess } = useUserWishListQuery(user, {
     skip: !user,
   });
+  const {data: countries, isSuccess: successResponse } = useGetCountriesQuery();
+  const [countriesWithCurrency, setCountriesWithCurrency] = useState([]);
+  useEffect(()=>{
+    fetch('https://restcountries.com/v3.1/all')
+    .then(response => response.json())
+    .then(data => {
+  const countriesWithCurrency = data.map(country => ({
+    name: country.name.common, 
+    currency: country.currencies
+      ? Object.keys(country.currencies).map(code => ({
+          code,
+          name: country.currencies[code]?.name,
+          symbol: country.currencies[code]?.symbol
+        }))
+      : null, 
+  }));
+  setCountriesWithCurrency(countriesWithCurrency);
+
+    })
+    .catch(error => {
+      console.error('Error fetching countries:', error);
+    });
+  }, [])
+
+  useEffect(()=> {
+      if (successResponse && countries && countriesWithCurrency.length > 0) {
+      const filteredCountries = countries?.map(country => {
+        const restCountries =  countriesWithCurrency?.find(c => c?.name?.toLowerCase() === country?.name?.toLowerCase());
+        if (restCountries) {
+          return {
+            ...restCountries,
+            code : country?.code,
+            currency_code : country?.currency_code,
+            name : restCountries?.name,
+            number: country?.dialCode,
+            currency:  restCountries?.currency?.length > 0 ?  restCountries?.currency[0]?.symbol : country?.currency_code,
+            currencyName : restCountries?.currency?.length > 0 ?  restCountries?.currency[0]?.name : country?.name,
+            flag: !country?.flag ? country?.flag : `https://flagcdn.com/w320/${country?.code?.toLowerCase()}.png`,
+          }
+        } else{
+          return {
+            ...country,
+            currency: country?.currency_code,
+            currencyName: country?.name,
+            flag: !country?.flag ? country?.flag : `https://flagcdn.com/w320/${country?.code?.toLowerCase()}.png`,
+          }
+        }
+      })
+
+      dispatch(setCountries(filteredCountries));
+
+      }
+  }, [countries, successResponse, countriesWithCurrency]);
 
   useEffect(() => {
     if (user) {
       if (isSuccess && whishList) {
         const filteredProducts = whishList?.map(product => {
-          const matchingItem = Items?.find(item => item.productID === product.productID);
+          const matchingItem = Items?.find(item => item.productID === product?.itemID);
           
           if (matchingItem) {
             return {
@@ -169,7 +220,7 @@ function Navigation() {
               <CurrencyModal />
             </div>
             <CartDropdown />
-            <SearchFormMobile />
+            <SearchFormMobile  showMessage={showMessage}/>
           </div>
         </div>
         <div className="xl:hidden">
@@ -275,11 +326,19 @@ const SearchForm = React.memo(() => {
   );
 });
 
-const SearchFormMobile = React.memo(() => {
+const SearchFormMobile = React.memo(({showMessage}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [isTop, setIsTop] = useState(false);
 
+  useEffect(()=>{
+    if (!showMessage) {
+      setIsTop(true);
+    }else{
+      setIsTop(false);
+    }
+  }, [showMessage])
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -317,7 +376,7 @@ const SearchFormMobile = React.memo(() => {
       {isModalOpen && (
         <div
           className={`fixed lg:hidden inset-0 z-50 ${
-            false === false && " mt-12"
+            !isTop ? "mt-12" : ''
           } flex justify-center items-start `}
         >
           <div className=" w-full   ">

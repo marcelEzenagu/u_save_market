@@ -1,35 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, {  } from "react";
 import RightImage from "../../../assets/images/vendor/Auth/login.webp";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import Googleicon from "../../../assets/images/auth/google.png"
 import Logo from "../../../assets/images/nav/logo.webp";
-import {useDispatch} from 'react-redux'
 import { setCredentials } from "../../../features/auth/authSlice";
 import { useLoginMutation } from "../../../features/auth/authApiSlice";
-import useErrorMessageHooks from "../../../hooks/useErrorMessageHooks";
+import {useErrorMessageHooks} from "../../../hooks/useErrorMessageHooks";
 import { setCookie } from "../../../utils";
 const LoginVendor = () => {
-  const [showPassword, setShowPassword] = useState(false);
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const [data, setData] = useState({
-    email:'',
-    password:'',
-    eye:false,
-  })
-const navigate = useNavigate()
-const [errorMessagesList, setErrorMessagesList, handleErrorMessagesList] = useErrorMessageHooks();;
-const [errMsg, setErrMsg] = useState('')
+const {errMsg, data, setData, handleChange, handleError, setErrMsg, dispatch, navigate, setErrorMessagesList, handleErrorMessagesList} = useErrorMessageHooks();
 const [login, {isLoading}] = useLoginMutation()
-const dispatch = useDispatch()
-useEffect(()=>{
-  setErrMsg('')
-}, [data.email, data.password])
 const handleSubmit = async (e) => {
   e.preventDefault()
   setErrMsg("");
@@ -45,26 +26,11 @@ const handleSubmit = async (e) => {
     })
     navigate('/vendor/dashboard/home')
   }catch (err) {
-    console.log(err)
-    if (err?.status === 200) {
-      return;
-    } else if (err?.status >= 400) {
-      setErrorMessagesList(err?.data?.message);
-    } else if (err?.status >= 401 && err?.status <= 404) {
-      setErrMsg(err?.data?.message);
-    }  else if (err?.status >= 500){
-      setErrMsg("Login failed")
-    }else{
-      setErrMsg("Login failed")
-    }
+    console.log(err);
+    handleError(err, "Login");
   }
 }
-const handleChange = e => {
-  const newData = Object.assign({}, data, {
-    [e.target.name]: e.target.value,
-  })
-  setData(newData)
-}
+
 
   return (
     <div className="block lg:flex  items-start px-4 pt-8 pb-4 max-w-[1366px] mx-auto">
@@ -119,7 +85,7 @@ const handleChange = e => {
                   placeholder="Enter password"
                   className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                 />
-                   {handleErrorMessagesList("password")}
+                  
                 <div
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                
@@ -134,7 +100,9 @@ const handleChange = e => {
                     <AiOutlineEye size={20} className="text-regal-light-gray" onClick={()=> setData({...data, eye:!data.eye})}/>
                   )}
                 </div>
+
               </div>
+              {handleErrorMessagesList("password")}
             </div>
             <p className="text-red-600 text-xs">{errMsg && errMsg}</p>
 
