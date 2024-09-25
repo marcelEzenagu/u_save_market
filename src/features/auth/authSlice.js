@@ -3,7 +3,7 @@ import {removeCookie} from "../../utils";
 
 const authSlice = createSlice({
     name : "auth",
-    initialState: {user:null, token:null, role:null, loginModal:false, countries : [], exchangeRate : null,  preferredCountry:null, preferredCurrency:null, verifiedDetails:{}},
+    initialState: {user:null, token:null, role:null, loginModal:false, preferredCountry:null, preferredCurrency:null},
     reducers: {
         setCredentials: (state, action) => {
             const {user, accessToken, role} = action.payload
@@ -21,29 +21,17 @@ const authSlice = createSlice({
             state.loginModal = action.payload; 
         },
         logOut: (state, action) => {
-            state.user = null;
-            state.token = null;
-            state.role = null;
-            state.preferredCountry = null;
-            state.preferredCurrency = null;
-            removeCookie('accessToken');
-        },
-        setCountries : (state, action) => {
-            state.countries = action.payload;
-        },
-        setExchangeRate : (state, action) => {
-            state.exchangeRate = action.payload;
-        },
-        setVerifiedDetails: (state, action) => {
-            state.verifiedDetails = action.payload;
-          },
-          clearVerifiedDetails: (state) => {
-            state.verifiedDetails = null;
-          },
+            state.user = null
+            state.token = null
+            state.role = null,
+            state.preferredCountry = null,
+            state.preferredCurrency = null,
+            removeCookie('accessToken')
+        }
     },
 })
 
-export const {setCredentials, logOut, setLoginModal,setCountries,setExchangeRate, setCountry, setCurrency, setVerifiedDetails, clearVerifiedDetails} = authSlice.actions
+export const {setCredentials, logOut, setLoginModal, setCountry, setCurrency} = authSlice.actions
 
 export default authSlice.reducer
 

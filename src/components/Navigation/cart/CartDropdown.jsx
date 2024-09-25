@@ -20,7 +20,7 @@ const CartDropdown = () => {
   const orderGet = useSelector((state)=> state?.order?.orders)
   const location = useLocation();
   const { handleIncrement, handleDecrement } = useCartOperationsHooks();
-  const exchangeRate = useSelector((state)=> state?.auth?.exchangeRate);
+  
   const { data: cartDetails, isLoading, isSuccess, error } = useGetUserCartQuery(user, {
     skip: !user
   });
@@ -119,7 +119,7 @@ const CartDropdown = () => {
                                 {item.name}
                               </span>
                               <span className="text-regal-sky-blue font-[400] text-xs md:text-sm">
-                              {exchangeRate?.currency}{' '}{ numberWithCommas(item?.price * exchangeRate?.rate)}{" "}
+                                ₦{numberWithCommas(item.price)}
                               </span>
                             </div>
                           </div>
@@ -162,7 +162,7 @@ const CartDropdown = () => {
                       className="bg-regal-sky-blue text-white flex items-center justify-between px-4 py-2 font-bold w-full rounded-md hover:bg-blue-600 transition"
                     >
                       {location.pathname === "/cart" ? "In cart" : "Go to cart"}{" "}
-                      <span>{exchangeRate?.currency}{' '}{ numberWithCommas(total * exchangeRate?.rate)}{" "}</span>
+                      <span>₦{numberWithCommas(total)}</span>
                     </div>
                   </Link>
                 </div>

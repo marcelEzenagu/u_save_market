@@ -3,46 +3,61 @@ import RightImage from "../../../assets/images/vendor/Auth/forgotpassword.webp";
 import { Link, useNavigate } from "react-router-dom";
 import {useDispatch} from 'react-redux'
 import Logo from "../../../assets/images/nav/logo.webp";
-import { useForgotPasswordMutation } from "../../../features/auth/authApiSlice";
-import {useErrorMessageHooks} from "../../../hooks/useErrorMessageHooks";
-import { setVerifiedDetails } from "../../../features/auth/authSlice";
+import { useRegisterMutation } from "../../../features/auth/authApiSlice";
 const ForgotPasswordVendor = () => {
-  const {
-    setErrorMessagesList,
-    handleErrorMessagesList,
-    handleError,
-    handleChange,
-    setErrMsg,
-    errMsg,
-    data, 
-    dispatch,
-    navigate,
-    setData,
-  } = useErrorMessageHooks();
+  const [showPassword, setShowPassword] = useState(false);
+  const [data, setData] = useState({
+    firstName:'',
+    lastName: '',
+    email:'',
+    password:'',
+    terms:false,
+    eye:false,
+    eyeConfirm:false
+  })
+  const [errMsg, setErrMsg] = useState('')
   const [modal, setModal] = useState(false)
-  const [forgotPassword, {isLoading}] = useForgotPasswordMutation()
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrMsg("");
-    setErrorMessagesList([]);
-    try {
-      const userData = await forgotPassword({ email: data.email }).unwrap();
-      dispatch(
-        setVerifiedDetails({
-          email: data?.email,
-          requestID: userData?.requestID,
-        })
-      );
-      navigate("/vendor/auth/otp");
-      setData({
-        email: "",
-      });
-    } catch (err) {
-      console.log(err);
-      handleError(err, "Forget Password");
-    }
+  const [Register, {isLoading}] = useRegisterMutation()
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
+
+  const dispatch = useDispatch()
+  useEffect(()=>{
+    setErrMsg('')
+  }, [data.email, data.password])
+const toggle = () => {
+  setModal(!modal)
+}
+
+const handleSubmit = async (e) => {
+    setModal(false)
+    e.preventDefault()
+    try {
+      const userData = await forgotPassword({ email : data.email}).unwrap()
+      // navigate('/reset-password')
+      setModal(true)
+    }catch (err) {
+      console.log(err?.status)
+      if (err?.status === 200) {
+        return
+      } 
+      else if (err?.status >= 400 && err?.status <= 404){
+        setErrMsg(err?.data?.message)
+      } else if (err?.status >= 500){
+        setErrMsg("forgotPassword failed")
+      }else{
+        setErrMsg("forgotPassword failed")
+      }
+    }
+  }
+const handleChange = e => {
+  const newData = Object.assign({}, data, {
+    [e.target.name]: e.target.value,
+  })
+  setData(newData)
+}
+  const navigate = useNavigate()
 
 
   return (
@@ -78,8 +93,6 @@ const ForgotPasswordVendor = () => {
                 placeholder="Enter Email"
                 className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
               />
-
-            {handleErrorMessagesList("email")}
             </div>
 
             <p className="text-red-600 text-xs">{errMsg && errMsg}</p>
@@ -97,8 +110,11 @@ const ForgotPasswordVendor = () => {
             <button className=" text-xs md:text-[12px] bg-regal-sky-blue text-white px-4  py-3 font-semibold w-full rounded-md hover:bg-blue-600 mt-4 "
             type="submit"
             disabled={isLoading}
+            onClick={()=>{
+                navigate('/vendor/auth/otp')
+            }}
             >
-                 {isLoading ? "Verifying Email..." : "Send PIN"}
+                 {isLoading ? 'Loading...' : 'Send PIN'}
               </button>
             </div>
 

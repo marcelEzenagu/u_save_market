@@ -23,46 +23,9 @@ export const authApiSlice =  apiSlice.injectEndpoints({
         }),
         forgotPassword: builder.mutation({
             query: credentials => ({
-                url:'/auth/vendors/forgot-password',
+                url:'/auth/forgot-password',
                 method:'POST',
                 body: {...credentials},
-            })
-        }),
-        resetPassword: builder.mutation({
-            query: credentials => ({
-                url:'/vendors/reset-password',
-                method:'POST',
-                body: {...credentials},
-                headers: {Authorization: `Bearer ${credentials?.token}`} 
-            })
-        }),
-        verifyOtp: builder.mutation({
-            query: credentials => ({
-                url:'/auth/vendors/verify-password',
-                method:'POST',
-                body: {...credentials},
-            })
-        }),
-        verifyOtpUser: builder.mutation({
-            query: credentials => ({
-                url:'/auth/users/verify-password',
-                method:'POST',
-                body: {...credentials},
-            })
-        }),
-        forgotPasswordUser: builder.mutation({
-            query: credentials => ({
-                url:'/auth/users/forgot-password',
-                method:'POST',
-                body: {...credentials},
-            })
-        }),
-        resetPasswordUser: builder.mutation({
-            query: credentials => ({
-                url:'/users/reset-password',
-                method:'POST',
-                body: {...credentials},
-                headers: {Authorization: `Bearer ${credentials?.token}`} 
             })
         }),
         getUser: builder.mutation({
@@ -72,19 +35,13 @@ export const authApiSlice =  apiSlice.injectEndpoints({
                 body: {...credentials},
             })
         }),
-        getCountries : builder.query({
-            query: () => ({
-                url : '/country-currency',
-                method:'GET',
-            }),
+        resetPassword: builder.mutation({
+            query: credentials => ({
+                url:'/auth/reset-password',
+                method:'POST',
+                body: {...credentials},
+            })
         }),
-        getExchangeRate : builder.query({
-            query: (currency) => ({
-                url : `/country-currency/${currency}`,
-                method:'GET',
-            }),
-        }),
-     
         loginUser: builder.mutation({
             query: credentials => ({
                 url:'auth/users/',
@@ -126,11 +83,5 @@ export const {
      useUpdateUserMutation,
      useRegisterUserMutation, 
      useForgotPasswordMutation,
-     useResetPasswordMutation,
-     useForgotPasswordUserMutation,
-     useResetPasswordUserMutation,
-     useVerifyOtpMutation,
-     useVerifyOtpUserMutation,
-     useGetCountriesQuery,
-     useGetExchangeRateQuery,
+     useResetPasswordMutation
     } = authApiSlice

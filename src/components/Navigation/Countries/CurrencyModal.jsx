@@ -1,35 +1,23 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { countries } from '../../../data/mockData'; // Assume you have a list of countries
 import Moneys from '../../../assets/images/nav/icons/moneys.webp';
 import { IoCloseCircleOutline } from "react-icons/io5";
-import { useUpdateUserMutation , useGetExchangeRateQuery} from '../../../features/auth/authApiSlice';
+import { useUpdateUserMutation } from '../../../features/auth/authApiSlice';
 import { setCurrency } from '../../../features/auth/authSlice';
 import { FaCheckCircle } from "react-icons/fa";
-import { setExchangeRate } from '../../../features/auth/authSlice';
-const Modal = ({ isOpen, onClose, onCurrencySelect, errorMsg, preferredCurrency, isLoading, dispatch }) => {
-  const countries = useSelector((state) => state?.auth?.countries);
+const Modal = ({ isOpen, onClose, onCurrencySelect, errorMsg, preferredCurrency, isLoading }) => {
   const [search, setSearch] = useState('');
-  const {data:getExchangeRate, isSuccess } = useGetExchangeRateQuery(preferredCurrency?.currency_code,{
-    skip : !preferredCurrency?.currency_code,
-  });
-  const filteredCurrencies =(countries || []).filter((country) =>
-    search === "" || country?.name?.toLowerCase()?.includes(search?.toLowerCase())
+  const filteredCurrencies = countries.filter(country =>
+    country.currency.toLowerCase().includes(search.toLowerCase())
   );
 
   const [pickedCurrency, setPickedCurrency] = useState(preferredCurrency);
   const dropdownRef = useRef(null);
   useEffect(()=>{
-    setPickedCurrency(preferredCurrency)
+    setPickedCurrency(pickedCurrency)
   }, [preferredCurrency])
   
-  useEffect(()=> {
-    if (isSuccess && getExchangeRate && preferredCurrency) {
-      dispatch(setExchangeRate({
-        ...getExchangeRate, 
-        currency : preferredCurrency?.currency
-      }));
-    }
-  }, [isSuccess, getExchangeRate, preferredCurrency]);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -80,13 +68,13 @@ const Modal = ({ isOpen, onClose, onCurrencySelect, errorMsg, preferredCurrency,
             <ul className="max-h-[50vh] lg:max-h-[300px] overflow-y-scroll w-full">
               {filteredCurrencies.map((country) => (
                 <li
-                  key={country.name}
+                  key={country.code}
                   className="flex items-center py-2 my-2 px-2 cursor-pointer hover:font-[700] hover:text-regal-blue hover:bg-regal-secondary-light"
                   onClick={() => setPickedCurrency(country)}
                 >
                   <span className='text-sm font-[400] mr-2'>{country.currency}</span>
                   <span className="text-sm font-[400] w-full flex flex-row items-center justify-between">
-                    {country.name} {pickedCurrency?.name?.toLowerCase() === country?.name?.toLowerCase() && <FaCheckCircle className="text-xl text-green-600" />}
+                    {country.name} {pickedCurrency?.name.toLowerCase() === country?.name.toLowerCase() && <FaCheckCircle className="text-xl text-green-600" />}
                   </span>
                 </li>
               ))}
@@ -130,6 +118,7 @@ function CurrencyModal() {
     }
 
     if (!preferredCurrency && !localStoragePreferredCurrency) {
+      // setIsModalOpen(true);
     }
   }, [preferredCurrency, dispatch]);
 
@@ -153,6 +142,8 @@ function CurrencyModal() {
       dispatch(setCurrency(currency));
     }
     setIsModalOpen(false);
+    // Optionally refresh the page or redirect
+    // window.location.reload(); 
   };
 
   return (
@@ -174,7 +165,6 @@ function CurrencyModal() {
         errorMsg={errorMsg}
         preferredCurrency={preferredCurrency}
         isLoading={isLoading}
-        dispatch={dispatch}
       />
     </>
   );

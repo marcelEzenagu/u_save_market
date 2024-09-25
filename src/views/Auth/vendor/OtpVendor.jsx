@@ -1,70 +1,52 @@
 import React, { useState, useEffect } from "react";
 import RightImage from "../../../assets/images/vendor/Auth/otp.webp";
-import { Link } from "react-router-dom";
-import {useSelector} from 'react-redux'
+import { Link, useNavigate } from "react-router-dom";
+import {useDispatch} from 'react-redux'
 import Logo from "../../../assets/images/nav/logo.webp";
 import { Timer } from "../../../components/Timer"
 import { usePinInput } from "react-pin-input-hook"
-import { useForgotPasswordMutation, useVerifyOtpMutation } from "../../../features/auth/authApiSlice";
-import {useErrorMessageHooks} from "../../../hooks/useErrorMessageHooks";
-import { setVerifiedDetails } from "../../../features/auth/authSlice";
+import { useRegisterMutation } from "../../../features/auth/authApiSlice";
 const OtpVendor = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [data, setData] = useState(0)
   const [intervals, setIntervals] = useState([]);
-  const [verifyOtp, {isLoading}] = useVerifyOtpMutation()
-  const [resetPassword, { isLoading: loading }] = useForgotPasswordMutation();
-  const { verifiedDetails } = useSelector((state) => state.auth);
-  const {
-    setErrorMessagesList,
-    handleErrorMessagesList,
-    setErrMsg,
-    navigate,
-    dispatch,
-    errMsg,
-    handleError,
-    setData,
-    data,
-    } = useErrorMessageHooks();
+  const [errMsg, setErrMsg] = useState('')
+  const [modal, setModal] = useState(false)
+  const [Register, {isLoading}] = useRegisterMutation()
 
   const { fields, clear } = usePinInput({
     onComplete: OTP => {
         setData(OTP)
     },
   })
+  const dispatch = useDispatch()
   useEffect(()=>{
-      console.log(verifiedDetails);
-      if (!verifiedDetails?.email || !verifiedDetails?.requestID){
-        navigate('vendor/auth/forgot-password');
+    setErrMsg('')
+  }, [data])
+
+
+const handleSubmit = async (e) => {
+    setModal(false)
+    e.preventDefault()
+    try {
+      const userData = await forgotPassword({ otp : data}).unwrap()
+      // navigate('/reset-password')
+    }catch (err) {
+      console.log(err?.status)
+      if (err?.status === 200) {
+        return
+      } 
+      else if (err?.status >= 400 && err?.status <= 404){
+        setErrMsg(err?.data?.message)
+      } else if (err?.status >= 500){
+        setErrMsg("forgotPassword failed")
+      }else{
+        setErrMsg("forgotPassword failed")
       }
-     }, [verifiedDetails])
-
-     const handleResendOtp = async () => {
-
-      setErrMsg("");
-      setErrorMessagesList([]);
-      try {
-        const userData = await resetPassword({email : verifiedDetails?.email}).unwrap();
-        dispatch(setVerifiedDetails({...verifiedDetails, requestID : userData?.requestID}));
-      }catch (err) {
-       console.log(err);
-       handleError(err, 'OTP');
     }
-    }
+  }
 
-     const handleSubmit = async (e) => {
-      e.preventDefault()
-      setErrMsg("");
-      setErrorMessagesList([]);
-      try {
-        const {access_data} = await verifyOtp({ otp : data, requestID : verifiedDetails?.requestID, email: verifiedDetails?.email}).unwrap();
-        console.log(access_data?.access_token);
-        dispatch(setVerifiedDetails({...verifiedDetails, token: access_data?.access_token }))
-        navigate('/vendor/auth/reset-password')
-      }catch (err) {
-       console.log(err);
-       handleError(err, 'OTP');
-    }
-   }
-
+  const navigate = useNavigate()
   const registerInterval = (id) => {
     setIntervals(intervals.concat([id]));
   };
@@ -85,20 +67,20 @@ const OtpVendor = () => {
           </h1>
           {/* Description Text */}
           <p className="text-center text-xs md:text-sm text-regal-light-gray mb-8 font-[400]">
-          A reset PIN has been sent to your email {verifiedDetails?.email}
+          A reset PIN has been sent to your email name@email.com
           </p>
 
             <div className="mb-3 col-span-2 md:mx-2">
             <div className="flex flex-row gap-4">
                 {fields.map((propsField, index) => (
               <input
-              key={index}
-              className="otp mb-3"
-              type="text"
-              onInput="digitValidate(this)"
-              {...propsField}
-              maxLength={1}
-              placeholder=""
+                key={index}
+                className="otp mb-3"
+                type="text"
+                oninput="digitValidate(this)"
+                {...propsField}
+                maxlength={1}
+                placeholder=""
               />
             ))}
                 </div>
@@ -110,14 +92,12 @@ const OtpVendor = () => {
             {intervals.length == 0 ? (
             <p className="text-sm mt-4">
               Didn’t receive the code?{" "}
-              <button className="text-sm text-regal-blue "
-                   onClick={handleResendOtp}
-                  type="button"
-                  disabled={loading}
-
-                 >
-                   {loading ? 'sending Otp...': 'Send again'}
-                 </button>
+              <span
+                className="text-sm text-regal-blue "
+                onClick={handleSubmit}
+              >
+                Send again
+              </span>
             </p>
           ) : (
             ""
@@ -129,9 +109,11 @@ const OtpVendor = () => {
             <button className=" text-xs md:text-[12px] bg-regal-sky-blue text-white px-4  py-3 font-semibold w-full rounded-md hover:bg-blue-600 mt-4 "
             type="submit"
             disabled={isLoading}
-            onClick={handleSubmit}
+            onClick={()=>{
+                navigate('/vendor/auth/reset-password')
+            }}
             >
-                 {isLoading ? 'Confirming...' : 'Confirm PIN'}
+                 {isLoading ? 'Loading...' : 'Confirm PIN'}
               </button>
             </div>
 

@@ -16,8 +16,7 @@ function ListComponent({
   withActions = false, // Boolean to determine if action column should be displayed
   selectedItems,
   handleCheckboxChange,
-  handleDeleteClick,
-  setCreateModel
+  handleDeleteClick
 }) {
   const [isOpenSelect, setIsOpenSelect] = useState(false);
   const [dropdownOption, setDropdownOption] = useState(dropdownOptions[0]);
@@ -67,16 +66,12 @@ useEffect(()=>{
           <input
             type="text"
             placeholder="Search"
-            className="bg-white rounded-md text-sm pl-11 pr-4 py-2 border focus:outline-none focus:ring-2 focus:ring-blue-500 md:w-[370px] font-[400]"
+            className="bg-white rounded-md text-sm pl-11 pr-4 py-2 border focus:outline-none focus:ring-2 focus:ring-blue-500 w-[370px] font-[400]"
           />
           <FiSearch className="absolute left-5 top-1/2 transform -translate-y-1/2 text-regal-crum-gray text-xl" />
         </div>
 
-        <button className="text-regal-sky-blue flex flex-row items-center gap-1 text-xs py-2 px-4 border rounded-md border-regal-sky-blue transition font-[500] active:scale-95"
-          onClick={()=>{
-            setCreateModel()
-          }}
-        >
+        <button className="text-regal-sky-blue flex flex-row items-center gap-1 text-xs py-2 px-4 border rounded-md border-regal-sky-blue transition font-[500] active:scale-95">
           Create {title}
         </button>
       </div>

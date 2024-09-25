@@ -11,7 +11,7 @@ import { selectCurrentUser } from "../../features/auth/authSlice";
 import LoadingScreen from "../../components/Loading/LoadingScreen";
 import { useGetUserCartQuery } from "../../features/cart/cartApiSlice";
 import { numberWithCommas } from "../../utils";
-import {loadStripe} from "@stripe/stripe-js";
+
 const TabComponent = React.memo(
   ({ tabs, activeTab, setActiveTab, data, handleChange }) => {
     return (
@@ -109,7 +109,7 @@ const OrderSummary = React.memo(({ cartDetails, data }) => {
           </div>
           <div className="px-4 py-2 w-full">
             {cartDetails?.products?.length > 0 && (
-              <button  type="submit" className="text-sm bg-regal-sky-blue text-white px-4 py-2 font-semibold w-full rounded-md hover:bg-blue-600">
+              <button className="text-sm bg-regal-sky-blue text-white px-4 py-2 font-semibold w-full rounded-md hover:bg-blue-600">
                 Pay now
               </button>
             )}
@@ -125,6 +125,7 @@ function Checkout() {
   const [activeTab, setActiveTab] = useState("1");
   const { isLoading, isAuthenticated } = useAuth();
   const userData = useSelector(selectCurrentUser);
+
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -195,16 +196,14 @@ function Checkout() {
   }, []);
 
   const handleSubmit = useCallback(
-   async (e) => {
+    (e) => {
       e.preventDefault();
       // if (validateForm(data)) {
         if (cartDetails?.products?.length > 0) {
           localStorage.setItem("checkoutDetails", JSON.stringify(data));
-          console.log(cartDetails);
-          const stripe =  await loadStripe("")
-          // navigate("/payment");
+          navigate("/payment");
         }
-      // } 
+      // }
     },
     [data, validateForm, navigate]
   );

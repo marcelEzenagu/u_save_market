@@ -12,7 +12,6 @@ import useWishListOperationsHooks from "../../hooks/useWishListOperationsHooks";
 const ProductCard = ({ item, category }) => {
   const { handleAddToCart, handleIncrement, handleDecrement } =
     useCartOperationsHooks();
-    const exchangeRate = useSelector((state)=> state?.auth?.exchangeRate);
   const {
     handleAddToWishList,
     handleRemoveFromWishList,
@@ -110,11 +109,11 @@ const ProductCard = ({ item, category }) => {
         <span className="text-xs text-regal-light-gray mb-3">
           {item.country}
         </span>
-        <p className="text-regal-sky-blue font-[600] text-sm md:text-[16px] flex items-center gap-2  w-[160px] clamp-1 whitespace-nowrap">
-          {exchangeRate?.currency}{' '}{ numberWithCommas(item?.price * exchangeRate?.rate)}{" "}
+        <p className="text-regal-sky-blue font-[600] text-sm md:text-[16px] flex items-center gap-2 ">
+          ₦{numberWithCommas(item?.price)}{" "}
           {item?.percentageOFF !== null ? (
             <s className="font-[400] text-xs text-regal-light-gray ">
-            {exchangeRate?.currency}{' '}{ numberWithCommas(item?.old_price * exchangeRate?.rate)}
+              ₦ {numberWithCommas(item?.old_price)}
             </s>
           ) : (
             ""

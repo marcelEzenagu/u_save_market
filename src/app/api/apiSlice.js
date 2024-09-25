@@ -43,5 +43,6 @@ export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
   //for the builder we are going to use extended api slices so we can specify
   //what belongs to the auth and other features of our application
+  // tagTypes:['Contact'],
   endpoints: (builder) => ({}),
 });

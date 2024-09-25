@@ -1,16 +1,33 @@
-import React, {  } from "react";
+import React, { useState, useEffect } from "react";
 import RightImage from "../../../assets/images/vendor/Auth/register.webp";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Googleicon from "../../../assets/images/auth/google.png"
+import {useDispatch} from 'react-redux'
 import Logo from "../../../assets/images/nav/logo.webp";
 import { useRegisterMutation } from "../../../features/auth/authApiSlice";
 import useErrorMessageHooks from "../../../hooks/useErrorMessageHooks";
 import { setCookie } from "../../../utils";
 import { setCredentials } from "../../../features/auth/authSlice";
 const RegisterVendor = () => {
-  const {errMsg, data, setData, handleChange, handleError, setErrMsg, dispatch, navigate, setErrorMessagesList, handleErrorMessagesList} = useErrorMessageHooks();
+  const [data, setData] = useState({
+    firstName:'',
+    lastName: '',
+    email:'',
+    password:'',
+    terms:false,
+    eye:false,
+    eyeConfirm:false
+  })
+  const [errorMessagesList, setErrorMessagesList, handleErrorMessagesList] = useErrorMessageHooks();;
+  const [errMsg, setErrMsg] = useState('')
+  const [modal, setModal] = useState(false)
   const [Register, {isLoading}] = useRegisterMutation()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  useEffect(()=>{
+    setErrMsg('')
+  }, [data.email, data.password])
 
 const handleSubmit = async (e) => {
   e.preventDefault()
@@ -36,10 +53,25 @@ const handleSubmit = async (e) => {
     navigate('/vendor/dashboard/home')
   }catch (err) {
     console.log(err);
-    handleError(err, "Register");
+    if (err?.status === 200) {
+      return;
+    } else if (err?.status >= 400) {
+      setErrorMessagesList(err?.data?.message);
+    } else if (err?.status >= 401 && err?.status <= 404) {
+      setErrMsg(err?.data?.message);
+    } else if (err?.status >= 500) {
+      setErrMsg("Register failed");
+    } else {
+      setErrMsg("Register failed");
+    }
   }
 }
-
+const handleChange = e => {
+  const newData = Object.assign({}, data, {
+    [e.target.name]: e.target.value,
+  })
+  setData(newData)
+}
 
 
 
