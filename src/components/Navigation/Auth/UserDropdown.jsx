@@ -15,9 +15,9 @@ function UserDropdown() {
   return (
     <Menu as="button" className="relative ">
       <Menu.Button className="flex items-center space-x-3  focus:outline-none ">
-        <div className="md:w-8 md:h-8 flex flex-col items-center justify-center rounded-full border border-regal-sky-blue">
+        <div className="w-8 h-8 md:w-8 md:h-8 flex flex-col items-center justify-center rounded-full border border-regal-sky-blue">
           <img
-            className="w-7 md:h-7 rounded-full object-cover"
+            className="w-7 h-7 md:h-7 rounded-full object-cover"
             src={user?.profilePicture || 'https://as2.ftcdn.net/jpg/02/15/84/43/160_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg'}
             alt="User Profile"
           />
