@@ -1,15 +1,16 @@
 import React from 'react';
 import { Menu } from '@headlessui/react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { logOut } from '../../../features/auth/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { logOut , selectCurrentUser} from '../../../features/auth/authSlice';
 const VendorDropdown = () => {
   const dispatch = useDispatch();
+  const user = useSelector(selectCurrentUser);
   return (
     <Menu as="div" className="relative">
       <Menu.Button className="flex items-center">
         <img
-          src="https://via.placeholder.com/150" // Replace with your image URL
+          src={user?.profilePicture || "https://via.placeholder.com/150"} // Replace with your image URL
           alt="User Avatar"
           className="w-9 h-9 rounded-full object-cover bg-gray-200"
         />

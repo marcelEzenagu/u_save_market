@@ -7,9 +7,13 @@ const authSlice = createSlice({
     reducers: {
         setCredentials: (state, action) => {
             const {user, accessToken, role} = action.payload
-            state.user = user
+            state.user = { ...user, profilePicture : import.meta.env.VITE_APP_API_URL + user?.profilePicture}
             state.token = accessToken
             state.role = role 
+        },
+        setUserCredentails: (state, action) => {
+            const {user} = action.payload
+            state.user =   { ...user, profilePicture : import.meta.env.VITE_APP_API_URL + user?.profilePicture}
         },
         setCountry: (state, action) => {
             state.preferredCountry = action.payload;
@@ -43,7 +47,7 @@ const authSlice = createSlice({
     },
 })
 
-export const {setCredentials, logOut, setLoginModal,setCountries,setExchangeRate, setCountry, setCurrency, setVerifiedDetails, clearVerifiedDetails} = authSlice.actions
+export const {setCredentials, logOut, setUserCredentails, setLoginModal,setCountries,setExchangeRate, setCountry, setCurrency, setVerifiedDetails, clearVerifiedDetails} = authSlice.actions
 
 export default authSlice.reducer
 

@@ -26,7 +26,7 @@ export const useVendorAuth = () => {
       if (!token && !userData) {
         if (isSuccess) {
           if (validateToken(userToken)) {
-            dispatch(setCredentials({ accessToken: userToken, role: 'vendor', vendor }));
+            dispatch(setCredentials({ accessToken: userToken, role: 'vendor', user: vendor }));
           } else {
               navigate('/vendor/auth/login'); // Redirect to login if token is invalid
           }

@@ -9,13 +9,24 @@ export const vendorApiSlice = apiSlice.injectEndpoints({
         }),
 
         updateVendorProfilePicture: builder.mutation({
-            query: (profilePicture) => ({
+            query: (credentials) => ({
                 url: 'vendors',
                 method: 'PATCH',
-                body: profilePicture,
-            })
+                body: {...credentials},
+                
+            }),
+            invalidatesTags:['vendor']
+        }),
+
+        updateVendorProfile: builder.mutation({
+            query: (credentials) => ({
+                url: 'vendors/',
+                method: 'PATCH',
+                body: {...credentials},
+            }),
+            invalidatesTags:['vendor']
         }),
     })
 })
 
-export const {useViewVendorQuery, useUpdateVendorProfilePictureMutation} = vendorApiSlice
+export const {useViewVendorQuery, useUpdateVendorProfileMutation, useUpdateVendorProfilePictureMutation} = vendorApiSlice
