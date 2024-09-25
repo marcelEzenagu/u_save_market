@@ -1,21 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { countries } from "../../../data/mockData";
 import Location from "../../../assets/images/nav/icons/location.webp";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { useUpdateUserMutation } from "../../../features/auth/authApiSlice";
 import { setCountry, setCurrency } from "../../../features/auth/authSlice";
 import { FaCheckCircle } from "react-icons/fa";
 
-const Modal = ({ isOpen, onClose, onCountrySelect, errorMsg, preferredCountry, isLoading }) => {
+const Modal = ({
+  isOpen,
+  onClose,
+  onCountrySelect,
+  errorMsg,
+  preferredCountry,
+  isLoading,
+}) => {
   const [search, setSearch] = useState("");
+  const countries = useSelector((state) => state?.auth?.countries);
   const [pickedCountry, setPickedCountry] = useState(preferredCountry);
-  const filteredCountries = countries.filter((country) =>
-    country.name.toLowerCase().includes(search.toLowerCase())
+  const filteredCountries = (countries || [])?.filter(
+    (country) =>
+      search === "" ||
+      country?.name?.toLowerCase()?.includes(search?.toLowerCase())
   );
-  useEffect(()=>{
-    setPickedCountry(preferredCountry)
-  }, [preferredCountry])
+
+  useEffect(() => {
+    setPickedCountry(preferredCountry);
+  }, [preferredCountry]);
 
   const dropdownRef = React.useRef(null);
 
@@ -34,13 +44,15 @@ const Modal = ({ isOpen, onClose, onCountrySelect, errorMsg, preferredCountry, i
 
   const handleSelectedCountry = () => {
     onCountrySelect(pickedCountry);
-  } 
+  };
 
   return (
     isOpen && (
       <div className="fixed inset-0 bg-black w-full bg-opacity-75 flex justify-center lg:items-center z-50 animated fadeInDown">
-        <div className="bg-white lg:rounded-lg overflow-hidden lg:max-w-[600px] w-full z-52" ref={dropdownRef}>
-         
+        <div
+          className="bg-white lg:rounded-lg overflow-hidden lg:max-w-[600px] w-full z-52"
+          ref={dropdownRef}
+        >
           <div className="flex items-center bg-gray-200 py-2 px-4 justify-between lg:hidden">
             <span className="flex items-center w-10">
               <img src={Location} alt="" className="w-5 mr-1 xl:mr-2" />
@@ -50,7 +62,7 @@ const Modal = ({ isOpen, onClose, onCountrySelect, errorMsg, preferredCountry, i
               <IoCloseCircleOutline className="text-xl text-regal-black" />
             </button>
           </div>
-          
+
           <div className="lg:pt-12 lg:pb-8 p-4 lg:p-8 relative">
             <h2 className="text-lg lg:text-xl font-bold text-regal-blue mb-2 lg:mb-3">
               Choose Country
@@ -65,38 +77,41 @@ const Modal = ({ isOpen, onClose, onCountrySelect, errorMsg, preferredCountry, i
               onChange={(e) => setSearch(e.target.value)}
               className="w-full py-4 px-4 border text-xs md:text-[14px] rounded-lg mb-4"
             />
-             <p className="text-red-700 text-sm mt-4 mb-1">{errorMsg}</p>
-             <ul className="max-h-[50vh] lg:max-h-[300px] overflow-y-scroll w-full">
-  {filteredCountries.map((country) => (
-    <li
-      key={country.code}
-      className="flex items-center py-2 my-2 px-2 cursor-pointer hover:font-[700] hover:text-regal-blue hover:bg-regal-secondary-light"
-      onClick={() => setPickedCountry(country)}
-    >
-      <img src={country.flag} alt={country.name} className="w-8 h-4 mr-2" />
-      <span className="text-sm font-[400] w-full flex flex-row items-center justify-between">
-        {country.name}{' '}
-        {pickedCountry?.name.toLowerCase() === country.name.toLowerCase() && (
-          <FaCheckCircle className="text-xl text-green-600" />
-        )}
-      </span>
-    </li>
-  ))}
-</ul>
+            <p className="text-red-700 text-sm mt-4 mb-1">{errorMsg}</p>
+            <ul className="max-h-[50vh] lg:max-h-[300px] overflow-y-scroll w-full">
+              {filteredCountries.map((country) => (
+                <li
+                  key={country.name}
+                  className="flex items-center py-2 my-2 px-2 cursor-pointer hover:font-[700] hover:text-regal-blue hover:bg-regal-secondary-light"
+                  onClick={() => setPickedCountry(country)}
+                >
 
+                  <img
+                    src={country?.flag}
+                    alt={country?.name}
+                    className="w-8 h-4 mr-2"
+                  />
+                  <span className="text-sm font-[400] w-full flex flex-row items-center justify-between">
+                    {country.name}{" "}
+                    {pickedCountry?.name?.toLowerCase() ===
+                      country?.name?.toLowerCase() && (
+                      <FaCheckCircle className="text-xl text-green-600" />
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
           <div className=" w-full px-4 pb-8 bg-white">
-            {pickedCountry && 
-                        <button
-              className="bg-regal-sky-blue text-white px-4 py-2 font-bold w-full rounded-md hover:bg-blue-600 transition"
-              onClick={handleSelectedCountry}
-              disabled={isLoading}
-            >
-             {isLoading ? 'Saving...' : 'Apply'} 
-            </button>
-            }
-
-
+            {pickedCountry && (
+              <button
+                className="bg-regal-sky-blue text-white px-4 py-2 font-bold w-full rounded-md hover:bg-blue-600 transition"
+                onClick={handleSelectedCountry}
+                disabled={isLoading}
+              >
+                {isLoading ? "Saving..." : "Apply"}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -109,10 +124,8 @@ function CountryModal() {
   const preferredCountry = useSelector((state) => state.auth?.preferredCountry);
   const isLoggedIn = useSelector((state) => state.auth?.user);
   const dispatch = useDispatch();
-  const [updateUser, 
-    {isLoading}
-   ] = useUpdateUserMutation();
-  const [errorMsg, setErrMsg] = useState('');
+  const [updateUser, { isLoading }] = useUpdateUserMutation();
+  const [errorMsg, setErrMsg] = useState("");
 
   useEffect(() => {
     const lspc = JSON.parse(localStorage.getItem("preferredCountry"));
@@ -123,21 +136,21 @@ function CountryModal() {
       }
     }
 
-    if (!preferredCountry ) {
-      if(!lspc && !isLoggedIn ){
+    if (!preferredCountry) {
+      if (!lspc && !isLoggedIn) {
         setIsModalOpen(true);
       }
     }
   }, [preferredCountry, dispatch]);
 
   useEffect(() => {
-    if(isLoggedIn && !preferredCountry ){
+    if (isLoggedIn && !preferredCountry) {
       setIsModalOpen(true);
     }
-    if(isLoggedIn && preferredCountry){
+    if (isLoggedIn && preferredCountry) {
       setIsModalOpen(false);
     }
-  }, [isLoggedIn, preferredCountry])
+  }, [isLoggedIn, preferredCountry]);
 
   const handleCountrySelect = async (country) => {
     if (isLoggedIn) {
@@ -148,7 +161,9 @@ function CountryModal() {
         setIsModalOpen(false);
       } catch (err) {
         if (err?.status >= 400 && err?.status <= 404) {
-          setErrMsg(err?.data?.message || "Failed to update user preferred country");
+          setErrMsg(
+            err?.data?.message || "Failed to update user preferred country"
+          );
         } else if (err?.status >= 500) {
           setErrMsg(err?.data?.message || "Server error");
         } else {
@@ -163,7 +178,7 @@ function CountryModal() {
       dispatch(setCurrency(country));
       setIsModalOpen(false);
     }
-  
+
     // Avoid window.location.reload() if possible; handle state updates instead.
   };
 
@@ -173,8 +188,12 @@ function CountryModal() {
         className="flex items-center hover:text-regal-blue text-sm xl:text-sm text-regal-black cursor-pointer font-[500]"
         onClick={() => setIsModalOpen(true)}
       >
-        <img src={preferredCountry?.flag || Location} alt="Location" className="w-4 md:w-6  mr-1 xl:mr-2" />
-        {preferredCountry?.name || 'Enter Country'}
+        <img
+          src={preferredCountry?.flag || Location}
+          alt="Location"
+          className="w-4 md:w-6  mr-1 xl:mr-2"
+        />
+        {preferredCountry?.name || "Enter Country"}
       </button>
 
       <Modal

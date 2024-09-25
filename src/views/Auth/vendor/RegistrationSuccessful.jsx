@@ -1,10 +1,10 @@
 import React from 'react'
 import PaymentSuccess from '../../../assets/images/payment/success.png'
 import Logo from "../../../assets/images/nav/logo.webp";
-import { useNavigate, Link } from 'react-router-dom'
+import {  Link } from 'react-router-dom'
 
 function RegistrationSuccessful() {
-    const navigate = useNavigate()
+   
   return (
     <div className=''>
         <nav className='p-4'>

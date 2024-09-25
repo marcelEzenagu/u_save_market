@@ -39,7 +39,8 @@ export default {
         'regal-track-gray' : 'rgba(201, 203, 209, 1)',
         'regal-light-green' : 'rgba(5, 205, 153, 1)',
         'regal-price-dark' : 'rgba(66, 84, 102, 1)',
-        'regal-warning': 'rgba(222, 130, 8, 1)'
+        'regal-warning': 'rgba(222, 130, 8, 1)',
+        'regal-wallet-blue' : 'rgba(76, 111, 255, 1)',
 
 
       },

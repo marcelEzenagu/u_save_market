@@ -4,7 +4,6 @@ import { useNavigate, Navigate } from 'react-router-dom';
 import { selectCurrentToken, selectCurrentUser, setCredentials, logOut, setLoginModal } from '../features/auth/authSlice'
 import { useViewUserQuery } from '../features/user/userApiSlice'
 import { getSecureCookie, validateToken }  from '../utils' 
-import { countries } from '../data/mockData';
 import { setCountry, setCurrency } from '../features/auth/authSlice';
 export function useGuestAuth() {
     const dispatch = useDispatch();
@@ -12,7 +11,7 @@ export function useGuestAuth() {
     const token = useSelector(selectCurrentToken);
     const userData = useSelector(selectCurrentUser);
     const userToken = getSecureCookie("accessToken");
-  
+    const countries = useSelector((state) => state?.auth?.countries);
     // Use `skip` to conditionally fetch user data
     const { data: user, isLoading, isSuccess, isError, error } = useViewUserQuery(userToken, {
       skip: !userToken || !validateToken(userToken) || (token && userData), // Skip query if conditions are met

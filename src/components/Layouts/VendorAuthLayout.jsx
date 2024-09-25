@@ -10,7 +10,7 @@ function VendorAuthLayout() {
   return (
     <div>
      
-      {!userToken || !validateToken(userToken) ? <Outlet /> : 'emeka'}
+      {!userToken || !validateToken(userToken) ? <Outlet /> : ''}
     </div>
   );
 }

@@ -54,6 +54,22 @@ import VendorView from "./views/admin/Vendors/VendorView";
 import OrderList from "./views/admin/OrderList";
 import PaymentList from "./views/admin/PaymentList";
 import AnalyticsList from "./views/admin/Analytics/AnalyticsList";
+import AgentsList from "./views/admin/Agents/AgentsList";
+import AgentView from "./views/admin/Agents/AgentView";
+import ProductList from "./views/admin/ProductList";
+import AgentAuthLayout from "./components/Layouts/AgentAuthLayout";
+import AgentOnboarding from "./views/Auth/Agent/AgentOnboarding";
+import AgentLayout from "./components/Layouts/AgentLayout";
+import OverViewAgent from "./views/Agent/OverViewAgent";
+import ShipmentList from "./views/Agent/Shipment/ShipmentList";
+import ShipmentView from "./views/Agent/Shipment/ShipmentView";
+import AgentOrderList from "./views/Agent/Order/OrderList"
+import AgentOrderView from "./views/Agent/Order/OrderView"
+import WarehousingList from "./views/Agent/Warehousing/WarehousingList";
+import WarehousingView from "./views/Agent/Warehousing/WarehousingView";
+import ReportAndAnalytics from "./views/Agent/ReportsAndAnalytics";
+import PaymentListAgent from "./views/Agent/Payments/PaymentListAgent";
+import PaymentOverview from "./views/Agent/Payments/PaymentOverview";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -265,6 +281,67 @@ const Router = createBrowserRouter([
         ]
     },
     {
+        path:'/agent/onboarding',
+        element:<AgentAuthLayout/>,
+        children: [
+            {
+                path: '/agent/onboarding',
+                element :  <AgentOnboarding/>
+            },
+        ]
+    },
+    {
+        path:'/agent/',
+        element:<AgentLayout/>,
+        children: [
+            {
+                path: '/agent/',
+                element : <Navigate to='/agent/overview'/>
+            },
+            {
+                path: '/agent/overview',
+                element :  <OverViewAgent/>
+            },
+            {
+                path: '/agent/shipments',
+                element :  <ShipmentList/>
+            },
+            {
+                path: '/agent/shipments/:id',
+                element :  <ShipmentView/>
+            },
+            {
+                path: '/agent/orders',
+                element :  <AgentOrderList/>
+            },
+            {
+                path: '/agent/orders/:id',
+                element :  <AgentOrderView/>
+            },
+            {
+                path: '/agent/warehousing',
+                element :  <WarehousingList/>
+            },
+            {
+                path: '/agent/warehousing/:id',
+                element :  <WarehousingView/>
+            },
+
+            {
+                path: '/agent/reports-and-analytics',
+                element :  <ReportAndAnalytics/>
+            },
+            {
+                path: '/agent/payments',
+                element : <PaymentListAgent/>
+            },
+            {
+                path: '/agent/payments/:id',
+                element : <PaymentOverview/>
+            }
+        ]
+    },
+    {
         path:'/admin/',
         element:<AdminLayout/>,
         children: [
@@ -291,6 +368,18 @@ const Router = createBrowserRouter([
             {
                 path:'/admin/users/:id',
                 element:<UserView/>
+            },
+            {
+                path:'/admin/agents',
+                element : <AgentsList/>,
+            },
+            {
+                path:'/admin/products',
+                element : <ProductList/>,
+            },
+            {
+                path:'/admin/agents/:id',
+                element:<AgentView/>
             },
             {
                 path:'/admin/orders',
