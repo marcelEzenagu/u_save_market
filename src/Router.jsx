@@ -70,6 +70,7 @@ import WarehousingView from "./views/Agent/Warehousing/WarehousingView";
 import ReportAndAnalytics from "./views/Agent/ReportsAndAnalytics";
 import PaymentListAgent from "./views/Agent/Payments/PaymentListAgent";
 import PaymentOverview from "./views/Agent/Payments/PaymentOverview";
+import PaymentError from "./views/checkout/PaymentError";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -98,8 +99,12 @@ const Router = createBrowserRouter([
         element:<Checkout/>,
     },
     {
-        path:'/payment',
+        path:'/payment-success',
         element: <Payment/>
+    },
+    {
+        path:'/payment-error',
+        element: <PaymentError/>
     },
     {
         path:'/',

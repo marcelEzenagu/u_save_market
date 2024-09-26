@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { useStripe, useElements, CardElement, Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import Footer from "../../components/Footer/Footer";
 import CategoryList from "../../components/cards/CategoryList";
 import Navigation from "../../components/Navigation/Navigation";
@@ -7,13 +9,14 @@ import PaymentCancel from "../../assets/images/order/cancel.png";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentUser } from "../../features/auth/authSlice";
 import LoadingScreen from "../../components/Loading/LoadingScreen";
 import { setOrders } from "../../features/order/orderSlice";
 import useCartOperationsHooks from "../../hooks/useCartOperationsHooks";
-import { selectCurrentToken } from "../../features/auth/authSlice";
-import { useGetUserCartQuery } from "../../features/cart/cartApiSlice";
-useGetUserCartQuery
+import { selectCurrentToken, selectCurrentUser } from "../../features/auth/authSlice";
+
+// Load Stripe using your public key
+const stripePromise = loadStripe(import.meta.env.VITE_APP_STRIPE_KEY);
+
 function Payment() {
   const userData = useSelector(selectCurrentUser);
   const userToken = useSelector(selectCurrentToken);
@@ -24,20 +27,26 @@ function Payment() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [placeOrder, setPlaceOrder] = useState(false);
-
   const [cartDetails, setCartDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const api = import.meta.env.VITE_APP_API_URL
+  
+  const stripe = useStripe();
+  const elements = useElements();
+  const [status, setStatus] = useState("default");
+  const [intentId, setIntentId] = useState(null);
+  const api = import.meta.env.VITE_APP_API_URL;
+
+  // Fetch cart details
   useEffect(() => {
-    // Fetch cart details (replace with actual API call to fetch cart)
     const fetchCartDetails = async () => {
       try {
         const response = await fetch(`${api}carts/`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${userToken}`, // Add the token to the Authorization header
-          }, });
+            Authorization: `Bearer ${userToken}`,
+          },
+        });
         const data = await response.json();
         setCartDetails(data);
         setLoading(false);
@@ -52,41 +61,40 @@ function Payment() {
     }
   }, [userData, userToken, placeOrder]);
 
-  useEffect(() => {
-    if (cartDetails?.products?.length > 0 && !placeOrder) {
-      handleOrderCreate();
-    // } else {
-    //   const timeoutId = setTimeout(() => {
-    //     navigate("/checkout");
-    //   }, 1000); 
-  
-    //   // Cleanup if component unmounts before navigation
-    //   return () => clearTimeout(timeoutId);
-    // }
-}
-  }, [cartDetails, placeOrder]);
-
-
-  const {
-    data: cartDetailsList,
-    isLoading: loadingData,
-    isSuccess,
-    isError,
-    error,
-    refetch, // You will use this to refetch cart details
-  } = useGetUserCartQuery(userData, {
-    skip: !userData && !order, // Skip fetching if no user data
-  });
 
   useEffect(() => {
-    if (order) {
-      // Call refetch to reload the cart
-      refetch();
+    if (!stripe || !elements) {
+      return;
     }
-  }, [order, refetch]);
 
+    const clientSecret = new URLSearchParams(window.location.search).get("payment_intent_client_secret");
+    if (!clientSecret) {
+      return;
+    }
+
+    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+      if (!paymentIntent) {
+        return;
+      }
+
+      setStatus(paymentIntent.status);
+      setIntentId(paymentIntent.id);
+    });
+  }, [stripe, elements]);
+
+ 
+  useEffect(() => {
+    console.log(intentId, status);
+    if (intentId && status) {
+      if (cartDetails?.products?.length > 0 && !placeOrder) {
+        handleOrderCreate();
+      }
+    }
+  }, [cartDetails, placeOrder, intentId, status]);
+
+ 
   const handleOrderCreate = useCallback(async () => {
-    let isMounted = true;  // Track component mounted state
+    let isMounted = true;  
     setPlaceOrder(true);
 
     try {
@@ -94,23 +102,23 @@ function Payment() {
         (acc, item) => acc + item?.price * item?.quantity,
         0
       );
-  
+
       const CheckoutDetails = JSON.parse(localStorage.getItem("checkoutDetails"));
       const totalCost = total + CheckoutDetails?.shippingPay;
-  
+
       const orderPayload = {
         cartID: cartDetails?.cartID,
         products: cartDetails?.products,
         totalCost: totalCost,
         userID: userData?.userID,
+        paymentIntentID : intentId
       };
 
-      // Post the order using fetch (or you can use axios if preferred)
       const response = await fetch(`${api}orders`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${userToken}`, // Add the token to the Authorization header
+          Authorization: `Bearer ${userToken}`,
         },
         body: JSON.stringify(orderPayload),
       });
@@ -120,13 +128,13 @@ function Payment() {
       }
 
       const orderDetails = await response.json();
-  
+
       if (isMounted) {
         setErrMsg(null);
         dispatch(setOrders([orderDetails]));
         setOrder(orderDetails);
         handleRemoveAllCartAfterCreateOrder();
-        localStorage.removeItem("checkoutDetails")
+        localStorage.removeItem("checkoutDetails");
       }
     } catch (err) {
       if (isMounted) {
@@ -136,10 +144,11 @@ function Payment() {
     }
 
     return () => {
-      isMounted = false;  // Cleanup when component unmounts
+      isMounted = false; 
     };
   }, [cartDetails, dispatch, handleRemoveAllCartAfterCreateOrder, userData, userToken]);
 
+  // Loading screen
   if (isLoading || !isAuthenticated || loading) {
     return <LoadingScreen />;
   }
@@ -178,11 +187,17 @@ function Payment() {
           <h6 className="text-regal-black text-sm mt-4 mb-6">Creating Order ....</h6>
         </div>
       )}
-
       <CategoryList />
       <Footer />
     </div>
   );
 }
 
-export default Payment;
+
+const PaymentWrapper = () => (
+  <Elements stripe={stripePromise}>
+    <Payment />
+  </Elements>
+);
+
+export default PaymentWrapper;

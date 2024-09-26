@@ -1,4 +1,5 @@
 import { apiSlice } from "../../app/api/apiSlice";
+import ChangePassword from "../../views/dashboard/settings/components/ChangePassword";
 
 export const userApiSlice =  apiSlice.injectEndpoints({
     endpoints:builder => ({
@@ -10,6 +11,14 @@ export const userApiSlice =  apiSlice.injectEndpoints({
         updateUserProfilePicture: builder.mutation({
             query: (credentials) => ({
                 url: 'users/details',
+                method: 'PATCH',
+                body: {...credentials},
+            }),
+            invalidatesTags:['user']
+        }),
+        changePassword: builder.mutation({
+            query: (credentials) => ({
+                url: 'users/change-password',
                 method: 'PATCH',
                 body: {...credentials},
             }),
@@ -52,6 +61,7 @@ export const {
     useAddItemToWishListMutation,
     useRemoveItemFromWishListMutation,
     useUserWishListQuery,
+    useChangePasswordMutation,
     useUpdateUserProfileMutation,
     useUpdateUserProfilePictureMutation
     } = userApiSlice
