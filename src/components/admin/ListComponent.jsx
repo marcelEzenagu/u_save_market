@@ -30,13 +30,6 @@ function ListComponent({
     setActiveTab(location?.pathname !== url);
   }, [location]);
 
-//   const handleCheckboxChange = (id) => {
-//     setSelectedItems((prevSelected) =>
-//       prevSelected.includes(id)
-//         ? prevSelected.filter((item) => item !== id)
-//         : [...prevSelected, id]
-//     );
-//   };
 
 useEffect(()=>{
     if (selectedItems?.length > 0) {

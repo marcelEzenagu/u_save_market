@@ -71,6 +71,8 @@ import ReportAndAnalytics from "./views/Agent/ReportsAndAnalytics";
 import PaymentListAgent from "./views/Agent/Payments/PaymentListAgent";
 import PaymentOverview from "./views/Agent/Payments/PaymentOverview";
 import PaymentError from "./views/checkout/PaymentError";
+import CategoryList from "./views/admin/CategoryList";
+import SubCategoryList from "./views/admin/subCategoryList";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -357,6 +359,14 @@ const Router = createBrowserRouter([
             {
                 path:'/admin/vendors',
                 element : <VendorList/>
+            },
+            {
+                path:'/admin/categories',
+                element : <CategoryList/>
+            },
+            {
+                path:'/admin/subcategories',
+                element : <SubCategoryList/>
             },
             {
                 path:'/admin/vendors/:id',
