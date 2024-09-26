@@ -154,7 +154,7 @@ const CategoryList = () => {
                 actions={actions}
                 itemsPerPage={10}
               />
-              {loading ? "Loading da"}
+              {loading ? "Loading data" :''}
         
           </section>
         </div>
