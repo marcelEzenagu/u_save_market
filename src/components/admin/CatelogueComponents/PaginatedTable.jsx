@@ -17,7 +17,7 @@ const PaginatedTable = React.memo(({ columns, data, actions, itemsPerPage = 12 }
 
   return (
     <div>
-      <div className="w-full overflow-x-scroll mt-4 animate-fade-in">
+      <div className="w-full overflow-x-auto overflow-y-visible mt-4 min-h-96 animate-fade-in">
         <table className="min-w-full">
           <thead>
             <tr>
@@ -78,7 +78,7 @@ const PaginatedTable = React.memo(({ columns, data, actions, itemsPerPage = 12 }
         </table>
       </div>
 
-      <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-between mt-4">
+      <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-between mt-4 px-4">
         <h6 className="text-xs text-regal-crum-gray">
           Showing {currentItems.length} items out of {data.length} results found
         </h6>

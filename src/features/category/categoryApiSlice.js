@@ -1,12 +1,11 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { apiSlice } from "../../app/api/apiSlice";
 
-export const categoryApiSlice = createApi({
-  tagTypes: ['Category', 'Subcategory'],
-  endpoints: (builder) => ({
+export const categoryApiSlice =  apiSlice.injectEndpoints({
+  endpoints: builder => ({
     // Categories Endpoints
     getCategories: builder.query({
       query: () => 'admin/categories',
-      providesTags: ['Category'],
+      providesTags: ['category'],
     }),
     addCategory: builder.mutation({
       query: (newCategory) => ({
@@ -14,7 +13,7 @@ export const categoryApiSlice = createApi({
         method: 'POST',
         body: newCategory,
       }),
-      invalidatesTags: ['Category'],
+      invalidatesTags: ['category'],
     }),
     updateCategory: builder.mutation({
       query: ({ id, ...updatedCategory }) => ({
@@ -22,20 +21,20 @@ export const categoryApiSlice = createApi({
         method: 'PATCH',
         body: updatedCategory,
       }),
-      invalidatesTags: ['Category'],
+      invalidatesTags: ['category'],
     }),
     deleteCategory: builder.mutation({
       query: (id) => ({
         url: `admin/categories/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Category'],
+      invalidatesTags: ['category'],
     }),
 
     // Subcategories Endpoints
     getSubcategories: builder.query({
       query: () => 'admin/sub-categories',
-      providesTags: ['Subcategory'],
+      providesTags: ['subcategory'],
     }),
     addSubcategory: builder.mutation({
       query: (newSubcategory) => ({
@@ -43,7 +42,7 @@ export const categoryApiSlice = createApi({
         method: 'POST',
         body: newSubcategory,
       }),
-      invalidatesTags: ['Subcategory'],
+      invalidatesTags: ['subcategory'],
     }),
     updateSubcategory: builder.mutation({
       query: ({ id, ...updatedSubcategory }) => ({
@@ -51,20 +50,20 @@ export const categoryApiSlice = createApi({
         method: 'PATCH',
         body: updatedSubcategory,
       }),
-      invalidatesTags: ['Subcategory'],
+      invalidatesTags: ['subcategory'],
     }),
     deleteSubcategory: builder.mutation({
       query: (id) => ({
         url: `admin/sub-categories/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Subcategory'],
+      invalidatesTags: ['subcategory'],
     }),
 
     // Get Subcategories by Category ID
     getSubcategoriesByCategory: builder.query({
       query: (categoryId) => `admin/sub-categories?category=${categoryId}`,
-      providesTags: ['Subcategory'],
+      providesTags: ['subcategory'],
     }),
   }),
 });

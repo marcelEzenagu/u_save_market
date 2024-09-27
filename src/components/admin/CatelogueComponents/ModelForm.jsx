@@ -8,6 +8,10 @@ const ModalForm = ({
   initialData = {}, // Initial data for edit mode
   onSubmit, // Function to handle form submission
   categories = [], // List of categories for dropdown in subcategory
+  loading = false,
+  success = false,
+  handleErrorMessagesList,
+  errMsg,
 }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -18,7 +22,6 @@ const ModalForm = ({
     ...initialData, // Pre-fill fields in edit mode
   });
 
-  const [success, setSuccess] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -44,7 +47,6 @@ const ModalForm = ({
 
   const handleFormSubmit = () => {
     onSubmit(formData); // Call parent function to handle form submission
-    setSuccess(true); // Show success message after submission
   };
 
   const renderFormFields = () => {
@@ -108,6 +110,7 @@ const ModalForm = ({
                 className="w-full p-3 text-xs border rounded-lg"
                 placeholder="Enter category name"
               />
+                {handleErrorMessagesList("categoryName")}
             </div>
             <div className="mb-4">
               <label className="block text-xs font-semibold mb-2 text-regal-black">
@@ -119,6 +122,7 @@ const ModalForm = ({
                 onChange={handleInputChange}
                 className="w-full p-3 text-xs border rounded-lg"
               />
+               {handleErrorMessagesList("categoryImage")}
             </div>
           </>
         );
@@ -213,13 +217,15 @@ const ModalForm = ({
                   <option value="inactive">Inactive</option>
                 </select>
               </div>
-
+                {/* error message */}
+                <p className="text-red-600">{errMsg ?errMsg : ""}</p>
               {/* Submit Button */}
               <button
                 onClick={handleFormSubmit}
                 className="bg-regal-sky-blue text-xs text-white py-3 px-4 rounded-md hover:bg-regal-sky-blue transition-colors mb-4"
+                disabled={loading}
               >
-                {isEdit ? `Update ${formType}` : `Add ${formType}`}
+               {loading ? "loading" : isEdit ? `Update ${formType}` : `Add ${formType}` }
               </button>
             </div>
         ) : (

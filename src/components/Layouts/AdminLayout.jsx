@@ -69,7 +69,7 @@ function AdminLayout() {
           },
           {
             id: "catalogue-2",
-            url: "/admin/Categories",
+            url: "/admin/categories",
             name: "Categories",
           },
           {
