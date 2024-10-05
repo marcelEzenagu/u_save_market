@@ -6,7 +6,7 @@ const DeleteModal = ({
   description,
   onConfirm,
   onClose,
-  iconSrc,
+  loading
 }) => {
   if (!isOpen) return null;
 
@@ -29,8 +29,9 @@ const DeleteModal = ({
             <button
               onClick={onConfirm}
               className="bg-white text-sm border border-red-500 text-red-500 py-2 px-4 font-[600] rounded-md w-full"
+              disabled={loading}
             >
-              Yes, Delete
+             {loading? 'deleting...' : 'Yes, Delete'} 
             </button>
           </div>
         </div>

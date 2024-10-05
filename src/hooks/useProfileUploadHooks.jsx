@@ -18,7 +18,7 @@ export function useProfileUploadHooks() {
         const file = event.target.files[0]; // Get the selected file
         try {
           if (!file) {
-            console.error('No file selected');
+            setError('No file selected');
             return;
           }
           if (file.size > MAX_FILE_SIZE) {
@@ -26,7 +26,7 @@ export function useProfileUploadHooks() {
           }
           if (file) {
             const reader = new FileReader();
-      
+           
             // Define the callback for when the file is read
             reader.onloadend = () => {
               const base64String = reader.result; // Get the base64 string     
@@ -39,6 +39,7 @@ export function useProfileUploadHooks() {
           }
           
         } catch (error) {
+          console.log(error);
           setError('something went wrong selecting your image.', error);
         }
 

@@ -1,5 +1,4 @@
-import React, { useMemo, useState } from "react";
-import { Items } from "../../data/mockData";
+import React, { useEffect, useMemo, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import Bag from "../../assets/images/admin/category.png";
 import OrderVendorStatus from "../../components/order/OrderVendorStatus";
@@ -9,28 +8,43 @@ import DeleteModal from "../../components/admin/CatelogueComponents/DeleteModal"
 import { IoTrashOutline } from "react-icons/io5";
 import { FaEdit } from "react-icons/fa";
 import { SlArrowDown } from "react-icons/sl";
+import {useErrorMessageHooks} from "../../hooks/useErrorMessageHooks";
+import { useGetCategoriesQuery,useGetSubcategoriesQuery,  useAddSubcategoryMutation, useUpdateSubcategoryMutation, useDeleteSubcategoryMutation } from "../../features/category/categoryApiSlice";
 const SubCategoryList = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Step 1: State for search term
   const [modalState, setModalState] = useState({ type: null, data: null });
-  const categories = [
-    { id: 1, name: "Electronics" },
-    { id: 2, name: "Furniture" },
-    // Add more categories here
-  ];
+  const [categoryNames, setCatgoryNames] = useState([]);
+  const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
+  const { data: subCategories = [], isLoading: subIsLoading, error : subError} = useGetSubcategoriesQuery();
+  const [SelectedCategory, setSelectedCategory] = useState("All Categories");
+  const [addSubcategory, {isLoading: addLoading},] = useAddSubcategoryMutation();
+  const [updateSubcategory,  {isLoading: editLoading}] = useUpdateSubcategoryMutation();
+  const [deleteSubcategory,  {isLoading: deleteLoading}] = useDeleteSubcategoryMutation();
+  const { handleError, setErrMsg,  setErrorMessagesList, handleErrorMessagesList, errMsg} = useErrorMessageHooks();
+  const [success, setSuccess] = useState(false);
+  useEffect(()=>{
+ if (categories) {
+  setCatgoryNames(categories?.map((i) => i?.categoryName))
+ }else{
+  setCatgoryNames([]);
+ }
+  }, [categories]);
+
   const columns = [
     {
-      key: "name",
+      key: "productCategory",
       label: "CATEGORY",
       render: (value, item) => (
         <ProductName
           value={value}
           image={item?.image}
+          categories={categories}
           viewProduct={() => setModalState({ type: "view", data: item })}
         />
       ),
     },
     {
-      key: "name",
+      key: "subCategoryName",
       label: "SUBCATEGORY",
       render: (value) => value,
     },
@@ -50,25 +64,72 @@ const SubCategoryList = () => {
     },
   ];
 
-  const handleDeleteConfirm = () => {
-    console.log("Item deleted");
-    setModalState({ type: null, data: null });
+  const handleDeleteConfirm = async () => {
+    if (modalState.data) {
+      try {
+        await deleteSubcategory(modalState?.data?.subCategoryID);
+        // dispatch(deleteSubcategory(modalState.data.id));
+        console.log("sub Category deleted:", modalState?.data?.subCategoryName);
+        setModalState({ type: null, data: null });
+      } catch (err) {
+        console.error("Failed to delete the sub Category:", err);
+      }
+    }
   };
 
   const handleModalClose = () => {
     setModalState({ type: null, data: null });
+    setSuccess(false)
   };
 
-  const handleCreateProduct = (formData) => {
-    console.log("Subcategory Created:", formData);
+  const handleCreateProduct = async (formData) => {
+    setErrMsg("");
+    setErrorMessagesList([]);
+    
+    if (modalState.type === "create") {
+      try {
+        console.log(formData);
+        const newCategory = await addSubcategory({...formData}).unwrap();
+        // dispatch(addCategoryToRedux(newCategory));
+        console.log("sub Category Created:", newCategory);
+        // handleModalClose();
+        setSuccess(true)
+
+      } catch (err) {
+        handleError(err, "sub category");
+        console.error("Failed to create category:", err);
+      }
+    } else if (modalState.type === "edit") {
+      try {
+        console.log(editLoading);
+        const updatedCategory = await updateSubcategory({
+          id: modalState.data.subCategoryID,
+          ...formData,
+        }).unwrap();
+        // dispatch(updateSubcategory({ id: modalState.data.id, updatedCategory }));
+        console.log("sub Category Updated:", updatedCategory);
+        setSuccess(true)
+      } catch (err) {
+        console.error("Failed to update sub Category:", err);
+      }
+    }
   };
 
   // Step 2: Filter items based on search term
   const filteredItems = useMemo(() => {
-    return Items.filter((item) =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [searchTerm]);
+    if (SelectedCategory !== "All Categories") {
+      return subCategories.filter((item) =>
+        item?.subCategoryName?.toLowerCase().includes(searchTerm?.toLowerCase()) && 
+      item?.productCategory?.categoryName?.toLowerCase() === SelectedCategory?.toLowerCase()
+      );
+    }else{
+      return subCategories.filter((item) =>
+        item?.subCategoryName?.toLowerCase().includes(searchTerm?.toLowerCase())
+      );
+    }
+
+  }, [searchTerm, subCategories, SelectedCategory]);
+
 
   return (
     <div className="Subcategory-list">
@@ -108,6 +169,10 @@ const SubCategoryList = () => {
               icon={Bag}
               isEdit={true}
               initialData={modalState.data}
+              handleErrorMessagesList={handleErrorMessagesList}
+              errMsg={errMsg}
+              loading={editLoading}
+              success={success}
             />
           )}
 
@@ -118,6 +183,9 @@ const SubCategoryList = () => {
               onSubmit={handleCreateProduct}
               icon={Bag}
               categories={categories}
+              loading={addLoading}
+              success={success}
+              handleErrorMessagesList={handleErrorMessagesList}
             />
           )}
 
@@ -125,9 +193,13 @@ const SubCategoryList = () => {
             <DeleteModal
               isOpen={modalState?.type === "delete"}
               title="Delete Subcategory"
-              description={`Are you sure you want to delete ${modalState.data?.name}?`}
+              description={`Are you sure you want to delete ${modalState.data?.subCategoryName}?`}
               onConfirm={handleDeleteConfirm}
               onClose={handleModalClose}
+              handleErrorMessagesList={handleErrorMessagesList}
+              errMsg={errMsg}
+              loading={deleteLoading}
+              success={success}
             />
           )}
 
@@ -136,7 +208,7 @@ const SubCategoryList = () => {
                 <h2 className="text-sm md:text-lg font-[700] text-regal-blue">
                 All Subcategory ({filteredItems?.length})
                 </h2>
-                <DropdownDiv dropdownOptions={['All Users', 'Inactive Users']}/>
+                <DropdownDiv dropdownOptions={categoryNames} setSelectedCategory={setSelectedCategory} isLoading={isLoading} error={error}/>
               </div>
               <PaginatedTable
                 columns={columns}
@@ -144,7 +216,8 @@ const SubCategoryList = () => {
                 actions={actions}
                 itemsPerPage={10}
               />
-        
+         {subIsLoading && <div>Loading data...</div>}
+         {subError && <div>Error loading sub-categories: {subError}</div>}
           </section>
         </div>
       </section>
@@ -153,14 +226,16 @@ const SubCategoryList = () => {
 };
 
 
-const DropdownDiv = ({dropdownOptions}) => {
+const DropdownDiv = ({dropdownOptions, setSelectedCategory, isLoading, error}) => {
   const [isOpenSelect, setIsOpenSelect] = useState(false);
-  const [dropdownOption, setDropdownOption] = useState(dropdownOptions[0]);
+  const [dropdownOption, setDropdownOption] = useState("All Categories");
 
   const handleOptionChange = (option) => {
     setDropdownOption(option);
+    setSelectedCategory(option);
     setIsOpenSelect(false);
   };
+
   return (      
     <div className="relative">
     {/* Dropdown button */}
@@ -176,9 +251,24 @@ const DropdownDiv = ({dropdownOptions}) => {
     {/* Dropdown menu */}
     {isOpenSelect && (
       <ul className="absolute left-0 pl-4 pr-8 bg-white border text-nowrap shadow-sm rounded-md mt-2 z-10 max-h-60 overflow-y-auto">
-        {dropdownOptions.map((option) => (
+        <li 
+            className="py-2 flex flex-row items-center justify-between"
+          >
+            <button
+              type="button"
+              className={`text-xs ${
+                dropdownOption === 'All Categories'
+                  ? "text-regal-blue font-[600]"
+                  : ""
+              }`}
+              onClick={() => handleOptionChange("All Categories")}
+            >
+              {'All Categories'}
+            </button>
+        </li>
+        {dropdownOptions.map((option, index) => (
           <li
-            key={option}
+            key={index}
             className="py-2 flex flex-row items-center justify-between"
           >
             <button
@@ -194,16 +284,26 @@ const DropdownDiv = ({dropdownOptions}) => {
             </button>
           </li>
         ))}
+          {isLoading && <div>Loading data...</div>}
+          {error && <div>Error loading categories: {error}</div>}
       </ul>
     )}
   </div>);
 }
-const ProductName = ({ value, image, viewProduct }) => (
-  <div className="flex items-center gap-3 cursor-pointer" onClick={viewProduct}>
-    <img src={image} alt={value} className="w-10 h-10 rounded-full" />
-    <span>{value}</span>
+const ProductName = ({ value, image, viewProduct, categories }) => {
+
+  if (value) {
+  return  <div className="flex items-center gap-3 cursor-pointer" onClick={viewProduct}>
+  <div className="w-10 h-10">
+  <img src={value?.categoryImage} alt={value?.categoryName} className="w-full h-full object-contain" />
   </div>
-);
+    <span>{value?.categoryName}</span>
+  </div>
+  }else{
+    return <p>Category not found</p>
+  }
+
+};
 
 
 

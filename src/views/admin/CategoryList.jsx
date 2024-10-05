@@ -8,17 +8,16 @@ import DeleteModal from "../../components/admin/CatelogueComponents/DeleteModal"
 import { IoTrashOutline } from "react-icons/io5";
 import { FaEdit } from "react-icons/fa";
 import { useGetCategoriesQuery, useAddCategoryMutation, useUpdateCategoryMutation, useDeleteCategoryMutation } from "../../features/category/categoryApiSlice";
-import { useDispatch } from "react-redux";
-import { addCategory as addCategoryToRedux, updateCategory, deleteCategory } from "../../features/category/categorySlice";
+// import { addCategory as addCategoryToRedux, updateCategory, deleteCategory } from "../../features/category/categorySlice";
 import {useErrorMessageHooks} from "../../hooks/useErrorMessageHooks";
 const CategoryList = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Step 1: State for search term
   const [modalState, setModalState] = useState({ type: null, data: null });
-  const {dispatch, handleError, setErrMsg,  setErrorMessagesList, handleErrorMessagesList, errMsg} = useErrorMessageHooks();
+  const { handleError, setErrMsg,  setErrorMessagesList, handleErrorMessagesList, errMsg} = useErrorMessageHooks();
   const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
   const [addCategory, {isLoading: addLoading},] = useAddCategoryMutation();
-  const [updateCategoryMutation] = useUpdateCategoryMutation();
-  const [deleteCategoryMutation] = useDeleteCategoryMutation();
+  const [updateCategory,  {isLoading: editLoading}] = useUpdateCategoryMutation();
+  const [deleteCategory,  {isLoading: deleteLoading}] = useDeleteCategoryMutation();
   const [success, setSuccess] = useState(false);
   const columns = [
     {
@@ -54,9 +53,9 @@ const CategoryList = () => {
   const handleDeleteConfirm = async () => {
     if (modalState.data) {
       try {
-        await deleteCategoryMutation(modalState.data.id);
-        dispatch(deleteCategory(modalState.data.id));
-        console.log("Category deleted:", modalState.data.name);
+        await deleteCategory(modalState.data.categoryID);
+        // dispatch(deleteCategory(modalState.data.id));
+        console.log("Category deleted:", modalState.data.categoryName);
         setModalState({ type: null, data: null });
       } catch (err) {
         console.error("Failed to delete the category:", err);
@@ -72,10 +71,12 @@ const CategoryList = () => {
   const handleCreateProduct = async (formData) => {
     setErrMsg("");
     setErrorMessagesList([]);
+    
     if (modalState.type === "create") {
       try {
-        const newCategory = await addCategory(formData).unwrap();
-        dispatch(addCategoryToRedux(newCategory));
+        console.log(formData);
+        const newCategory = await addCategory({...formData}).unwrap();
+        // dispatch(addCategoryToRedux(newCategory));
         console.log("Category Created:", newCategory);
         // handleModalClose();
         setSuccess(true)
@@ -86,13 +87,14 @@ const CategoryList = () => {
       }
     } else if (modalState.type === "edit") {
       try {
-        const updatedCategory = await updateCategoryMutation({
-          id: modalState.data.id,
+        console.log(editLoading);
+        const updatedCategory = await updateCategory({
+          id: modalState.data.categoryID,
           ...formData,
         }).unwrap();
-        dispatch(updateCategory({ id: modalState.data.id, updatedCategory }));
+        // dispatch(updateCategory({ id: modalState.data.id, updatedCategory }));
         console.log("Category Updated:", updatedCategory);
-        handleModalClose();
+        setSuccess(true)
       } catch (err) {
         console.error("Failed to update category:", err);
       }
@@ -140,7 +142,11 @@ const CategoryList = () => {
               onSubmit={handleCreateProduct}
               icon={Bag}
               isEdit={true}
-              initialData={modalState.data}
+              initialData={modalState?.data}
+              handleErrorMessagesList={handleErrorMessagesList}
+              errMsg={errMsg}
+              loading={editLoading}
+              success={success}
             />
           )}
 
@@ -161,9 +167,13 @@ const CategoryList = () => {
             <DeleteModal
               isOpen={modalState?.type === "delete"}
               title="Delete Category"
-              description={`Are you sure you want to delete ${modalState.data?.name}?`}
+              description={`Are you sure you want to delete ${modalState?.data?.categoryName}?`}
               onConfirm={handleDeleteConfirm}
               onClose={handleModalClose}
+              handleErrorMessagesList={handleErrorMessagesList}
+              errMsg={errMsg}
+              loading={deleteLoading}
+              success={success}
             />
           )}
 

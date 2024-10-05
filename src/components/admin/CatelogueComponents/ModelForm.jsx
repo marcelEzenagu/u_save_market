@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Success from "../../../assets/images/payment/success.png";
+import {useProfileUploadHooks} from "../../../hooks/useProfileUploadHooks";
 const ModalForm = ({
   icon,
   setCreateModel,
@@ -15,19 +16,22 @@ const ModalForm = ({
 }) => {
   const [formData, setFormData] = useState({
     name: "",
-    category: "",
+    categoryName: "",
     subCategory: "",
     status: "",
     image: "",
+    productCategory : "",
+    categoryImage:"",
     ...initialData, // Pre-fill fields in edit mode
   });
 
   const dropdownRef = useRef(null);
-
+  const {error, handleFileChange, base64String, imagePreview, clearData} = useProfileUploadHooks();
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setCreateModel();
+        clearData();
       }
     };
 
@@ -37,12 +41,26 @@ const ModalForm = ({
     };
   }, [setCreateModel]);
 
-  const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files ? files[0] : value,
-    });
+  useEffect(()=> {
+    if (formType === 'category' && base64String) {
+      setFormData({
+        ...formData,
+        categoryImage : base64String ,
+      });
+    } 
+  }, [base64String]);
+
+  const handleInputChange  =  (e) => {
+    if (e.target.type === 'file') {
+      handleFileChange(e)
+    }else{
+        const { name, value, files } = e.target;
+        setFormData({
+          ...formData,
+          [name]: files ? files[0] : value,
+        });
+    }
+
   };
 
   const handleFormSubmit = () => {
@@ -104,8 +122,8 @@ const ModalForm = ({
               </label>
               <input
                 type="text"
-                name="name"
-                value={formData?.name}
+                name="categoryName"
+                value={formData?.categoryName}
                 onChange={handleInputChange}
                 className="w-full p-3 text-xs border rounded-lg"
                 placeholder="Enter category name"
@@ -116,12 +134,29 @@ const ModalForm = ({
               <label className="block text-xs font-semibold mb-2 text-regal-black">
                 Upload Image
               </label>
-              <input
-                type="file"
-                name="image"
-                onChange={handleInputChange}
-                className="w-full p-3 text-xs border rounded-lg"
-              />
+              {formData?.categoryImage ? 
+              <>
+                 <input
+                 type="file"
+                 name="categoryImage"
+                 onChange={handleInputChange}
+                 className="w-full p-3 text-xs border rounded-lg"
+               /> 
+                <div className="w-14 h-14">
+                  <img src={formData?.categoryImage} alt="" className="w-full h-full object-contain"/>
+                </div>
+              
+              </>
+
+               :
+               <input
+               type="file"
+               name="categoryImage"
+               onChange={handleInputChange}
+               className="w-full p-3 text-xs border rounded-lg"
+             />
+              }
+           
                {handleErrorMessagesList("categoryImage")}
             </div>
           </>
@@ -134,15 +169,15 @@ const ModalForm = ({
                 Category
               </label>
               <select
-                name="category"
-                value={formData?.category}
+                name="productCategory"
+                value={formData?.productCategory}
                 onChange={handleInputChange}
                 className="w-full p-3 text-xs border rounded-lg"
               >
                 <option value="">Select Category</option>
                 {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
+                  <option key={cat.id} value={cat.categoryID}>
+                    {cat.categoryName}
                   </option>
                 ))}
               </select>
@@ -153,8 +188,8 @@ const ModalForm = ({
               </label>
               <input
                 type="text"
-                name="name"
-                value={formData?.name}
+                name="subCategoryName"
+                value={formData?.subCategoryName}
                 onChange={handleInputChange}
                 className="w-full p-3 text-xs border rounded-lg"
                 placeholder="Enter subcategory name"
@@ -218,14 +253,15 @@ const ModalForm = ({
                 </select>
               </div>
                 {/* error message */}
-                <p className="text-red-600">{errMsg ?errMsg : ""}</p>
+                <p className="text-red-600">{errMsg}</p>
+                <p className="text-red-600">{error}</p>
               {/* Submit Button */}
               <button
                 onClick={handleFormSubmit}
                 className="bg-regal-sky-blue text-xs text-white py-3 px-4 rounded-md hover:bg-regal-sky-blue transition-colors mb-4"
                 disabled={loading}
               >
-               {loading ? "loading" : isEdit ? `Update ${formType}` : `Add ${formType}` }
+               {loading ? "loading..." : isEdit ? `Update ${formType}` : `Add ${formType}` }
               </button>
             </div>
         ) : (
