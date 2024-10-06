@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import Bag from "../../assets/images/admin/category.png";
-import OrderVendorStatus from "../../components/order/OrderVendorStatus";
+import DefaultStatus from "../../components/order/DefaultStatus";
 import PaginatedTable from "../../components/admin/CatelogueComponents/PaginatedTable";
 import ModalForm from "../../components/admin/CatelogueComponents/ModelForm";
 import DeleteModal from "../../components/admin/CatelogueComponents/DeleteModal";
@@ -34,7 +34,7 @@ const CategoryList = () => {
         </div>
       ),
     },
-    { key: "status", label: "STATUS", render: () => <OrderVendorStatus /> },
+    { key: "status", label: "STATUS", render: (value) =>  <DefaultStatus status={value} /> },
   ];
 
   const actions = [
@@ -194,7 +194,8 @@ const CategoryList = () => {
               itemsPerPage={10}
             />
             {isLoading && <div>Loading data...</div>}
-            {error && <div>Error loading categories: {error}</div>}
+            {error && <div>Error loading categories: {error.message  || "Unknown error"}</div>}
+
            </div>
          
           </section>

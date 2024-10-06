@@ -78,7 +78,7 @@ function Payment() {
       }
 
       setStatus(paymentIntent.status);
-      setIntentId(paymentIntent.id);
+      setIntentId(clientSecret);
     });
   }, [stripe, elements]);
 
@@ -108,10 +108,10 @@ function Payment() {
 
       const orderPayload = {
         cartID: cartDetails?.cartID,
-        products: cartDetails?.products,
+        items: cartDetails?.products,
         totalCost: totalCost,
         userID: userData?.userID,
-        paymentIntentID : intentId
+        clientSecret : intentId
       };
 
       const response = await fetch(`${api}orders`, {

@@ -195,63 +195,30 @@ function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-    
+  
       if (!stripe || !elements) {
         console.log("Stripe.js has not loaded yet.");
         return;
       }
-    
+  
       if (validateForm(data)) {
         try {
           if (cartDetails?.products?.length > 0) {
             localStorage.setItem("checkoutDetails", JSON.stringify(data));
             setLoadingPayment(true);
-    
-            // Fetch CardElement
-            const cardElement = elements.getElement(PaymentElement);
-    
-            // Ensure cardElement is not null
-            if (!cardElement) {
-              throw new Error("CardElement not found");
-            }
-    
-            // const result = await stripe.confirmCardPayment(clientSecret, {
-            //   payment_method: {
-            //     card: cardElement,
-            //     billing_details: {
-            //       name: `${data.firstName} ${data.lastName}`,
-            //       email: data.email,
-            //     },
-            //   },
-            // });
+  
             const { error } = await stripe.confirmPayment({
               elements,
               confirmParams: {
-                // Make sure to change this to your payment completion page
-                return_url: `${window.location.host}/payment-success`,
+                return_url: `${window.location.origin}/payment-success`, // Correctly formatted return URL
               },
             });
-    
-            // Handle the result from the payment confirmation
-            // if (result.error) {
-            //   // Show error message
-            //   console.log(result.error.message);
-            //   showToast(result.error.message, "error");
-            //   setLoadingPayment(false);
-            // } else {
-            //   // Payment was successful
-            //   if (result.paymentIntent.status === 'succeeded') {
-            //     // Navigate to success page with clientSecret as a query parameter
-            //     navigate(`/payment-success?payment_intent_client_secret=${clientSecret}`);
-            //   } else {
-            //     navigate("/payment-failed");
-            //   }
-            //   setLoadingPayment(false);
-            // }
-            if (error.type === "card_error" || error.type === "validation_error") {
+  
+            if (error) {
               showToast(error.message);
             } else {
-              showToast("An unexpected error occurred.");
+              showToast("Payment processing...");
+              // You can add further handling here if needed
             }
             setLoadingPayment(false);
           }
@@ -264,6 +231,7 @@ function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
     },
     [data, cartDetails, elements, stripe, navigate]
   );
+  
   
   
   

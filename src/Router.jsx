@@ -73,6 +73,7 @@ import PaymentOverview from "./views/Agent/Payments/PaymentOverview";
 import PaymentError from "./views/checkout/PaymentError";
 import CategoryList from "./views/admin/CategoryList";
 import SubCategoryList from "./views/admin/subCategoryList";
+import ProductCreate from "./views/Vendor/product/ProductCreate";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -226,6 +227,10 @@ const Router = createBrowserRouter([
                 {
                     path:'/vendor/dashboard/products/:name',
                     element: <ProductView/>
+                },
+                {
+                    path:'/vendor/dashboard/products/create',
+                    element: <ProductCreate/>
                 },
                 {
                     path:'/vendor/dashboard/orders',

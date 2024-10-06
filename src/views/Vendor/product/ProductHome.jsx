@@ -52,10 +52,10 @@ function ProductHome() {
             Import
           </button>
 
-          <button className="flex flex-row items-center justify-center gap-2 font-[500] text-white bg-regal-sky-blue hover:bg-blue-700 px-4 py-2 rounded-md text-xs">
+          <Link to={'/vendor/dashboard/products/create'} className="flex flex-row items-center justify-center gap-2 font-[500] text-white bg-regal-sky-blue hover:bg-blue-700 px-4 py-2 rounded-md text-xs">
             <FaPlus />
             Create Product
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -307,7 +307,7 @@ return (
       <div className="grid grid-col-2 sm:grid-cols-4 md:grid-cols-6 px-4">
       {currentItems &&
                 currentItems.map((e) => (
-                  <div className=" " key={e.id}>
+                  <div className="mt-4" key={e.id}>
                     <ItemsCard item={e} />
                   </div>
                 ))}
@@ -337,8 +337,8 @@ return (
 
 function ItemsCard(props) {
   return (
-    <div key={props.item.id} className="text-sm font-[500] animate-fade-in w-[150px] mt-4 mb-8 mx-auto">
-      <div className="relative bg-white  rounded-lg  overflow-hidden">
+    <div key={props.item.id} className="text-sm font-[500] animate-fade-in w-[150px]  mx-auto">
+      <div className="relative bg-white  h-[150px]  rounded-lg  overflow-hidden">
         <img
           src={props.item.image}
           alt={props.item.name}

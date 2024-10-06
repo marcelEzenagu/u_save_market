@@ -1,6 +1,6 @@
 import React from 'react'
 import { TfiAngleDown } from "react-icons/tfi";
-function Shopping() {
+function Shopping({handleChange, data, setData, handleErrorMessagesList}) {
   return (
     <div>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -14,11 +14,14 @@ function Shopping() {
        </label>
        <input
        type="text"
-       name="text"
-       id="text"
+       name="weight"
+       id="weight"
+       value={data?.weight}
+       onChange={handleChange}
        placeholder="Enter name"
        className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
      />
+      {handleErrorMessagesList("weight")}
      </div>
      <div className="mb-2 col-span-2 md:col-span-1">
        <label
@@ -28,18 +31,17 @@ function Shopping() {
         Unit
        </label>
        <div className="relative ">
-       <select
-         className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
-       >
-         <option value="status1">Active</option>
-         <option value="status2">New</option>
-         <option value="status3">In Process</option>
-         <option value="status4">Completed</option>
-       </select>
-       <div className="absolute inset-y-0 right-[-3px] flex items-center px-2 pointer-events-none">
-         <TfiAngleDown className="text-gray-500 bg-white w-9 z-50" />
-       </div>
+       <input
+       type="text"
+       name="weight_unit"
+       id="weight_unit"
+       value={data?.weight_unit}
+       onChange={handleChange}
+       placeholder="Enter weight unit"
+       className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+     />
      </div>
+     {handleErrorMessagesList("weight_unit")}
      </div>
 
     <h6 className='text-xs text-regal-sky-blue  flex items-center gap-4  font-[500]'>

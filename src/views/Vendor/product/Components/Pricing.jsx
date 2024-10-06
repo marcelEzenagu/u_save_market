@@ -1,7 +1,7 @@
 import React from 'react'
 import { TfiAngleDown } from "react-icons/tfi";
 import { FiInfo } from "react-icons/fi";
-function Pricing() {
+function Pricing({handleChange, data, setData, handleErrorMessagesList}) {
   return (
     <div>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -13,12 +13,15 @@ function Pricing() {
        Original Price
        </label>
        <input
-       type="text"
-       name="text"
-       id="text"
+       type='number'
+       name="originalPrice"
+       id="originalPrice"
        placeholder="0.00"
+       value={data?.originalPrice}
+       onChange={handleChange}
        className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
      />
+     {handleErrorMessagesList("originalPrice")}
      </div>
      <div className="mb-2 col-span-2 md:col-span-1">
        <label
@@ -28,12 +31,15 @@ function Pricing() {
         Sales Price
        </label>
        <input
-       type="text"
-       name="text"
-       id="text"
+      type='number'
+       name="salesPrice"
+       id="salesPrice"
+       value={data?.salesPrice}
+       onChange={handleChange}
        placeholder="Enter name"
        className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
      />
+       {handleErrorMessagesList("salesPrice")}
      </div>
       
      <div className="mb-2 col-span-2 md:col-span-1">
@@ -44,12 +50,15 @@ function Pricing() {
        Profile (%)
        </label>
        <input
-       type="text"
-       name="text"
-       id="text"
-       placeholder="Enter name"
+       type="number"
+       name="profit"
+       id="profit"
+       value={data?.profit}
+       onChange={handleChange}
+       placeholder="Enter Profile"
        className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
      />
+       {handleErrorMessagesList("profit")}
      </div>
      <div className="mb-2 col-span-2 md:col-span-1">
        <label
@@ -59,12 +68,15 @@ function Pricing() {
         Tax <FiInfo className="text-regal-blue text-sm mx-2"/>
        </label>
        <input
-       type="text"
-       name="text"
-       id="text"
+       type="number"
+       name="discount"
+       id="discount"
+       value={data?.discount}
+       onChange={handleChange}
        placeholder="Enter name"
        className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
      />
+       {handleErrorMessagesList("discount")}
      </div>
      <div className="mb-2 col-span-2 md:col-span-1">
        <label
@@ -95,17 +107,16 @@ function Pricing() {
         Quantity left
        </label>
        <div className="relative ">
-       <select
-         className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
-       >
-         <option value="status1">Active</option>
-         <option value="status2">New</option>
-         <option value="status3">In Process</option>
-         <option value="status4">Completed</option>
-       </select>
-       <div className="absolute inset-y-0 right-[-3px] flex items-center px-2 pointer-events-none">
-         <TfiAngleDown className="text-gray-500 bg-white w-9 z-50" />
-       </div>
+       <input
+       type="number"
+       name="quantity"
+       id="quantity"
+       value={data?.quantity}
+       onChange={handleChange}
+       placeholder="Enter Profile"
+       className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+     />
+       {handleErrorMessagesList("quantity")}
      </div>
      </div>
 

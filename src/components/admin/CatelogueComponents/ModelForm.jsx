@@ -9,10 +9,12 @@ const ModalForm = ({
   initialData = {}, // Initial data for edit mode
   onSubmit, // Function to handle form submission
   categories = [], // List of categories for dropdown in subcategory
+  subCategories = [], // List of subCategories for dropdown products
   loading = false,
   success = false,
   handleErrorMessagesList,
   errMsg,
+
 }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -78,8 +80,8 @@ const ModalForm = ({
               </label>
               <input
                 type="text"
-                name="name"
-                value={formData?.name}
+                name="productName"
+                value={formData?.productName}
                 onChange={handleInputChange}
                 className="w-full p-3 text-xs border rounded-lg"
                 placeholder="Enter product name"
@@ -89,27 +91,37 @@ const ModalForm = ({
               <label className="block text-xs font-semibold mb-2 text-regal-black">
                 Category
               </label>
-              <input
-                type="text"
-                name="category"
-                value={formData?.category}
+              <select
+                name="productCategory"
+                value={formData?.productCategory}
                 onChange={handleInputChange}
                 className="w-full p-3 text-xs border rounded-lg"
-                placeholder="Enter category"
-              />
+              >
+                <option value="">Select Category</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.categoryID}>
+                    {cat.categoryName}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="mb-4">
               <label className="block text-xs font-semibold mb-2 text-regal-black">
-                Subcategory
+                Sub Category
               </label>
-              <input
-                type="text"
-                name="subCategory"
-                value={formData?.subCategory}
+              <select
+                name="productCategory"
+                value={formData?.productCategory}
                 onChange={handleInputChange}
                 className="w-full p-3 text-xs border rounded-lg"
-                placeholder="Enter subcategory"
-              />
+              >
+                <option value="">Select Category</option>
+                {subCategories.map((cat) => (
+                  <option key={cat.id} value={cat.subCategoryID}>
+                    {cat.subCategoryName}
+                  </option>
+                ))}
+              </select>
             </div>
           </>
         );
@@ -248,8 +260,8 @@ const ModalForm = ({
                   className="w-full p-3 text-xs border rounded-lg"
                 >
                   <option value="">Select Status</option>
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
+                  <option value="ACTIVE">Active</option>
+                  <option value="INACTIVE">Inactive</option>
                 </select>
               </div>
                 {/* error message */}

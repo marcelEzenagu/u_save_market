@@ -17,7 +17,7 @@ import { useUserWishListQuery } from "../../features/user/userApiSlice";
 import { setWishList } from "../../features/user/userSlice";
 import BottomLinks from "../Sidebar/BottomLinks";
 import { useGetCountriesQuery } from "../../features/auth/authApiSlice";
-
+import { useSearchItemsQuery } from "../../features/item/itemApiSlice";
 function Navigation() {
   const [mobileDropdown, setMobileDropdown] = useState(false);
   const [activeUser, setActiveuser] = useState(false);
@@ -268,10 +268,13 @@ function Navigation() {
 const SearchForm = React.memo(() => {
   const [query, setQuery] = useState(""); // State to track the input value
   const dropdownRef = useRef(null);
+  const { data: searchItems, isLoading, isError } = useSearchItemsQuery({searchTerm : query}); // Use the search query hook
+
   // Handle input change
   const handleChange = (event) => {
     setQuery(event.target.value);
   };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -284,6 +287,7 @@ const SearchForm = React.memo(() => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   return (
     <form
       action=""
@@ -303,22 +307,28 @@ const SearchForm = React.memo(() => {
           className="absolute right-[0.1rem] top-1/2 -translate-y-1/2 p-3 rounded-full bg-regal-blue border-l-4 border-l-regal-sky-blue"
         >
           <img src={SearchBarIcon} alt="Search Icon" />
-          {/* <IoSearchOutline   className='text-white text-2xl'/> */}
         </button>
         {query && ( // Show dropdown only if query is not empty
           <div className="absolute top-16 z-50 bg-white p-4 w-full rounded-xl left-1/2 -translate-x-1/2 flex flex-col gap-2 shadow-md">
+            
             <div className="flex flex-row justify-between items-center gap-2 py-2">
               <p className="text-sm font-[600]">Recent searches </p>
               <button className="text-sm font-[600] text-regal-sky-blue">
                 Clear
               </button>
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <IoSearchOutline />
-                <p className="text-xs font-[400]">Dropdown Item 1</p>
-              </div>
-            </div>
+            {isLoading && <p className="text-center">Loading...</p>}
+            {isError && <p className="text-red-500 text-center">Error fetching results.</p>}
+            {searchItems?.length > 0 ? (
+              searchItems.map((item) => (
+                <div key={item.id} className="flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer">
+                  <IoSearchOutline />
+                  <p className="text-xs font-[400]">{item.name}</p>
+                </div>
+              ))
+            ) : (
+              <p className="text-center">No items found</p>
+            )}
           </div>
         )}
       </div>
@@ -326,34 +336,17 @@ const SearchForm = React.memo(() => {
   );
 });
 
-const SearchFormMobile = React.memo(({showMessage}) => {
+const SearchFormMobile = React.memo(({ showMessage }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [isTop, setIsTop] = useState(false);
+  const { data: searchItems, isLoading, isError } = useSearchItemsQuery({searchTerm : searchQuery}); // Use the search query hook
 
-  useEffect(()=>{
-    if (!showMessage) {
-      setIsTop(true);
-    }else{
-      setIsTop(false);
-    }
-  }, [showMessage])
   const handleSearch = (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-
-    // Simulate search results - in a real app, you'd fetch these from an API
-    if (query.length > 0) {
-      setSearchResults(["Result 1", "Result 2", "Result 3"]);
-    } else {
-      setSearchResults([]);
-    }
+    setSearchQuery(e.target.value);
   };
 
   const clearSearch = () => {
     setSearchQuery("");
-    setSearchResults([]);
   };
 
   const closeSearchModal = () => {
@@ -374,13 +367,9 @@ const SearchFormMobile = React.memo(({showMessage}) => {
 
       {/* Search Modal */}
       {isModalOpen && (
-        <div
-          className={`fixed lg:hidden inset-0 z-50 ${
-            !isTop ? "mt-12" : ''
-          } flex justify-center items-start `}
-        >
-          <div className=" w-full   ">
-            <div className=" bg-white flex flex-row py-3 px-4 items-center gap-4 ">
+        <div className="fixed lg:hidden inset-0 z-50 flex justify-center items-start">
+          <div className="w-full">
+            <div className="bg-white flex flex-row py-3 px-4 items-center gap-4">
               {/* Input Field with Cancel Button Inside */}
               <div className="relative w-full">
                 <input
@@ -397,28 +386,33 @@ const SearchFormMobile = React.memo(({showMessage}) => {
                   {/* Cancel Icon */}
                   <IoCloseCircleOutline className="text-xl text-regal-black" />
                 </button>
-                {/* Search Results Dropdown */}
               </div>
 
               {/* Cancel Button by the Side */}
               <button
                 onClick={closeSearchModal}
-                className=" text-regal-black font-[600] focus:outline-none"
+                className="text-regal-black font-[600] focus:outline-none"
               >
                 Cancel
               </button>
             </div>
             {/* Search Results Dropdown */}
-            {searchResults.length > 0 && (
-              <div className=" bg-white border border-gray-300 rounded-lg shadow-lg mx-4">
-                {searchResults.map((result, index) => (
-                  <div
-                    key={index}
-                    className="p-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    {result}
-                  </div>
-                ))}
+            {searchQuery && (
+              <div className="bg-white border border-gray-300 rounded-lg shadow-lg mx-4">
+                {isLoading && <p className="text-center p-2">Loading...</p>}
+                {isError && <p className="text-red-500 text-center p-2">Error fetching results.</p>}
+                {searchItems?.length > 0 && isLoading == false ? (
+                  searchItems.map((result) => (
+                    <div
+                      key={result.id}
+                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {result.name}
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center p-2">No items found</p>
+                )}
               </div>
             )}
           </div>
@@ -427,4 +421,5 @@ const SearchFormMobile = React.memo(({showMessage}) => {
     </div>
   );
 });
+
 export default Navigation;

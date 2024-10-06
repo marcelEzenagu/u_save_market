@@ -1,5 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Items } from "../../data/mockData";
+import {
+  useGetProductsQuery,
+  useAddProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+} from "../../features/product/productApiSlice"; // Adjust the import path as necessary
+import { Items } from "../../data/mockData"; // You may not need this anymore if you're fetching from the API
 import { FiSearch } from "react-icons/fi";
 import Bag from "../../assets/images/admin/bag.png";
 import OrderVendorStatus from "../../components/order/OrderVendorStatus";
@@ -13,12 +19,29 @@ import { HiUsers } from "react-icons/hi2";
 import { FaHouseChimneyWindow } from "react-icons/fa6";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { numberWithCommas, ReplaceImage} from "../../utils";
+import { numberWithCommas, ReplaceImage } from "../../utils";
 import { TfiAngleDown } from "react-icons/tfi";
+import {useErrorMessageHooks} from "../../hooks/useErrorMessageHooks";
+import { useGetCategoriesQuery,useGetSubcategoriesQuery } from "../../features/category/categoryApiSlice";
+import DefaultStatus from "../../components/order/DefaultStatus";
 const ProductList = () => {
-  const [searchTerm, setSearchTerm] = useState(""); // Step 1: State for search term
+  const [searchTerm, setSearchTerm] = useState("");
   const [modalState, setModalState] = useState({ type: null, data: null });
-  const [activeTab, setActiveTab] = useState("1");
+  const [activeTab, setActiveTab] = useState("all");
+  const [success, setSuccess] = useState(false);
+  const { handleError, setErrMsg,  setErrorMessagesList, handleErrorMessagesList, errMsg} = useErrorMessageHooks();
+  const {
+    data: products = [],
+    isLoading: loadingProducts,
+    error,
+  } = useGetProductsQuery();
+  const { data: categories = [], isLoading, errorCategory } = useGetCategoriesQuery();
+  const { data: subCategories = [], isLoading: subIsLoading, error : subError} = useGetSubcategoriesQuery();
+  const [addProduct, { isLoading: addLoading }] = useAddProductMutation();
+  const [updateProduct, { isLoading: editLoading }] =
+    useUpdateProductMutation();
+  const [deleteProduct, { isLoading: deleteLoading }] =
+    useDeleteProductMutation();
 
   const tabItems = useMemo(
     () => [
@@ -30,15 +53,15 @@ const ProductList = () => {
       {
         name: "Active Products",
         icon: <HiUsers className="text-lg text-regal-blue" />,
-        total: "350",
+        total: products?.filter((i)=> i?.status.toLowerCase() === "active")?.length,
       },
       {
         name: "Inactive Products",
         icon: <FaHouseChimneyWindow className="text-lg text-regal-blue" />,
-        total: "642",
+        total:  products?.filter((i)=> i?.status.toLowerCase() === "inactive")?.length,
       },
     ],
-    []
+    [products]
   );
 
   const columns = [
@@ -56,13 +79,13 @@ const ProductList = () => {
     {
       key: "category",
       label: "CATEGORY",
-      render: (value) => value || "Staples",
+      render: (value) => value || "not found",
     },
     { key: "price", label: "PRICE" },
     { key: "stock", label: "STOCK" },
     { key: "supported countries", label: "SUPPORTED COUNTRIES" },
     { key: "unsupported countries", label: "UNSUPPORTED COUNTRIES" },
-    { key: "status", label: "STATUS", render: () => <OrderVendorStatus /> },
+    { key: "status", label: "STATUS", render: (value) => <DefaultStatus status={value} /> },
   ];
 
   const actions = [
@@ -78,8 +101,10 @@ const ProductList = () => {
     },
   ];
 
-  const handleDeleteConfirm = () => {
-    console.log("Item deleted");
+  const handleDeleteConfirm = async () => {
+    if (modalState.data) {
+      await deleteProduct(modalState.data.id); // Assuming your product has an 'id'
+    }
     setModalState({ type: null, data: null });
   };
 
@@ -87,32 +112,68 @@ const ProductList = () => {
     setModalState({ type: null, data: null });
   };
 
-  const handleCreateProduct = (formData) => {
-    console.log("Product Created:", formData);
+  const handleCreateProduct = async (formData) => {
+    await addProduct(formData);
+    setErrMsg("");
+    setErrorMessagesList([]);
+
+    if (modalState.type === "create") {
+      try {
+        console.log(formData);
+        const newCategory = await addProduct({ ...formData }).unwrap();
+        // dispatch(addCategoryToRedux(newCategory));
+        console.log("Product Created:", newCategory);
+        // handleModalClose();
+        setSuccess(true);
+      } catch (err) {
+        handleError(err, "Product");
+        console.error("Failed to Product:", err);
+      }
+    } else if (modalState.type === "edit") {
+      try {
+        console.log(editLoading);
+        const updatedProduct = await updateProduct({
+          id: modalState.data.subCategoryID,
+          ...formData,
+        }).unwrap();
+        // dispatch(updateSubcategory({ id: modalState.data.id, updatedCategory }));
+        console.log("sub Product Updated:", updatedProduct);
+        setSuccess(true);
+      } catch (err) {
+        console.error("Failed to update Product:", err);
+      }
+    }
   };
 
   const tabOptions = useMemo(
     () => [
-      { id: "1", name: "All" },
-      { id: "2", name: "Active" },
-      { id: "3", name: "Inactive" },
+      { id: "all", name: "All" },
+      { id: "active", name: "Active" },
+      { id: "inactive", name: "Inactive" },
     ],
     []
   );
 
-  // Step 2: Filter items based on search term
   const filteredItems = useMemo(() => {
-    return Items.filter((item) =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [searchTerm]);
+    console.log(products);
+    if (activeTab !== 'all') {
+      return products.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) && item?.status?.toLowerCase() === activeTab
+      );
+    }else{
+      return products.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+  }, [searchTerm, products, activeTab]);
 
   return (
     <div className="product-list">
-      <main className="flex  flex-col md:flex-row justify-between items-center mt-6">
+      <main className="flex flex-col md:flex-row justify-between items-center mt-6">
         <DateFilters />
         <button
-          className="text-white flex flex-row items-center gap-1 text-xs py-2 px-4 border rounded-md bg-regal-sky-blue   transition font-[500] active:scale-95"
+          className="text-white flex flex-row items-center gap-1 text-xs py-2 px-4 border rounded-md bg-regal-sky-blue transition font-[500] active:scale-95"
           onClick={() => setModalState({ type: "create" })}
         >
           Add Product
@@ -140,7 +201,7 @@ const ProductList = () => {
                 className="w-full p-2 outline-none text-xs"
                 placeholder="Search Product"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)} // Step 3: Update search term
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
           </div>
@@ -153,7 +214,13 @@ const ProductList = () => {
               onSubmit={handleCreateProduct}
               icon={Bag}
               isEdit={true}
+              handleErrorMessagesList={handleErrorMessagesList}
+              errMsg={errMsg}
               initialData={modalState.data}
+              loading={editLoading}
+              success={success}
+              categories={categories}
+              subCategories={subCategories}
             />
           )}
 
@@ -163,6 +230,12 @@ const ProductList = () => {
               formType="product"
               onSubmit={handleCreateProduct}
               icon={Bag}
+              handleErrorMessagesList={handleErrorMessagesList}
+              errMsg={errMsg}
+              loading={addLoading}
+              success={success}
+              categories={categories}
+              subCategories={subCategories}
             />
           )}
 
@@ -173,6 +246,10 @@ const ProductList = () => {
               description={`Are you sure you want to delete ${modalState.data?.name}?`}
               onConfirm={handleDeleteConfirm}
               onClose={handleModalClose}
+              handleErrorMessagesList={handleErrorMessagesList}
+              errMsg={errMsg}
+              loading={deleteLoading}
+              success={success}
             />
           )}
 
@@ -190,8 +267,11 @@ const ProductList = () => {
                 data={filteredItems}
                 actions={actions}
                 itemsPerPage={10}
+                isLoading={loadingProducts} // Add loading state for the table
               />
             )}
+                  {loadingProducts && <div>Loading data...</div>}
+                  {error && <div>Error loading Product: {error.message  || "Unknown error"}</div>}
           </section>
         </div>
       </section>
@@ -224,23 +304,20 @@ const TabOverview = ({ items }) => (
           key={item.name}
           className="flex items-center gap-4 p-4 border rounded-3xl"
         >
-          <div className="w-12 h-12 rounded-full bg-regal-auth-bg-color flex items-center justify-center text-sm">
-            {item.icon}
-          </div>
-          <div className="flex flex-col gap-1">
-            <div className="text-xs font-semibold text-regal-crum-gray">
-              {item.name}
-            </div>
-            <div className="text-lg font-bold text-regal-blue">
-              {item.total}
-            </div>
-          </div>
+          <div className="w-12 h-12 rounded-full bg-regal-auth-bg-color flex justify-center items-center">
+            {" "}
+            {item.icon}{" "}
+          </div>{" "}
+          <div>
+            {" "}
+            <h6 className="font-medium text-xs">{item.name}</h6>{" "}
+            <span className="font-semibold text-sm">{item.total}</span>{" "}
+          </div>{" "}
         </div>
-      ))}
+      ))}{" "}
     </div>
   </section>
 );
-
 const TabButtons = ({ options, activeTab, onTabChange }) => (
   <div>
     {options.map((tab) => (
@@ -259,173 +336,12 @@ const TabButtons = ({ options, activeTab, onTabChange }) => (
   </div>
 );
 
+
 const ProductName = ({ value, image, viewProduct }) => (
-  <div className="flex items-center gap-3 cursor-pointer" onClick={viewProduct}>
-    <img src={image} alt={value} className="w-10 h-10 rounded-full" />
-    <span>{value}</span>
+  <div className="flex items-center gap-2 cursor-pointer" onClick={viewProduct}>
+    {" "}
+    <img src={image} alt={value} className="w-12 h-12 rounded" />{" "}
+    <span className="text-sm">{value}</span>{" "}
   </div>
 );
-
-function TabsView({ data, close, filteredItems }) {
-  const [getNum, setNumber] = useState(0);
-  useEffect(() => {
-    filteredItems?.map((i, index) => {
-      if (i?.productID === data?.productID) {
-        setNumber((index += 1));
-      }
-    });
-  }, [data]);
-  return (
-    <div className="rounded-2xl border bg-white mt-8 overflow-hidden">
-      <div className="bg-regal-dashboard-active-tab-gray border-b flex flex-row justify-between items-center p-4">
-        <button
-          className="flex flex-row gap-2 items-center text-xs font-[600]"
-          onClick={() => {
-            close();
-          }}
-        >
-          <AiOutlineArrowLeft className="font-[400]" />
-          Go Back
-        </button>
-
-        <div className="flex flex-row items-center gap-4">
-          <div className="flex items-center gap-2">
-            <img
-              src={data?.image || "https://via.placeholder.com/40"}
-              alt="Profile"
-              className="w-6 h-6 rounded-full object-cover"
-            />
-            <span className="text-xs capitalize text-regal-black truncate max-w-[100px] md:max-w-full whitespace-nowrap font-[600]">
-              {data?.name || "User Name"}
-            </span>
-          </div>
-          <div className="flex flex-row items-center gap-2">
-            <IoIosArrowBack className="text-regal-crum-gray text-sm" />
-            <span className="text-regal-black text-xs">
-              <span className="text-regal-crum-gray text-xs">{getNum} of</span>{" "}
-              {filteredItems?.length}
-            </span>
-            <IoIosArrowForward className="text-regal-black text-sm" />
-          </div>
-        </div>
-      </div>
-      <div className="p-4">
-        <div className="flex flex-row items-center gap-4">
-        <div className="text-sm font-[500] animate-fade-in w-[100px] ">
-        <div className="relative bg-white h-[200px]  rounded-lg  overflow-hidden ">
-        <img
-          src={data?.image || ReplaceImage}
-          alt={data?.name}
-          className="w-full h-full object-contain"
-        />
-          </div>
-          </div>
-          <div className="flex flex-col gap-1  ">
-          <h5
-          className="text-xs md:text-lg font-semibold mb-2 line-clamp-2"
-        >
-          {data?.name}
-        </h5>
-        <p className="text-regal-black font-semibold text-sm md:text-lg ">
-          ₦{numberWithCommas(data?.price)}{" "}
-            {data?.percentageOFF  !== null ?
-          <s className="font-[400] text-xs text-regal-light-gray ">
-            {data?.old_price && '₦'+ numberWithCommas(data?.old_price) }
-          </s>
-
-           : ''}
-        </p>
-          </div>
-
-
-        </div>
-
-
-
-        <div className="border rounded-md p-4">
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <h6 className="text-regal-dark text-[16px]  mb-4 font-[600]">
-        General information
-        </h6>
-
-            <div className="mb-2 col-span-2">
-              <label
-                htmlFor="ProductName"
-                className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
-              >
-                Product Name
-              </label>
-              <input
-                type="text"
-                name="text"
-                id="text"
-                value={data?.name}
-                disabled={true}
-                placeholder="Enter name"
-                className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
-              />
-            </div>
-            <div className="mb-2 col-span-2 md:col-span-1">
-              <label
-                htmlFor="FirstName"
-                className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
-              >
-                Category
-              </label>
-              <div className="relative ">
-                <select className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black">
-                  <option value="status1">Active</option>
-                  <option value="status2">New</option>
-                  <option value="status3">In Process</option>
-                  <option value="status4">Completed</option>
-                </select>
-                <div className="absolute inset-y-0 right-[-3px] flex items-center px-2 pointer-events-none">
-                  <TfiAngleDown className="text-gray-500 bg-white w-9 z-50" />
-                </div>
-              </div>
-            </div>
-            <div className="mb-2 col-span-2 md:col-span-1">
-              <label
-                htmlFor="LastName"
-                className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
-              >
-                Sub Category
-              </label>
-              <div className="relative ">
-                <select className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black">
-                  <option value="status1">Active</option>
-                  <option value="status2">New</option>
-                  <option value="status3">In Process</option>
-                  <option value="status4">Completed</option>
-                </select>
-                <div className="absolute inset-y-0 right-[-3px] flex items-center px-2 pointer-events-none">
-                  <TfiAngleDown className="text-gray-500 bg-white w-9 z-50" />
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-2 col-span-2">
-              <label
-                htmlFor="ProductDescription"
-                className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
-              >
-                Product Description
-              </label>
-              <textarea
-                name=""
-                id=""
-                rows={"10"}
-                className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
-              >
-               {data?.description}
-              </textarea>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default ProductList;

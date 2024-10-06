@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import Bag from "../../assets/images/admin/category.png";
-import OrderVendorStatus from "../../components/order/OrderVendorStatus";
 import PaginatedTable from "../../components/admin/CatelogueComponents/PaginatedTable";
 import ModalForm from "../../components/admin/CatelogueComponents/ModelForm";
 import DeleteModal from "../../components/admin/CatelogueComponents/DeleteModal";
@@ -10,6 +9,7 @@ import { FaEdit } from "react-icons/fa";
 import { SlArrowDown } from "react-icons/sl";
 import {useErrorMessageHooks} from "../../hooks/useErrorMessageHooks";
 import { useGetCategoriesQuery,useGetSubcategoriesQuery,  useAddSubcategoryMutation, useUpdateSubcategoryMutation, useDeleteSubcategoryMutation } from "../../features/category/categoryApiSlice";
+import DefaultStatus from "../../components/order/DefaultStatus";
 const SubCategoryList = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Step 1: State for search term
   const [modalState, setModalState] = useState({ type: null, data: null });
@@ -48,7 +48,7 @@ const SubCategoryList = () => {
       label: "SUBCATEGORY",
       render: (value) => value,
     },
-    { key: "status", label: "STATUS", render: () => <OrderVendorStatus /> },
+    { key: "status", label: "STATUS", render: (value) => <DefaultStatus status={value} /> },
   ];
 
   const actions = [
@@ -217,7 +217,7 @@ const SubCategoryList = () => {
                 itemsPerPage={10}
               />
          {subIsLoading && <div>Loading data...</div>}
-         {subError && <div>Error loading sub-categories: {subError}</div>}
+         {subError && <div>Error loading sub-categories: {subError.message  || "Unknown error"}</div>}
           </section>
         </div>
       </section>
@@ -284,8 +284,8 @@ const DropdownDiv = ({dropdownOptions, setSelectedCategory, isLoading, error}) =
             </button>
           </li>
         ))}
-          {isLoading && <div>Loading data...</div>}
-          {error && <div>Error loading categories: {error}</div>}
+            {isLoading && <div>Loading data...</div>}
+            {error && <div>Error loading categories: {error.message  || "Unknown error"}</div>}
       </ul>
     )}
   </div>);
