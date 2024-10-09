@@ -34,7 +34,7 @@ const ForgotPasswordVendor = () => {
           requestID: userData?.requestID,
         })
       );
-      navigate("/vendor/auth/otp");
+      navigate("/vendor/otp");
       setData({
         email: "",
       });
@@ -87,7 +87,7 @@ const ForgotPasswordVendor = () => {
             <button className=" text-xs md:text-[12px] text-regal-sky-blue bg-regal-secondary-light px-4  py-3 font-semibold w-full rounded-md  mt-4 "
             type="button"
             onClick={()=>{
-                navigate('/vendor/auth/login')
+                navigate('/vendor/login')
             }}
           
             >

@@ -149,7 +149,7 @@ function ProductCreate() {
       <div className="flex flex-row items-center justify-between ">
         <Link
           className=" flex items-center gap-2 text-regal-dark text-lg md:text-2xl font-[500]"
-          to="/vendor/dashboard/products"
+          to="/vendor/products"
         >
           <IoIosArrowRoundBack />
 

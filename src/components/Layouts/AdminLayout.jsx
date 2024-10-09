@@ -65,11 +65,6 @@ function AdminLayout() {
         ),
         children: [
           {
-            id: "catalogue-1",
-            url: "/admin/products",
-            name: "Products",
-          },
-          {
             id: "catalogue-2",
             url: "/admin/categories/",
             name: "Categories",
@@ -78,6 +73,11 @@ function AdminLayout() {
             id: "catalogue-3",
             url: "/admin/subcategories",
             name: "SubCategories",
+          },
+          {
+            id: "catalogue-1",
+            url: "/admin/products",
+            name: "Products",
           },
         ],
       },

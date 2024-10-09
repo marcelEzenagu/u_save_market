@@ -21,7 +21,7 @@ const VendorDropdown = () => {
           <Menu.Item>
             {({ active }) => (
               <Link
-                to="/vendor/dashboard/profile/profile-details"
+                to="/vendor/profile/profile-details"
                 className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
               >
                 Profile Details
@@ -31,7 +31,7 @@ const VendorDropdown = () => {
           <Menu.Item>
             {({ active }) => (
               <Link
-                to="/vendor/dashboard/profile/identification"
+                to="/vendor/profile/identification"
                 className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
               >
                 Identification
@@ -41,7 +41,7 @@ const VendorDropdown = () => {
           <Menu.Item>
             {({ active }) => (
               <Link
-                to="/vendor/dashboard/profile/change-password"
+                to="/vendor/profile/change-password"
                 className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
               >
                 Change Password
@@ -51,7 +51,7 @@ const VendorDropdown = () => {
           <Menu.Item>
             {({ active }) => (
               <Link
-                to="/vendor/dashboard/profile/payments"
+                to="/vendor/profile/payments"
                 className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
               >
                 Payments
@@ -61,7 +61,7 @@ const VendorDropdown = () => {
           <Menu.Item>
             {({ active }) => (
               <Link
-                to="/vendor/dashboard/profile/settings"
+                to="/vendor/profile/settings"
                 className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
               >
                 Settings

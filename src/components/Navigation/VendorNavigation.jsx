@@ -31,31 +31,31 @@ function VendorNavigation() {
         {
             id: '1',
             name : 'Dashboard',
-            url:'/vendor/dashboard/home',
+            url:'/vendor/home',
             image: <RxDashboard  className='text-lg  font-[600]' /> 
         },
         {
             id: '2',
             name : ' Products',
-            url:'/vendor/dashboard/products',
+            url:'/vendor/products',
             image: <LiaBoxSolid  className='text-xl  font-[600]' /> 
         },
         {
             id: '3',
             name : 'Orders',
-            url:'/vendor/dashboard/orders',
+            url:'/vendor/orders',
             image: <FaLaptopMedical className='text-xl  font-[600]'  /> 
         },
         {
             id: '4',
             name : ' Analytics',
-            url:'/vendor/dashboard/analytics',
+            url:'/vendor/analytics',
             image:  <TbBrandGoogleAnalytics className='text-lg  font-[600]' /> 
         },
         {
             id: '5',
             name : ' Payment',
-            url:'/vendor/dashboard/payment',
+            url:'/vendor/payment',
             image:  <TbBrandGoogleAnalytics className='text-lg  font-[600]' /> 
         },
     ]
@@ -65,7 +65,7 @@ function VendorNavigation() {
         <div className="mx-auto py-3 px-4 flex max-w-[1366px]  flex-row justify-between items-center lg:container-fluid  ">
 
             
-        <Link to="/vendor/dashboard/home">
+        <Link to="/vendor/home">
               <img
                 src={Logo}
                 alt=""
@@ -138,7 +138,7 @@ function SearchForm(props) {
     setQuery("");
     setDropdownVisible(false);
     const queryParam = dropdownOption === "products" ? `products=${item.name}` : `orders=${item.name}`;
-    navigate(`/vendor/dashboard/search?${queryParam}`);
+    navigate(`/vendor/search?${queryParam}`);
 
   };
 

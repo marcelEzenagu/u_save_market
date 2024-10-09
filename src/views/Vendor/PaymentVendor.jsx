@@ -485,7 +485,7 @@ function ItemsCard(props) {
 
       <div className="flex flex-col gap-2">
         <Link
-          to={`/vendor/dashboard/products/${props.item.name}`}
+          to={`/vendor/products/${props.item.name}`}
           className="text-xs font-[500] "
         >
           {props.item?.name}

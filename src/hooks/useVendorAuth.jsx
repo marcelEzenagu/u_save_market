@@ -28,20 +28,20 @@ export const useVendorAuth = () => {
           if (validateToken(userToken)) {
             dispatch(setCredentials({ accessToken: userToken, role: 'vendor', user: vendor }));
           } else {
-              navigate('/vendor/auth/login'); // Redirect to login if token is invalid
+              navigate('/vendor/login'); // Redirect to login if token is invalid
           }
         } else if (isError) {
           console.error("Error fetching vendor data:", error);
           if (error?.status === 401) {
             dispatch(logOut());
-            navigate('/vendor/auth/login'); // Redirect to login
+            navigate('/vendor/login'); // Redirect to login
           }
         }
       }else{
         console.log("me");
       }
     } else {
-        navigate('/vendor/auth/login'); // Redirect to login
+        navigate('/vendor/login'); // Redirect to login
     }
 
   }, [token, userData, userToken, isSuccess, isError, dispatch, vendor, error]);

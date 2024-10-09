@@ -27,35 +27,35 @@ const Profile = () => {
     {
         id: '1',
         name:'profile-details',
-        url:'/vendor/dashboard/profile/profile-details',
+        url:'/vendor/profile/profile-details',
         component : <ProfileDetails />,
         icon: <RiUserLine className="text-xl " />
     },
     {
         id: '2',
         name:'identification',
-        url:'/vendor/dashboard/profile/identification',
+        url:'/vendor/profile/identification',
         component : <Identification />,
         icon: <HiOutlineIdentification  className="text-2xl "/>
     },
     {
         id: '3',
         name:'Password & Security',
-        url:'/vendor/dashboard/profile/password-security',
+        url:'/vendor/profile/password-security',
         component : <PasswordAndSecurity />,
         icon: <SlLock className="text-xl " />
     },
     {
         id: '4',
         name:'performance',
-        url:'/vendor/dashboard/profile/performance',
+        url:'/vendor/profile/performance',
         component : <Performance />,
         icon: <HiOutlineChartBarSquare  className="text-2xl "/>
     },
     {
         id: '5',
         name:'settings',
-        url:'/vendor/dashboard/profile/settings',
+        url:'/vendor/profile/settings',
         component : <Settings />,
         icon: <IoSettingsOutline  className="text-xl"/>
     },

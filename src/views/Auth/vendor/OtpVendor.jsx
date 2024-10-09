@@ -58,7 +58,7 @@ const OtpVendor = () => {
         const {access_data} = await verifyOtp({ otp : data, requestID : verifiedDetails?.requestID, email: verifiedDetails?.email}).unwrap();
         console.log(access_data?.access_token);
         dispatch(setVerifiedDetails({...verifiedDetails, token: access_data?.access_token }))
-        navigate('/vendor/auth/reset-password')
+        navigate('/vendor/reset-password')
       }catch (err) {
        console.log(err);
        handleError(err, 'OTP');

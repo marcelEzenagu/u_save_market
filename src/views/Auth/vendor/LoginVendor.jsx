@@ -24,7 +24,7 @@ const handleSubmit = async (e) => {
       password:'',
       eye:false,
     })
-    navigate('/vendor/dashboard/home')
+    navigate('/vendor/home')
   }catch (err) {
     console.log(err);
     handleError(err, "Login");
@@ -106,7 +106,7 @@ const handleSubmit = async (e) => {
             </div>
             <p className="text-red-600 text-xs">{ errMsg}</p>
 
-            <Link to="/vendor/auth/forgot-password" className="text-xs text-regal-blue">Forgot Password ?</Link>
+            <Link to="/vendor/forgot-password" className="text-xs text-regal-blue">Forgot Password ?</Link>
 
             <div className="w-full ">
               <button className=" text-xs md:text-[12px] bg-regal-sky-blue text-white px-4  py-3 font-semibold w-full rounded-lg hover:bg-blue-600 mt-4 "
@@ -132,7 +132,7 @@ const handleSubmit = async (e) => {
                     Log in with Google</button>
             </div>
 
-            <h5 className="text-regal-black text-sm font-[500] text-center mt-4">Don't have an account <Link to="/vendor/auth/register"  className="underline">Sign up for free</Link></h5>
+            <h5 className="text-regal-black text-sm font-[500] text-center mt-4">Don't have an account <Link to="/vendor/register"  className="underline">Sign up for free</Link></h5>
           </form>
         </div>
       </div>

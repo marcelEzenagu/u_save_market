@@ -28,7 +28,7 @@ function RegistrationSuccessful() {
           {/* Buttons in flex-col with gap */}
           <div className="flex flex-col gap-4   mx-auto">
             <Link
-            to={'/vendor/dashboard/home'}
+            to={'/vendor/home'}
               className="bg-regal-sky-blue text-white py-2 px-14 rounded-md hover:bg-blue-900 transition font-[600]  text-xs md:text-sm"
            >
              Proceed
