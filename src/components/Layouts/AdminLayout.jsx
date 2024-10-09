@@ -3,7 +3,9 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import Logo from "../../assets/images/nav/logo.webp";
 import "../../assets/css/admin.css";
 import { FiSearch, FiBell, FiChevronRight } from "react-icons/fi";
-import useFetchCountriesWithCurrencies from "../../hooks/useFetchCountriesWithCurrencies";
+import { useAdminAuth } from "../../hooks/useAdminAuth";
+import LoadingScreen from '../Loading/LoadingScreen'
+import useFetchCountries from "../../hooks/useFetchCountries";
 function AdminLayout() {
   const sidebarLinks = useMemo(() => {
     const sidebar = [
@@ -287,7 +289,7 @@ function AdminLayout() {
   const [isOpen, setIsOpen] = useState(false); // For mobile menu toggle
   const location = useLocation();
   const [isActive, setisActive] = useState(null);
-  const { countriesWithCurrency } = useFetchCountriesWithCurrencies();
+  const { countriesWithCurrency } = useFetchCountries();
   useEffect(()=>{
     countriesWithCurrency;
   }, []);
@@ -337,6 +339,13 @@ function AdminLayout() {
       link?.url?.includes(activePathSegment)
     );
   }
+
+  const { isLoading, isAuthenticated } = useAdminAuth();
+
+  if (isLoading || !isAuthenticated) {
+    return <LoadingScreen />;
+  }
+
   return (
     <div className="flex h-screen ">
       {/* Sidebar */}

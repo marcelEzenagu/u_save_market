@@ -74,6 +74,11 @@ import PaymentError from "./views/checkout/PaymentError";
 import CategoryList from "./views/admin/CategoryList";
 import SubCategoryList from "./views/admin/SubCategoryList";
 import ProductCreate from "./views/Vendor/product/ProductCreate";
+import LoginAgent from "./views/Auth/Agent/LoginAgent";
+import LoginAdmin from "./views/Auth/admin/LoginAdmin";
+import ForgotPasswordAgent from "./views/Auth/Agent/ForgotPasswordAgent";
+import OtpAgent from "./views/Auth/Agent/OtpAgent";
+import ResetPasswordAgent from "./views/Auth/Agent/ResetPasswordAgent";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -293,13 +298,37 @@ const Router = createBrowserRouter([
         ]
     },
     {
-        path:'/agent/onboarding',
+        path:'/agent/',
         element:<AgentAuthLayout/>,
         children: [
             {
-                path: '/agent/onboarding',
+                path: '/agent/',
+                element : <Navigate to='/agent/register'/>
+            },
+            {
+                path: '/agent/register',
                 element :  <AgentOnboarding/>
             },
+            {
+                path: '/agent/login',
+                element :  <LoginAgent/>
+            },
+            {
+                path:'/agent/forgot-password',
+                element: <ForgotPasswordAgent/>
+            },
+            {
+                path:'/agent/otp',
+                element: <OtpAgent/>
+            },
+            {
+                path:'/agent/reset-password',
+                element: <ResetPasswordAgent/>
+            },
+            {
+                path:'/agent/registration/successful',
+                element: <RegistrationSuccessful/>
+            }
         ]
     },
     {
@@ -351,6 +380,20 @@ const Router = createBrowserRouter([
                 path: '/agent/payments/:id',
                 element : <PaymentOverview/>
             }
+        ]
+    },
+    {
+        path:'/admin/',
+        element:<AgentAuthLayout/>,
+        children: [
+            {
+                path: '/admin/',
+                element : <Navigate to='/admin/login'/>
+            },
+            {
+                path: '/admin/login',
+                element :  <LoginAdmin/>
+            },
         ]
     },
     {

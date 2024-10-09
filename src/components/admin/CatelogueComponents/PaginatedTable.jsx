@@ -37,7 +37,7 @@ const PaginatedTable = React.memo(({ columns, data, actions, itemsPerPage = 12 }
                 {columns.map((column) => (
                   <td
                     key={column.key}
-                    className="px-6 py-2 text-xs text-regal-black whitespace-nowrap font-[600]"
+                    className="px-6 py-2 text-xs text-regal-black whitespace-nowrap font-[500]"
                   >
                     {column.render ? column.render(item[column.key], item) : item[column.key]}
                   </td>

@@ -6,7 +6,7 @@ function DefaultStatus({ status }) {
     case  "active":
       return (
         <span
-          className={`inline-block px-2 py-1 text-xs  text-green-500 rounded-full bg-green-100`}
+          className={`inline-block px-2 py-1 text-xs  text-blue-500 rounded-md bg-blue-100`}
         >
           active
         </span>
@@ -14,7 +14,7 @@ function DefaultStatus({ status }) {
     case  "inactive":
       return (
         <span
-        className={`inline-block px-2 py-1 text-xs  text-red-500 rounded-full bg-red-100`}
+        className={`inline-block px-2 py-1 text-xs  text-black-500 rounded-md bg-gray-100`}
         >
           inactive
         </span>
@@ -22,7 +22,7 @@ function DefaultStatus({ status }) {
     default:
       return (
         <span
-          className={`inline-block px-2 py-1 text-xs  text-red-500 rounded-full bg-red-100`}
+          className={`inline-block px-2 py-1 text-xs  text-red-500 rounded-md bg-red-100`}
         >
           failed
         </span>
