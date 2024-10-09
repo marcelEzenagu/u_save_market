@@ -11,21 +11,20 @@ import GeneralInformation from "./Components/GeneralInformation";
 import Media from "./Components/Media";
 import Pricing from "./Components/Pricing";
 import Shopping from "./Components/Shopping";
-import { Items } from "../../../data/mockData";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { numberWithCommas } from "../../../utils";
 import Cancelicon from "../../../assets/images/order/cancel.png";
 import ProductDescription from "../../../components/ProductDescription";
 import { useErrorMessageHooks } from "../../../hooks/useErrorMessageHooks";
 import { useAddItemMutation } from "../../../features/item/itemApiSlice";
+import { useToaster } from "../../../components/ToasterContext";
+import ViewProduct from "./Components/ViewProduct";
 function ProductCreate() {
   const { name } = useParams();
   const [activeTab, setActiveTab] = useState("1");
   const [active, setActive] = useState("1");
   const [selectedStatus, setSelectedStatus] = useState("Select Status");
   const [isModalOpenAddProduct, setisModalOpenAddProduct] = useState(false);
-  const [isModalOpenDeleteProduct, setisModalOpenDeleteProduct] =
-    useState(false);
   const {
     handleError,
     setErrMsg,
@@ -37,6 +36,7 @@ function ProductCreate() {
     errMsg,
   } = useErrorMessageHooks();
   const [addItem, { isLoading }] = useAddItemMutation();
+  const { showToast } = useToaster();
   useEffect(() => {
     defaultValue();
   }, []);
@@ -70,6 +70,10 @@ function ProductCreate() {
     try {
       const { response } = await addItem(data).unwrap();
       console.log(response);
+      showToast(
+        "Item created successfully",
+        "success"
+      );
       defaultValue();
     } catch (err) {
       console.log(err);
@@ -82,12 +86,20 @@ function ProductCreate() {
       value: "active",
       color:  "text-green-600 bg-green-100 border-green-600",
       icon: "",
+
     },
+    
     {
       label: "inactive",
       value: "inactive",
       color: "text-red-600 bg-red-100 border-red-600",
     },
+    {
+        label: "draft",
+        value: "draft",
+        color:  "text-gray-600 bg-gray-100 border-gray-600",
+  
+      },
   ];
 
   const tabs = [
@@ -125,6 +137,7 @@ function ProductCreate() {
       (option) => option.value === selectedValue
     );
     setSelectedStatus(selectedOption.label);
+    setData({...data, status : selectedOption.value.toLocaleUpperCase()});
   };
 
   const selectedOption = statusOptions.find(
@@ -139,10 +152,10 @@ function ProductCreate() {
           to="/vendor/dashboard/products"
         >
           <IoIosArrowRoundBack />
-          {name}
+
         </Link>
         <div className="flex flex-row items-center gap-6">
-          <Menu as="button" className="relative inline-block text-right">
+          {/* <Menu as="button" className="relative inline-block text-right">
             <div>
               <Menu.Button className=" rounded-full text-lg text-regal-dark focus:outline-none">
                 •••
@@ -167,7 +180,7 @@ function ProductCreate() {
                 </Menu.Item>
               </div>
             </Menu.Items>
-          </Menu>
+          </Menu> */}
           <button
             className="flex flex-row items-center justify-center gap-2 font-[500] text-regal-black text-xs border rounded-md border-regal-black py-2 px-3"
             onClick={() => {
@@ -243,6 +256,8 @@ function ProductCreate() {
             </h5>
 
             <div className="flex flex-col items-start gap-8 pb-4 mt-4  border-b ">
+             <div className="w-full "> 
+
               <div className="w-full px-4 relative">
                 <select
                   value={selectedOption ? selectedOption.value : ""}
@@ -269,6 +284,11 @@ function ProductCreate() {
                     }
                   />
                 </div>
+             
+              </div>
+              <div className="px-4">
+              {handleErrorMessagesList("status")}
+              </div>
               </div>
               <div className="w-64">
                 <button
@@ -305,6 +325,7 @@ function ProductCreate() {
       )} */}
               </div>
             </div>
+           
             <p className="text-red-600 text-xs">{errMsg}</p>
             <div className="px-5 pt-4 pb-3 w-full">
               <button
@@ -318,12 +339,7 @@ function ProductCreate() {
           </div>
         </div>
       </section>
-      <DeleteProduct
-        isModalOpen={isModalOpenDeleteProduct}
-        setIsModalOpen={(e) => {
-          setisModalOpenDeleteProduct(e);
-        }}
-      />
+
       <ViewProduct
         isModalOpen={isModalOpenAddProduct}
         setIsModalOpen={(e) => {
@@ -334,142 +350,5 @@ function ProductCreate() {
     </div>
   );
 }
-
 export default ProductCreate;
-function ViewProduct(props) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  useEffect(() => {
-    setIsModalOpen(props.isModalOpen);
-  }, [props.isModalOpen]);
 
-  const dropdownaddRef = useRef(null);
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        dropdownaddRef.current &&
-        !dropdownaddRef.current.contains(event.target)
-      ) {
-        props.setIsModalOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  return (
-    <>
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black w-full bg-opacity-75  z-50 flex justify-center items-center animated fadeInDown ">
-          <div
-            className="bg-white py-3 px-4   md:p-6 rounded-lg shadow-lg w-[350px] md:w-[700px] "
-            ref={dropdownaddRef}
-          >
-            {props?.data?.itemName === "" ? (
-              <div className="h-24 flex flex-col items-center justify-center gap-4">
-                <h5 className="text-sm"> Nothing to preview yet</h5>
-              </div>
-            ) : (
-              <main className="my-4 mb-20 grid grid-cols-1 md:grid-cols-2  gap-4">
-                <div className="w-full h-80 my-auto relative">
-                  <img
-                    src={props?.data?.image}
-                    alt={props?.data?.itemName}
-                    className="w-full h-full object-contain"
-                  />
-                  <span className=" text-xs absolute bottom-0 right-0 font-semibold text-regal-black py-2 px-4 bg-regal-light-item-color">
-                    2 pieces left
-                  </span>
-                </div>
-                <div className="flex flex-col gap-3">
-                  <h4 className="text-xs font-[500] text-regal-black">
-                    {props?.data?.itemName}
-                  </h4>
-                  <h5 className="text-sm font-[700] text-regal-blue">
-                    ₦{numberWithCommas(props?.data?.originalPrice)}
-                  </h5>
-                  <div>
-                    <h1 className="text-sm  font-[600] text-regal-light-gray mb-2">
-                      Product description
-                    </h1>
-                    <ProductDescription
-                      description={props?.data?.description}
-                    />
-                  </div>
-                </div>
-              </main>
-            )}
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
-
-function DeleteProduct(props) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-  useEffect(() => {
-    setIsModalOpen(props.isModalOpen);
-  }, [props.isModalOpen]);
-
-  const dropdownaddRef = useRef(null);
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        dropdownaddRef.current &&
-        !dropdownaddRef.current.contains(event.target)
-      ) {
-        props.setIsModalOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-  return (
-    isModalOpen && (
-      <div
-        className="fixed inset-0 bg-black w-full bg-opacity-75  z-50 flex justify-center items-center animated fadeInDown"
-        ref={dropdownaddRef}
-      >
-        <div className="bg-white p-5 md:p-14 rounded-lg shadow-lg w-[300px] md:w-[450px] text-center ">
-          <img src={Cancelicon} alt="" className="w-32 mx-auto mb-2" />
-          <h2 className="text-xl font-bold mb-2">Delete Item</h2>
-          <p className="text-regal-black text-sm mt-4 mb-6">
-            Are you sure you want to delete this product? the product would stop
-            being displayed on the website
-          </p>
-
-          {/* Buttons in flex-col with gap */}
-          <div className="flex flex-col gap-4 w-[200px] mx-auto">
-            <button
-              onClick={() => {
-                // Handle delete action here
-                props.setIsModalOpen(false);
-              }}
-              className="bg-regal-sky-blue text-white py-2 text-sm rounded-md hover:bg-blue-900 transition active:scale-95"
-            >
-              Save as Draft
-            </button>
-            <button
-              onClick={() => {
-                // Handle delete action here
-                props.setIsModalOpen(false);
-              }}
-              className=" text-regal-sky-blue text-sm py-2 border-2 border-white rounded-md hover:border-regal-sky-blue transition font-[500] active:scale-95"
-            >
-              Yes, Delete
-            </button>
-          </div>
-        </div>
-      </div>
-    )
-  );
-}

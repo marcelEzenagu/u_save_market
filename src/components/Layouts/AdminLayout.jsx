@@ -1,9 +1,9 @@
-import React, { Children, useLayoutEffect, useMemo, useState } from "react";
+import React, { Children, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Logo from "../../assets/images/nav/logo.webp";
 import "../../assets/css/admin.css";
 import { FiSearch, FiBell, FiChevronRight } from "react-icons/fi";
-
+import useFetchCountriesWithCurrencies from "../../hooks/useFetchCountriesWithCurrencies";
 function AdminLayout() {
   const sidebarLinks = useMemo(() => {
     const sidebar = [
@@ -69,7 +69,7 @@ function AdminLayout() {
           },
           {
             id: "catalogue-2",
-            url: "/admin/categories",
+            url: "/admin/categories/",
             name: "Categories",
           },
           {
@@ -287,6 +287,10 @@ function AdminLayout() {
   const [isOpen, setIsOpen] = useState(false); // For mobile menu toggle
   const location = useLocation();
   const [isActive, setisActive] = useState(null);
+  const { countriesWithCurrency } = useFetchCountriesWithCurrencies();
+  useEffect(()=>{
+    countriesWithCurrency;
+  }, []);
   useLayoutEffect(() => {
     setisActive(null)
     getActiveTabName();

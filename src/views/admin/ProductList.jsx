@@ -1,14 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   useGetProductsQuery,
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
 } from "../../features/product/productApiSlice"; // Adjust the import path as necessary
-import { Items } from "../../data/mockData"; // You may not need this anymore if you're fetching from the API
 import { FiSearch } from "react-icons/fi";
 import Bag from "../../assets/images/admin/bag.png";
-import OrderVendorStatus from "../../components/order/OrderVendorStatus";
 import PaginatedTable from "../../components/admin/CatelogueComponents/PaginatedTable";
 import ModalForm from "../../components/admin/CatelogueComponents/ModelForm";
 import DeleteModal from "../../components/admin/CatelogueComponents/DeleteModal";
@@ -17,13 +15,13 @@ import { FaEdit } from "react-icons/fa";
 import { LuBox } from "react-icons/lu";
 import { HiUsers } from "react-icons/hi2";
 import { FaHouseChimneyWindow } from "react-icons/fa6";
-import { AiOutlineArrowLeft } from "react-icons/ai";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { numberWithCommas, ReplaceImage } from "../../utils";
-import { TfiAngleDown } from "react-icons/tfi";
 import {useErrorMessageHooks} from "../../hooks/useErrorMessageHooks";
 import { useGetCategoriesQuery,useGetSubcategoriesQuery } from "../../features/category/categoryApiSlice";
 import DefaultStatus from "../../components/order/DefaultStatus";
+import { useGetCountriesQuery } from "../../features/auth/authApiSlice";
+import { useSelector } from "react-redux";
+import { AiOutlineArrowLeft } from "react-icons/ai";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 const ProductList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [modalState, setModalState] = useState({ type: null, data: null });
@@ -35,6 +33,12 @@ const ProductList = () => {
     isLoading: loadingProducts,
     error,
   } = useGetProductsQuery();
+  const {
+    data: countries = [],
+    isLoading: loadingCountries,
+    errorCountries,
+  } = useGetCountriesQuery();
+  const countriesList = useSelector((state) => state?.auth?.countries);
   const { data: categories = [], isLoading, errorCategory } = useGetCategoriesQuery();
   const { data: subCategories = [], isLoading: subIsLoading, error : subError} = useGetSubcategoriesQuery();
   const [addProduct, { isLoading: addLoading }] = useAddProductMutation();
@@ -42,7 +46,7 @@ const ProductList = () => {
     useUpdateProductMutation();
   const [deleteProduct, { isLoading: deleteLoading }] =
     useDeleteProductMutation();
-
+  console.log(products);
   const tabItems = useMemo(
     () => [
       {
@@ -53,12 +57,12 @@ const ProductList = () => {
       {
         name: "Active Products",
         icon: <HiUsers className="text-lg text-regal-blue" />,
-        total: products?.filter((i)=> i?.status.toLowerCase() === "active")?.length,
+        total:  products?.filter((i)=> i?.productStatus?.toLowerCase() === "active")?.length ,
       },
       {
         name: "Inactive Products",
         icon: <FaHouseChimneyWindow className="text-lg text-regal-blue" />,
-        total:  products?.filter((i)=> i?.status.toLowerCase() === "inactive")?.length,
+        total: products?.filter((i)=> i?.productStatus?.toLowerCase() === "inactive")?.length,
       },
     ],
     [products]
@@ -66,26 +70,47 @@ const ProductList = () => {
 
   const columns = [
     {
-      key: "name",
+      key: "productName",
       label: "PRODUCT NAME",
       render: (value, item) => (
         <ProductName
-          value={value}
-          image={item?.image}
-          viewProduct={() => setModalState({ type: "view", data: item })}
-        />
+        value={value}
+        viewProduct={() => setModalState({ type: "view", data: item })}
+      />
       ),
     },
     {
-      key: "category",
+      key: "productCategory",
       label: "CATEGORY",
-      render: (value) => value || "not found",
+      render: (value) => (
+        <ProductCategoryName
+        value={value}
+        categories={categories}
+      />
+      ),
+    },
+    {
+      key: "productSubCategory",
+      label: "SUB CATEGORY",
+      render: (value) => (
+        <ProductSubCategoryName
+        value={value}
+        subCategories={subCategories}
+      />
+      ),
     },
     { key: "price", label: "PRICE" },
     { key: "stock", label: "STOCK" },
-    { key: "supported countries", label: "SUPPORTED COUNTRIES" },
+    { key: "productSupportedCountries", label: "SUPPORTED COUNTRIES",
+      render: (value) => (
+        <ProductCountryList
+        value={value}
+        countriesList={countriesList}
+      />
+      ),
+     },
     { key: "unsupported countries", label: "UNSUPPORTED COUNTRIES" },
-    { key: "status", label: "STATUS", render: (value) => <DefaultStatus status={value} /> },
+    { key: "productStatus", label: "STATUS", render: (value) => <DefaultStatus status={value} /> },
   ];
 
   const actions = [
@@ -103,20 +128,19 @@ const ProductList = () => {
 
   const handleDeleteConfirm = async () => {
     if (modalState.data) {
-      await deleteProduct(modalState.data.id); // Assuming your product has an 'id'
+      await deleteProduct(modalState?.data?.productID);
     }
     setModalState({ type: null, data: null });
   };
 
   const handleModalClose = () => {
+    setSuccess(false);
     setModalState({ type: null, data: null });
   };
 
   const handleCreateProduct = async (formData) => {
-    await addProduct(formData);
     setErrMsg("");
     setErrorMessagesList([]);
-
     if (modalState.type === "create") {
       try {
         console.log(formData);
@@ -133,7 +157,7 @@ const ProductList = () => {
       try {
         console.log(editLoading);
         const updatedProduct = await updateProduct({
-          id: modalState.data.subCategoryID,
+          id: modalState.data.productID,
           ...formData,
         }).unwrap();
         // dispatch(updateSubcategory({ id: modalState.data.id, updatedCategory }));
@@ -155,14 +179,13 @@ const ProductList = () => {
   );
 
   const filteredItems = useMemo(() => {
-    console.log(products);
     if (activeTab !== 'all') {
       return products.filter((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) && item?.status?.toLowerCase() === activeTab
+        item?.productName?.toLowerCase().includes(searchTerm.toLowerCase()) && item?.productStatus?.toLowerCase() === activeTab
       );
     }else{
       return products.filter((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+        item?.productName?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
     
@@ -182,30 +205,7 @@ const ProductList = () => {
 
       <TabOverview items={tabItems} />
 
-      <section className="rounded-2xl border animate-fade-in mt-8 bg-white">
-        <div className="p-4 md:px-8 md:pt-8 pb-4">
-          <div className="flex flex-col md:flex-row justify-between overflow-x-scroll">
-            <TabButtons
-              options={tabOptions}
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-            />
-
-            {/* Search bar */}
-            <div className="w-full flex items-center border border-gray-300 max-w-[400px] rounded-md overflow-hidden mt-3 md:mt-0">
-              <span className="pl-2 text-regal-light-gray">
-                <FiSearch />
-              </span>
-              <input
-                type="text"
-                className="w-full p-2 outline-none text-xs"
-                placeholder="Search Product"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </div>
-
+      <section className="rounded-2xl border animate-fade-in mt-8 bg-white">       
           {/* Modals */}
           {modalState?.type === "edit" && (
             <ModalForm
@@ -221,6 +221,8 @@ const ProductList = () => {
               success={success}
               categories={categories}
               subCategories={subCategories}
+              countries={countries}
+              loadingCountries={loadingCountries}
             />
           )}
 
@@ -236,6 +238,8 @@ const ProductList = () => {
               success={success}
               categories={categories}
               subCategories={subCategories}
+              countries={countries}
+              loadingCountries={loadingCountries}
             />
           )}
 
@@ -243,7 +247,7 @@ const ProductList = () => {
             <DeleteModal
               isOpen={modalState?.type === "delete"}
               title="Delete Product"
-              description={`Are you sure you want to delete ${modalState.data?.name}?`}
+              description={`Are you sure you want to delete ${modalState.data?.productName}?`}
               onConfirm={handleDeleteConfirm}
               onClose={handleModalClose}
               handleErrorMessagesList={handleErrorMessagesList}
@@ -253,15 +257,37 @@ const ProductList = () => {
             />
           )}
 
-          {/* Filtered and Paginated Table */}
-          <section className="mt-8">
+       
             {modalState?.type === "view" && modalState?.data !== null ? (
-              <TabsView
-                data={modalState?.data}
+              <ProductView
+                product={modalState?.data}
                 filteredItems={filteredItems}
                 close={() => setModalState({ type: null, data: null })}
               />
             ) : (
+              <main className="p-4 md:px-8 md:pt-8 pb-4">
+              <div className="flex flex-col md:flex-row justify-between overflow-x-scroll">
+              <TabButtons
+                options={tabOptions}
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+              />
+  
+              {/* Search bar */}
+              <div className="w-full flex items-center border border-gray-300 max-w-[400px] rounded-md overflow-hidden mt-3 md:mt-0">
+                <span className="pl-2 text-regal-light-gray">
+                  <FiSearch />
+                </span>
+                <input
+                  type="text"
+                  className="w-full p-2 outline-none text-xs"
+                  placeholder="Search Product"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+          <section className="mt-8">
               <PaginatedTable
                 columns={columns}
                 data={filteredItems}
@@ -269,11 +295,13 @@ const ProductList = () => {
                 itemsPerPage={10}
                 isLoading={loadingProducts} // Add loading state for the table
               />
+              {loadingProducts && <div>Loading data...</div>}
+              {error && <div>Error loading Product: {error?.message  || "Unknown error"}</div>}
+           </section>
+           </main>
             )}
-                  {loadingProducts && <div>Loading data...</div>}
-                  {error && <div>Error loading Product: {error.message  || "Unknown error"}</div>}
-          </section>
-        </div>
+                 
+
       </section>
     </div>
   );
@@ -337,11 +365,155 @@ const TabButtons = ({ options, activeTab, onTabChange }) => (
 );
 
 
+
+const ProductView = ({ product, filteredItems, close }) => {
+  console.log(product);
+  return (
+    <div className="rounded-2xl border bg-white overflow-hidden">
+    
+      <div className="bg-regal-dashboard-active-tab-gray border-b flex flex-row justify-between items-center p-4">
+                <button className="flex flex-row gap-2 items-center text-xs font-[600]"
+                onClick={()=>{
+                  onClose();
+                }}>
+                    <AiOutlineArrowLeft className="font-[400]" />
+                    Go Back
+                </button>
+
+                <div className="flex flex-row items-center gap-4">
+                    <div className="flex items-center gap-2">
+                        {/* <img
+                            src={userInfo.profileImage || "https://via.placeholder.com/40"}
+                            alt="Profile"
+                            className="w-6 h-6 rounded-full object-cover"
+                        /> */}
+                        <span className="text-xs capitalize text-regal-black whitespace-nowrap font-[600]">
+                            {product?.productName}
+                        </span>
+                    </div>
+                    <div className="flex flex-row items-center gap-2">
+                        <IoIosArrowBack className="text-regal-crum-gray text-sm" />
+                        <span className="text-regal-black text-xs">
+                            <span className="text-regal-crum-gray text-xs">1 of</span> 350
+                        </span>
+                        <IoIosArrowForward className="text-regal-black text-sm" />
+                    </div>
+                </div>
+            </div>
+
+      {/* Product Information */}
+      <div className="flex space-x-6  p-4 max-w-[1366px]">
+        {/* <img
+          src={product?.images[0]}
+          alt={product?.productName}
+          className="w-32 h-32 object-cover rounded-md"
+        /> */}
+        <div>
+          <h2 className="text-2xl font-bold capitalize">{product?.productName}</h2>
+          {/* <p className="text-xl font-semibold text-gray-700 mt-1">₦{product?.price}</p> */}
+        </div>
+      </div>
+
+      {/* General Information Section */}
+      <div className="mt-6 border rounded-lg m-4  p-4">
+        <h3 className="font-semibold text-gray-700 mb-4">General Information</h3>
+
+        {/* Product Name */}
+        <div className="mb-4">
+          <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">Product Name</label>
+          <input
+            type="text"
+           className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+            value={product?.productName}
+            readOnly
+          />
+        </div>
+
+        {/* Category and Sub Category */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">Category</label>
+            <select
+             className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+              value={product?.productCategory}
+              disabled
+            >
+              <option>{product?.productCategory}</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">Sub Category</label>
+            <select
+             className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+              value={product?.productSubCategory}
+              disabled
+            >
+              <option>{product?.productSubCategory}</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Product Description */}
+        <div className="mt-4">
+          <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">Product Description</label>
+          <textarea
+           className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+            rows="4"
+            value={product?.description}
+            readOnly
+          />
+        </div>
+      </div>
+    </div>
+ 
+  );
+};
+
+
+
 const ProductName = ({ value, image, viewProduct }) => (
   <div className="flex items-center gap-2 cursor-pointer" onClick={viewProduct}>
-    {" "}
-    <img src={image} alt={value} className="w-12 h-12 rounded" />{" "}
-    <span className="text-sm">{value}</span>{" "}
+    <span className="text-sm capitalize">{value}</span>{" "}
   </div>
 );
+const ProductCategoryName =  ({ value, categories }) => {
+  const catgoryDetails = categories?.find((i) => i?.categoryID === value)
+  if (catgoryDetails) {  
+  return  <div className="flex items-center gap-3 cursor-pointer capitalize" >
+  <div className="w-10 h-10">
+  <img src={catgoryDetails?.categoryImage} alt={catgoryDetails?.categoryName} className="w-full h-full object-contain" />
+  </div>
+    <span>{catgoryDetails?.categoryName}</span>
+  </div>
+  }else{
+    return <p>Category not found</p>
+  }
+}
+const ProductSubCategoryName =  ({ value, subCategories }) => {
+  const catgoryDetails = subCategories?.find((i) => i?.subCategoryID === value)
+  if (catgoryDetails) {  
+  return  <div className="flex items-center gap-3 cursor-pointer capitalize" >
+    <span>{catgoryDetails?.subCategoryName}</span>
+  </div>
+  }else{
+    return <p>Category not found</p>
+  }
+}
+
+const ProductCountryList =  ({ value, countriesList }) => {
+  const countriesDetails = countriesList?.filter((i) => value?.includes(i?.name))
+  if (countriesDetails) {  
+  return  <div className="flex items-center gap-3 cursor-pointer capitalize" >
+    {countriesDetails?.map((i)=> (
+          <span className="flex items-center gap-1 text-xs mx-2">
+              <img src={`https://flagcdn.com/w320/${i?.code?.toLowerCase()}.png`} alt={i?.name} className="w-4 h-2" />
+            {i?.name}
+            </span>
+    ))}
+  </div>
+  }else{
+    return <p>Category not found</p>
+  }
+}
 export default ProductList;

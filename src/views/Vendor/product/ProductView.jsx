@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { AiOutlineEye } from "react-icons/ai";
-import { BsCart3 } from "react-icons/bs";
-import { GoHeart } from "react-icons/go";
+import { FaRegCheckCircle } from "react-icons/fa";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { Menu } from "@headlessui/react";
 import { FaCalendarAlt, FaTimes } from "react-icons/fa";
+import ProductDescription from "../../../components/ProductDescription";
 import { TfiAngleDown } from "react-icons/tfi";
+import { numberWithCommas } from "../../../utils";
 import GeneralInformation from "./Components/GeneralInformation";
 import Media from "./Components/Media";
 import Pricing from "./Components/Pricing";
 import Shopping from "./Components/Shopping";
 import { useErrorMessageHooks } from "../../../hooks/useErrorMessageHooks";
-import { useAddItemMutation, useGetItemByIdQuery } from "../../../features/item/itemApiSlice";
-
+import {  useGetItemByIdQuery, useDeleteItemMutation, useUpdateItemMutation } from "../../../features/item/itemApiSlice";
+import DeleteProduct from "./Components/DeleteProduct";
+import ViewProduct from "./Components/ViewProduct";
 function ProductView() {
   const { name } = useParams();
   const { data: fetchedItem, isLoading, isError, error } = useGetItemByIdQuery(name);
@@ -34,7 +36,7 @@ function ProductView() {
     handleErrorMessagesList,
     errMsg,
   } = useErrorMessageHooks();
-  const [addItem, { isLoading: isAdding }] = useAddItemMutation();
+  const [updateItem, { isLoading: isAdding }] = useUpdateItemMutation();
 
   useEffect(() => {
     if (fetchedItem) {
@@ -57,7 +59,9 @@ function ProductView() {
         status: fetchedItem.status || "",
         description: fetchedItem.description || "",
         itemSupportedCountries: fetchedItem.itemSupportedCountries || [],
+        ...fetchedItem
       });
+      setSelectedStatus(fetchedItem?.status?.toLowerCase());
     } else {
       defaultValue();
     }
@@ -89,17 +93,27 @@ function ProductView() {
     setErrMsg("");
     setErrorMessagesList([]);
     try {
-      const { response } = await addItem(data).unwrap();
+      const { response } = await updateItem({...data, id : data?.ItemID}).unwrap();
       console.log(response);
+      showToast(
+        "Item updated successfully",
+        "success"
+      );
       defaultValue();
     } catch (err) {
-      handleError(err, "Create Item");
+      handleError(err, "Update Item");
     }
   };
 
   const statusOptions = [
     { label: "active", value: "active", color: "text-green-600 bg-green-100 border-green-600" },
     { label: "inactive", value: "inactive", color: "text-red-600 bg-red-100 border-red-600" },
+    {
+      label: "draft",
+      value: "draft",
+      color:  "text-gray-600 bg-gray-100 border-gray-600",
+
+    },
   ];
 
   const tabs = [
@@ -113,6 +127,7 @@ function ProductView() {
     const selectedValue = event.target.value;
     const selectedOption = statusOptions.find((option) => option.value === selectedValue);
     setSelectedStatus(selectedOption.label);
+    setData({...data, status : selectedOption.value.toLocaleUpperCase()});
   };
 
   const selectedOption = statusOptions.find((option) => option.label === selectedStatus);
@@ -131,7 +146,53 @@ function ProductView() {
 
   return (
     <div className="px-4 py-8">
-      {/* The rest of your component */}
+        <div className="flex flex-row items-center justify-between ">
+        <Link
+          className=" flex items-center gap-2 text-regal-dark text-lg md:text-2xl font-[500]"
+          to="/vendor/dashboard/products"
+        >
+          <IoIosArrowRoundBack />
+          {data?.itemName}
+        </Link>
+        <div className="flex flex-row items-center gap-6">
+          <Menu as="button" className="relative inline-block text-right">
+            <div>
+              <Menu.Button className=" rounded-full text-lg text-regal-dark focus:outline-none">
+                •••
+              </Menu.Button>
+            </div>
+
+            <Menu.Items className="absolute right-0 mt-2 w-40 z-50 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
+              <div className="py-1">
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      className={`flex items-center w-full px-4 py-2 text-sm text-red-600 ${
+                        active ? "bg-gray-100" : ""
+                      }`}
+                      onClick={() => {
+                        setisModalOpenDeleteProduct(true);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </Menu.Item>
+              </div>
+            </Menu.Items>
+          </Menu>
+          <button
+            className="flex flex-row items-center justify-center gap-2 font-[500] text-regal-black text-xs border rounded-md border-regal-black py-2 px-3"
+            onClick={() => {
+              setisModalOpenAddProduct(true);
+            }}
+          >
+            <AiOutlineEye className="text-sm" />
+            Preview
+          </button>
+        </div>
+      </div>
+
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-5">
         <div className="md:col-span-3 border shadow-sm bg-white py-2 rounded-md ">
           <div className="grid grid-cols-2 md:grid-cols-4">
@@ -145,9 +206,10 @@ function ProductView() {
                         active === e.id
                           ? "text-regal-blue after:scale-y-100 font-[600]"
                           : "hover:text-regal-blue hover:after:scale-y-100"
-                      }`}
+                      } flex flex-row items-center gap-2 relative after:content-[''] after:absolute after:right-[-12px] after:top-1/2 after:transform after:translate-y-[-50%] after:h-full after:w-[4px] after:bg-regal-blue after:rounded-full after:origin-top after:transition-transform after:duration-300 after:ease-in-out`}
                       onClick={() => setActive(e.id)}
                     >
+                      <FaRegCheckCircle className="text-lg font-[500]" />
                       {e.name}
                     </h6>
                   </li>
@@ -183,18 +245,24 @@ function ProductView() {
             </div>
           </div>
         </div>
-        {/* Status Section */}
+       
         <div>
-          <div className="border shadow-sm bg-white py-2 rounded-md">
-            <h5 className="text-lg text-regal-black font-[700] px-4 pt-4">Product Status</h5>
+        <div className=" border shadow-sm bg-white py-2 rounded-md ">
+            <h5 className="text-lg text-regal-black font-[700] px-4 pt-4">
+              Product Status
+            </h5>
 
-            <div className="flex flex-col items-start gap-8 pb-4 mt-4 border-b">
+            <div className="flex flex-col items-start gap-8 pb-4 mt-4  border-b ">
+             <div className="w-full "> 
+
               <div className="w-full px-4 relative">
                 <select
                   value={selectedOption ? selectedOption.value : ""}
                   onChange={handleChangeOption}
-                  className={`w-full p-2 pr-10 px-4 py-3 text-xs border-[1.2px] rounded-md font-[500] focus:outline-none appearance-none ${
-                    selectedOption ? selectedOption.color : "text-gray-800 border-gray-300"
+                  className={`w-full p-2 pr-10  px-4 py-3 text-xs border-[1.2px] rounded-md font-[500] focus:outline-none appearance-none ${
+                    selectedOption
+                      ? selectedOption.color
+                      : "text-gray-800 border-gray-300"
                   }`}
                 >
                   <option disabled value="">
@@ -206,24 +274,52 @@ function ProductView() {
                     </option>
                   ))}
                 </select>
+                <div className="absolute inset-y-0 right-[30px] flex items-center pointer-events-none">
+                  <TfiAngleDown
+                    className={
+                      selectedOption ? selectedOption.color : "text-gray-300"
+                    }
+                  />
+                </div>
+             
+              </div>
+              <div className="px-4">
+              {handleErrorMessagesList("status")}
+              </div>
               </div>
             </div>
-
+           
             <p className="text-red-600 text-xs">{errMsg}</p>
             <div className="px-5 pt-4 pb-3 w-full">
               <button
                 disabled={isAdding}
                 onClick={handleSubmit}
-                className="w-full border text-regal-white bg-regal-blue font-[600] text-xs rounded-md py-3 px-8 hover:opacity-95 disabled:bg-opacity-75 disabled:cursor-not-allowed transition-all"
+                className="text-sm bg-regal-sky-blue text-white px-4  py-2  w-full rounded-md hover:bg-blue-600 "
               >
-                {isAdding ? "Creating Item..." : "Create Product"}
+                {isAdding ? "loading..." : "update"}
               </button>
             </div>
           </div>
         </div>
       </section>
+      <DeleteProduct
+        isModalOpen={isModalOpenDeleteProduct}
+        setIsModalOpen={(e) => {
+          setisModalOpenDeleteProduct(e);
+        }}
+        data={data}
+      />
+      <ViewProduct
+        isModalOpen={isModalOpenAddProduct}
+        setIsModalOpen={(e) => {
+          setisModalOpenAddProduct(e);
+        }}
+        data={data}
+      />
     </div>
   );
 }
 
 export default ProductView;
+
+

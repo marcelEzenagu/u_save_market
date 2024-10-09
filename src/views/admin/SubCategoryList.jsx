@@ -291,13 +291,13 @@ const DropdownDiv = ({dropdownOptions, setSelectedCategory, isLoading, error}) =
   </div>);
 }
 const ProductName = ({ value, image, viewProduct, categories }) => {
-
-  if (value) {
+  const catgoryDetails = categories?.find((i) => i?.categoryID === value?.categoryID)
+  if (catgoryDetails) {  
   return  <div className="flex items-center gap-3 cursor-pointer" onClick={viewProduct}>
   <div className="w-10 h-10">
-  <img src={value?.categoryImage} alt={value?.categoryName} className="w-full h-full object-contain" />
+  <img src={catgoryDetails?.categoryImage} alt={catgoryDetails?.categoryName} className="w-full h-full object-contain" />
   </div>
-    <span>{value?.categoryName}</span>
+    <span>{catgoryDetails?.categoryName}</span>
   </div>
   }else{
     return <p>Category not found</p>

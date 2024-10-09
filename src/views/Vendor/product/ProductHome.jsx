@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { PiExport } from "react-icons/pi";
 import { BiImport, BiEdit } from "react-icons/bi";
 import { FaPlus } from "react-icons/fa6";
@@ -11,31 +11,48 @@ import { Menu } from "@headlessui/react";
 import { FiInfo } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import OrderVendorStatus from "../../../components/order/OrderVendorStatus";
+import { useGetItemsQuery } from "../../../features/item/itemApiSlice";
+import DefaultStatus from "../../../components/order/DefaultStatus";
 function ProductHome() {
-  const [active, setActive] = useState("1");
+  const [active, setActive] = useState("All Items");
   const [activeFilter, setActiveFilter ] = useState(true)
-  const tabs = [
+  const { data: items = [], isLoading, erroritems } = useGetItemsQuery();
+  const [searchTerm, setSearchTerm] = useState("");
+  const tabs = useMemo(()=> [
     {
-      id: "1",
-      name: "All Product",
-      count: "50",
+      id: "All Items",
+      name: "All Items",
+      count: items?.length,
     },
     {
-      id: "2",
+      id: "active",
       name: "Active",
-      count: "30",
+      count: items?.filter((i) => i?.status === "ACTIVE").length || 0,
     },
     {
-      id: "3",
-      name: "Daft",
-      count: "10",
+      id: "draft",
+      name: "Draft",
+      count: items?.filter((i) => i?.status === "DRAFT").length || 0,
     },
     {
-      id: "4",
+      id: "inactive",
       name: "Inactive",
-      count: "10",
+      count:items?.filter((i) => i?.status === "INACTIVE").length || 0,
     },
-  ];
+  ], [items])
+
+  const filteredItems = useMemo(() => {
+    if (active !== 'All Items') {
+      return items.filter((item) =>
+        item?.itemName?.toLowerCase().includes(searchTerm.toLowerCase()) && item?.status?.toLowerCase() === active
+      );
+    }else{
+      return items.filter((item) =>
+        item?.itemName?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+  }, [searchTerm, items, active]);
   return (
     <div className="px-4 py-8">
       <div className="flex flex-row items-center justify-between ">
@@ -108,9 +125,13 @@ function ProductHome() {
           </div>
         </nav>
 
-        <section>
-                {activeFilter ? <ProductTableTab/> : <ProductItemTab />}
-        </section>
+        {isLoading ? 'loading data... ' :
+        <section className="">
+        {activeFilter ? <ProductTableTab filteredItems={filteredItems}/> : <ProductItemTab  filteredItems={filteredItems}/>}
+      </section>
+        }
+        {erroritems && erroritems}
+
       </div>
 
         <main className="flex flex-row items-center justify-between border rounded-md border-regal-blue px-4 py-2 my-8">
@@ -130,7 +151,8 @@ function ProductHome() {
     </div>
   );
 }
-function ProductTableTab () {
+function ProductTableTab ({filteredItems}) {
+  console.log(filteredItems);
     const itemsPerPage = 7;
   // Here we use item offsets; we could also use page offsets
   // following the API or data you're working with.
@@ -141,12 +163,12 @@ function ProductTableTab () {
   // from an API endpoint with useEffect and useState)
   const endOffset = itemOffset + itemsPerPage;
   console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-  const currentItems = Items.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(Items.length / itemsPerPage);
+  const currentItems = filteredItems.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(filteredItems.length / itemsPerPage);
 
   // Invoke when user click to request another page.
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % Items.length;
+    const newOffset = (event.selected * itemsPerPage) % filteredItems.length;
     console.log(
       `User requested page number ${event.selected}, which is offset ${newOffset}`
     );
@@ -154,7 +176,7 @@ function ProductTableTab () {
   }; 
   return (
     <div>
-           <div className="w-full overflow-x-scroll mt-4 animate-fade-in">
+           <div className="w-full overflow-x-scroll mt-4 min-h-80 animate-fade-in">
       <table className=" min-w-full divide-y divide-gray-200 ">
         <thead className="bg-gray-50">
           <tr>
@@ -162,7 +184,7 @@ function ProductTableTab () {
             <input type="checkbox" />
             </th>
             <th className="px-6 py-4 text-left text-xs font-medium text-nowrap text-regal-black tracking-wider">
-              Product
+              Image
             </th>
             <th className="px-6 py-4 text-left text-xs font-medium text-nowrap text-regal-black  tracking-wider">
               Name
@@ -192,15 +214,15 @@ function ProductTableTab () {
               </td>
               <td className="px-6 py-2 whitespace-nowrap">
                 <img
-                  src={product.image}
-                  alt={product.name}
+                  src={product?.images[0]}
+                  alt={product?.itemName}
                   className="w-12 h-14 object-cover rounded"
                 />
               </td>
-              <td className="px-6 py-2 text-xs text-regal-black whitespace-nowrap">
+              <td className="px-6 py-2 text-xs text-regal-black whitespace-nowrap capitalize">
               <Link
-              to={`/vendor/dashboard/products/${product.name}`} >
-                {product.name}
+              to={`/vendor/dashboard/products/${product.ItemID}`} >
+                {product?.itemName}
                 </Link>
               </td>
               <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
@@ -210,10 +232,10 @@ function ProductTableTab () {
               15 in stock for 2 variants
               </td>
               <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
-              $1000
+              {product?.newPrice}
               </td>
               <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
-              <OrderVendorStatus />
+              <DefaultStatus status={product?.status} />
               </td>
               <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
               <Menu as="button" className="relative inline-block text-right">
@@ -227,14 +249,14 @@ function ProductTableTab () {
                     <div className="py-1">
                       <Menu.Item>
                         {({ active }) => (
-                          <button
+                          <Link
                             className={`flex items-center w-full px-4 py-2 text-sm ${
                               active ? "bg-gray-100" : ""
                             }`}
-
+                            to={`/vendor/dashboard/products/${product.ItemID}`} 
                           >
                             Edit
-                          </button>
+                          </Link>
                         )}
                       </Menu.Item>
                       <Menu.Item>
@@ -280,7 +302,7 @@ function ProductTableTab () {
     </div>
   );
 }
-function ProductItemTab () {
+function ProductItemTab ({filteredItems}) {
   const itemsPerPage = 18;
 // Here we use item offsets; we could also use page offsets
 // following the API or data you're working with.
@@ -291,12 +313,12 @@ const [itemOffset, setItemOffset] = useState(0);
 // from an API endpoint with useEffect and useState)
 const endOffset = itemOffset + itemsPerPage;
 console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-const currentItems = Items.slice(itemOffset, endOffset);
-const pageCount = Math.ceil(Items.length / itemsPerPage);
+const currentItems = filteredItems.slice(itemOffset, endOffset);
+const pageCount = Math.ceil(filteredItems.length / itemsPerPage);
 
 // Invoke when user click to request another page.
 const handlePageClick = (event) => {
-  const newOffset = (event.selected * itemsPerPage) % Items.length;
+  const newOffset = (event.selected * itemsPerPage) % filteredItems.length;
   console.log(
     `User requested page number ${event.selected}, which is offset ${newOffset}`
   );
@@ -337,11 +359,11 @@ return (
 
 function ItemsCard(props) {
   return (
-    <div key={props.item.id} className="text-sm font-[500] animate-fade-in w-[150px]  mx-auto">
+    <div key={props?.item?.itemID} className="text-sm font-[500] animate-fade-in w-[150px]  mx-auto">
       <div className="relative bg-white  h-[150px]  rounded-lg  overflow-hidden">
         <img
-          src={props.item.image}
-          alt={props.item.name}
+          src={props?.item?.images[0]}
+          alt={props?.item?.itemName}
           className="w-full h-full object-contain"
         />
 
@@ -349,16 +371,17 @@ function ItemsCard(props) {
 
       <div className="flex flex-col gap-2">
         <Link
-        to={`/vendor/dashboard/products/${props.item.name}`}
+        to={`/vendor/dashboard/products/${props?.item?.itemID}`}
           className="text-xs font-[500] "
         >
-          {props.item?.name}
+          {props?.item?.itemName}
         </Link>
         <p className="text-regal-sky-blue font-[600] text-sm md:text-[14px] ">
-          ₦{numberWithCommas(props.item?.price)}
+          ₦{numberWithCommas(props.item?.originalPrice
+)}
         </p>
         <div className="">
-        <OrderVendorStatus/>
+        <DefaultStatus status={props?.item?.status} />
         </div>
       </div>
     </div>

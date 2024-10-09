@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { TfiAngleDown } from "react-icons/tfi";
 import { IoClose } from "react-icons/io5";
 import {
@@ -32,17 +32,19 @@ function GeneralInformation({handleChange, data, handleErrorMessagesList, setDat
       )
     );
   };
-
-  const handleSelectCountry = (country) => {
-    if (!data?.itemSupportedCountries.includes(country)) {
-      setData((prevData) => ({
-        ...prevData,
-        itemSupportedCountries: [...prevData?.itemSupportedCountries, country],
-      }));
-      setSearchTerm("");
+  useEffect(()=>{
+    if (data?.productID) {
+      const getSupportedCountries = products?.find((i) => i?.productID ===  data?.productID)
+      if (getSupportedCountries) {
+        setData((prevData) => ({
+          ...prevData,
+          itemSupportedCountries: getSupportedCountries?.productSupportedCountries,
+        }));
+      }
     }
 
-  };
+  }, [data?.productID, products])
+
 
   const handleRemoveCountry = (country) => {
     setData((prevData) => ({
@@ -165,7 +167,7 @@ function GeneralInformation({handleChange, data, handleErrorMessagesList, setDat
         >
           Supported Countries
         </label>
-        <div className="relative">
+        {/* <div className="relative">
           <input
             type="text"
             className="w-full p-3 text-xs md:text-[12px] border rounded-lg focus:outline-regal-blue"
@@ -191,7 +193,7 @@ function GeneralInformation({handleChange, data, handleErrorMessagesList, setDat
               {loadingCountries &&  <li className="p-2  text-xs text-gray-500">loading...</li>}
             </ul>
           )}
-        </div>
+        </div> */}
         {handleErrorMessagesList("itemSupportedCountries")}
         
         {/* Selected countries */}
