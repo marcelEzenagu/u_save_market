@@ -405,8 +405,9 @@ const SearchFormMobile = React.memo(({preferredCountry, showMessage }) => {
                   searchItems.map((result) => (
                     <div
                       key={result.itemID}
-                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                     className="flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer"
                     >
+                         <IoSearchOutline />
                       {result?.itemName}
                     </div>
                   ))
