@@ -72,7 +72,7 @@ import PaymentListAgent from "./views/Agent/Payments/PaymentListAgent";
 import PaymentOverview from "./views/Agent/Payments/PaymentOverview";
 import PaymentError from "./views/checkout/PaymentError";
 import CategoryList from "./views/admin/CategoryList";
-import SubCategoryList from "./views/admin/subCategoryList";
+import SubCategoryList from "./views/admin/SubCategoryList";
 import ProductCreate from "./views/Vendor/product/ProductCreate";
 const Router = createBrowserRouter([
     {
