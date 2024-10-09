@@ -38,6 +38,8 @@ function GeneralInformation({handleChange, data, handleErrorMessagesList, setDat
       if (getSupportedCountries) {
         setData((prevData) => ({
           ...prevData,
+          itemCategory : getSupportedCountries?.productCategory,
+          itemSubCategory : getSupportedCountries?.productSubCategory,
           itemSupportedCountries: getSupportedCountries?.productSupportedCountries,
         }));
       }
@@ -82,15 +84,16 @@ function GeneralInformation({handleChange, data, handleErrorMessagesList, setDat
           >
             Category
           </label>
+        
           <div className="relative ">
             <select
             value={data?.itemCategory}
-            onChange={handleChange}
+            disabled={true}
             name="itemCategory"
              className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black">
             <option value="">Select Category</option>
                 {categories.map((cat) => (
-                  <option key={cat.id} value={cat.categoryName}>
+                  <option key={cat.id} value={cat.categoryID}>
                     {cat.categoryName}
                   </option>
                 ))}
@@ -113,8 +116,8 @@ function GeneralInformation({handleChange, data, handleErrorMessagesList, setDat
           <div className="relative ">
             <select
                value={data?.itemSubCategory}
-               onChange={handleChange}
                name="itemSubCategory"
+               disabled={true}
             className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black">
             <option value="">Select Category</option>
                 {subCategories.map((cat) => (

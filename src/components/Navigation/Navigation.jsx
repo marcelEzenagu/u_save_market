@@ -208,7 +208,7 @@ function Navigation() {
                 className=" w-[100px] md:w-[140px] lg:w-[150px]"
               />
             </Link>
-            <SearchForm />
+            <SearchForm  preferredCountry={preferredCountry}/>
           </div>
 
           <div className="flex flex-row-reverse lg:flex-row items-center gap-4">
@@ -220,7 +220,7 @@ function Navigation() {
               <CurrencyModal />
             </div>
             <CartDropdown />
-            <SearchFormMobile  showMessage={showMessage}/>
+            <SearchFormMobile preferredCountry={preferredCountry}  showMessage={showMessage}/>
           </div>
         </div>
         <div className="xl:hidden">
@@ -265,10 +265,10 @@ function Navigation() {
   );
 }
 
-const SearchForm = React.memo(() => {
+const SearchForm = React.memo(({preferredCountry}) => {
   const [query, setQuery] = useState(""); // State to track the input value
   const dropdownRef = useRef(null);
-  const { data: searchItems, isLoading, isError } = useSearchItemsQuery({searchTerm : query}); // Use the search query hook
+  const { data: searchItems, isLoading, isError } = useSearchItemsQuery({searchTerm : query,  country : preferredCountry?.name?.toLowerCase(), filter : "" }); // Use the search query hook
 
   // Handle input change
   const handleChange = (event) => {
@@ -336,10 +336,10 @@ const SearchForm = React.memo(() => {
   );
 });
 
-const SearchFormMobile = React.memo(({ showMessage }) => {
+const SearchFormMobile = React.memo(({preferredCountry, showMessage }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { data: searchItems, isLoading, isError } = useSearchItemsQuery({searchTerm : searchQuery}); // Use the search query hook
+  const { data: searchItems, isLoading, isError } = useSearchItemsQuery({searchTerm : searchQuery, country : preferredCountry?.name?.toLowerCase(), filter : ""}); // Use the search query hook
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
