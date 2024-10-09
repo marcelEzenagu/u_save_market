@@ -101,6 +101,10 @@ const Modal = ({
                 </li>
               ))}
             </ul>
+            {search !== "" && filteredCountries.length === 0 ?
+            <div>
+              <p className='text-sm text-center my-12'>The country you are searching for is not Supported </p>
+            </div> : ""}
           </div>
           <div className=" w-full px-4 pb-8 bg-white">
             {pickedCountry && (

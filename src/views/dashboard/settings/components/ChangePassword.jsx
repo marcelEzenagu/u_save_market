@@ -2,7 +2,7 @@ import React from "react";
 import { HiOutlineArrowLeft } from "react-icons/hi2";
 import { useErrorMessageHooks } from "../../../../hooks/useErrorMessageHooks";
 import { useToaster } from "../../../../components/ToasterContext";
-import { useResetPasswordUserMutation } from "../../../../features/auth/authApiSlice";
+import { useChangePasswordMutation } from "../../../../features/user/userApiSlice";
 import { Link } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
@@ -18,26 +18,26 @@ function ChangePassword() {
     data,
   } = useErrorMessageHooks();
 
-  const [resetPasswordUser, { isLoading }] = useResetPasswordUserMutation();
+  const [changePassword, { isLoading }] = useChangePasswordMutation();
   const { showToast } = useToaster();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrMsg("");
     setErrorMessagesList([]);
+    if (data?.newPassword !== data?.confirmpassword) {
+      setErrMsg("new password and confirm password must be the same");
+    }else{
     try {
-      const userData = await resetPasswordUser({
-        token: verifiedDetails?.token,
-        password: data.password,
-        confirmPassword: data.confirmpassword,
+      await changePassword({
+        oldPassword :data?.oldPassword,
+        newPassword: data?.newPassword,
       }).unwrap();
-      handleToggle("login");
-      console.log(userData);
-      setVerifiedDetails({});
-      onClose();
+
       showToast("Password reset successful", "success");
       setData({
-        password: "",
+        oldPassword: "",
+        newPassword: "",
         confirmpassword: "",
         eye: false,
         eyeConfirm: false,
@@ -46,6 +46,7 @@ function ChangePassword() {
       console.log(err);
       handleError(err, "Reset Password");
     }
+  }
   };
 
   return (
@@ -81,10 +82,10 @@ function ChangePassword() {
             <div className="relative">
               <input
                 type={data?.eyeold ? "text" : "password"}
-                name="passwordOld"
+                name="oldPassword"
                 id="oldPassword"
                 onChange={handleChange}
-                value={data.passwordOld}
+                value={data.oldPassword}
                 placeholder="Enter old password"
                 className="w-full p-3 text-sm border border-gray-300 rounded-lg focus:outline-regal-blue bg-transparent text-regal-black"
               />
@@ -99,13 +100,13 @@ function ChangePassword() {
                 )}
               </div>
             </div>
-            {handleErrorMessagesList("passwordOld")}
+            {handleErrorMessagesList("oldPassword")} {handleErrorMessagesList("old password")}
           </div>
 
           {/* New Password */}
           <div className="mb-6">
             <label
-              htmlFor="password"
+              htmlFor="newPassword"
               className="block text-sm font-medium text-regal-black mb-2"
             >
               New Password
@@ -113,10 +114,10 @@ function ChangePassword() {
             <div className="relative">
               <input
                 type={data?.eye ? "text" : "password"}
-                name="password"
-                id="password"
+                name="newPassword"
+                id="newPassword"
                 onChange={handleChange}
-                value={data.password}
+                value={data.newPassword}
                 placeholder="Enter new password"
                 className="w-full p-3 text-sm border border-gray-300 rounded-lg focus:outline-regal-blue bg-transparent text-regal-black"
               />
@@ -131,7 +132,7 @@ function ChangePassword() {
                 )}
               </div>
             </div>
-            {handleErrorMessagesList("password")}
+            {handleErrorMessagesList("newPassword")} {handleErrorMessagesList("new password")}
           </div>
 
           {/* Confirm New Password */}

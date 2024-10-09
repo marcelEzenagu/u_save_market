@@ -5,13 +5,17 @@ import Logo from "../../assets/images/nav/logo.webp";
 import Footer from "../../components/Footer/Footer";
 import Shippinginfo from "./component/Shippinginfo";
 import Bilingdetails from "./component/Bilingdetails";
-import PaymentDetails from "./component/PaymentDetails";
+// import PaymentDetails from "./component/PaymentDetails";
 import { useAuth } from "../../hooks/useAuth";
 import { selectCurrentUser } from "../../features/auth/authSlice";
 import LoadingScreen from "../../components/Loading/LoadingScreen";
 import { useGetUserCartQuery } from "../../features/cart/cartApiSlice";
 import { numberWithCommas } from "../../utils";
-import {loadStripe} from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, useStripe, PaymentElement, useElements, CardElement } from "@stripe/react-stripe-js";
+import { useToaster } from "../../components/ToasterContext";
+const stripePromise = loadStripe(import.meta.env.VITE_APP_STRIPE_KEY);
+
 const TabComponent = React.memo(
   ({ tabs, activeTab, setActiveTab, data, handleChange }) => {
     return (
@@ -56,15 +60,8 @@ const TabComponent = React.memo(
   }
 );
 
-const OrderSummary = React.memo(({ cartDetails, data }) => {
-  const total = useMemo(() => {
-    return cartDetails?.products?.reduce(
-      (acc, item) => acc + item?.price * item?.quantity,
-      0
-    );
-  }, [cartDetails]);
+const OrderSummary = React.memo(({ cartDetails, data, estTotal, total,  loadingPayment }) => {
 
-  const estTotal = useMemo(() => total + data?.shippingPay, [total, data]);
 
   return (
     <div className="border shadow-sm bg-white py-4 mt-5 md:mt-0 rounded-xl ">
@@ -109,8 +106,8 @@ const OrderSummary = React.memo(({ cartDetails, data }) => {
           </div>
           <div className="px-4 py-2 w-full">
             {cartDetails?.products?.length > 0 && (
-              <button  type="submit" className="text-sm bg-regal-sky-blue text-white px-4 py-2 font-semibold w-full rounded-md hover:bg-blue-600">
-                Pay now
+              <button disabled={loadingPayment}  type="submit" className="text-sm bg-regal-sky-blue text-white px-4 py-2 font-semibold w-full rounded-md hover:bg-blue-600">
+               {loadingPayment ? "Processing..." : "Pay now"}  
               </button>
             )}
           </div>
@@ -120,34 +117,36 @@ const OrderSummary = React.memo(({ cartDetails, data }) => {
   );
 });
 
-function Checkout() {
+
+const PaymentDetails = () => {
+  const paymentElementOptions = {
+    layout: "tabs"
+  }
+  return (
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      <h6 className="text-regal-blue text-sm md:text-[16px] mb-4 font-[700]">3. Payment Details</h6>
+      <label className="block text-sm font-medium text-regal-black mb-2">
+        Credit or debit card
+      </label>
+      <div className=" mb-4">
+      <PaymentElement id="payment-element" options={paymentElementOptions} />
+      {/* <CardElement options={paymentElementOptions} /> */}
+      </div>
+    </div>
+  );
+};
+
+
+function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("1");
-  const { isLoading, isAuthenticated } = useAuth();
+  const [loadingPayment, setLoadingPayment] = useState(false);
   const userData = useSelector(selectCurrentUser);
-  const [data, setData] = useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    email: "",
-    street: "",
-    country: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    cardHolderName: "",
-    cardNumber: "",
-    expiry: "",
-    cvv: "",
-    companyName: "",
-    shippingPay: 0,
-  });
 
-  const {
-    data: cartDetails,
-    isLoading: loading,
-    refetch,
-  } = useGetUserCartQuery();
+
+  const { showToast } = useToaster();
+  const stripe = useStripe();
+  const elements = useElements();
 
   useEffect(() => {
     if (userData) {
@@ -168,6 +167,7 @@ function Checkout() {
     }));
   }, []);
 
+
   const validateForm = useCallback((formData) => {
     const requiredFields = [
       "firstName",
@@ -179,10 +179,6 @@ function Checkout() {
       "city",
       "state",
       "zipCode",
-      "cardHolderName",
-      "cardNumber",
-      "expiry",
-      "cvv",
     ];
 
     for (const field of requiredFields) {
@@ -194,38 +190,51 @@ function Checkout() {
     return true;
   }, []);
 
+
+
   const handleSubmit = useCallback(
-   async (e) => {
+    async (e) => {
       e.preventDefault();
-      // if (validateForm(data)) {
-        if (cartDetails?.products?.length > 0) {
-          localStorage.setItem("checkoutDetails", JSON.stringify(data));
-          console.log(cartDetails);
-          const stripe =  await loadStripe(import.meta.env.VITE_APP_STRIPE_KEY);
-          const body = {
-            products: cartDetails?.products
+  
+      if (!stripe || !elements) {
+        console.log("Stripe.js has not loaded yet.");
+        return;
+      }
+  
+      if (validateForm(data)) {
+        try {
+          if (cartDetails?.products?.length > 0) {
+            localStorage.setItem("checkoutDetails", JSON.stringify(data));
+            setLoadingPayment(true);
+  
+            const { error } = await stripe.confirmPayment({
+              elements,
+              confirmParams: {
+                return_url: `${window.location.origin}/payment-success`, // Correctly formatted return URL
+              },
+            });
+  
+            if (error) {
+              showToast(error.message);
+            } else {
+              showToast("Payment processing...");
+              // You can add further handling here if needed
+            }
+            setLoadingPayment(false);
           }
-          const headers={
-              "Content-Type" : "application/json"
-          }
-          const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/create-checkout-session`, {
-            method:"POST",
-            headers:headers,
-            body:JSON.stringify(body)
-          });
-          const session = await response.json();
-          const result = stripe.redirectToCheckout({
-            sessionId:session.id
-          });
-          if(result?.error){
-            console.log(result?.error);
-          }
-          // navigate("/payment");
+        } catch (error) {
+          console.log(error);
+          setLoadingPayment(false);
+          showToast("Something went wrong while processing the payment. Please try again later.", "error");
         }
-      // } 
+      }
     },
-    [data, validateForm, navigate]
+    [data, cartDetails, elements, stripe, navigate]
   );
+  
+  
+  
+  
 
   const tabs = useMemo(
     () => [
@@ -242,19 +251,16 @@ function Checkout() {
           "This is to verify you’re an authorized user of the purchasing credit card you intend to use",
         component: Bilingdetails,
       },
-      {
-        id: "3",
-        name: "Payments",
-        details: "Make Payments for your order",
-        component: PaymentDetails,
-      },
+      // {
+      //   id: "3",
+      //   name: "Payments",
+      //   details: "Make Payments for your order",
+      //   component: PaymentDetails,
+      // },
     ],
     []
   );
 
-  if (isLoading || !isAuthenticated || loading) {
-    return <LoadingScreen />;
-  }
 
   return (
     <div>
@@ -283,10 +289,14 @@ function Checkout() {
                 setActiveTab={setActiveTab}
                 data={data}
                 handleChange={handleChange}
+               
               />
+                <PaymentDetails clientSecret={clientSecret} />
             </div>
             <div>
-              <OrderSummary cartDetails={cartDetails} data={data} />
+              <OrderSummary  loadingPayment={loadingPayment} cartDetails={cartDetails} data={data} total={total} estTotal={estTotal} />
+
+            
             </div>
           </form>
         </div>
@@ -296,4 +306,86 @@ function Checkout() {
   );
 }
 
-export default Checkout;
+export default function CheckoutWrapper() {
+  const [clientSecret, setClientSecret] = useState("");
+  const { isLoading, isAuthenticated } = useAuth();
+  const token = useSelector(state => state?.auth?.token);
+    const {
+    data: cartDetails,
+    isLoading: loading,
+    refetch,
+  } = useGetUserCartQuery();
+  const [data, setData] = useState({
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    email: "",
+    street: "",
+    country: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    // cardHolderName: "",
+    // cardNumber: "",
+    // expiry: "",
+    // cvv: "",
+    companyName: "",
+    shippingPay: 0,
+  });
+
+  const total = useMemo(() => {
+    return cartDetails?.products?.reduce(
+      (acc, item) => acc + item?.price * item?.quantity,
+      0
+    );
+  }, [cartDetails]);
+
+  const estTotal = useMemo(() => total + data?.shippingPay, [total, data]);
+  useEffect(()=>{
+    const getClientKey  = async () => {
+          
+      const body = { products: cartDetails?.products, totalCost: estTotal };
+      const headers = {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      };
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_API_URL}orders/pay-intent`, 
+        {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(body),
+        }
+      );
+
+      const { clientSecret } = await response.json();
+      setClientSecret(clientSecret);
+    }
+
+    getClientKey();
+  }, []);
+
+  const appearance = {
+    theme: 'stripe',
+  };
+
+  if (isLoading || !isAuthenticated || loading) {
+    return <LoadingScreen />;
+  }
+
+  if(clientSecret){
+
+    return (
+      <Elements options={{   
+        clientSecret,
+        appearance, }} stripe={stripePromise}>
+        <Checkout clientSecret={clientSecret} cartDetails={cartDetails}  setData={setData} data={data} estTotal={estTotal} total={total} />
+      </Elements>
+    );
+  }else{
+    return <LoadingScreen />;
+  }
+
+
+
+}

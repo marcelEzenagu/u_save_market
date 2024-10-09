@@ -37,11 +37,14 @@ export const useVendorAuth = () => {
             navigate('/vendor/auth/login'); // Redirect to login
           }
         }
+      }else{
+        console.log("me");
       }
     } else {
         navigate('/vendor/auth/login'); // Redirect to login
     }
-  }, [token, userData, isSuccess, isError, dispatch, vendor, error]);
+
+  }, [token, userData, userToken, isSuccess, isError, dispatch, vendor, error]);
 
   return {
     isLoading,

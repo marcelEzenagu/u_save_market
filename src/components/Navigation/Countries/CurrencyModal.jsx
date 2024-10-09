@@ -91,6 +91,10 @@ const Modal = ({ isOpen, onClose, onCurrencySelect, errorMsg, preferredCurrency,
                 </li>
               ))}
             </ul>
+            {search !== "" && filteredCurrencies.length === 0 ?
+            <div>
+              <p className='text-sm text-center my-12'>The currency you are searching for is not Supported </p>
+            </div> : ""}
           </div>
           <div className=" w-full px-4 pb-8 bg-white">
             {pickedCurrency && 

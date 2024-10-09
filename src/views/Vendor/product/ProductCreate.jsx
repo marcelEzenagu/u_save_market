@@ -1,31 +1,30 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { AiOutlineEye } from "react-icons/ai";
-import { FaRegCheckCircle } from "react-icons/fa";
+import { BsCart3 } from "react-icons/bs";
+import { GoHeart } from "react-icons/go";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { Menu } from "@headlessui/react";
 import { FaCalendarAlt, FaTimes } from "react-icons/fa";
-import ProductDescription from "../../../components/ProductDescription";
 import { TfiAngleDown } from "react-icons/tfi";
-import { numberWithCommas } from "../../../utils";
 import GeneralInformation from "./Components/GeneralInformation";
 import Media from "./Components/Media";
 import Pricing from "./Components/Pricing";
 import Shopping from "./Components/Shopping";
+import { FaRegCheckCircle } from "react-icons/fa";
+import { numberWithCommas } from "../../../utils";
+import Cancelicon from "../../../assets/images/order/cancel.png";
+import ProductDescription from "../../../components/ProductDescription";
 import { useErrorMessageHooks } from "../../../hooks/useErrorMessageHooks";
-import {  useGetItemByIdQuery, useDeleteItemMutation, useUpdateItemMutation } from "../../../features/item/itemApiSlice";
-import DeleteProduct from "./Components/DeleteProduct";
+import { useAddItemMutation } from "../../../features/item/itemApiSlice";
+import { useToaster } from "../../../components/ToasterContext";
 import ViewProduct from "./Components/ViewProduct";
-function ProductView() {
+function ProductCreate() {
   const { name } = useParams();
-  const { data: fetchedItem, isLoading, isError, error } = useGetItemByIdQuery(name);
-
   const [activeTab, setActiveTab] = useState("1");
   const [active, setActive] = useState("1");
   const [selectedStatus, setSelectedStatus] = useState("Select Status");
   const [isModalOpenAddProduct, setisModalOpenAddProduct] = useState(false);
-  const [isModalOpenDeleteProduct, setisModalOpenDeleteProduct] = useState(false);
-
   const {
     handleError,
     setErrMsg,
@@ -36,36 +35,11 @@ function ProductView() {
     handleErrorMessagesList,
     errMsg,
   } = useErrorMessageHooks();
-  const [updateItem, { isLoading: isAdding }] = useUpdateItemMutation();
-
+  const [addItem, { isLoading }] = useAddItemMutation();
+  const { showToast } = useToaster();
   useEffect(() => {
-    if (fetchedItem) {
-      // If item is found, set it to state
-      setData({
-        itemName: fetchedItem.itemName || "",
-        images: fetchedItem.images || [],
-        itemCategory: fetchedItem.itemCategory || "",
-        itemSubCategory: fetchedItem.itemSubCategory || "",
-        productID: fetchedItem.productID || "",
-        quantity: fetchedItem.quantity || 0,
-        salesPrice: fetchedItem.salesPrice || 0,
-        originalPrice: fetchedItem.originalPrice || 0,
-        profit: fetchedItem.profit || 0,
-        discount: fetchedItem.discount || 0,
-        newPrice: fetchedItem.newPrice || 0,
-        weight: fetchedItem.weight || 0,
-        stock: fetchedItem.stock || "",
-        weight_unit: fetchedItem.weight_unit || "kg",
-        status: fetchedItem.status || "",
-        description: fetchedItem.description || "",
-        itemSupportedCountries: fetchedItem.itemSupportedCountries || [],
-        ...fetchedItem
-      });
-      setSelectedStatus(fetchedItem?.status?.toLowerCase());
-    } else {
-      defaultValue();
-    }
-  }, [fetchedItem]);
+    defaultValue();
+  }, []);
 
   const defaultValue = () => {
     setData({
@@ -81,7 +55,7 @@ function ProductView() {
       discount: 0,
       newPrice: 0,
       weight: 0,
-      stock: "",
+      stock:'',
       weight_unit: "kg",
       status: "",
       description: "",
@@ -92,70 +66,96 @@ function ProductView() {
   const handleSubmit = async () => {
     setErrMsg("");
     setErrorMessagesList([]);
+    console.log(data);
     try {
-      const { response } = await updateItem({...data, id : data?.ItemID}).unwrap();
+      const { response } = await addItem(data).unwrap();
       console.log(response);
       showToast(
-        "Item updated successfully",
+        "Item created successfully",
         "success"
       );
       defaultValue();
     } catch (err) {
-      handleError(err, "Update Item");
+      console.log(err);
+      handleError(err, "Create Item");
     }
   };
-
   const statusOptions = [
-    { label: "active", value: "active", color: "text-green-600 bg-green-100 border-green-600" },
-    { label: "inactive", value: "inactive", color: "text-red-600 bg-red-100 border-red-600" },
     {
-      label: "draft",
-      value: "draft",
-      color:  "text-gray-600 bg-gray-100 border-gray-600",
+      label: "active",
+      value: "active",
+      color:  "text-green-600 bg-green-100 border-green-600",
+      icon: "",
 
     },
+    
+    {
+      label: "inactive",
+      value: "inactive",
+      color: "text-red-600 bg-red-100 border-red-600",
+    },
+    {
+        label: "draft",
+        value: "draft",
+        color:  "text-gray-600 bg-gray-100 border-gray-600",
+  
+      },
   ];
 
   const tabs = [
-    { id: "1", name: "General information", component: GeneralInformation },
-    { id: "2", name: "Media", component: Media },
-    { id: "3", name: "Pricing", component: Pricing },
-    { id: "4", name: "Shipping", component: Shopping },
+    {
+      id: "1",
+      name: "General information",
+      component: GeneralInformation,
+    },
+    {
+      id: "2",
+      name: "Media",
+      component: Media,
+    },
+    {
+      id: "3",
+      name: "Pricing",
+      details: "Make Payments for your order",
+      component: Pricing,
+    },
+    {
+      id: "4",
+      name: "Shipping",
+      component: Shopping,
+    },
   ];
+  const [isDateInputVisible, setIsDateInputVisible] = useState(false);
+
+  const toggleDateInput = () => {
+    setIsDateInputVisible(!isDateInputVisible);
+  };
 
   const handleChangeOption = (event) => {
     const selectedValue = event.target.value;
-    const selectedOption = statusOptions.find((option) => option.value === selectedValue);
+    const selectedOption = statusOptions.find(
+      (option) => option.value === selectedValue
+    );
     setSelectedStatus(selectedOption.label);
     setData({...data, status : selectedOption.value.toLocaleUpperCase()});
   };
 
-  const selectedOption = statusOptions.find((option) => option.label === selectedStatus);
-
-  if (isLoading) {
-    return  'Getting Item';  // Display loading spinner
-  }
-
-  if (isError) {
-    return <p className="text-red-600">Error: {error?.message || "Failed to load item"}</p>;  // Error handling
-  }
-
-  if (!fetchedItem) {
-    return <p className="text-red-600">Item not found</p>;  // When no item is found
-  }
+  const selectedOption = statusOptions.find(
+    (option) => option.label === selectedStatus
+  );
 
   return (
     <div className="px-4 py-8">
-        <div className="flex flex-row items-center justify-between ">
+      <div className="flex flex-row items-center justify-between ">
         <Link
           className=" flex items-center gap-2 text-regal-dark text-lg md:text-2xl font-[500]"
           to="/vendor/dashboard/products"
         >
           <IoIosArrowRoundBack />
-          {data?.itemName}
+
         </Link>
         <div className="flex flex-row items-center gap-6">
-          <Menu as="button" className="relative inline-block text-right">
+          {/* <Menu as="button" className="relative inline-block text-right">
             <div>
               <Menu.Button className=" rounded-full text-lg text-regal-dark focus:outline-none">
                 •••
@@ -180,7 +180,7 @@ function ProductView() {
                 </Menu.Item>
               </div>
             </Menu.Items>
-          </Menu>
+          </Menu> */}
           <button
             className="flex flex-row items-center justify-center gap-2 font-[500] text-regal-black text-xs border rounded-md border-regal-black py-2 px-3"
             onClick={() => {
@@ -193,61 +193,64 @@ function ProductView() {
         </div>
       </div>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-5">
+      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-5 ">
         <div className="md:col-span-3 border shadow-sm bg-white py-2 rounded-md ">
-          <div className="grid grid-cols-2 md:grid-cols-4">
-            {/* Sidebar Tabs */}
+          <div className="grid rid-cols-2 md:grid-cols-4 ">
             <div className="">
               <ul className="flex flex-col items-start space-y-4 px-8 py-4 animate-fade-in ">
-                {tabs.map((e, index) => (
+                {tabs?.map((e, index) => (
                   <li key={index} className="relative w-full">
                     <h6
                       className={`text-regal-light-gray text-xs py-2 font-[400] after:scale-y-0 cursor-pointer ${
-                        active === e.id
+                        active === e?.id
                           ? "text-regal-blue after:scale-y-100 font-[600]"
                           : "hover:text-regal-blue hover:after:scale-y-100"
                       } flex flex-row items-center gap-2 relative after:content-[''] after:absolute after:right-[-12px] after:top-1/2 after:transform after:translate-y-[-50%] after:h-full after:w-[4px] after:bg-regal-blue after:rounded-full after:origin-top after:transition-transform after:duration-300 after:ease-in-out`}
-                      onClick={() => setActive(e.id)}
                     >
                       <FaRegCheckCircle className="text-lg font-[500]" />
-                      {e.name}
+                      {e?.name}
                     </h6>
                   </li>
                 ))}
               </ul>
             </div>
-
-            {/* Active Tab Content */}
             <div className="md:col-span-3 flex flex-col px-4 py-4 gap-4">
               {tabs.map((e, i) => (
-                <div key={i} className="border shadow-sm bg-white py-4 md:py-6 rounded-md">
-                  <div className="px-4 md:px-4">
+                <div
+                  className=" border shadow-sm bg-white py-4 md:py-6  rounded-md "
+                  key={i}
+                >
+                  <div className="px-4  md:px-4">
                     <div className="flex flex-row items-center justify-between">
-                      <h6 className="text-regal-dark text-[16px] mb-4 font-[600]">{e.name}</h6>
+                      <h6 className="text-regal-dark text-[16px]  mb-4 font-[600]">
+                        {e.name}
+                      </h6>
                       <button
-                        className="text-regal-light-gray text-lg mb-4 font-[700] active:scale-95"
-                        onClick={() => setActiveTab(e.id)}
+                        className="text-regal-light-gray text-lg  mb-4 font-[700] active:scale-95"
+                        onClick={() => {
+                          setActiveTab(e.id);
+                        }}
                       >
                         <TfiAngleDown />
                       </button>
                     </div>
-                    <div className="px-4">
-                      <e.component
-                        handleChange={handleChange}
-                        data={data}
-                        setData={setData}
-                        handleErrorMessagesList={handleErrorMessagesList}
-                      />
-                    </div>
+                  </div>
+                  {/* {e.id === activeTab &&  } */}
+                  <div className="px-4">
+                    <e.component
+                      handleChange={handleChange}
+                      data={data}
+                      setData={setData}
+                      handleErrorMessagesList={handleErrorMessagesList}
+                    />
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
-       
         <div>
-        <div className=" border shadow-sm bg-white py-2 rounded-md ">
+          <div className=" border shadow-sm bg-white py-2 rounded-md ">
             <h5 className="text-lg text-regal-black font-[700] px-4 pt-4">
               Product Status
             </h5>
@@ -287,28 +290,56 @@ function ProductView() {
               {handleErrorMessagesList("status")}
               </div>
               </div>
+              <div className="w-64">
+                <button
+                  onClick={toggleDateInput}
+                  className="flex items-center justify-center px-8 text-xs text-blue-600"
+                >
+                  <FaCalendarAlt className="mr-2" />
+                  Schedule availability
+                </button>
+                {/* 
+      {isDateInputVisible && (
+        <div className="relative">
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={handleDateChange}
+            className="w-full p-2 border rounded-md text-gray-800 mb-2"
+          />
+          {selectedDate && (
+            <button
+              onClick={clearDate}
+              className="absolute right-2 top-2 text-red-500 hover:text-red-700"
+            >
+              <FaTimes />
+            </button>
+          )}
+        </div>
+      )}
+
+      {selectedDate && (
+        <div className="mt-2 text-gray-700">
+          Selected Date: {selectedDate}
+        </div>
+      )} */}
+              </div>
             </div>
            
             <p className="text-red-600 text-xs">{errMsg}</p>
             <div className="px-5 pt-4 pb-3 w-full">
               <button
-                disabled={isAdding}
+                disabled={isLoading}
                 onClick={handleSubmit}
                 className="text-sm bg-regal-sky-blue text-white px-4  py-2  w-full rounded-md hover:bg-blue-600 "
               >
-                {isAdding ? "loading..." : "update"}
+                {isLoading ? "loading..." : "Save and publish"}
               </button>
             </div>
           </div>
         </div>
       </section>
-      <DeleteProduct
-        isModalOpen={isModalOpenDeleteProduct}
-        setIsModalOpen={(e) => {
-          setisModalOpenDeleteProduct(e);
-        }}
-        data={data}
-      />
+
       <ViewProduct
         isModalOpen={isModalOpenAddProduct}
         setIsModalOpen={(e) => {
@@ -319,7 +350,5 @@ function ProductView() {
     </div>
   );
 }
-
-export default ProductView;
-
+export default ProductCreate;
 

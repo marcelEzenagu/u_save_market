@@ -70,6 +70,10 @@ import WarehousingView from "./views/Agent/Warehousing/WarehousingView";
 import ReportAndAnalytics from "./views/Agent/ReportsAndAnalytics";
 import PaymentListAgent from "./views/Agent/Payments/PaymentListAgent";
 import PaymentOverview from "./views/Agent/Payments/PaymentOverview";
+import PaymentError from "./views/checkout/PaymentError";
+import CategoryList from "./views/admin/CategoryList";
+import SubCategoryList from "./views/admin/SubCategoryList";
+import ProductCreate from "./views/Vendor/product/ProductCreate";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -98,8 +102,12 @@ const Router = createBrowserRouter([
         element:<Checkout/>,
     },
     {
-        path:'/payment',
+        path:'/payment-success',
         element: <Payment/>
+    },
+    {
+        path:'/payment-error',
+        element: <PaymentError/>
     },
     {
         path:'/',
@@ -219,6 +227,10 @@ const Router = createBrowserRouter([
                 {
                     path:'/vendor/dashboard/products/:name',
                     element: <ProductView/>
+                },
+                {
+                    path:'/vendor/dashboard/products/create',
+                    element: <ProductCreate/>
                 },
                 {
                     path:'/vendor/dashboard/orders',
@@ -352,6 +364,14 @@ const Router = createBrowserRouter([
             {
                 path:'/admin/vendors',
                 element : <VendorList/>
+            },
+            {
+                path:'/admin/categories',
+                element : <CategoryList/>
+            },
+            {
+                path:'/admin/subcategories',
+                element : <SubCategoryList/>
             },
             {
                 path:'/admin/vendors/:id',

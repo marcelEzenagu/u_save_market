@@ -49,7 +49,7 @@ export const useAuth = () => {
     } else {
         navigate('/', { state: { loginModel: true } }); // Redirect to login
     }
-  }, [token, userData, isSuccess, isError, dispatch, user, error]);
+  }, [token, userData, userToken, isSuccess, isError, dispatch, user, error]);
 
   return {
     isLoading,

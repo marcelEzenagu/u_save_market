@@ -104,7 +104,7 @@ const handleSubmit = async (e) => {
               </div>
               {handleErrorMessagesList("password")}
             </div>
-            <p className="text-red-600 text-xs">{errMsg && errMsg}</p>
+            <p className="text-red-600 text-xs">{ errMsg}</p>
 
             <Link to="/vendor/auth/forgot-password" className="text-xs text-regal-blue">Forgot Password ?</Link>
 

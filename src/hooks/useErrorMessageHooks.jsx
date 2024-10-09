@@ -49,7 +49,7 @@ export const useErrorMessageHooks = () => {
   };
 
   const handleError = (err, name) => {
-    if (err?.status >= 400 && !err?.status >= 500) {
+    if (err?.status >= 400 && err?.status < 500) {
       setErrorMessagesList(err?.data?.message || []);
     } else if (err?.status >= 500) {
       setErrMsg(name + ' failed');

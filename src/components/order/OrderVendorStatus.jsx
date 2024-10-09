@@ -1,23 +1,23 @@
 import React from 'react'
 
 function OrderVendorStatus(props) {
-    let key = props.status 
+    let key = props?.status?.toLowerCase() 
     switch (key) {
-        case key ===  'active':
+        case 'active':
             return (
                 <span
                     className={`inline-block px-2 py-1 text-xs  text-regal-sky-blue rounded-full bg-regal-secondary-light`}
                 >
                      active
                 </span> );
-        case key ===  'new':
+        case  'new':
             return (
                 <span
                     className={`inline-block px-2 py-1 text-xs  text-green-500 rounded-full bg-green-100`}
                 >
                      new
                 </span> );
-                        case key ===  'inactive':
+                        case  'inactive':
                             return (
                                 <span
                                     className={`inline-block px-2 py-1 text-xs  text-black rounded-full bg-gray-100`}

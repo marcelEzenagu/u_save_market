@@ -23,7 +23,7 @@ function ProductTab() {
   return (
     <div>      
             <section>
-        <div className="grid grid-cols-2 md:grid-cols-4  gap-4  relative  bg-white mt-8">
+        <div className="grid grid-cols-2 md:grid-cols-4  gap-4  relative  bg-white mt-8 max-w-[1366px]">
           {tab.map((item) => (
             <div
               key={item.name}
