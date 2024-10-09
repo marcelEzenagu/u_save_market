@@ -313,7 +313,10 @@ const SearchForm = React.memo(({preferredCountry}) => {
             
             <div className="flex flex-row justify-between items-center gap-2 py-2">
               <p className="text-sm font-[600]">Recent searches </p>
-              <button className="text-sm font-[600] text-regal-sky-blue">
+              <button className="text-sm font-[600] text-regal-sky-blue" 
+              onClick={()=>{
+                setQuery("");
+              }}>
                 Clear
               </button>
             </div>
@@ -399,6 +402,15 @@ const SearchFormMobile = React.memo(({preferredCountry, showMessage }) => {
             {/* Search Results Dropdown */}
             {searchQuery && (
               <div className="bg-white border border-gray-300 rounded-lg shadow-lg mx-4">
+                     <div className="flex flex-row justify-between items-center gap-2 py-2 px-2">
+              <p className="text-sm font-[600]">Recent searches </p>
+              <button className="text-sm font-[600] text-regal-sky-blue" 
+              onClick={()=>{
+                setSearchQuery("");
+              }}>
+                Clear
+              </button>
+            </div>
                 {isLoading && <p className="text-center p-2">Loading...</p>}
                 {isError && <p className="text-red-500 text-center p-2">Error fetching results.</p>}
                 {searchItems?.length > 0 && isLoading == false ? (
