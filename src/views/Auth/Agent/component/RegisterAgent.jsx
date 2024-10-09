@@ -1,25 +1,20 @@
-import React, {  } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import Googleicon from "../../../../assets/images/auth/google.png"
-import { useRegisterMutation } from "../../../../features/auth/authApiSlice";
+import { useRegisterAgentMutation } from "../../../../features/auth/authApiSlice";
 import useErrorMessageHooks from "../../../../hooks/useErrorMessageHooks";
 import { setCookie } from "../../../../utils";
 import { setCredentials } from "../../../../features/auth/authSlice";
-const RegisterAgent = ({handleNext}) => {
+import { IoClose } from "react-icons/io5";
+const RegisterAgent = ({handleNext, countries, loadingCountries = false,}) => {
   const {errMsg, data, setData, handleChange, handleError, setErrMsg, dispatch, navigate, setErrorMessagesList, handleErrorMessagesList} = useErrorMessageHooks();
-  const [Register, {isLoading}] = useRegisterMutation()
-
-const handleSubmit = async (e) => {
-  e.preventDefault()
-  setErrMsg("");
-  setErrorMessagesList([]);
-  try {
-    const  {
-      access_data,
-      vendor
-       } = await Register({ firstName: data.firstName, lastName:data.lastName,  email : data.email, password : data.password }).unwrap()
-    setCookie("accessToken", access_data?.token)
-    dispatch(setCredentials({ accessToken: access_data?.token, user : vendor, role: access_data?.role,}))
+  const [registerAgent, {isLoading}] = useRegisterAgentMutation()
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredCountries, setFilteredCountries] = useState([]);
+  useEffect(()=>{
+    defaultData()
+  }, [])
+  const defaultData = () => {
     setData({
       firstName:'',
       lastName: '',
@@ -27,19 +22,59 @@ const handleSubmit = async (e) => {
       password:'',
       terms:false,
       eye:false,
-      eyeConfirm:false
+      eyeConfirm:false,
+      servicingCountries : []
     })
+  }
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  setErrMsg("");
+  setErrorMessagesList([]);
+  try {
+    const  {
+      access_data,
+      agent
+       } = await registerAgent({ firstName: data.firstName, lastName:data.lastName,  email : data.email, password : data.password, servicingCountries: data?.servicingCountries }).unwrap()
+    setCookie("accessToken", access_data?.token)
+    dispatch(setCredentials({ accessToken: access_data?.token, user : agent, role: access_data?.role,}))
+    defaultData();
     // setModal(true)
-    navigate('/vendor/dashboard/home')
+    navigate('/agent/overview')
   }catch (err) {
     console.log(err);
     handleError(err, "Register");
   }
 }
 
+const handleSearchChange = (e) => {
+  const query = e.target.value.toLowerCase();
+  setSearchTerm(query);
+  setFilteredCountries(
+    countries.filter((country) =>
+      country?.name?.toLowerCase().includes(query)
+    )
+  );
+};
 
+const handleSelectCountry = (country) => {
+  if (!data?.servicingCountries?.includes(country)) {
+    setData((prevData) => ({
+      ...prevData,
+      servicingCountries: [...prevData?.servicingCountries, country],
+    }));
+    setSearchTerm("");
+  }
 
+};
 
+const handleRemoveCountry = (country) => {
+  setData((prevData) => ({
+    ...prevData,
+    servicingCountries: prevData?.servicingCountries?.filter(
+      (c) => c !== country
+    ),
+  }));
+};
 
   return (
     <div className="animated fadeInDown md:w-[450px] mx-auto">
@@ -109,6 +144,62 @@ const handleSubmit = async (e) => {
               />
                 {handleErrorMessagesList("email")}
             </div>
+                 {/* supported countries*/}
+                 <div className="grid grid-cols-1 md:grid-cols-2  col-span-2 md:col-span-2 mb-2">
+      {/* Supported Countries */}
+      <div className="mb-2 col-span-2">
+        <label
+          htmlFor="SupportedCountries"
+       className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
+        >
+         Servicing Countries
+        </label>
+        <div className="relative">
+          <input
+            type="text"
+           className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+            placeholder="Search countries"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+          {searchTerm && (
+            <ul className="absolute w-full bg-white border mt-1 z-10 max-h-40 overflow-y-auto">
+              {filteredCountries.length > 0 ? (
+                filteredCountries.map((country) => (
+                  <li
+                    key={country.id}
+                    onClick={() => handleSelectCountry(country.name)}
+                    className="p-2 text-xs hover:bg-gray-100 cursor-pointer"
+                  >
+                    {country.name}
+                  </li>
+                ))
+              ) : (
+                <li className="p-2 text-xs text-gray-500">No countries found</li>
+              )}
+              {loadingCountries &&  <li className="p-2  text-xs text-gray-500">loading...</li>}
+            </ul>
+          )}
+        </div>
+        {handleErrorMessagesList("servicingCountries")}
+        
+        {/* Selected countries */}
+        <div className="flex gap-2 flex-wrap mt-2">
+          {data?.servicingCountries?.map((country, index) => (
+            <span
+              key={index}
+              className=" text-xs capitalize flex items-center p-2 rounded gap-2 border"
+            >
+              {country}
+              <IoClose
+                className="cursor-pointer"
+                onClick={() => handleRemoveCountry(country)}
+              />
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
 
             <div className="mb-4 col-span-2">
               <label
@@ -128,7 +219,7 @@ const handleSubmit = async (e) => {
                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
                   className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                 />
-                 {handleErrorMessagesList("password")}
+               
                 <div
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                 
@@ -144,16 +235,14 @@ const handleSubmit = async (e) => {
                   )}
                 </div>
               </div>
+              {handleErrorMessagesList("password")}
             </div>
 
             <p className="text-red-600 text-xs">{errMsg && errMsg}</p>
             <div className="w-full ">
             <button className=" text-xs md:text-[12px] bg-regal-sky-blue text-white px-4  py-3 font-semibold w-full rounded-lg hover:bg-blue-600 mt-4 "
-            type="button"
+            type="submit"
             disabled={isLoading}
-            onClick={()=>{
-              handleNext()
-            }}
             >
                  {isLoading ? 'Loading...' : ' Sign Up '}
               </button>

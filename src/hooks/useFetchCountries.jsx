@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setCountries } from "../features/auth/authSlice";
 import { useGetCountriesQuery } from "../features/auth/authApiSlice";
-const useFetchCountriesWithCurrencies = () => {
+const useFetchCountries = () => {
   const [countriesWithCurrency, setCountriesWithCurrency] = useState([]);
   const dispatch = useDispatch();
   const {data: countries, isSuccess: successResponse } = useGetCountriesQuery();
@@ -77,4 +77,4 @@ const useFetchCountriesWithCurrencies = () => {
   return { countriesWithCurrency };
 };
 
-export default useFetchCountriesWithCurrencies;
+export default useFetchCountries;

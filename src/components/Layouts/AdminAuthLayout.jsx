@@ -2,10 +2,10 @@ import React, { useLayoutEffect } from 'react';
 import { getSecureCookie, validateToken } from '../../utils'; 
 import { Outlet, Navigate } from 'react-router-dom';
 
-function AgentAuthLayout() {
+function AdminAuthLayout() {
   const userToken = getSecureCookie("accessToken");
   if (userToken && validateToken(userToken)) {
-  return  <Navigate to='/agent/overview'/>
+  return  <Navigate to='/admin/overview'/>
   }
   return (
     <div>
@@ -15,4 +15,4 @@ function AgentAuthLayout() {
   );
 }
 
-export default AgentAuthLayout;
+export default AdminAuthLayout;

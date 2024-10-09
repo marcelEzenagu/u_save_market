@@ -3,7 +3,8 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import Logo from "../../assets/images/nav/logo.webp";
 import "../../assets/css/admin.css";
 import { FiSearch, FiBell, FiChevronDown } from "react-icons/fi";
-
+import { useAgentAuth } from '../../hooks/useAgentAuth'
+import LoadingScreen from "../Loading/LoadingScreen";
 function AgentLayout() {
 
    const sidebarLinks = [
@@ -133,6 +134,12 @@ function AgentLayout() {
       setActiveTab(activeLink)
       return activeLink ? activeLink.name : 'Overview';
     };
+
+    const { isLoading, isAuthenticated } = useAgentAuth();
+
+    if (isLoading || !isAuthenticated) {
+      return <LoadingScreen />;
+    }
   
     return (
       <div className="flex h-screen ">

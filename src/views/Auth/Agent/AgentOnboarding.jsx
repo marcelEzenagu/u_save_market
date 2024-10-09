@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "../../../assets/images/nav/logo.webp";
 import { Link } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
 import RegisterAgent from "./component/RegisterAgent";
 import OtpAgent from "./component/OtpAgent";
+import { useSelector } from "react-redux";
 import UploadDocumentAgent from "./component/UploadDocumentAgent";
 import AcceptanceFormAgent from "./component/AcceptanceFormAgent";
 import RegistrationSuccessfulAgent from "./component/RegisterationSuccessfulAgent";
+import useFetchCountries from "../../../hooks/useFetchCountries";
 const AgentOnboarding = () => {
   const [step, setStep] = useState(1);
+  const { countriesWithCurrency } = useFetchCountries();
+  useEffect(()=>{
+    countriesWithCurrency;
+  }, []);
+
   const totalSteps = 5;
   const StepDetails = [
     {
@@ -69,7 +76,7 @@ const AgentOnboarding = () => {
         step:5,
     },
   ];
-
+const countries = useSelector((state) => state?.auth?.countries)
   const handleNext = () => {
     if (step < totalSteps) setStep(step + 1);
   };
@@ -81,7 +88,7 @@ const AgentOnboarding = () => {
   const renderForm = () => {
     switch (step) {
       case 1:
-        return <RegisterAgent handleNext={handleNext}/>
+        return <RegisterAgent handleNext={handleNext} countries={countries}/>
       case 2:
         return <OtpAgent handleNext={handleNext} />
       case 3:
@@ -151,7 +158,7 @@ const AgentOnboarding = () => {
           </div>
           {/* Sign-In Button */}
           <div className="flex justify-end self-end pb-4">
-            <Link className="text-regal-black flex items-center font-semibold gap-1">
+            <Link to="/agent/login" className="text-regal-black flex items-center font-semibold gap-1">
               <BsArrowLeft /> Sign In
             </Link>
           </div>
