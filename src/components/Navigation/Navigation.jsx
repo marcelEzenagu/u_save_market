@@ -321,9 +321,9 @@ const SearchForm = React.memo(({preferredCountry}) => {
             {isError && <p className="text-red-500 text-center">Error fetching results.</p>}
             {searchItems?.length > 0 ? (
               searchItems.map((item) => (
-                <div key={item.id} className="flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer">
+                <div key={item.itemID} className="flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer">
                   <IoSearchOutline />
-                  <p className="text-xs font-[400]">{item.name}</p>
+                  <p className="text-xs font-[400]">{item.itemName}</p>
                 </div>
               ))
             ) : (
@@ -404,10 +404,10 @@ const SearchFormMobile = React.memo(({preferredCountry, showMessage }) => {
                 {searchItems?.length > 0 && isLoading == false ? (
                   searchItems.map((result) => (
                     <div
-                      key={result.id}
+                      key={result.itemID}
                       className="p-2 hover:bg-gray-100 cursor-pointer"
                     >
-                      {result.name}
+                      {result?.itemName}
                     </div>
                   ))
                 ) : (
