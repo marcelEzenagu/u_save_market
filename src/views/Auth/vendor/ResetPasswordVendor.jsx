@@ -32,7 +32,7 @@ const ResetPasswordVendor = () => {
   useEffect(() => {
     // Redirect if there are no verified details
     if (!verifiedDetails?.email || !verifiedDetails?.requestID || !verifiedDetails?.token) {
-      navigate("/vendor/auth/forgot-password");
+      navigate("/vendor/forgot-password");
     }
   }, [verifiedDetails, navigate]);
 
@@ -54,7 +54,7 @@ const ResetPasswordVendor = () => {
         eye: false,
         eyeConfirm: false,
       });
-      navigate("/vendor/auth/login");
+      navigate("/vendor/login");
       dispatch(clearVerifiedDetails());
     } catch (err) {
       console.log(err);

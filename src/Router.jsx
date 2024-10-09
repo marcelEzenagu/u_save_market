@@ -79,6 +79,7 @@ import LoginAdmin from "./views/Auth/admin/LoginAdmin";
 import ForgotPasswordAgent from "./views/Auth/Agent/ForgotPasswordAgent";
 import OtpAgent from "./views/Auth/Agent/OtpAgent";
 import ResetPasswordAgent from "./views/Auth/Agent/ResetPasswordAgent";
+import AdminAuthLayout from "./components/Layouts/AdminAuthLayout";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -168,122 +169,122 @@ const Router = createBrowserRouter([
         ]
     },
     {
-        path:'/vendor/auth',
+        path:'/vendor',
         element: <VendorAuthLayout/>,
         children: [
             {
-                path: '/vendor/auth/',
-                element : <Navigate to='/vendor/auth/login'/>
+                path: '/vendor/',
+                element : <Navigate to='/vendor/login'/>
             },
                 {
-                    path:'/vendor/auth/register',
+                    path:'/vendor/register',
                     element: <RegisterVendor/>
                 },
                 {
-                    path:'/vendor/auth/login',
+                    path:'/vendor/login',
                     element: <LoginVendor/>
                 },
                 {
-                    path:'/vendor/auth/forgot-password',
+                    path:'/vendor/forgot-password',
                     element: <ForgotPasswordVendor/>
                 },
                 {
-                    path:'/vendor/auth/otp',
+                    path:'/vendor/otp',
                     element: <OtpVendor/>
                 },
                 {
-                    path:'/vendor/auth/reset-password',
+                    path:'/vendor/reset-password',
                     element: <ResetPasswordVendor/>
                 },
                 {
-                    path:'/vendor/auth/registration',
+                    path:'/vendor/registration',
                     element: <VendorDetails/>
                 },
                 {
-                    path:'/vendor/auth/registration/successful',
+                    path:'/vendor/registration/successful',
                     element: <RegistrationSuccessful/>
                 }
         ]
     },
     {
-        path:'/vendor/dashboard',
+        path:'/vendor',
         element: <VendorLayout/>,
         children: [
             {
-                path: '/vendor/dashboard',
-                element : <Navigate to='/vendor/dashboard/home'/>
+                path: '/vendor',
+                element : <Navigate to='/vendor/home'/>
             },
                 {
-                    path:'/vendor/dashboard/home',
+                    path:'/vendor/home',
                     element: <VendorHome/>
                 },
                 {
-                    path:'/vendor/dashboard/search',
+                    path:'/vendor/search',
                     element: <SearchVendor/>
                 },
                 {
-                    path:'/vendor/dashboard/products',
+                    path:'/vendor/products',
                     element: <ProductHome/>
                 },
                 {
-                    path:'/vendor/dashboard/payment',
+                    path:'/vendor/payment',
                     element: <PaymentVendor/>
                 },
                 {
-                    path:'/vendor/dashboard/products/:name',
+                    path:'/vendor/products/:name',
                     element: <ProductView/>
                 },
                 {
-                    path:'/vendor/dashboard/products/create',
+                    path:'/vendor/products/create',
                     element: <ProductCreate/>
                 },
                 {
-                    path:'/vendor/dashboard/orders',
+                    path:'/vendor/orders',
                     element: <OrderHome/>
                 },
                 {
-                    path:'/vendor/dashboard/analytics',
+                    path:'/vendor/analytics',
                     element: <Analytics/>
                 },
                 {
-                    path:'/vendor/dashboard/profile',
+                    path:'/vendor/profile',
                     element: <Profile/>,
                     children: [
                         {
-                            path: '/vendor/dashboard/profile',
-                            element : <Navigate to="/vendor/dashboard/profile/profile-details"/>
+                            path: '/vendor/profile',
+                            element : <Navigate to="/vendor/profile/profile-details"/>
                         },
                         {   
-                         path:'/vendor/dashboard/profile/profile-details',
+                         path:'/vendor/profile/profile-details',
                             element: <ProfileDetails/>,
                         },
                         {   
-                            path:'/vendor/dashboard/profile/password-security',
+                            path:'/vendor/profile/password-security',
                                element: <PasswordAndSecurity/>,
                            },
                            {   
-                            path:'/vendor/dashboard/profile/performance',
+                            path:'/vendor/profile/performance',
                                element: <Performance/>,
                            },
                            {   
-                            path:'/vendor/dashboard/profile/settings',
+                            path:'/vendor/profile/settings',
                                element: <SettingsVendor/>,
                            },
                         {   
-                            path:'/vendor/dashboard/profile/identification',
+                            path:'/vendor/profile/identification',
                                element: <Identification/>,
                             //    children: [
                             //     {   
-                            //         path:'/vendor/dashboard/profile/identification/business-verification',
+                            //         path:'/vendor/profile/identification/business-verification',
                             //            element: <BusinessVerification/>,
                             //        },
 
                             //        {   
-                            //         path:'/vendor/dashboard/profile/identification/government-issued-id',
+                            //         path:'/vendor/profile/identification/government-issued-id',
                             //            element: <GovernmentIssued/>,
                             //        },
                             //        {   
-                            //         path:'/vendor/dashboard/profile/identification/interview-meeting',
+                            //         path:'/vendor/profile/identification/interview-meeting',
                             //            element: <InterviewMeeting/>,
                             //        },
                             //    ]
@@ -291,7 +292,7 @@ const Router = createBrowserRouter([
                     ]
                 },
                 {
-                    path:'/vendor/dashboard/orders/:name',
+                    path:'/vendor/orders/:name',
                     element: <VendorOrderview/>
                 },
 
@@ -384,7 +385,7 @@ const Router = createBrowserRouter([
     },
     {
         path:'/admin/',
-        element:<AgentAuthLayout/>,
+        element:<AdminAuthLayout/>,
         children: [
             {
                 path: '/admin/',

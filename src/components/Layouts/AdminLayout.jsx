@@ -5,6 +5,8 @@ import "../../assets/css/admin.css";
 import { FiSearch, FiBell, FiChevronRight } from "react-icons/fi";
 import { useAdminAuth } from "../../hooks/useAdminAuth";
 import LoadingScreen from '../Loading/LoadingScreen'
+import { useDispatch } from "react-redux";
+import { logOut } from "../../features/auth/authSlice";
 import useFetchCountries from "../../hooks/useFetchCountries";
 function AdminLayout() {
   const sidebarLinks = useMemo(() => {
@@ -65,11 +67,6 @@ function AdminLayout() {
         ),
         children: [
           {
-            id: "catalogue-1",
-            url: "/admin/products",
-            name: "Products",
-          },
-          {
             id: "catalogue-2",
             url: "/admin/categories/",
             name: "Categories",
@@ -78,6 +75,11 @@ function AdminLayout() {
             id: "catalogue-3",
             url: "/admin/subcategories",
             name: "SubCategories",
+          },
+          {
+            id: "catalogue-1",
+            url: "/admin/products",
+            name: "Products",
           },
         ],
       },
@@ -523,7 +525,7 @@ function AdminLayout() {
 
 const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const dispatch = useDispatch();
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
@@ -578,7 +580,7 @@ const Header = () => {
                 </li>
                 <li>
                   <button
-                    onClick={() => console.log("Logout")}
+                    onClick={() => dispatch(logOut())}
                     className="w-full text-left px-4 py-2 hover:bg-gray-100"
                   >
                     Logout

@@ -5,7 +5,7 @@ import { Outlet, Navigate } from 'react-router-dom';
 function VendorAuthLayout() {
   const userToken = getSecureCookie("accessToken");
   if (userToken && validateToken(userToken)) {
-  return  <Navigate to='/vendor/dashboard/home'/>
+  return  <Navigate to='/vendor/home'/>
   }
   return (
     <div>

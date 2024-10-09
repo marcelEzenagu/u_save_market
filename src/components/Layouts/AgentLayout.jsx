@@ -5,6 +5,8 @@ import "../../assets/css/admin.css";
 import { FiSearch, FiBell, FiChevronDown } from "react-icons/fi";
 import { useAgentAuth } from '../../hooks/useAgentAuth'
 import LoadingScreen from "../Loading/LoadingScreen";
+import { useSelector, useDispatch } from "react-redux";
+import { logOut } from "../../features/auth/authSlice";
 function AgentLayout() {
 
    const sidebarLinks = [
@@ -109,7 +111,8 @@ function AgentLayout() {
     const [isOpen, setIsOpen] = useState(false); // For mobile menu toggle
     const location = useLocation();
     const [dropdownOpen, setDropdownOpen] = useState(false);
-  
+      const user =  useSelector((state)=> state?.auth?.user)
+      const dispatch = useDispatch();
     const toggleDropdown = () => {
       setDropdownOpen(!dropdownOpen);
     };
@@ -127,7 +130,6 @@ function AgentLayout() {
       }else{
         activePathSegment = pathSegments[pathSegments.length - 1];
       }
-      console.log(pathSegments.length)
       const activeLink = sidebarLinks.find(link =>
         link.url.includes(activePathSegment)
       );
@@ -140,7 +142,7 @@ function AgentLayout() {
     if (isLoading || !isAuthenticated) {
       return <LoadingScreen />;
     }
-  
+
     return (
       <div className="flex h-screen ">
         {/* Sidebar */}
@@ -209,7 +211,7 @@ function AgentLayout() {
                 alt="User"
                 className="w-10 h-10 rounded-full"
               />
-              <span className="text-regal-black text-xs font-semibold truncate">Heather Wright</span>
+              <span className="text-regal-black text-xs font-semibold truncate">{user?.lastName} {user?.firstName}</span>
             </div>
   
             {/* Dropdown */}
@@ -226,7 +228,7 @@ function AgentLayout() {
                   </li>
                   <li>
                     <button
-                      onClick={() => console.log("Logout")}
+                      onClick={() => dispatch(logOut())}
                       className="w-full text-left px-4 py-2 hover:bg-gray-100"
                     >
                       Logout

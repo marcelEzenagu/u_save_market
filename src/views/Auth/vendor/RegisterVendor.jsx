@@ -33,7 +33,7 @@ const handleSubmit = async (e) => {
       eyeConfirm:false
     })
     // setModal(true)
-    navigate('/vendor/dashboard/home')
+    navigate('/vendor/home')
   }catch (err) {
     console.log(err);
     handleError(err, "Register");
@@ -179,7 +179,7 @@ const handleSubmit = async (e) => {
                     Log in with Google</button>
             </div>
 
-            <h5 className="text-regal-black text-sm font-[500] text-center mt-4">Already have an account? <Link to="/vendor/auth/login" className="underline">Log In</Link></h5>
+            <h5 className="text-regal-black text-sm font-[500] text-center mt-4">Already have an account? <Link to="/vendor/login" className="underline">Log In</Link></h5>
           </form>
         </div>
       </div>

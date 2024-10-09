@@ -162,7 +162,7 @@ function ProductTableTab () {
               </td>
               <td className="px-6 py-2 text-xs text-regal-black whitespace-nowrap">
               <Link
-              to={`/vendor/dashboard/products/${product.name}`} >
+              to={`/vendor/products/${product.name}`} >
                 {product.name}
                 </Link>
               </td>

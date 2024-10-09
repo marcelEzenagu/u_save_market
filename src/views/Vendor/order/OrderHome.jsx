@@ -191,7 +191,7 @@ function ProductTableTab () {
               <td className="px-6 py-2 text-regal-black  whitespace-nowrap">
               <div className="flex flex-col gap-2">
               <Link
-              to={`/vendor/dashboard/orders/${product.name}`}  className="text-xs font-[500]">
+              to={`/vendor/orders/${product.name}`}  className="text-xs font-[500]">
                 {product.name}
                 </Link>
                 <span  className="text-xs font-[500]">#29102937</span>
@@ -346,7 +346,7 @@ function ItemsCard(props) {
 
       <div className="flex flex-col gap-2">
         <Link
-        to={`/vendor/dashboard/products/${props.item.name}`}
+        to={`/vendor/products/${props.item.name}`}
           className="text-xs font-[500] "
         >
           {props.item?.name}

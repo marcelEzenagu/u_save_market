@@ -14,7 +14,7 @@ function OrderView() {
     <div className="px-4 py-8">
             <Link
           className=" flex items-center gap-2 text-regal-dark text-sm font-[600] mb-4"
-          to="/vendor/dashboard/orders"
+          to="/vendor/orders"
         >
           <IoIosArrowRoundBack />
          Back

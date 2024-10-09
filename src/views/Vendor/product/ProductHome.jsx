@@ -69,7 +69,7 @@ function ProductHome() {
             Import
           </button>
 
-          <Link to={'/vendor/dashboard/products/create'} className="flex flex-row items-center justify-center gap-2 font-[500] text-white bg-regal-sky-blue hover:bg-blue-700 px-4 py-2 rounded-md text-xs">
+          <Link to={'/vendor/products/create'} className="flex flex-row items-center justify-center gap-2 font-[500] text-white bg-regal-sky-blue hover:bg-blue-700 px-4 py-2 rounded-md text-xs">
             <FaPlus />
             Create Product
           </Link>
@@ -221,7 +221,7 @@ function ProductTableTab ({filteredItems}) {
               </td>
               <td className="px-6 py-2 text-xs text-regal-black whitespace-nowrap capitalize">
               <Link
-              to={`/vendor/dashboard/products/${product.ItemID}`} >
+              to={`/vendor/products/${product.ItemID}`} >
                 {product?.itemName}
                 </Link>
               </td>
@@ -253,7 +253,7 @@ function ProductTableTab ({filteredItems}) {
                             className={`flex items-center w-full px-4 py-2 text-sm ${
                               active ? "bg-gray-100" : ""
                             }`}
-                            to={`/vendor/dashboard/products/${product.ItemID}`} 
+                            to={`/vendor/products/${product.ItemID}`} 
                           >
                             Edit
                           </Link>
@@ -371,7 +371,7 @@ function ItemsCard(props) {
 
       <div className="flex flex-col gap-2">
         <Link
-        to={`/vendor/dashboard/products/${props?.item?.itemID}`}
+        to={`/vendor/products/${props?.item?.itemID}`}
           className="text-xs font-[500] "
         >
           {props?.item?.itemName}

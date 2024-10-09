@@ -18,13 +18,14 @@ const handleSubmit = async (e) => {
   try {
     const {response } = await loginAgent({ email : data.email, password : data.password }).unwrap()
     setCookie("accessToken", response?.access_data?.access_token)
-    dispatch(setCredentials({ accessToken: response?.access_data?.access_token, user : response?.vendor, role: response?.access_data?.role,}))
+    dispatch(setCredentials({ accessToken: response?.access_data?.access_token, user : response?.user, role: response?.access_data?.role,}))
     setData({
       email:'',
       password:'',
       eye:false,
     })
-    navigate('/agent/overview')
+    // console.log(response);
+    // navigate('/agent/overview')
   }catch (err) {
     console.log(err);
     handleError(err, "Login");
