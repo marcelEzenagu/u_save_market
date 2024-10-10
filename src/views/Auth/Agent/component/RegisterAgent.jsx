@@ -78,7 +78,7 @@ const handleRemoveCountry = (country) => {
             Join to Enjoy Shopping Experience
           </h1>
           {/* Description Text */}
-          <p className="text-center text-xs md:text-sm text-regal-light-gray mb-8 font-[400]">
+          <p className="text-center text-xs md:text-sm text-regal-light-gray mb-6 font-[400]">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
             elementum elit eget purus suscipit, sed egestas.
           </p>

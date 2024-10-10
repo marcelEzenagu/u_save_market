@@ -54,26 +54,24 @@ const LoginAdmin = () => {
     <div className="block lg:flex  items-start px-4 pt-8 pb-4 h-screen max-w-[1366px] mx-auto">
       <div className="w-full lg:w-1/2  hidden md:flex flex-col ">
         <div className="w-full ">
-          <img src={Logo} alt="" className="   w-48" />
+          <img src={Logo} alt="" className="  w-32 2xl:w-48" />
         </div>
 
-        <div className="mb-6 max-w-[420px] max-h-[400px] mx-auto mt-20">
+        <div className="mb-6  max-w-[370px] 2xl:max-w-[420px]  mx-auto mt-10 2xl:mt-20">
           <img
             src={RightImage}
             alt="Illustration"
             className=" rounded-2xl"
           />
-            <p className="text-center text-xl text-regal-black mt-8 font-[400]">
+            <p className="text-center 2xl:text-xl text-regal-black mt-8 font-[400]">
             Let’s see what we have new, check it out! So maybe write here something more.
           </p>
         </div>
 
-        <div className="text-center">
-        </div>
       </div>
       <div className=" mx-auto my-auto border rounded-xl  shadow-md py-14 px-8 animated fadeInDown">
         <div className="flex flex-col  justify-center md:w-[440px] mx-auto">
-          {/* <Link to="/" className="mb-10">
+          {/* <Link to="/" className="mb-8">
             <img src={Logo} alt="" className="w-36 mx-auto" />
           </Link> */}
           <h1 className="text-xl md:text-[26px] font-bold text-center mb-5 md:w-[410px] mx-auto ">
@@ -143,7 +141,7 @@ const LoginAdmin = () => {
               </p>
               {handleErrorMessagesList("password")}
             </div>
-            <p className="text-red-600 text-xs">{errMsg}</p>
+            <p className="text-red-600 text-xs mb-1">{errMsg}</p>
 
             <div className="w-full ">
               <button

@@ -34,17 +34,17 @@ const handleSubmit = async (e) => {
 
 
   return (
-    <div className="block lg:flex  items-start px-4 pt-8 pb-4 max-w-[1366px] mx-auto">
-        <div className="hidden lg:block w-1/2 h-[94vh]">
+    <div className="block lg:flex  items-start px-4  max-w-[1366px] mx-auto">
+        <div className=" hidden lg:block w-1/2 h-screen py-4">
         <img
           src={'https://images.pexels.com/photos/17302468/pexels-photo-17302468/free-photo-of-fresh-fruit-and-vegetables-at-the-market.jpeg?auto=compress&cs=tinysrgb&w=700'}
           alt="Right Side"
-          className="w-full h-full object-cover rounded-lg animate-fade-in"
+          className="w-full h-full object-cover rounded-xl  animate-fade-in"
         />
       </div>
       <div className=" lg:w-1/2 my-auto animated fadeInDown">
         <div className="flex flex-col  justify-center md:w-[440px] mx-auto">
-          <Link to="/" className="mb-10">
+          <Link to="/" className="mb-8">
             <img src={Logo} alt="" className="w-36 mx-auto" />
           </Link>
           <h1 className="text-2xl md:text-[30px] font-bold text-center mb-5 md:w-[410px] mx-auto ">

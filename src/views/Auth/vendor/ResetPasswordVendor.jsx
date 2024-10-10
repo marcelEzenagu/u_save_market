@@ -66,7 +66,7 @@ const ResetPasswordVendor = () => {
     <div className="block lg:flex items-start px-4 pt-8 pb-4 max-w-[1366px] mx-auto">
       <div className="lg:w-1/2 animated fadeInDown">
         <div className="flex flex-col justify-center md:w-[440px] mx-auto">
-          <Link to="/" className="mb-10">
+          <Link to="/" className="mb-8">
             <img src={Logo} alt="" className="w-36 mx-auto" />
           </Link>
           <h1 className="text-2xl md:text-[30px] font-bold text-center mb-5 w-[350px] mx-auto">
@@ -144,8 +144,8 @@ const ResetPasswordVendor = () => {
         </div>
       </div>
 
-      <div className="hidden lg:block w-1/2 h-[94vh]">
-        <img src={RightImage} alt="Right Side" className="w-full h-full object-cover rounded-lg animate-fade-in" />
+      <div className=" hidden lg:block w-1/2 h-screen py-4">
+        <img src={RightImage} alt="Right Side" className="w-full h-full object-cover rounded-xl  animate-fade-in" />
       </div>
     </div>
   );
