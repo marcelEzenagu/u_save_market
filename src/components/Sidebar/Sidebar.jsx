@@ -112,7 +112,7 @@ const [cats, setCats] = useState([])
                             setActive(e.id)
                         }}
                       >
-                        <img src={`${baseUrl}/public/images/categories/${e.name.toLowerCase()}.png`} alt={e.name.toLowerCase()} className='w-6 h-6'/>
+                        <img src={`${baseUrl}public/images/categories/${e.name.toLowerCase()}.png`} alt={e.name.toLowerCase()} className='w-6 h-6'/>
                         <Link to={`/products?name=${e.name}`} className='text-sm capitalize font-[600] w-[180px] truncate whitespace-nowrap'>{e.name}</Link>
                       </div>
                       {e?.subcat?.length > 0 && active === e.id ?  e.subcat.map((i) => (
