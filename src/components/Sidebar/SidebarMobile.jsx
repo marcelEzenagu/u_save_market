@@ -100,7 +100,7 @@ function DefaultSidebar ({name})
                           setActive(e.id)
                       }}
                       >
-                          <img src={e.image} alt="" className='w-6 h-6'/>
+                          {/* <img src={e.image} alt="" className='w-6 h-6'/> */}
                           <Link to={`/products?name=${e.name}`} className='text-sm capitalize font-[600] min-w-[100px]  truncate whitespace-nowrap'>{e.name}</Link>
                       </div>
                   </div>
@@ -120,6 +120,7 @@ function DefaultSidebar ({name})
       </div>
     ) 
 }
+
 const data = [
     {
       id:'1',
@@ -137,6 +138,6 @@ const data = [
       id:'4',
       name:'  Deals ',
     }
-  ]
+]
 
 export default SidebarMobile

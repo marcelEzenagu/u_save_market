@@ -31,6 +31,7 @@ const authSlice = createSlice({
             state.preferredCountry = null;
             state.preferredCurrency = null;
             removeCookie('accessToken');
+            removeCookie('role');
         },
         setCountries : (state, action) => {
             state.countries = action.payload;
@@ -53,4 +54,5 @@ export default authSlice.reducer
 
 export const selectCurrentUser = (state) => state.auth.user
 export const selectCurrentToken = (state) => state.auth.token
+export const selectCurrentRole = (state) => state.auth.role
 

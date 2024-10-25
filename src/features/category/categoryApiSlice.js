@@ -4,9 +4,14 @@ export const categoryApiSlice =  apiSlice.injectEndpoints({
   endpoints: builder => ({
     // Categories Endpoints
     getCategories: builder.query({
+      query: () => 'product-categories',
+      providesTags: ['category'],
+    }),
+    getAdminCategoriesQuery: builder.query({
       query: () => 'admin/categories',
       providesTags: ['category'],
     }),
+
     addCategory: builder.mutation({
       query: (newCategory) => ({
         url: 'admin/categories',
@@ -36,6 +41,7 @@ export const categoryApiSlice =  apiSlice.injectEndpoints({
       query: () => 'admin/sub-categories',
       providesTags: ['subcategory'],
     }),
+
     addSubcategory: builder.mutation({
       query: (newSubcategory) => ({
         url: 'admin/sub-categories',
@@ -70,6 +76,7 @@ export const categoryApiSlice =  apiSlice.injectEndpoints({
 
 export const {
   useGetCategoriesQuery,
+  useGetAdminCategoriesQuery,
   useAddCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,

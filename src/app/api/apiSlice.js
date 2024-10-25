@@ -5,6 +5,7 @@ import { getSecureCookie } from "../../utils";
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_APP_API_URL,
   // Using the Credentials :"include", we are Attaching the Credentials to the Cookie with every request
+  
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     //We are attaching the AccessToken to every Request that we make to the api

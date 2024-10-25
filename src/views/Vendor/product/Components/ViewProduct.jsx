@@ -9,6 +9,7 @@ function ViewProduct(props) {
     }, [props.isModalOpen]);
   
     const dropdownaddRef = useRef(null);
+    
     useEffect(() => {
       const handleClickOutside = (event) => {
         if (

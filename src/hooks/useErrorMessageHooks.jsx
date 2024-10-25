@@ -59,9 +59,11 @@ export const useErrorMessageHooks = () => {
   };
 
   const handleChange = (e) => {
+    
     const newData = Object.assign({}, data, {
       [e.target.name]: e.target.value,
     });
+
     setData(newData);
   };
 

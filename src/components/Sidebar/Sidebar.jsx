@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { MockData } from '../../data/mockData';
 import { useLocation } from 'react-router-dom';
 import BottomLinks from './BottomLinks';
+import { useGetCategoriesQuery } from '../../features/category/categoryApiSlice';
+
+
 function Sidebar() {
     const location = useLocation();
     const query = new URLSearchParams(location.search)
@@ -29,7 +32,13 @@ function Sidebar() {
  );
 }
 
+
 const FilterSider = ({name}) => {
+
+
+    const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
+
+    const MockData = categories.data
     const [active, setActive] = useState(name);
     useEffect(()=>{
         const findData = data.filter((e)=> e.name?.toLowerCase() === name?.toLowerCase())
@@ -66,29 +75,45 @@ const FilterSider = ({name}) => {
       </div>
     ) 
 }
-function DefaultSidebar ({name}) 
-{
+
+
+function DefaultSidebar ({name}) {
+  const   baseUrl = import.meta.env.VITE_APP_API_URL
+console.log("baseUrl:::: ",baseUrl)
+const [cats, setCats] = useState([])
+    const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
+
+    
     const [active, setActive] = useState(null);
     useEffect(()=>{
-        const findData = MockData.filter((e)=> e.name?.toLowerCase() === name?.toLowerCase())
+        const MockData = categories
+        const findData = MockData?.filter((e)=> e.name?.toLowerCase() === name?.toLowerCase())
         if(findData) {
             setActive(findData[0]?.id)
         }
     }, [name]);
+
+    useEffect(()=>{
+
+        const categoryData = categories?.data
+        console.log("categoryData:::: ",categoryData)
+
+        // setCats(categoryData)
+    }, []);
     return (
       <div>
           <div>
               <h5 className="text-md font-[700] mb-2">CATEGORIES</h5>
               <div className='flex flex-col items-start mb-16'>
-              {MockData && MockData.map((e)=> (
+              {categories && categories?.map((e)=> (
                       <div key={e.id}>
                       <div className={`flex items-center w-full rounded-md my-1 py-1 p-2 gap-2 hover:bg-active-gray ${active === e.id && 'bg-active-gray'}`}
-                      onClick={()=> {
-                          setActive(e.id)
-                      }}
+                        onClick={()=> {
+                            setActive(e.id)
+                        }}
                       >
-                          <img src={e.image} alt="" className='w-6 h-6'/>
-                          <Link to={`/products?name=${e.name}`} className='text-sm capitalize font-[600] w-[180px] truncate whitespace-nowrap'>{e.name}</Link>
+                        <img src={`${baseUrl}/public/images/categories/${e.name.toLowerCase()}.png`} alt={e.name.toLowerCase()} className='w-6 h-6'/>
+                        <Link to={`/products?name=${e.name}`} className='text-sm capitalize font-[600] w-[180px] truncate whitespace-nowrap'>{e.name}</Link>
                       </div>
                       {e?.subcat?.length > 0 && active === e.id ?  e.subcat.map((i) => (
                               <div key={i.id} className='flex items-center p-2 gap-2'>

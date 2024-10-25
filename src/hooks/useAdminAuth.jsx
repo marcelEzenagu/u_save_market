@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect,useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { selectCurrentToken, selectCurrentUser, setCredentials, logOut , setLoginModal} from '../features/auth/authSlice'
+import { selectCurrentToken,selectCurrentRole, selectCurrentUser, setCredentials, logOut , setLoginModal} from '../features/auth/authSlice'
 import { getSecureCookie, validateToken }  from '../utils' 
 import { useViewAdminQuery } from '../features/admin/adminApiSlice';
 export const useAdminAuth = () => {
@@ -10,6 +10,7 @@ export const useAdminAuth = () => {
   const token = useSelector(selectCurrentToken);
   const userData = useSelector(selectCurrentUser);
   const userToken = getSecureCookie("accessToken");
+  const role =getSecureCookie("role");
 
   const {
     data: admin,
@@ -22,7 +23,7 @@ export const useAdminAuth = () => {
   });
 
   useEffect(() => {
-    if (userToken && validateToken(userToken)) {
+    if (userToken && validateToken(userToken)&& role == "admin") {
       if (!token && !userData) {
         if (isSuccess) {
           if (validateToken(userToken)) {

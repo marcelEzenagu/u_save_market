@@ -2,8 +2,11 @@ import React, { useMemo } from "react";
 import GridBox from "../components/cards/GridBox";
 import { MockData } from "../data/mockData";
 import { Link } from "react-router-dom";
+import { useGetCategoriesQuery } from "../features/category/categoryApiSlice";
 
 function Home() {
+  const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
+
   const imageList = useMemo(() => [
     'https://images.pexels.com/photos/95425/pexels-photo-95425.jpeg?auto=compress&cs=tinysrgb&w=600',
     'https://images.pexels.com/photos/5709271/pexels-photo-5709271.jpeg?auto=compress&cs=tinysrgb&w=600',
@@ -37,7 +40,7 @@ function Home() {
       {/* Category List (Mobile) */}
       <div className="lg:hidden mt-4">
         <div className="flex flex-wrap gap-2">
-          {MockData.map(category => (
+          {categories?.data?.map(category => (
             <Link
               to={`/products?name=${category.name.toLowerCase()}`}
               key={category.id}

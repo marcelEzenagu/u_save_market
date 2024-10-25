@@ -60,6 +60,9 @@ import Like from '../assets/images/Default/icons/like.webp'
 import New from '../assets/images/Default/icons/new.webp'
 import Price from '../assets/images/Default/icons/price.webp'
 import Best from '../assets/images/Default/icons/best.webp'
+// import { useGetCategoriesQuery } from "../features/category/categoryApiSlice"
+
+
 
 export const MockData = [
     {
@@ -299,6 +302,8 @@ export const MockData = [
           ]
     }
 ];
+
+
 
 
 export const countries = [

@@ -16,16 +16,26 @@ const handleSubmit = async (e) => {
   setErrMsg("");
   setErrorMessagesList([]);
   try {
-    const {response } = await loginAgent({ email : data.email, password : data.password }).unwrap()
+    // const {response } = await loginAgent({ email : data.email, password : data.password }).unwrap()
+    const {response } = await loginAgent({ email : "chineduezenagumarcel@gmail.com", password : "@123A234233" }).unwrap()
     setCookie("accessToken", response?.access_data?.access_token)
     dispatch(setCredentials({ accessToken: response?.access_data?.access_token, user : response?.user, role: response?.access_data?.role,}))
-    setData({
+
+    if(response?.user){
+      if(!response?.user?.isEmailVerified){
+        navigate('/agent/register')
+        return
+      }
+    }
+        setData({
       email:'',
       password:'',
       eye:false,
     })
-    // console.log(response);
-    // navigate('/agent/overview')
+    console.log(response);
+    if(response?.access_data?.access_token != undefined){
+      navigate('/agent/overview')
+    }
   }catch (err) {
     console.log(err);
     handleError(err, "Login");

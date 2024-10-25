@@ -1,6 +1,8 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState,useEffect } from "react";
 import { Items } from "../../data/mockData";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
 import OrderVendorStatus from "../../components/order/OrderVendorStatus";
 import { Line } from "react-chartjs-2";
 import ReactPaginate from "react-paginate";
@@ -14,6 +16,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import useErrorMessageHooks from "../../hooks/useErrorMessageHooks";
+import DateRangeFilter from "../../components/dateRangeFilter";
 
 // Register necessary Chart.js components
 ChartJS.register(
@@ -27,6 +31,22 @@ ChartJS.register(
 );
 
 function Overview() {
+  const {
+    navigate,
+  } = useErrorMessageHooks();
+
+  const [dto, setDto] = useState({
+    openDate:false,
+  })
+  // const role = useSelector((state) => state.auth?.role);
+
+  // useEffect(()=>{
+  //   // console
+  //   if(role && role !== "admin"){
+  //     navigate("/admin/login")
+  //   }
+  // }, []);
+
   const tab = useMemo(
     () => [
       {
@@ -120,24 +140,20 @@ function Overview() {
     ],
     []
   );
+  
+  const handleShowDate = (dateType) => {
+    console.log("DATE_type::: ")
+    console.log("DATE_type::: ",dateType)
+  }
+
   return (
     <div className="">
-      <div className="flex flex-row items-center gap-4 mt-4">
-        <div className="flex flex-row items-center gap-2">
-          <h6 className="text-sm text-regal-light-gray">Form:</h6>
-          <input
-            type="date"
-            className="text-xs text-regal-light-gray border rounded-[4px] px-2 py-1"
-          />
-        </div>
-        <div className="flex flex-row items-center gap-2">
-          <h6 className="text-sm text-regal-light-gray">To:</h6>
-          <input
-            type="date"
-            className="text-xs text-regal-light-gray border rounded-[4px] px-2 py-1"
-          />
-        </div>
-      </div>
+
+     
+      <DateRangeFilter
+        openDate={dto.openDate}
+        showDate={handleShowDate}
+      />
 
       <section>
         <div className="grid grid-cols-2 md:grid-cols-4  gap-4  relative  bg-white mt-8 max-w-[1366px]">

@@ -7,11 +7,12 @@ const PaginatedTable = React.memo(({ columns, data, actions, itemsPerPage = 12 }
   const [itemOffset, setItemOffset] = useState(0);
 
   const endOffset = itemOffset + itemsPerPage;
-  const currentItems = data.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(data.length / itemsPerPage);
+  const currentItems = data.data?.slice(itemOffset, endOffset);
+  // const pageCount = Math.ceil(data?.length / itemsPerPage);
+  const pageCount = Math.ceil(data?.total / itemsPerPage);
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % data.length;
+    const newOffset = (event.selected * itemsPerPage) % data?.total;
     setItemOffset(newOffset);
   };
 
@@ -32,7 +33,7 @@ const PaginatedTable = React.memo(({ columns, data, actions, itemsPerPage = 12 }
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {currentItems.map((item, index) => (
+            {currentItems?.map((item, index) => (
               <tr key={index}>
                 {columns.map((column) => (
                   <td
@@ -80,7 +81,7 @@ const PaginatedTable = React.memo(({ columns, data, actions, itemsPerPage = 12 }
 
       <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-between mt-4 px-4">
         <h6 className="text-xs text-regal-crum-gray">
-          Showing {currentItems.length} items out of {data.length} results found
+          Showing {currentItems?.length} items out of {data?.total} results found
         </h6>
 
         <ReactPaginate

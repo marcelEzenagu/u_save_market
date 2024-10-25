@@ -8,13 +8,13 @@ import { IoTrashOutline } from "react-icons/io5";
 import { FaEdit } from "react-icons/fa";
 import { SlArrowDown } from "react-icons/sl";
 import {useErrorMessageHooks} from "../../hooks/useErrorMessageHooks";
-import { useGetCategoriesQuery,useGetSubcategoriesQuery,  useAddSubcategoryMutation, useUpdateSubcategoryMutation, useDeleteSubcategoryMutation } from "../../features/category/categoryApiSlice";
+import { useGetAdminCategoriesQuery,useGetSubcategoriesQuery,  useAddSubcategoryMutation, useUpdateSubcategoryMutation, useDeleteSubcategoryMutation } from "../../features/category/categoryApiSlice";
 import DefaultStatus from "../../components/order/DefaultStatus";
 const SubCategoryList = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Step 1: State for search term
   const [modalState, setModalState] = useState({ type: null, data: null });
   const [categoryNames, setCatgoryNames] = useState([]);
-  const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
+  const { data: categories = [], isLoading, error } = useGetAdminCategoriesQuery();
   const { data: subCategories = [], isLoading: subIsLoading, error : subError} = useGetSubcategoriesQuery();
   const [SelectedCategory, setSelectedCategory] = useState("All Categories");
   const [addSubcategory, {isLoading: addLoading},] = useAddSubcategoryMutation();
@@ -24,7 +24,7 @@ const SubCategoryList = () => {
   const [success, setSuccess] = useState(false);
   useEffect(()=>{
  if (categories) {
-  setCatgoryNames(categories?.map((i) => i?.categoryName))
+  setCatgoryNames(categories.data?.map((i) => i?.categoryName))
  }else{
   setCatgoryNames([]);
  }
@@ -117,13 +117,15 @@ const SubCategoryList = () => {
 
   // Step 2: Filter items based on search term
   const filteredItems = useMemo(() => {
+    console.log("subCategories::: ",subCategories)
+
     if (SelectedCategory !== "All Categories") {
-      return subCategories.filter((item) =>
+      return subCategories?.data?.filter((item) =>
         item?.subCategoryName?.toLowerCase().includes(searchTerm?.toLowerCase()) && 
       item?.productCategory?.categoryName?.toLowerCase() === SelectedCategory?.toLowerCase()
       );
     }else{
-      return subCategories.filter((item) =>
+      return subCategories?.data?.filter((item) =>
         item?.subCategoryName?.toLowerCase().includes(searchTerm?.toLowerCase())
       );
     }
@@ -165,7 +167,7 @@ const SubCategoryList = () => {
               setCreateModel={handleModalClose}
               formType="subcategory"
               onSubmit={handleCreateProduct}
-              categories={categories}
+              categories={categories.data}
               icon={Bag}
               isEdit={true}
               initialData={modalState.data}
@@ -182,7 +184,7 @@ const SubCategoryList = () => {
               formType="subcategory"
               onSubmit={handleCreateProduct}
               icon={Bag}
-              categories={categories}
+              categories={categories.data}
               loading={addLoading}
               success={success}
               handleErrorMessagesList={handleErrorMessagesList}
@@ -212,7 +214,7 @@ const SubCategoryList = () => {
               </div>
               <PaginatedTable
                 columns={columns}
-                data={filteredItems}
+                data={subCategories}
                 actions={actions}
                 itemsPerPage={10}
               />
@@ -290,8 +292,11 @@ const DropdownDiv = ({dropdownOptions, setSelectedCategory, isLoading, error}) =
     )}
   </div>);
 }
+
 const ProductName = ({ value, image, viewProduct, categories }) => {
-  const catgoryDetails = categories?.find((i) => i?.categoryID === value?.categoryID)
+  console.log("value::: ",value)
+  // const catgoryDetails = categories.data?.find((i) => i?.categoryID === value?.categoryID)
+  const catgoryDetails = categories.data?.find((i) => i?.categoryID === value)
   if (catgoryDetails) {  
   return  <div className="flex items-center gap-3 cursor-pointer" onClick={viewProduct}>
   <div className="w-10 h-10">

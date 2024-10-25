@@ -6,8 +6,11 @@ import { FiSearch, FiBell, FiChevronRight } from "react-icons/fi";
 import { useAdminAuth } from "../../hooks/useAdminAuth";
 import LoadingScreen from '../Loading/LoadingScreen'
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+
 import { logOut } from "../../features/auth/authSlice";
 import useFetchCountries from "../../hooks/useFetchCountries";
+import useErrorMessageHooks from "../../hooks/useErrorMessageHooks";
 function AdminLayout() {
   const sidebarLinks = useMemo(() => {
     const sidebar = [
@@ -292,9 +295,15 @@ function AdminLayout() {
   const location = useLocation();
   const [isActive, setisActive] = useState(null);
   const { countriesWithCurrency } = useFetchCountries();
+ 
+  const{navigate} = useErrorMessageHooks()
   useEffect(()=>{
     countriesWithCurrency;
   }, []);
+  // const role = useSelector((state) => state.auth?.role);
+
+ 
+
   useLayoutEffect(() => {
     setisActive(null)
     getActiveTabName();
@@ -342,11 +351,24 @@ function AdminLayout() {
     );
   }
 
+  
   const { isLoading, isAuthenticated } = useAdminAuth();
 
+
   if (isLoading || !isAuthenticated) {
-    return <LoadingScreen />;
+   
+      return <LoadingScreen />;
+    }else if(!isAuthenticated){
+        navigate("/admin/login")
+
   }
+
+    // useEffect(()=>{
+    //   //   // console
+    //   if(role && role !== "admin"){
+    //     navigate("/admin/login")
+    //   }
+    // }, []);
 
   return (
     <div className="flex h-screen ">

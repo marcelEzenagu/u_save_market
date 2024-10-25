@@ -53,6 +53,7 @@ function ProductHome() {
     }
     
   }, [searchTerm, items, active]);
+  
   return (
     <div className="px-4 py-8">
       <div className="flex flex-row items-center justify-between ">

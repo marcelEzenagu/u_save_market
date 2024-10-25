@@ -12,8 +12,18 @@ import useFetchCountries from "../../../hooks/useFetchCountries";
 const AgentOnboarding = () => {
   const [step, setStep] = useState(1);
   const { countriesWithCurrency } = useFetchCountries();
+  const user =  useSelector((state)=> state?.auth?.user)
+  
   useEffect(()=>{
     countriesWithCurrency;
+  }, []);
+
+  // manage not verified email
+  useEffect(()=>{
+    // console
+    if(user && !user?.isEmailVerified){
+      setStep(2)
+    }
   }, []);
 
   const totalSteps = 5;
@@ -76,7 +86,8 @@ const AgentOnboarding = () => {
         step:5,
     },
   ];
-const countries = useSelector((state) => state?.auth?.countries)
+  
+  const countries = useSelector((state) => state?.auth?.countries)
   const handleNext = () => {
     if (step < totalSteps) setStep(step + 1);
   };

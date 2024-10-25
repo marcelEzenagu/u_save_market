@@ -231,7 +231,7 @@ function ProductCreate() {
                           setActiveTab(e.id);
                         }}
                       >
-                        <TfiAngleDown />
+                        {/* <TfiAngleDown /> */}
                       </button>
                     </div>
                   </div>

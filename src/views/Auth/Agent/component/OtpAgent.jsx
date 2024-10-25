@@ -44,6 +44,7 @@ const OtpAgent = ({handleNext}) => {
       try {
         const userData = await resetPassword({email : verifiedDetails?.email}).unwrap();
         dispatch(setVerifiedDetails({...verifiedDetails, requestID : userData?.requestID}));
+        navigate("/")
       }catch (err) {
        console.log(err);
        handleError(err, 'OTP');
@@ -58,7 +59,7 @@ const OtpAgent = ({handleNext}) => {
         const {access_data} = await verifyOtp({ otp : data, requestID : verifiedDetails?.requestID, email: verifiedDetails?.email}).unwrap();
         console.log(access_data?.access_token);
         dispatch(setVerifiedDetails({...verifiedDetails, token: access_data?.access_token }))
-        navigate('/vendor/reset-password')
+        navigate('/agent/reset-password')
       }catch (err) {
        console.log(err);
        handleError(err, 'OTP');

@@ -111,11 +111,14 @@ function AgentLayout() {
     const [isOpen, setIsOpen] = useState(false); // For mobile menu toggle
     const location = useLocation();
     const [dropdownOpen, setDropdownOpen] = useState(false);
-      const user =  useSelector((state)=> state?.auth?.user)
-      const dispatch = useDispatch();
+    
+    const user =  useSelector((state)=> state?.auth?.user)
+    const dispatch = useDispatch();
+
     const toggleDropdown = () => {
       setDropdownOpen(!dropdownOpen);
     };
+
     useLayoutEffect(()=>{
       getActiveTabName();
       setIsOpen(false)
@@ -166,38 +169,42 @@ function AgentLayout() {
             </div>
   
             {/* Links Section */}
-            <nav className="flex-1 mt-5 mb-8 ">
-              <ul className="space-y-4 text-sm ml-3">
-                {sidebarLinks.map((link) => (
-                  <li key={link.id} className="relative">
-                    <Link
-                      to={link.url}
-                      className={`flex items-center text-xs gap-4 py-2 pr-2 transition-colors relative group ${
-                        activeTab?.name.toLowerCase() === link?.name.toLowerCase()
-                          ? "text-black font-bold " // Active styles
-                          : "text-gray-400 hover:text-black hover:font-bold" // Inactive styles
-                      }`}
-                    >
-                      <span className={`text-xl group-hover:text-blue-400`}>
-                        {/* Update the SVG icon color based on the active state */}
-                        {React.cloneElement(link.icon, {
-                          stroke:
-                          activeTab?.name.toLowerCase() === link.name.toLowerCase()
-                              ? "#3b82f6"
-                              : "#8A8C94", // Change color dynamically
-                        })}
-                      </span>
-                      <span>{link.name}</span>
-                    </Link>
-  
-                    {/* Active Indicator using ::after */}
-                    { activeTab?.name.toLowerCase() === link?.name.toLowerCase() && (
-                      <span className="absolute right-0 top-0 bottom-0 w-1 rounded bg-blue-500 after:block after:h-full after:content-['']"></span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </nav>
+            {
+              user.isVerified &&
+
+              <nav className="flex-1 mt-5 mb-8 ">
+                <ul className="space-y-4 text-sm ml-3">
+                  {sidebarLinks.map((link) => (
+                    <li key={link.id} className="relative">
+                      <Link
+                        to={link.url}
+                        className={`flex items-center text-xs gap-4 py-2 pr-2 transition-colors relative group ${
+                          activeTab?.name.toLowerCase() === link?.name.toLowerCase()
+                            ? "text-black font-bold " // Active styles
+                            : "text-gray-400 hover:text-black hover:font-bold" // Inactive styles
+                        }`}
+                      >
+                        <span className={`text-xl group-hover:text-blue-400`}>
+                          {/* Update the SVG icon color based on the active state */}
+                          {React.cloneElement(link.icon, {
+                            stroke:
+                            activeTab?.name.toLowerCase() === link.name.toLowerCase()
+                                ? "#3b82f6"
+                                : "#8A8C94", // Change color dynamically
+                          })}
+                        </span>
+                        <span>{link.name}</span>
+                      </Link>
+    
+                      {/* Active Indicator using ::after */}
+                      { activeTab?.name.toLowerCase() === link?.name.toLowerCase() && (
+                        <span className="absolute right-0 top-0 bottom-0 w-1 rounded bg-blue-500 after:block after:h-full after:content-['']"></span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            }
           </div>
 
                {/* User Profile */}

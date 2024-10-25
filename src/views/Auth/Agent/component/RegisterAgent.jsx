@@ -32,8 +32,8 @@ const handleSubmit = async (e) => {
   setErrorMessagesList([]);
   try {
     const {access_data, user} = await registerAgent({ firstName: data.firstName, lastName:data.lastName,  email : data.email, password : data.password, servicingCountries: data?.servicingCountries }).unwrap()
-    setCookie("accessToken", access_data?.token)
-    dispatch(setCredentials({ accessToken: access_data?.token, user : user, role: access_data?.role,}))
+    // setCookie("accessToken", access_data?.token)
+    dispatch(setCredentials({ requestID:requestID, user : user}))
     defaultData();
   navigate('/agent/overview')
   }catch (err) {
@@ -141,61 +141,60 @@ const handleRemoveCountry = (country) => {
                 {handleErrorMessagesList("email")}
             </div>
                  {/* supported countries*/}
-                 <div className="grid grid-cols-1 md:grid-cols-2  col-span-2 md:col-span-2 mb-2">
-      {/* Supported Countries */}
-      <div className="mb-2 col-span-2">
-        <label
-          htmlFor="SupportedCountries"
-       className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
-        >
-         Servicing Countries
-        </label>
-        <div className="relative">
-          <input
-            type="text"
-           className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
-            placeholder="Search countries"
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-          {searchTerm && (
-            <ul className="absolute w-full bg-white border mt-1 z-10 max-h-40 overflow-y-auto">
-              {filteredCountries.length > 0 ? (
-                filteredCountries.map((country) => (
-                  <li
-                    key={country.id}
-                    onClick={() => handleSelectCountry(country.name)}
-                    className="p-2 text-xs hover:bg-gray-100 cursor-pointer"
-                  >
-                    {country.name}
-                  </li>
-                ))
-              ) : (
-                <li className="p-2 text-xs text-gray-500">No countries found</li>
-              )}
-              {loadingCountries &&  <li className="p-2  text-xs text-gray-500">loading...</li>}
-            </ul>
-          )}
-        </div>
-        {handleErrorMessagesList("servicingCountries")}
-        
-        {/* Selected countries */}
-        <div className="flex gap-2 flex-wrap mt-2">
-          {data?.servicingCountries?.map((country, index) => (
-            <span
-              key={index}
-              className=" text-xs capitalize flex items-center p-2 rounded gap-2 border"
-            >
-              {country}
-              <IoClose
-                className="cursor-pointer"
-                onClick={() => handleRemoveCountry(country)}
-              />
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2  col-span-2 md:col-span-2 mb-2">
+                  <div className="mb-2 col-span-2">
+                    <label
+                      htmlFor="SupportedCountries"
+                  className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
+                    >
+                    Servicing Countries
+                    </label>
+                    <div className="relative">
+                      {/* <input
+                        type="text"
+                      className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+                        placeholder="Search countries"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                      /> */}
+                      {searchTerm && (
+                        <ul className="absolute w-full bg-white border mt-1 z-10 max-h-40 overflow-y-auto">
+                          {filteredCountries.length > 0 ? (
+                            filteredCountries.map((country) => (
+                              <li
+                                key={country.id}
+                                onClick={() => handleSelectCountry(country.name)}
+                                className="p-2 text-xs hover:bg-gray-100 cursor-pointer"
+                              >
+                                {country.name}
+                              </li>
+                            ))
+                          ) : (
+                            <li className="p-2 text-xs text-gray-500">No countries found</li>
+                          )}
+                          {loadingCountries &&  <li className="p-2  text-xs text-gray-500">loading...</li>}
+                        </ul>
+                      )}
+                    </div>
+                    {/* {handleErrorMessagesList("servicingCountries")} */}
+                    
+                    {/* Selected countries */}
+                    <div className="flex gap-2 flex-wrap mt-2">
+                      {data?.servicingCountries?.map((country, index) => (
+                        <span
+                          key={index}
+                          className=" text-xs capitalize flex items-center p-2 rounded gap-2 border"
+                        >
+                          {country}
+                          <IoClose
+                            className="cursor-pointer"
+                            onClick={() => handleRemoveCountry(country)}
+                          />
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
 
             <div className="mb-4 col-span-2">
               <label

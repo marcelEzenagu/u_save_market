@@ -18,6 +18,7 @@ const handleSubmit = async (e) => {
   try {
     const {response } = await login({ email : data.email, password : data.password }).unwrap()
     setCookie("accessToken", response?.access_data?.access_token)
+    setCookie("role", response?.access_data?.role)
     dispatch(setCredentials({ accessToken: response?.access_data?.access_token, user : response?.vendor, role: response?.access_data?.role,}))
     setData({
       email:'',

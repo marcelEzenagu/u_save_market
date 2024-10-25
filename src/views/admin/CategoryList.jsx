@@ -7,18 +7,22 @@ import ModalForm from "../../components/admin/CatelogueComponents/ModelForm";
 import DeleteModal from "../../components/admin/CatelogueComponents/DeleteModal";
 import { IoTrashOutline } from "react-icons/io5";
 import { FaEdit } from "react-icons/fa";
-import { useGetCategoriesQuery, useAddCategoryMutation, useUpdateCategoryMutation, useDeleteCategoryMutation } from "../../features/category/categoryApiSlice";
+import { useGetAdminCategoriesQuery, useAddCategoryMutation, useUpdateCategoryMutation, useDeleteCategoryMutation } from "../../features/category/categoryApiSlice";
 // import { addCategory as addCategoryToRedux, updateCategory, deleteCategory } from "../../features/category/categorySlice";
 import {useErrorMessageHooks} from "../../hooks/useErrorMessageHooks";
 const CategoryList = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Step 1: State for search term
   const [modalState, setModalState] = useState({ type: null, data: null });
   const { handleError, setErrMsg,  setErrorMessagesList, handleErrorMessagesList, errMsg} = useErrorMessageHooks();
-  const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
+  // const { data, isLoading, error } = useGetAdminCategoriesQuery();
+
+  const { data: categories = [], isLoading, error } = useGetAdminCategoriesQuery();
   const [addCategory, {isLoading: addLoading},] = useAddCategoryMutation();
   const [updateCategory,  {isLoading: editLoading}] = useUpdateCategoryMutation();
   const [deleteCategory,  {isLoading: deleteLoading}] = useDeleteCategoryMutation();
   const [success, setSuccess] = useState(false);
+  const [perPage, setPerPage] = useState(2);
+  
   const columns = [
     {
       key: "categoryName",
@@ -57,7 +61,11 @@ const CategoryList = () => {
         // dispatch(deleteCategory(modalState.data.id));
         console.log("Category deleted:", modalState.data.categoryName);
         setModalState({ type: null, data: null });
+        setSuccess(true)
+
       } catch (err) {
+        handleError(err, "category");
+
         console.error("Failed to delete the category:", err);
       }
     }
@@ -74,7 +82,7 @@ const CategoryList = () => {
     
     if (modalState.type === "create") {
       try {
-        console.log(formData);
+        console.log(formData,"formData");
         const newCategory = await addCategory({...formData}).unwrap();
         // dispatch(addCategoryToRedux(newCategory));
         console.log("Category Created:", newCategory);
@@ -102,8 +110,7 @@ const CategoryList = () => {
   };
 
   const filteredItems = useMemo(() => {
-    console.log(categories);
-    return categories?.filter((item) =>
+    return categories.data?.filter((item) =>
       item?.categoryName?.toLowerCase().includes(searchTerm?.toLowerCase())
     );
   
@@ -189,9 +196,9 @@ const CategoryList = () => {
            <div className="pb-4">  
            <PaginatedTable
               columns={columns}
-              data={filteredItems}
+              data={categories}
               actions={actions}
-              itemsPerPage={10}
+              itemsPerPage={perPage}
             />
             {isLoading && <div>Loading data...</div>}
             {error && <div>Error loading categories: {error.message  || "Unknown error"}</div>}

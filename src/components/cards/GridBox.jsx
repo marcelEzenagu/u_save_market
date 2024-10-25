@@ -1,6 +1,8 @@
 import React from "react";
-import { MockData } from "../../data/mockData";
+// import { MockData } from "../../data/mockData";
 import { Link } from "react-router-dom";
+import { useGetCategoriesQuery } from "../../features/category/categoryApiSlice";
+
 function GridBox() {
     const gridColors = [
       'bg-grid-card-color-1',
@@ -10,12 +12,14 @@ function GridBox() {
       'bg-grid-card-color-5',
       'bg-grid-card-color-6',
       ];
-    const subCategories = MockData.filter((e)=>e?.subcat.length >= 5)
- 
+      const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
+
+      console.log("categories:::: ",categories)
+    const subCategories = categories?.filter((e)=>e?.subcat.length >= 5)
   return (
     <div>
       <div>
-      {MockData.map((category, index) => {
+      {categories?.map((category, index) => {
         const isEven = parseInt(category.id) % 2 === 0;
         const hasFiveOrMoreSubcats = category.subcat.length >= 5;
         const color = gridColors[index % gridColors.length]

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import {
-  useGetProductsQuery,
+  useGetProductsAdminQuery,
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
@@ -16,7 +16,7 @@ import { LuBox } from "react-icons/lu";
 import { HiUsers } from "react-icons/hi2";
 import { FaHouseChimneyWindow } from "react-icons/fa6";
 import {useErrorMessageHooks} from "../../hooks/useErrorMessageHooks";
-import { useGetCategoriesQuery,useGetSubcategoriesQuery } from "../../features/category/categoryApiSlice";
+import { useGetAdminCategoriesQuery,useGetSubcategoriesQuery } from "../../features/category/categoryApiSlice";
 import DefaultStatus from "../../components/order/DefaultStatus";
 import { useGetCountriesQuery } from "../../features/auth/authApiSlice";
 import { useSelector } from "react-redux";
@@ -32,14 +32,14 @@ const ProductList = () => {
     data: products = [],
     isLoading: loadingProducts,
     error,
-  } = useGetProductsQuery();
+  } = useGetProductsAdminQuery();
   const {
     data: countries = [],
     isLoading: loadingCountries,
     errorCountries,
   } = useGetCountriesQuery();
   const countriesList = useSelector((state) => state?.auth?.countries);
-  const { data: categories = [], isLoading, errorCategory } = useGetCategoriesQuery();
+  const { data: categories = [], isLoading, errorCategory } = useGetAdminCategoriesQuery();
   const { data: subCategories = [], isLoading: subIsLoading, error : subError} = useGetSubcategoriesQuery();
   const [addProduct, { isLoading: addLoading }] = useAddProductMutation();
   const [updateProduct, { isLoading: editLoading }] =
@@ -57,12 +57,12 @@ const ProductList = () => {
       {
         name: "Active Products",
         icon: <HiUsers className="text-lg text-regal-blue" />,
-        total:  products?.filter((i)=> i?.productStatus?.toLowerCase() === "active")?.length ,
+        total:  products.data?.filter((i)=> i?.productStatus?.toLowerCase() === "active")?.length ,
       },
       {
         name: "Inactive Products",
         icon: <FaHouseChimneyWindow className="text-lg text-regal-blue" />,
-        total: products?.filter((i)=> i?.productStatus?.toLowerCase() === "inactive")?.length,
+        total: products.data?.filter((i)=> i?.productStatus?.toLowerCase() === "inactive")?.length,
       },
     ],
     [products]
@@ -143,7 +143,8 @@ const ProductList = () => {
     setErrorMessagesList([]);
     if (modalState.type === "create") {
       try {
-        console.log(formData);
+        console.log(formData,"formData");
+        
         const newCategory = await addProduct({ ...formData }).unwrap();
         // dispatch(addCategoryToRedux(newCategory));
         console.log("Product Created:", newCategory);
@@ -180,11 +181,11 @@ const ProductList = () => {
 
   const filteredItems = useMemo(() => {
     if (activeTab !== 'all') {
-      return products.filter((item) =>
+      return products?.data?.filter((item) =>
         item?.productName?.toLowerCase().includes(searchTerm.toLowerCase()) && item?.productStatus?.toLowerCase() === activeTab
       );
     }else{
-      return products.filter((item) =>
+      return products?.data?.filter((item) =>
         item?.productName?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
@@ -219,8 +220,8 @@ const ProductList = () => {
               initialData={modalState.data}
               loading={editLoading}
               success={success}
-              categories={categories}
-              subCategories={subCategories}
+              categories={categories.data}
+              subCategories={subCategories.data}
               countries={countries}
               loadingCountries={loadingCountries}
             />
@@ -236,8 +237,8 @@ const ProductList = () => {
               errMsg={errMsg}
               loading={addLoading}
               success={success}
-              categories={categories}
-              subCategories={subCategories}
+              categories={categories.data}
+              subCategories={subCategories.data}
               countries={countries}
               loadingCountries={loadingCountries}
             />
@@ -290,7 +291,7 @@ const ProductList = () => {
           <section className="mt-8">
               <PaginatedTable
                 columns={columns}
-                data={filteredItems}
+                data={products}
                 actions={actions}
                 itemsPerPage={10}
                 isLoading={loadingProducts} // Add loading state for the table
@@ -478,7 +479,7 @@ const ProductName = ({ value, image, viewProduct }) => (
   </div>
 );
 const ProductCategoryName =  ({ value, categories }) => {
-  const catgoryDetails = categories?.find((i) => i?.categoryID === value)
+  const catgoryDetails = categories.data?.find((i) => i?.categoryID === value)
   if (catgoryDetails) {  
   return  <div className="flex items-center gap-3 cursor-pointer capitalize" >
   <div className="w-10 h-10">
@@ -491,7 +492,7 @@ const ProductCategoryName =  ({ value, categories }) => {
   }
 }
 const ProductSubCategoryName =  ({ value, subCategories }) => {
-  const catgoryDetails = subCategories?.find((i) => i?.subCategoryID === value)
+  const catgoryDetails = subCategories?.data?.find((i) => i?.subCategoryID === value)
   if (catgoryDetails) {  
   return  <div className="flex items-center gap-3 cursor-pointer capitalize" >
     <span>{catgoryDetails?.subCategoryName}</span>
