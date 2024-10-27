@@ -25,13 +25,14 @@ const ProductCard = ({ item, category }) => {
   const wishListItem = wishList.find(
     (cartItem) => cartItem.productID === item?.productID
   );
+  const   baseUrl = import.meta.env.VITE_APP_API_URL
 
   return (
-    <div key={item.productID} className="text-sm font-[500] animate-fade-in">
+    <div key={item.itemID} className="text-sm font-[500] animate-fade-in">
       <div className="relative bg-white rounded-lg overflow-hidden h-[200px] group">
         <img
-          src={item.image || ReplaceImage}
-          alt={item.name}
+          src={item?.images ? `${baseUrl}${item?.images[0]}` : ReplaceImage }
+          alt={item.itemName}
           onError={ReplaceImage}
           className="w-full h-full object-contain"
         />
@@ -60,7 +61,7 @@ const ProductCard = ({ item, category }) => {
           </div>
         )}
 
-        {item?.in_stock && (
+        {item?.quantity >0 && (
           <div
             className={`absolute bottom-2 right-4 flex flex-row items-center bg-white rounded-full space-x-2 shadow-sm ${
               cartItem ? "opacity-100" : "opacity-0 group-hover:opacity-100"
@@ -103,18 +104,18 @@ const ProductCard = ({ item, category }) => {
       <div className="py-4">
         <Link
           className="text-sm font-[400] mb-3 line-clamp-2 "
-          to={`/products/${category}/${item.name}`}
+          to={`/products/${item.itemCategory ? item.itemCategory: category}/${item.itemName}`}
         >
-          {item.name}
+          {item.itemName}
         </Link>
-        <span className="text-xs text-regal-light-gray mb-3">
+        {/* <span className="text-xs text-regal-light-gray mb-3">
           {item.country}
-        </span>
+        </span> */}
         <p className="text-regal-sky-blue font-[600] text-sm md:text-[16px] flex items-center gap-2  w-[160px] clamp-1 whitespace-nowrap">
-          {exchangeRate?.currency}{' '}{ numberWithCommas(item?.price * exchangeRate?.rate)}{" "}
+          {exchangeRate?.currency}{' '}{ numberWithCommas((item?.price * exchangeRate?.rate).toFixed(2))}{" "}
           {item?.percentageOFF !== null ? (
             <s className="font-[400] text-xs text-regal-light-gray ">
-            {exchangeRate?.currency}{' '}{ numberWithCommas(item?.old_price * exchangeRate?.rate)}
+            {exchangeRate?.currency}{' '}{ numberWithCommas((item?.oldPrice ? item?.oldPrice -item?.price : 0 * exchangeRate?.rate).toFixed(2))}
             </s>
           ) : (
             ""

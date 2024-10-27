@@ -3,7 +3,7 @@ import { LuCalendarDays } from "react-icons/lu";
 import { IoAddOutline } from "react-icons/io5";
 import { PiMinus, PiTrash } from "react-icons/pi";
 import { Link, useLocation } from "react-router-dom";
-import { numberWithCommas } from "../../../utils";
+import { numberWithCommas, ReplaceImage } from "../../../utils";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
 import { useGetUserCartQuery } from "../../../features/cart/cartApiSlice";
 import Shoppingcart from "../../../assets/images/nav/icons/shoppingcart.webp";
@@ -12,6 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import useCartOperationsHooks from "../../../hooks/useCartOperationsHooks";
 
 const CartDropdown = () => {
+  const   baseUrl = import.meta.env.VITE_APP_API_URL
+
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const dispatch = useDispatch();
@@ -102,24 +104,24 @@ const CartDropdown = () => {
                 <div className="p-4">
                   <div className="max-h-[500px] lg:max-h-96 overflow-y-scroll">
                     {cartLength > 0 ? (
-                      cart.map((item) => (
+                      cart?.map((item) => (
                         <div
-                          key={item.productID}
+                          key={item.itemID}
                           className="flex items-center justify-between gap-4 mb-4 pb-2"
                         >
                           {/* Item Image */}
                           <div className="flex items-center gap-3">
                             <img
-                              src={item.image}
-                              alt={item.name}
+                              src={item?.images ? `${baseUrl}${item?.images[0]} `: ReplaceImage}
+                              alt={item?.itemName}
                               className="w-12 h-12 object-cover rounded-md"
                             />
                             <div className="flex flex-col">
                               <span className="font-[400] w-48 text-xs md:text-sm">
-                                {item.name}
+                                {item?.itemName}
                               </span>
                               <span className="text-regal-sky-blue font-[400] text-xs md:text-sm">
-                              {exchangeRate?.currency}{' '}{ numberWithCommas(item?.price * exchangeRate?.rate)}{" "}
+                              {exchangeRate?.currency}{' '}{ numberWithCommas((item?.price * exchangeRate?.rate).toFixed(2))}{" "}
                               </span>
                             </div>
                           </div>
@@ -162,7 +164,7 @@ const CartDropdown = () => {
                       className="bg-regal-sky-blue text-white flex items-center justify-between px-4 py-2 font-bold w-full rounded-md hover:bg-blue-600 transition"
                     >
                       {location.pathname === "/cart" ? "In cart" : "Go to cart"}{" "}
-                      <span>{exchangeRate?.currency}{' '}{ numberWithCommas(total * exchangeRate?.rate)}{" "}</span>
+                      <span>{exchangeRate?.currency}{' '}{ numberWithCommas((total * exchangeRate?.rate).toFixed(2))}{" "}</span>
                     </div>
                   </Link>
                 </div>

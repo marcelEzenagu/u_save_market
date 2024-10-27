@@ -29,7 +29,8 @@ function Payment() {
   const [placeOrder, setPlaceOrder] = useState(false);
   const [cartDetails, setCartDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+  const Items = useSelector((state) => state.cart.items || []);
+
   const stripe = useStripe();
   const elements = useElements();
   const [status, setStatus] = useState("default");
@@ -49,6 +50,7 @@ function Payment() {
         });
         const data = await response.json();
         setCartDetails(data);
+        
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -122,14 +124,16 @@ function Payment() {
         },
         body: JSON.stringify(orderPayload),
       });
-
       if (!response.ok) {
+        console.log("ENTERED HERE")
         throw new Error('Error creating order');
       }
-
+      
       const orderDetails = await response.json();
-
+      console.log("orderDetails HERE",orderDetails)
+      
       if (isMounted) {
+        console.log("orderD222  HERE")
         setErrMsg(null);
         dispatch(setOrders([orderDetails]));
         setOrder(orderDetails);
@@ -138,7 +142,7 @@ function Payment() {
       }
     } catch (err) {
       if (isMounted) {
-        console.log(err);
+        console.log("Something went wrong",err);
         setErrMsg("Something went wrong. Please try again.");
       }
     }

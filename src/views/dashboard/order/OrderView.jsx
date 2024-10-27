@@ -28,7 +28,7 @@ function OrderView() {
       setTrackOrderDetails={(e) => {
         setTrackOrderDetails(e)
       }}
-      order={order}
+      order={order? order : []}
     />
   );
 }

@@ -7,6 +7,8 @@ import { useGetCategoriesQuery } from "../features/category/categoryApiSlice";
 function Home() {
   const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
 
+  const   baseUrl = import.meta.env.VITE_APP_API_URL
+
   const imageList = useMemo(() => [
     'https://images.pexels.com/photos/95425/pexels-photo-95425.jpeg?auto=compress&cs=tinysrgb&w=600',
     'https://images.pexels.com/photos/5709271/pexels-photo-5709271.jpeg?auto=compress&cs=tinysrgb&w=600',
@@ -40,15 +42,17 @@ function Home() {
       {/* Category List (Mobile) */}
       <div className="lg:hidden mt-4">
         <div className="flex flex-wrap gap-2">
-          {categories?.data?.map(category => (
+          {categories?.map(category => (
             <Link
-              to={`/products?name=${category.name.toLowerCase()}`}
+              to={`/products?category=${category.name.toLowerCase()}`}
               key={category.id}
               className="flex items-center p-1 hover:bg-gray-200 rounded-md transition"
             >
               <img
-                src={category.image}
-                alt={category.name}
+                // src={category.image}
+             src={`${baseUrl}public/images/categories/${category.name.toLowerCase()}.png`} 
+
+                alt={category.name.toLowerCase()} 
                 className="w-6 h-6 object-cover rounded"
                 loading="lazy"
               />

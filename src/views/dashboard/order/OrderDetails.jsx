@@ -223,7 +223,7 @@ const OrderItems = ({ products }) => (
       </button>
     </div>
     <div className="mt-5 flex gap-4 overflow-x-scroll">
-      {products.map((item, index) => (
+      {products?.map((item, index) => (
         <div className="w-[170px]" key={index}>
           <ItemsCard item={item} />
         </div>

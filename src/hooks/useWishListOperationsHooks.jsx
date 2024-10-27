@@ -25,7 +25,7 @@ function useWishListOperationsHooks() {
     dispatch(addToWishList(item));
     try {
       const data = {
-        productID: item.productID ,
+        itemID: item.itemID ,
       };
       await addItemToWishList(data).unwrap();
       showToast("Item added to wishList successfully!", "success");
@@ -47,10 +47,10 @@ function useWishListOperationsHooks() {
       );
       
     }else{
-    dispatch(removeFromWishList(item?.productID));
+    dispatch(removeFromWishList(item?.itemID));
     try {
     
-      await removeItemFromWishList(item?.id).unwrap();
+      await removeItemFromWishList(item?.itemID).unwrap();
       showToast("Item removed from wishList successfully!", "success");
     } catch (error) {
       console.log(error);
@@ -64,7 +64,7 @@ function useWishListOperationsHooks() {
 
   const handleFindItemInWishList = (id) => {
     const Item = wishList.find(
-      (cartItem) => cartItem.productID === id?.productID
+      (cartItem) => cartItem.itemID === id?.itemID
     );
     return Item;
   };

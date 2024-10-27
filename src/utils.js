@@ -38,6 +38,7 @@ export const getData = async (url = "") => {
 };
 
 export const numberWithCommas = (x) => {
+  console.log("numberWithCommas",x)
   if (!x) return 0;
   x = x.toString();
   let pattern = /(-?\d+)(\d{3})/;
@@ -166,10 +167,7 @@ export const getFlatItemsAsStringOrder = (items, customName) => {
   );
 };
 
-export const ReplaceImage = (error) => {
-  error.target.src =
-    "https://cdn.vectorstock.com/i/preview-1x/48/06/image-preview-icon-picture-placeholder-vector-31284806.jpg";
-};
+export const ReplaceImage = "https://cdn.vectorstock.com/i/preview-1x/48/06/image-preview-icon-picture-placeholder-vector-31284806.jpg"
 
 export const parseJwt = (token) => {
   let base64Url = token.split(".")[1];

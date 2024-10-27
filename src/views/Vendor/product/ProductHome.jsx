@@ -53,7 +53,7 @@ function ProductHome() {
     }
     
   }, [searchTerm, items, active]);
-  
+
   return (
     <div className="px-4 py-8">
       <div className="flex flex-row items-center justify-between ">
@@ -233,7 +233,7 @@ function ProductTableTab ({filteredItems}) {
               15 in stock for 2 variants
               </td>
               <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
-              {product?.newPrice}
+              {product?.price}
               </td>
               <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
               <DefaultStatus status={product?.status} />

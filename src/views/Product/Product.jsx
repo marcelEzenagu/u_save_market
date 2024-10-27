@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Fragment} from "react";
+import React, { useState, useEffect, useMemo,useRef, Fragment} from "react";
 import { Transition } from "@headlessui/react";
 import { Link, useLocation } from "react-router-dom";
 import { SlArrowRight } from "react-icons/sl";
@@ -6,17 +6,20 @@ import { LuListFilter } from "react-icons/lu";
 import SidebarMobile from "../../components/Sidebar/SidebarMobile";
 import ProductCard from "../../components/cards/ProductCard";
 import { useProduct } from "../../hooks/useProduct";
+import { useItem } from "../../hooks/useItem";
 function Product() {
   const location = useLocation();
   const query = new URLSearchParams(location.search)
-  const name = query.get('name');
+  const category = query.get('category');
+  const subCategory = query.get('subCategory');
   const [isResultOpen, setIsResultOpen] = useState(false);
   const [isPriceOpen, setIsPriceOpen] = useState(false);
   const [isCountryOpen, setIsCountryOpen] = useState(false);
   const [selectedResult, setSelectedResult] = useState('');
   const [selectedPrice, setSelectedPrice] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
-  const {isLoading, userProduct, preferredCountry} = useProduct();
+  const {isLoading, userProduct, preferredCountry} = useItem({category,subCategory});
+  // const {isLoading, userProduct, preferredCountry} = useProduct();
   const toggleResultDropdown = () => setIsResultOpen(!isResultOpen);
   const togglePriceDropdown = () => setIsPriceOpen(!isPriceOpen);
   const toggleCountryDropdown = () => setIsCountryOpen(!isCountryOpen);
@@ -26,6 +29,8 @@ function Product() {
     setIsResultOpen(false);
   };
 
+
+  // console.log("userProduct1:: ",userProduct)
   const handlePriceSelect = (price) => {
     setSelectedPrice(price);
     setIsPriceOpen(false);
@@ -36,16 +41,35 @@ function Product() {
     setIsCountryOpen(false);
   };
 
+
   useEffect(()=>{
-    if (userProduct.length > 0) {
+    if (userProduct) {
+      // return userProduct.data
+      console.log("userProduct.data:::=",userProduct.data)
       setItems(userProduct)
-    }else{
-      setItems([])
+      // return userProduct.data
+      // const {isLoading, userProduct, preferredCountry} =
+      // return useItem({category,subCategory});
+
     }
-  }, [userProduct]);
+  }, [category,subCategory,userProduct]);
+
+ 
+  // const newItemsList = useMemo(() => {
+    // console.log("ITEMSLIS",Items)
+  //   // return items.data?.filter((item) =>
+  //   //   item?.categoryName?.toLowerCase().includes(searchTerm?.toLowerCase())
+  //   // );
+  
+  // }, [items]);
+
 
   // Filter logic
-  const filteredItems = Items.filter(item => {
+  // const filteredItems = Items.filter(item => {
+
+
+    const filteredItems = Items.filter(item => {
+      console.log("item:::", item)
     let isMatch = true;
 
     if (selectedResult) {
@@ -69,6 +93,7 @@ function Product() {
 
     return isMatch;
   });
+  console.log("filteredItems:::", filteredItems)
 
   // Sorting based on Price
   if (selectedPrice === 'Low to High') {
@@ -94,7 +119,7 @@ function Product() {
             </span>
             <SlArrowRight className="text-sm" />
             <span className="text-regal-crum-gray text-xs md:text-sm font-[600] max-w-36 md:max-w-[180px] truncate whitespace-nowrap">
-              {name}
+              {category}
             </span>
           </div>
         </nav>
@@ -278,8 +303,9 @@ function Product() {
      
           {filteredItems?.length > 0 ?
              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
-            {filteredItems.map((item) => ( <ProductCard item={item} key={item.productID} category={name} />))  }
-            </div> :
+            {filteredItems.map((item) => ( <ProductCard item={item} key={item.itemID} category={category} />))  }
+            </div>
+             :
           <div className="flex flex-col items-center text-center p-8 w-[500px] mx-auto">
           {/* <img 
             src={NotFoundImage} 
@@ -327,6 +353,7 @@ function FilterDropdown() {
       [event.target.value]: event.target.checked,
     });
   };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {

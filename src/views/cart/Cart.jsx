@@ -7,12 +7,14 @@ import { IoAddOutline } from "react-icons/io5";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import RelatedProduct from "../../components/RelatedProduct";
 import CartImage from "../../assets/images/cart/Empty-cart.webp";
-import { numberWithCommas } from "../../utils";
+import { numberWithCommas, ReplaceImage } from "../../utils";
 import useCartOperationsHooks from "../../hooks/useCartOperationsHooks";
 import { useProduct } from "../../hooks/useProduct";
 import useWishListOperationsHooks from "../../hooks/useWishListOperationsHooks";
 
+const   baseUrl = import.meta.env.VITE_APP_API_URL
 const CartItem = React.memo(
+
   ({ item, onDecrement, onIncrement, onRemove, lastItemId, exchangeRate }) => {
     const {
       handleAddToWishList,
@@ -23,27 +25,28 @@ const CartItem = React.memo(
     const wishListItem = wishList.find(
       (cartItem) => cartItem.productID === item?.productID
     );
- 
+    
+    const itemCost = (item.price * exchangeRate).toFixed(2)
     return (
       <div
         className={`flex items-center justify-between md:gap-4 py-8 px-1 md:px-2 ${
-          lastItemId !== item.productID && "border-b"
+          lastItemId !== item.itemID && "border-b"
         }`}
       >
         <div className="flex items-center gap-3">
           <img
-            src={item.image}
-            alt={item.name}
+            src={item.images? `${baseUrl}${item.images[0]}`:ReplaceImage}
+            alt={item.itemName}
             className="w-20 h-20 object-contain rounded-md"
           />
           <div className="flex flex-col">
             <span className="font-[500] max-w-[150px] md:max-w-[300px] text-xs md:text-sm">
-              {item.name}
+              {item.itemName}
             </span>
             <div className="flex flex-row items-center gap-2 md:gap-4 mt-3 md:mt-5">
               <button
                 className="text-regal-light-gray border-b-2 custom-text-line text-xs md:text-sm cursor-pointer"
-                onClick={() => onRemove(item.productID)}
+                onClick={() => onRemove(item.itemID)}
               >
                 Remove
               </button>
@@ -82,7 +85,7 @@ const CartItem = React.memo(
           </button>
         </div>
         <span className="text-regal-black font-[600] text-xs md:text-sm">
-        {exchangeRate?.currency}{' '}{ numberWithCommas(item?.price * exchangeRate?.rate)}
+        {exchangeRate?.currency}{' '}{ numberWithCommas((item?.price * exchangeRate?.rate).toFixed(2))}
         </span>
       </div>
     );
@@ -101,7 +104,7 @@ const OrderSummary = ({ total, itemCount, navigate,exchangeRate }) => {
           </p>
         </div>
         <p className="text-sm font-[600] text-regal-black">
-        {exchangeRate?.currency}{' '}{ numberWithCommas(total * exchangeRate?.rate)}{" "}
+        {exchangeRate?.currency}{' '}{ numberWithCommas((total * exchangeRate?.rate).toFixed(2))}{" "}
         </p>
       </div>
       <div className="flex flex-row justify-between items-start m-4">
@@ -120,7 +123,7 @@ const OrderSummary = ({ total, itemCount, navigate,exchangeRate }) => {
           <h6 className="text-sm font-[500] text-regal-black">Est.Total</h6>
         </div>
         <p className="text-lg font-[600] text-regal-black px-4">
-        {exchangeRate?.currency}{' '}{ numberWithCommas(total * exchangeRate?.rate)}{" "}
+        {exchangeRate?.currency}{' '}{ numberWithCommas((total * exchangeRate?.rate).toFixed(2))}{" "}
         </p>
       </div>
 
@@ -217,7 +220,7 @@ function Cart() {
     [Items]
   );
   const lastItemId = useMemo(
-    () => (Items.length > 0 ? Items[Items.length - 1].productID : null),
+    () => (Items.length > 0 ? Items[Items.length - 1].itemID : null),
     [Items]
   );
   useEffect(()=>{
@@ -260,7 +263,7 @@ function Cart() {
             <div className="border shadow-sm bg-white md:p-4 rounded-md col-span-2">
               {Items.map((item) => (
                 <CartItem
-                  key={item.productID}
+                  key={item.itemID}
                   item={item}
                   onDecrement={handleDecrement}
                   onIncrement={handleIncrement}
@@ -297,13 +300,14 @@ function Cart() {
       ) : (
         <EmptyCart navigate={navigate} />
       )}
-      <RelatedProduct Items={ITemsDiv} className="mt-10" cols={"5"} />
+       {/* <RelatedProduct Items={ITemsDiv} className="mt-10" cols={"5"} /> */}
+      
       <CartModal
         isModalOpen={isModalOpen}
         toggleModal={toggleModal}
         handleRemoveAll={handleRemoveAll}
         
-      />
+      /> 
     </div>
   );
 }

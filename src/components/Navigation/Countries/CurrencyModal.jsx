@@ -78,9 +78,10 @@ const Modal = ({ isOpen, onClose, onCurrencySelect, errorMsg, preferredCurrency,
             <p className='text-sm text-regal-black font-[600] mb-4'>Recently used currencies</p>
             <p className="text-red-700 text-sm mt-4 mb-1">{errorMsg}</p>
             <ul className="max-h-[50vh] lg:max-h-[300px] overflow-y-scroll w-full">
-              {filteredCurrencies.map((country) => (
+              {filteredCurrencies.map((country,indx) => (
                 <li
-                  key={country.name}
+                  // key={country.name}
+                  key={indx}
                   className="flex items-center py-2 my-2 px-2 cursor-pointer hover:font-[700] hover:text-regal-blue hover:bg-regal-secondary-light"
                   onClick={() => setPickedCurrency(country)}
                 >

@@ -10,6 +10,7 @@ export const cartApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Cart'], // Invalidate the 'Cart' tag to refetch queries that use this tag
     }),
+
     addUserCart: builder.mutation({
       query: (cart) => ({
         url: 'carts',
@@ -18,6 +19,7 @@ export const cartApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Cart'], // Invalidate the 'Cart' tag after adding an item
     }),
+
     deleteUserCartItem: builder.mutation({
       query: (cart) => ({
         url: `carts`,
@@ -26,6 +28,7 @@ export const cartApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Cart'], // Invalidate the 'Cart' tag after deleting an item
     }),
+    
     getUserCart: builder.query({
       query: () => '/carts',
       providesTags: ['Cart'], // Provide the 'Cart' tag to this query

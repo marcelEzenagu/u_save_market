@@ -1,11 +1,11 @@
 import React from 'react'
 import EmptyBag from '../../../assets/images/account/emptybag.png'
 import { Link, useNavigate } from 'react-router-dom'
-import { Items } from '../../../data/mockData'
+import { Items} from '../../../data/mockData'
 import ItemsCard from '../../../components/cards/ItemsCard'
 
 function BuyAgain() {
-   
+  const Items=[]
     return (
         <div className='p-4'>
            <h6 className='text-regal-black text-sm md:text-xl font-bold'>Buy Again</h6>
@@ -68,8 +68,8 @@ function OrderCard() {
   
           <div className="mt-5 border-t flex flex-row gap-4 overflow-x-scroll">
             {Items &&
-              Items.map((e) => (
-                <div className="w-[170px]" key={e.id}>
+              Items.map((e,indx) => (
+                <div className="w-[170px]" key={indx}>
                   <ItemsCard item={e} />
                 </div>
               ))}

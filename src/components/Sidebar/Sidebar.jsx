@@ -9,7 +9,8 @@ import { useGetCategoriesQuery } from '../../features/category/categoryApiSlice'
 function Sidebar() {
     const location = useLocation();
     const query = new URLSearchParams(location.search)
-    const name = query.get('name');
+    const name = query.get('category');
+    const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
 
     const [activeTab, setActiveTab] = useState(false);
     useEffect(()=>{
@@ -26,19 +27,16 @@ function Sidebar() {
     }, [name]);
  return (
     <>
-    {activeTab ? <FilterSider name={name}/>: <DefaultSidebar name={name}/>}
+    {activeTab ? <FilterSider name={name} categories={categories}/>
+    : 
+    <DefaultSidebar name={name} categories={categories} />}
         
     </>
  );
 }
 
 
-const FilterSider = ({name}) => {
-
-
-    const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
-
-    const MockData = categories.data
+const FilterSider = ({name,categories}) => {
     const [active, setActive] = useState(name);
     useEffect(()=>{
         const findData = data.filter((e)=> e.name?.toLowerCase() === name?.toLowerCase())
@@ -59,9 +57,9 @@ const FilterSider = ({name}) => {
                       }}
                       >
                           {/* <img src={e.image} alt="" className='w-6 h-6'/> */}
-                          <Link to={`/products?name=${e.name.toLowerCase()}`} className='text-sm capitalize font-[600] w-[180px] truncate whitespace-nowrap'>{e.name}</Link>
+                          <Link to={`/products?category=${e.name.toLowerCase()}`} className='text-sm capitalize font-[600] w-[180px] truncate whitespace-nowrap'>{e.name}</Link>
                       </div>
-                      {MockData.length > 0 && active === e.name.toLowerCase() ?  MockData.map((i) => (
+                      {categories.length > 0 && active === e.name.toLowerCase() ?  categories.map((i) => (
                               <div key={i.id} className='flex items-center p-2 gap-2'>
                                    <div  alt="" className='w-6 h-6'></div>
                               <span className='text-sm capitalize font-[400] w-[180px] truncate whitespace-nowrap '>{i.name}</span>
@@ -77,11 +75,8 @@ const FilterSider = ({name}) => {
 }
 
 
-function DefaultSidebar ({name}) {
+function DefaultSidebar ({name,categories}) {
   const   baseUrl = import.meta.env.VITE_APP_API_URL
-console.log("baseUrl:::: ",baseUrl)
-const [cats, setCats] = useState([])
-    const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
 
     
     const [active, setActive] = useState(null);
@@ -93,19 +88,14 @@ const [cats, setCats] = useState([])
         }
     }, [name]);
 
-    useEffect(()=>{
-
-        const categoryData = categories?.data
-        console.log("categoryData:::: ",categoryData)
-
-        // setCats(categoryData)
-    }, []);
+  
     return (
       <div>
+        {categories && 
           <div>
               <h5 className="text-md font-[700] mb-2">CATEGORIES</h5>
               <div className='flex flex-col items-start mb-16'>
-              {categories && categories?.map((e)=> (
+              {categories?.map((e)=> (
                       <div key={e.id}>
                       <div className={`flex items-center w-full rounded-md my-1 py-1 p-2 gap-2 hover:bg-active-gray ${active === e.id && 'bg-active-gray'}`}
                         onClick={()=> {
@@ -113,19 +103,23 @@ const [cats, setCats] = useState([])
                         }}
                       >
                         <img src={`${baseUrl}public/images/categories/${e.name.toLowerCase()}.png`} alt={e.name.toLowerCase()} className='w-6 h-6'/>
-                        <Link to={`/products?name=${e.name}`} className='text-sm capitalize font-[600] w-[180px] truncate whitespace-nowrap'>{e.name}</Link>
+                        <Link to={`/products?category=${e.name}`} className='text-sm capitalize font-[600] w-[180px] truncate whitespace-nowrap'>{e.name}</Link>
                       </div>
                       {e?.subcat?.length > 0 && active === e.id ?  e.subcat.map((i) => (
                               <div key={i.id} className='flex items-center p-2 gap-2'>
                                    <div  alt="" className='w-6 h-6'></div>
+
+                                   <Link to={`/products?category=${e.name}&subCategory=${i.name}`}>
                               <span className='text-sm capitalize font-[400] w-[180px] truncate whitespace-nowrap '>{i.name}</span>
+                              </Link>
                           </div>
                       )) : ''}
                   </div>
               ))}
               </div>  
              <BottomLinks/>
-          </div>    
+          </div> 
+        }   
       </div>
     ) 
 }

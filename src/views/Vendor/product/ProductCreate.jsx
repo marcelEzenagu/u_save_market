@@ -53,7 +53,7 @@ function ProductCreate() {
       originalPrice: 0,
       profit: 0,
       discount: 0,
-      newPrice: 0,
+      price: 0,
       weight: 0,
       stock:'',
       weight_unit: "kg",

@@ -4,7 +4,7 @@ export const itemApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Items Endpoints
     getItems: builder.query({
-      query: () => 'items',
+      query: ({category,subCategory,country}) => `items?category=${category}&subCategory=${subCategory}&country=${country}`,
       providesTags: ['item'],
     }),
     addItem: builder.mutation({
@@ -15,6 +15,7 @@ export const itemApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['item'],
     }),
+
     updateItem: builder.mutation({
       query: ({ id, ...updatedItem }) => ({
         url: `items/${id}`,
@@ -23,6 +24,7 @@ export const itemApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['item'],
     }),
+
     deleteItem: builder.mutation({
       query: (id) => ({
         url: `items/${id}`,

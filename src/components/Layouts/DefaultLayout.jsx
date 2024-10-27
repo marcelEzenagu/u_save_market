@@ -46,7 +46,7 @@ function DefaultLayout() {
           <div className="max-w-[1200px] flex flex-row items-center gap-2 md:gap-8 mx-auto md:px-4">
             {dataCategory.map((e, i) => (
               <Link
-                to={`/products?name=${e.name?.toLowerCase()}`}
+                to={`/products?group=${e.name?.toLowerCase()}`}
                 className="flex flex-row items-center gap-1 md:gap-2 cursor-pointer"
                 key={e.id} // Use unique id as key
               >

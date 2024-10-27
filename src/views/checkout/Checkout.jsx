@@ -106,7 +106,8 @@ const OrderSummary = React.memo(({ cartDetails, data, estTotal, total,  loadingP
           </div>
           <div className="px-4 py-2 w-full">
             {cartDetails?.products?.length > 0 && (
-              <button disabled={loadingPayment}  type="submit" className="text-sm bg-regal-sky-blue text-white px-4 py-2 font-semibold w-full rounded-md hover:bg-blue-600">
+              <button disabled={loadingPayment}  type="submit"
+               className="text-sm bg-regal-sky-blue text-white px-4 py-2 font-semibold w-full rounded-md hover:bg-blue-600">
                {loadingPayment ? "Processing..." : "Pay now"}  
               </button>
             )}
@@ -310,11 +311,15 @@ export default function CheckoutWrapper() {
   const [clientSecret, setClientSecret] = useState("");
   const { isLoading, isAuthenticated } = useAuth();
   const token = useSelector(state => state?.auth?.token);
+  const cartData = useSelector(state => state?.cart)
+  const exchangeRate = useSelector((state)=> state?.auth?.exchangeRate);
+
     const {
     data: cartDetails,
     isLoading: loading,
     refetch,
   } = useGetUserCartQuery();
+
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -339,31 +344,38 @@ export default function CheckoutWrapper() {
       0
     );
   }, [cartDetails]);
+  console.log("CART total::: ",total)
 
   const estTotal = useMemo(() => total + data?.shippingPay, [total, data]);
+ 
   useEffect(()=>{
     const getClientKey  = async () => {
-          
-      const body = { products: cartDetails?.products, totalCost: estTotal };
-      const headers = {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      };
-      const response = await fetch(
-        `${import.meta.env.VITE_APP_API_URL}orders/pay-intent`, 
-        {
-          method: "POST",
-          headers: headers,
-          body: JSON.stringify(body),
-        }
-      );
+          if(total){
+            console.log("CART---total::: ",total)
 
-      const { clientSecret } = await response.json();
-      setClientSecret(clientSecret);
+            const body = { products: cartDetails?.products, totalCost: estTotal };
+           console.log("BODY::",body)
+            // return 
+            const headers = {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
+            };
+            const response = await fetch(
+              `${import.meta.env.VITE_APP_API_URL}orders/pay-intent`, 
+              {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(body),
+              }
+            );
+      
+            const { clientSecret } = await response.json();
+            setClientSecret(clientSecret);
+          }
     }
 
     getClientKey();
-  }, []);
+  }, [cartDetails]);
 
   const appearance = {
     theme: 'stripe',
@@ -379,7 +391,14 @@ export default function CheckoutWrapper() {
       <Elements options={{   
         clientSecret,
         appearance, }} stripe={stripePromise}>
-        <Checkout clientSecret={clientSecret} cartDetails={cartDetails}  setData={setData} data={data} estTotal={estTotal} total={total} />
+        <Checkout 
+          clientSecret={clientSecret} 
+          cartDetails={cartDetails}  
+          setData={setData} data={data} 
+          estTotal={estTotal} 
+          total={total} 
+        />
+
       </Elements>
     );
   }else{

@@ -32,14 +32,14 @@ function Pricing({handleChange, data, setData, handleErrorMessagesList}) {
        </label>
        <input
       type='number'
-       name="newPrice"
-       id="newPrice"
-       value={data?.newPrice}
+       name="price"
+       id="price"
+       value={data?.price}
        onChange={handleChange}
        placeholder="Enter name"
        className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
      />
-       {handleErrorMessagesList("newPrice")}
+       {handleErrorMessagesList("price")}
      </div>
       
      <div className="mb-2 col-span-2 md:col-span-1">

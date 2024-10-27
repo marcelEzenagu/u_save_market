@@ -14,7 +14,6 @@ function GridBox() {
       ];
       const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
 
-      console.log("categories:::: ",categories)
     const subCategories = categories?.filter((e)=>e?.subcat.length >= 5)
   return (
     <div>
@@ -62,7 +61,7 @@ function GridBox() {
                 
                 return (
                     <Link
-                    to={`/products?name=${category.name.toLowerCase()}subcategory=${sub?.name.toLowerCase()}`}
+                    to={`/products?category=${category.name.toLowerCase()}&subCategory=${sub?.name.toLowerCase()}`}
                     key={sub.id}
                     className={`subcat-item relative animate-fade-in rounded-lg transform transition-transform
                        duration-500 ease-in-out hover:scale-105 h-40

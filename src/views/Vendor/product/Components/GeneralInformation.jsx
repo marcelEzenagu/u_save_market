@@ -5,7 +5,6 @@ import {
   useGetProductsQuery,
 } from "../../../../features/product/productApiSlice";
 import { useGetCountriesQuery } from "../../../../features/auth/authApiSlice";
-import { useGetAdminCategoriesQuery,useGetSubcategoriesQuery } from "../../../../features/category/categoryApiSlice";
 function GeneralInformation({handleChange, data, handleErrorMessagesList, setData}) {
   const {
     data: products = [],

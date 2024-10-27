@@ -24,7 +24,7 @@ const useCartOperationsHooks = () => {
 
   const handleAddToCart = async (item) => {
 
-    if(!item?.in_stock)  return showToast('This product is out of stock it can not be added', 'error');
+    if(!item?.quantity>0)  return showToast('This product is out of stock it can not be added', 'error');
     dispatch(addToCart(item));
     if (!token || !user) {
       showToast('Oops! Looks like you need to log in before adding items to your cart. Log in to continue shopping!', 'warning');
@@ -32,10 +32,11 @@ const useCartOperationsHooks = () => {
     }
     try {
       const data = {
-        products: [{ ...item, productID: item.productID, quantity: 1 }],
+        products: [{ ...item, quantity: 1 }],
       };
+
       if (cart?.length > 0) {
-        await updateUserCart({ products: [...cart, { ...item, productID: item.productID, quantity: 1 }] }).unwrap();
+        await updateUserCart({ products: [...cart, { ...item, quantity: 1 }] }).unwrap();
       } else {
         await addUserCart(data).unwrap();
       }
@@ -118,6 +119,7 @@ const useCartOperationsHooks = () => {
       showToast('Something went wrong while clearing the cart. Please try again later.', 'error');
     }
   };
+  
   const handleRemoveAllCartAfterCreateOrder = async () => {
     dispatch(removeAllItemInCart());
   };
