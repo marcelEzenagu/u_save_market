@@ -7,6 +7,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
       query: () => 'products',
       providesTags: ['product'],
     }),
+
     getProductsAdmin: builder.query({
       query: () => 'admin/products',
       providesTags: ['product'],
@@ -27,6 +28,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['product'],
     }),
+    
     deleteProduct: builder.mutation({
       query: (id) => ({
         url: `products/${id}`,

@@ -19,7 +19,7 @@ import { useErrorMessageHooks } from "../../../hooks/useErrorMessageHooks";
 import { useAddItemMutation } from "../../../features/item/itemApiSlice";
 import { useToaster } from "../../../components/ToasterContext";
 import ViewProduct from "./Components/ViewProduct";
-function ProductCreate() {
+function CreateItem() {
   const { name } = useParams();
   const [activeTab, setActiveTab] = useState("1");
   const [active, setActive] = useState("1");
@@ -51,8 +51,10 @@ function ProductCreate() {
       quantity: 0,
       salesPrice: 0,
       originalPrice: 0,
+      oldPrice: 0,
       profit: 0,
       discount: 0,
+      fee: "3%",
       price: 0,
       weight: 0,
       stock:'',
@@ -80,6 +82,7 @@ function ProductCreate() {
       handleError(err, "Create Item");
     }
   };
+
   const statusOptions = [
     {
       label: "active",
@@ -249,10 +252,11 @@ function ProductCreate() {
             </div>
           </div>
         </div>
+
         <div>
           <div className=" border shadow-sm bg-white py-2 rounded-md ">
             <h5 className="text-lg text-regal-black font-[700] px-4 pt-4">
-              Product Status
+              Item Status
             </h5>
 
             <div className="flex flex-col items-start gap-8 pb-4 mt-4  border-b ">
@@ -350,5 +354,5 @@ function ProductCreate() {
     </div>
   );
 }
-export default ProductCreate;
+export default CreateItem;
 

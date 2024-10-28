@@ -25,8 +25,8 @@ import LoginVendor from "./views/Auth/vendor/LoginVendor";
 import VendorDetails from "./views/Auth/vendor/VendorDetails";
 import VendorLayout from "./components/Layouts/VendorLayout";
 import VendorHome from "./views/Vendor/Home";
-import ProductHome from "./views/Vendor/product/ProductHome";
-import ProductView from "./views/Vendor/product/ProductView";
+import ItemHome from "./views/Vendor/item/ItemHome";
+import ItemView from "./views/Vendor/item/ItemView";
 import OrderHome from "./views/Vendor/order/OrderHome";
 import VendorOrderview from "./views/Vendor/order/OrderView";
 import ForgotPasswordVendor from "./views/Auth/vendor/ForgotPasswordVendor";
@@ -73,7 +73,7 @@ import PaymentOverview from "./views/Agent/Payments/PaymentOverview";
 import PaymentError from "./views/checkout/PaymentError";
 import CategoryList from "./views/admin/CategoryList";
 import SubCategoryList from "./views/admin/SubCategoryList";
-import ProductCreate from "./views/Vendor/product/ProductCreate";
+import CreateItem from "./views/Vendor/item/CreateItem";
 import LoginAgent from "./views/Auth/Agent/LoginAgent";
 import LoginAdmin from "./views/Auth/admin/LoginAdmin";
 import ForgotPasswordAgent from "./views/Auth/Agent/ForgotPasswordAgent";
@@ -223,20 +223,20 @@ const Router = createBrowserRouter([
                     element: <SearchVendor/>
                 },
                 {
-                    path:'/vendor/products',
-                    element: <ProductHome/>
+                    path:'/vendor/items',
+                    element: <ItemHome/>
                 },
                 {
                     path:'/vendor/payment',
                     element: <PaymentVendor/>
                 },
                 {
-                    path:'/vendor/products/:name',
-                    element: <ProductView/>
+                    path:'/vendor/items/:name',
+                    element: <ItemView/>
                 },
                 {
-                    path:'/vendor/products/create',
-                    element: <ProductCreate/>
+                    path:'/vendor/items/create',
+                    element: <CreateItem/>
                 },
                 {
                     path:'/vendor/orders',

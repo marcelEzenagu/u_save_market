@@ -37,6 +37,8 @@ function GeneralInformation({handleChange, data, handleErrorMessagesList, setDat
   };
   useEffect(()=>{
     
+    console.log("data=== ",data)
+
     if (data?.productID) {
       const foundproduct = products?.find((i) => i?.productID ===  data?.productID)
       console.log("data?.productID=== ",foundproduct?.productSupportedCountries)
@@ -77,25 +79,6 @@ function GeneralInformation({handleChange, data, handleErrorMessagesList, setDat
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
        
-        <div className="mb-2 col-span-2">
-          <label
-            htmlFor="itemName"
-            className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
-          >
-            Item Name
-          </label>
-          <input
-            type="text"
-            name="itemName"
-            id="text"
-            value={data?.itemName?.toUpperCase()}
-            onChange={handleChange}
-            placeholder="Enter name"
-            className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
-          />
-          {handleErrorMessagesList('itemName')}
-        </div>
-
 
         <div className="mb-2 col-span-2 md:col-span-2">
           <label
@@ -111,8 +94,8 @@ function GeneralInformation({handleChange, data, handleErrorMessagesList, setDat
               name="productID"
             className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black">
             <option value="">Select Product</option>
-                {products.map((cat) => (
-                  <option key={cat.id} value={cat.productID}>
+                {products.map((cat,indx) => (
+                  <option key={indx} value={cat.productID}>
                     {cat.productName.toUpperCase()}
                   </option>
                 ))}
@@ -124,6 +107,26 @@ function GeneralInformation({handleChange, data, handleErrorMessagesList, setDat
           </div>
           {/* {handleErrorMessagesList('itemSubCategory')} */}
         </div>
+
+        <div className="mb-2 col-span-2">
+          <label
+            htmlFor="itemName"
+            className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
+          >
+            Item Name
+          </label>
+          <input
+            type="text"
+            name="itemName"
+            id="text"
+            value={data?.itemName?.toUpperCase()}
+            onChange={handleChange}
+            placeholder="Enter the display name for this item"
+            className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+          />
+          {handleErrorMessagesList('itemName')}
+        </div>
+
 
         <div className="mb-2 col-span-2 md:col-span-1">
           <label

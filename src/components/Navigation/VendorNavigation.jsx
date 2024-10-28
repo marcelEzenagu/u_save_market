@@ -36,8 +36,8 @@ function VendorNavigation() {
         },
         {
             id: '2',
-            name : ' Products',
-            url:'/vendor/products',
+            name : ' Items',
+            url:'/vendor/items',
             image: <LiaBoxSolid  className='text-xl  font-[600]' /> 
         },
         {
@@ -137,7 +137,7 @@ function SearchForm(props) {
   const handleItemSelect = (item) => {
     setQuery("");
     setDropdownVisible(false);
-    const queryParam = dropdownOption === "products" ? `products=${item.name}` : `orders=${item.name}`;
+    const queryParam = dropdownOption === "items" ? `items=${item.name}` : `orders=${item.name}`;
     navigate(`/vendor/search?${queryParam}`);
 
   };

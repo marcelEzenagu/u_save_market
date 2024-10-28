@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Cancelicon from "../../../../assets/images/order/cancel.png";
 import { useDeleteItemMutation } from "../../../../features/item/itemApiSlice";
 import { useErrorMessageHooks } from "../../../../hooks/useErrorMessageHooks";
-function DeleteProduct({isModalOpen, setIsModalOpen,data }) {
+function DeleteItem({isModalOpen, setIsModalOpen,data }) {
   const [isModalOpenModal, setIsModalOpenModal] = useState(false);
   useEffect(() => {
     setIsModalOpenModal(isModalOpen);
@@ -82,4 +82,4 @@ function DeleteProduct({isModalOpen, setIsModalOpen,data }) {
   );
 }
 
-export default DeleteProduct;
+export default DeleteItem;

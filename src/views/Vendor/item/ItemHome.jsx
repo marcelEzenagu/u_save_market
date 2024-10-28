@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import OrderVendorStatus from "../../../components/order/OrderVendorStatus";
 import { useGetItemsQuery } from "../../../features/item/itemApiSlice";
 import DefaultStatus from "../../../components/order/DefaultStatus";
-function ProductHome() {
+function ItemHome() {
   const [active, setActive] = useState("All Items");
   const [activeFilter, setActiveFilter ] = useState(true)
   const { data: items = [], isLoading, erroritems } = useGetItemsQuery();
@@ -58,7 +58,7 @@ function ProductHome() {
     <div className="px-4 py-8">
       <div className="flex flex-row items-center justify-between ">
         <h5 className="text-regal-black text-lg md:text-2xl font-[700]">
-          Products
+          Items
         </h5>
         <div className="flex flex-row items-center gap-6">
           <button className="flex flex-row items-center justify-center gap-2 font-[500] text-regal-black text-xs">
@@ -70,9 +70,9 @@ function ProductHome() {
             Import
           </button>
 
-          <Link to={'/vendor/products/create'} className="flex flex-row items-center justify-center gap-2 font-[500] text-white bg-regal-sky-blue hover:bg-blue-700 px-4 py-2 rounded-md text-xs">
+          <Link to={'/vendor/items/create'} className="flex flex-row items-center justify-center gap-2 font-[500] text-white bg-regal-sky-blue hover:bg-blue-700 px-4 py-2 rounded-md text-xs">
             <FaPlus />
-            Create Product
+            Create Item
           </Link>
         </div>
       </div>
@@ -222,7 +222,7 @@ function ProductTableTab ({filteredItems}) {
               </td>
               <td className="px-6 py-2 text-xs text-regal-black whitespace-nowrap capitalize">
               <Link
-              to={`/vendor/products/${product.ItemID}`} >
+              to={`/vendor/items/${product.ItemID}`} >
                 {product?.itemName}
                 </Link>
               </td>
@@ -254,7 +254,7 @@ function ProductTableTab ({filteredItems}) {
                             className={`flex items-center w-full px-4 py-2 text-sm ${
                               active ? "bg-gray-100" : ""
                             }`}
-                            to={`/vendor/products/${product.ItemID}`} 
+                            to={`/vendor/items/${product.ItemID}`} 
                           >
                             Edit
                           </Link>
@@ -372,7 +372,7 @@ function ItemsCard(props) {
 
       <div className="flex flex-col gap-2">
         <Link
-        to={`/vendor/products/${props?.item?.itemID}`}
+        to={`/vendor/items/${props?.item?.itemID}`}
           className="text-xs font-[500] "
         >
           {props?.item?.itemName}
@@ -388,4 +388,4 @@ function ItemsCard(props) {
     </div>
   );
 }
-export default ProductHome;
+export default ItemHome;

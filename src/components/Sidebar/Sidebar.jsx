@@ -91,7 +91,7 @@ function DefaultSidebar ({name,categories}) {
   
     return (
       <div>
-        {categories && 
+        {categories.length && 
           <div>
               <h5 className="text-md font-[700] mb-2">CATEGORIES</h5>
               <div className='flex flex-col items-start mb-16'>

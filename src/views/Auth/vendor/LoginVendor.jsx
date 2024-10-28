@@ -118,7 +118,7 @@ const handleSubmit = async (e) => {
               </button>
             </div>
                 
-         
+         <div className="hidden">
             <div className="flex flex-row items-center my-6">
                 <hr  className="w-full border-b-[1px]"/>
                 <span className="mx-4 text-[12px] font-[600] text-regal-black ">OR</span>
@@ -132,6 +132,8 @@ const handleSubmit = async (e) => {
                 <img src={Googleicon} alt="" className=" mr-4" />
                     Log in with Google</button>
             </div>
+
+         </div>
 
             <h5 className="text-regal-black text-sm font-[500] text-center mt-4">Don't have an account <Link to="/vendor/register"  className="underline">Sign up for free</Link></h5>
           </form>

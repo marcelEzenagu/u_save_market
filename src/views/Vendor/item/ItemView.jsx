@@ -14,9 +14,9 @@ import Pricing from "./Components/Pricing";
 import Shopping from "./Components/Shopping";
 import { useErrorMessageHooks } from "../../../hooks/useErrorMessageHooks";
 import {  useGetItemByIdQuery, useDeleteItemMutation, useUpdateItemMutation } from "../../../features/item/itemApiSlice";
-import DeleteProduct from "./Components/DeleteProduct";
+import DeleteItem from "./Components/DeleteItem";
 import ViewProduct from "./Components/ViewProduct";
-function ProductView() {
+function ItemView() {
   const { name } = useParams();
   const { data: fetchedItem, isLoading, isError, error } = useGetItemByIdQuery(name);
 
@@ -302,7 +302,7 @@ function ProductView() {
           </div>
         </div>
       </section>
-      <DeleteProduct
+      <DeleteItem
         isModalOpen={isModalOpenDeleteProduct}
         setIsModalOpen={(e) => {
           setisModalOpenDeleteProduct(e);
@@ -320,6 +320,6 @@ function ProductView() {
   );
 }
 
-export default ProductView;
+export default ItemView;
 
 

@@ -7,10 +7,10 @@ function Pricing({handleChange, data, setData, handleErrorMessagesList}) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
     <div className="mb-2 col-span-2 md:col-span-1">
        <label
-         htmlFor=" Original Price"
+         htmlFor=" Old Price"
          className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
        >
-       Original Price
+       Ooriginal Price
        </label>
        <input
        type='number'
@@ -47,7 +47,7 @@ function Pricing({handleChange, data, setData, handleErrorMessagesList}) {
          htmlFor="FirstName"
          className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
        >
-       Profile (%)
+       Profit (%)
        </label>
        <input
        type="number"
@@ -65,13 +65,13 @@ function Pricing({handleChange, data, setData, handleErrorMessagesList}) {
          htmlFor="LastName"
          className="flex items-center  text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
        >
-        Tax <FiInfo className="text-regal-blue text-sm mx-2"/>
+        Fee <FiInfo className="text-regal-blue text-sm mx-2"/>
        </label>
        <input
        type="number"
-       name="discount"
-       id="discount"
-       value={data?.discount}
+       name="fee"
+       id="fee"
+       value={data?.fee}
        onChange={handleChange}
        placeholder="Enter name"
        className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
