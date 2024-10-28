@@ -1,6 +1,6 @@
 import React from 'react'
 import { TfiAngleDown } from "react-icons/tfi";
-function Shopping({handleChange, data, setData, handleErrorMessagesList}) {
+function Shipping({handleChange, data, setData, handleErrorMessagesList}) {
   return (
     <div>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -52,4 +52,4 @@ function Shopping({handleChange, data, setData, handleErrorMessagesList}) {
   )
 }
 
-export default Shopping
+export default Shipping

@@ -10,7 +10,7 @@ import { TfiAngleDown } from "react-icons/tfi";
 import GeneralInformation from "./Components/GeneralInformation";
 import Media from "./Components/Media";
 import Pricing from "./Components/Pricing";
-import Shopping from "./Components/Shopping";
+import Shopping from "./Components/Shipping";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { numberWithCommas } from "../../../utils";
 import Cancelicon from "../../../assets/images/order/cancel.png";

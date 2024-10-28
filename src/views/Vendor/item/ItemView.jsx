@@ -11,7 +11,7 @@ import { numberWithCommas } from "../../../utils";
 import GeneralInformation from "./Components/GeneralInformation";
 import Media from "./Components/Media";
 import Pricing from "./Components/Pricing";
-import Shopping from "./Components/Shopping";
+import Shopping from "./Components/Shipping";
 import { useErrorMessageHooks } from "../../../hooks/useErrorMessageHooks";
 import {  useGetItemByIdQuery, useDeleteItemMutation, useUpdateItemMutation } from "../../../features/item/itemApiSlice";
 import DeleteItem from "./Components/DeleteItem";
