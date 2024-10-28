@@ -26,7 +26,6 @@ const CartItem = React.memo(
       (cartItem) => cartItem.productID === item?.productID
     );
     
-    const itemCost = (item.price * exchangeRate).toFixed(2)
     return (
       <div
         className={`flex items-center justify-between md:gap-4 py-8 px-1 md:px-2 ${
@@ -85,7 +84,7 @@ const CartItem = React.memo(
           </button>
         </div>
         <span className="text-regal-black font-[600] text-xs md:text-sm">
-        {exchangeRate?.currency}{' '}{ numberWithCommas((item?.price * exchangeRate?.rate).toFixed(2))}
+        {exchangeRate?.currency}{' '}{ numberWithCommas((item?.newPrice ? item?.newPrice* exchangeRate?.rate :item?.salesPrice * exchangeRate?.rate).toFixed(2))}
         </span>
       </div>
     );

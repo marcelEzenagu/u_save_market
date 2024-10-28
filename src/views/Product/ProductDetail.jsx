@@ -97,10 +97,10 @@ function ProductDetail() {
               {productInfo?.itemName}
             </h4>
             <h5 className="text-lg font-[700] flex items-center gap-2 text-regal-blue">
-            {exchangeRate?.currency}{' '}{ numberWithCommas((productInfo?.price * exchangeRate?.rate).toFixed(2))}{" "}
+            {exchangeRate?.currency}{' '}{ numberWithCommas((productInfo?.salesPrice * exchangeRate?.rate).toFixed(2))}{" "}
             {productInfo?.percentageOFF  !== null ?
           <s className="font-[400] text-xs text-regal-light-gray ">
-            {exchangeRate?.currency}{' '}{ numberWithCommas((productInfo?.oldPrice ? productInfo?.oldPrice -productInfo?.price : 0 * exchangeRate?.rate).toFixed(2))}
+            {exchangeRate?.currency}{' '}{ numberWithCommas((productInfo?.newPrice ? productInfo?.salesPrice -productInfo?.newPrice : 0 * exchangeRate?.rate).toFixed(2))}
           </s>
            : ''}
         </h5>
