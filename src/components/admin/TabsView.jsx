@@ -5,6 +5,7 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 function TabsView({ tabs, userInfo, url }) {
     const [active, setActive] = useState(tabs[0]?.id); // Set the first tab as active by default
+    const   baseUrl = import.meta.env.VITE_APP_API_URL
 
     const activeTab = useMemo(() => tabs.find(tab => tab.id === active), [active, tabs]);
 
@@ -20,12 +21,13 @@ function TabsView({ tabs, userInfo, url }) {
                 <div className="flex flex-row items-center gap-4">
                     <div className="flex items-center gap-2">
                         <img
-                            src={userInfo.profileImage || "https://via.placeholder.com/40"}
+                            src={userInfo?.profilePicture ? `${baseUrl}${userInfo?.profilePicture}` : "https://via.placeholder.com/40"}
                             alt="Profile"
                             className="w-6 h-6 rounded-full object-cover"
                         />
                         <span className="text-xs capitalize text-regal-black whitespace-nowrap font-[600]">
-                            {userInfo.name || "User Name"}
+                            {/* {userInfo.name || "User Name"} */}
+                            {userInfo?.firstName.toUpperCase()}{" "}{userInfo?.lastName.toUpperCase()}
                         </span>
                     </div>
                     <div className="flex flex-row items-center gap-2">

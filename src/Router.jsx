@@ -80,6 +80,7 @@ import ForgotPasswordAgent from "./views/Auth/Agent/ForgotPasswordAgent";
 import OtpAgent from "./views/Auth/Agent/OtpAgent";
 import ResetPasswordAgent from "./views/Auth/Agent/ResetPasswordAgent";
 import AdminAuthLayout from "./components/Layouts/AdminAuthLayout";
+import ItemList from "./views/admin/ItemList";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -440,6 +441,10 @@ const Router = createBrowserRouter([
             {
                 path:'/admin/products',
                 element : <ProductList/>,
+            },
+            {
+                path:'/admin/items',
+                element : <ItemList/>,
             },
             {
                 path:'/admin/agents/:id',

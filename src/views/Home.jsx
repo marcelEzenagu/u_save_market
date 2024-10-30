@@ -50,8 +50,7 @@ function Home() {
             >
               <img
                 // src={category.image}
-             src={`${baseUrl}public/images/categories/${category.name.toLowerCase()}.png`} 
-
+                src={`${baseUrl}public/images/categories/${category.name.toLowerCase()}.png`} 
                 alt={category.name.toLowerCase()} 
                 className="w-6 h-6 object-cover rounded"
                 loading="lazy"

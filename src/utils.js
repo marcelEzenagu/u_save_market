@@ -38,7 +38,6 @@ export const getData = async (url = "") => {
 };
 
 export const numberWithCommas = (x) => {
-  console.log("numberWithCommas",x)
   if (!x) return 0;
   x = x.toString();
   let pattern = /(-?\d+)(\d{3})/;

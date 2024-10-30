@@ -7,7 +7,9 @@ export const categoryApiSlice =  apiSlice.injectEndpoints({
       query: () => 'product-categories',
       providesTags: ['category'],
     }),
-    getAdminCategoriesQuery: builder.query({
+
+
+    getAdminCategories: builder.query({
       query: () => 'admin/categories',
       providesTags: ['category'],
     }),
@@ -20,6 +22,7 @@ export const categoryApiSlice =  apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['category'],
     }),
+    
     updateCategory: builder.mutation({
       query: ({ id, ...updatedCategory }) => ({
         url: `admin/categories/${id}`,
@@ -28,6 +31,7 @@ export const categoryApiSlice =  apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['category'],
     }),
+
     deleteCategory: builder.mutation({
       query: (id) => ({
         url: `admin/categories/${id}`,

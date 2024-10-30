@@ -12,6 +12,9 @@ export const productApiSlice = apiSlice.injectEndpoints({
       query: () => 'admin/products',
       providesTags: ['product'],
     }),
+
+   
+
     addProduct: builder.mutation({
       query: (newProduct) => ({
         url: 'products',

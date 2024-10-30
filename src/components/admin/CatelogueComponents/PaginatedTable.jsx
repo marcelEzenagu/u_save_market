@@ -16,6 +16,7 @@ const PaginatedTable = React.memo(({ columns, data, actions, itemsPerPage = 12 }
     setItemOffset(newOffset);
   };
 
+
   return (
     <div>
       <div className="w-full overflow-x-auto overflow-y-visible mt-4 min-h-96 animate-fade-in">

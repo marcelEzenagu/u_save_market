@@ -81,7 +81,7 @@ useEffect(()=>{
             <div className="flex flex-row items-center justify-between">
               <div className="flex flex-row items-center">
                 <h2 className="text-sm md:text-lg font-[700] text-regal-blue">
-                  {dropdownOption} ({data?.length})
+                  {dropdownOption} ({data?.total})
                 </h2>
                 <div className="relative">
                   {/* Dropdown button */}
@@ -191,14 +191,14 @@ useEffect(()=>{
 
 const TableComponent = React.memo(
   ({ headers, data, renderRow, selectedItems, handleCheckboxChange, handleDeleteClick }) => {
-    const itemsPerPage = 12;
+    const itemsPerPage = 4;
     const [itemOffset, setItemOffset] = useState(0);
     const endOffset = itemOffset + itemsPerPage;
-    const currentItems = data.slice(itemOffset, endOffset);
-    const pageCount = Math.ceil(data.length / itemsPerPage);
+    const currentItems = data?.data?.slice(itemOffset, endOffset);
+    const pageCount = Math.ceil(data?.total / itemsPerPage);
 
     const handlePageClick = (event) => {
-      const newOffset = (event.selected * itemsPerPage) % data.length;
+      const newOffset = (event.selected * itemsPerPage) % data?.total;
       setItemOffset(newOffset);
     };
 
@@ -211,7 +211,7 @@ const TableComponent = React.memo(
                 <th className="px-6 py-4 text-left text-xs font-medium text-regal-light-gray">
                   <input type="checkbox" />
                 </th>
-                {headers.map((header, index) => (
+                {headers?.map((header, index) => (
                   <th
                     key={index}
                     className="px-6 py-4 text-left text-xs font-medium text-regal-light-gray"
@@ -223,14 +223,14 @@ const TableComponent = React.memo(
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {currentItems.map((item) => renderRow(item, selectedItems, handleCheckboxChange))}
+              {currentItems?.map((item) => renderRow(item, selectedItems, handleCheckboxChange))}
             </tbody>
           </table>
         </div>
 
         <div className="flex flex-row items-center justify-between mt-4">
           <h6 className="text-xs text-regal-crum-gray">
-            Showing {currentItems.length} items out of {data.length} results found
+            Showing {currentItems?.length} items out of {data?.total} results found
           </h6>
 
  

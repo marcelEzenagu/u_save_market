@@ -1,11 +1,13 @@
 import React, {useState} from 'react'
 import IdentifyComponent from '../../Identification/IdentifyComponent'
-function UserIdentificationTab() {
+function UserIdentificationTab({vendorID}) {
+
     const [interview, setInterview] = useState(false);
     const handleSet = () => {
         setInterview(false);
     }
-  return (
+  
+    return (
     <div className='p-4 md:px-8 md:pt-8 pb-4 animate-fade-in'>
   <section className='max-w-[800px] '>
     <IdentifyComponent scheduleInterview={interview} handleSet={handleSet}/>

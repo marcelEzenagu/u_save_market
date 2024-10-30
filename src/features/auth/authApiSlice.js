@@ -14,6 +14,7 @@ export const authApiSlice =  apiSlice.injectEndpoints({
                     authorization:meta.response.headers.get('Authorization')};
               }
         }),
+
         loginAgent: builder.mutation({
             query: credentials => ({
                 url:'auth/agents/',
@@ -26,6 +27,7 @@ export const authApiSlice =  apiSlice.injectEndpoints({
                     authorization:meta.response.headers.get('Authorization')};
               }
         }),
+        
         loginAdmin: builder.mutation({
             query: credentials => ({
                 url:'auth/admin',

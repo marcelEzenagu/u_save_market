@@ -84,6 +84,11 @@ function AdminLayout() {
             url: "/admin/products",
             name: "Products",
           },
+          {
+            id: "catalogue-1",
+            url: "/admin/items",
+            name: "Items",
+          },
         ],
       },
       {

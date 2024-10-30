@@ -10,19 +10,23 @@ import { FaEdit } from "react-icons/fa";
 import { useGetAdminCategoriesQuery, useAddCategoryMutation, useUpdateCategoryMutation, useDeleteCategoryMutation } from "../../features/category/categoryApiSlice";
 // import { addCategory as addCategoryToRedux, updateCategory, deleteCategory } from "../../features/category/categorySlice";
 import {useErrorMessageHooks} from "../../hooks/useErrorMessageHooks";
+import { useAdminListVendorsQuery } from "../../features/admin/adminApiSlice";
+import { useDispatch } from "react-redux";
 const CategoryList = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Step 1: State for search term
   const [modalState, setModalState] = useState({ type: null, data: null });
   const { handleError, setErrMsg,  setErrorMessagesList, handleErrorMessagesList, errMsg} = useErrorMessageHooks();
   // const { data, isLoading, error } = useGetAdminCategoriesQuery();
+  var { data: vendors = [], isLoading, error } = useAdminListVendorsQuery()
 
-  const { data: categories = [], isLoading, error } = useGetAdminCategoriesQuery();
+  var { data: categories = [], isLoading, error } = useGetAdminCategoriesQuery();
   const [addCategory, {isLoading: addLoading},] = useAddCategoryMutation();
   const [updateCategory,  {isLoading: editLoading}] = useUpdateCategoryMutation();
   const [deleteCategory,  {isLoading: deleteLoading}] = useDeleteCategoryMutation();
   const [success, setSuccess] = useState(false);
-  const [perPage, setPerPage] = useState(2);
-  
+  const [perPage, setPerPage] = useState(10);
+  const dispatch = useDispatch()
+
   const columns = [
     {
       key: "categoryName",
@@ -82,11 +86,9 @@ const CategoryList = () => {
     
     if (modalState.type === "create") {
       try {
-        console.log(formData,"formData");
         const newCategory = await addCategory({...formData}).unwrap();
         // dispatch(addCategoryToRedux(newCategory));
-        console.log("Category Created:", newCategory);
-        // handleModalClose();
+        handleModalClose();
         setSuccess(true)
 
       } catch (err) {
@@ -110,6 +112,7 @@ const CategoryList = () => {
   };
 
   const filteredItems = useMemo(() => {
+    console.log("vendors:: ",vendors)
     return categories.data?.filter((item) =>
       item?.categoryName?.toLowerCase().includes(searchTerm?.toLowerCase())
     );

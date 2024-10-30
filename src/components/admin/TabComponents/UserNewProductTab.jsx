@@ -7,27 +7,20 @@ import AdminProductCard from "../../cards/AdminProductCard";
 import ProductDescription from "../../ProductDescription";
 import { numberWithCommas } from "../../../utils";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import { useAdminListItemsByVendorsQuery } from '../../../features/admin/adminApiSlice';
-
-function 
-UserProductTab({vendorID}) {
-  const itemsPerPage = 50;
+function UserNewProductTab() {
+  const itemsPerPage = 20;
   const [itemOffset, setItemOffset] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null); // For viewing product details
   const [showProductDetail, setShowProductDetail] = useState(false); // Toggling between list and detail view
   const [productToDelete, setProductToDelete] = useState(null); // For managing deletion
-  
-  const {data:items, isLoading, error} = useAdminListItemsByVendorsQuery({vendorID})
-  console.log("VERNDEORID-items::: ", items)
-  const endOffset = itemOffset + itemsPerPage;
-  const currentItems = items?.data?.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(items?.total / itemsPerPage);
 
+  const endOffset = itemOffset + itemsPerPage;
+  const currentItems = Items.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(Items.length / itemsPerPage);
 
   const handlePageClick = (event) => {
-    // const newOffset = (event.selected * itemsPerPage) % Items.length;
-    const newOffset = (event.selected * itemsPerPage) % items?.total ;
+    const newOffset = (event.selected * itemsPerPage) % Items.length;
     setItemOffset(newOffset);
   };
 
@@ -60,7 +53,7 @@ UserProductTab({vendorID}) {
       {/* Show Product List or Product Detail */}
       {!showProductDetail ? (
         <div>
-          {currentItems?.length > 0 ? (
+          {currentItems.length > 0 ? (
             <div>
               <div className="grid grid-cols-2 md:grid-col-5 lg:grid-cols-5 2xl:grid-cols-7">
                 {currentItems.map((e) => (
@@ -74,7 +67,7 @@ UserProductTab({vendorID}) {
               </div>
               <div className="flex flex-row items-center justify-between mt-4">
                 <h6 className="text-xs text-regal-crum-gray">
-                  Showing {currentItems.length} items out of {items?.total} results found
+                  Showing {currentItems.length} items out of {Items.length} results found
                 </h6>
 
                 <ReactPaginate
@@ -139,7 +132,7 @@ UserProductTab({vendorID}) {
   );
 }
 
-export default UserProductTab;
+export default UserNewProductTab;
 
 // ProductDetail Component
 function ProductDetail({ product, onBack }) {

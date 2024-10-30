@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState,useMemo ,useEffect} from "react";
 import ListComponent from "../../../components/admin/ListComponent";
-import { Items } from "../../../data/mockData"; // No need to rename to vendors
+import { Items } from "../../../data/mockData"; 
+// No need to rename to vendors
+
 import OrderVendorStatus from "../../../components/order/OrderVendorStatus";
 import { Link } from "react-router-dom";
 import { PiDotsThreeOutline } from "react-icons/pi";
 import { Menu } from "@headlessui/react";
+import {  useAdminListVendorsQuery } from "../../../features/admin/adminApiSlice";
+import UserStatus from "../../../components/user/UserStatus";
 const renderVendorRow = (
   vendor,
   selectedItems,
@@ -26,17 +30,19 @@ const renderVendorRow = (
           alt=""
           className="w-6 h-6 rounded-full object-cover"
         />
-        <Link to={`/admin/vendors/${vendor.productID}`}>Theresa Webb</Link>
+        <Link to={`/admin/vendors/${vendor.vendorID}`}>{vendor.firstName.toUpperCase()}{" "}{vendor.lastName.toUpperCase()}</Link>
       </div>
     </td>
     <td className="px-6 py-2 text-xs font-medium text-regal-black">
       {vendor.email}
     </td>
     <td className="px-6 py-2 text-xs font-medium text-regal-black">
-      {vendor.phone}
+      {vendor?.phoneNumber}
     </td>
     <td className="px-6 py-2 text-xs font-medium text-regal-black">
-      <OrderVendorStatus />
+      <UserStatus 
+        status={vendor.status}
+      />
     </td>
     <td className="px-6 py-2 text-xs font-medium text-regal-black">
       <Menu as="button" className="relative inline-block text-right">
@@ -54,7 +60,7 @@ const renderVendorRow = (
                   className={`flex items-center w-full px-4 py-2 text-xs gap-2 text-regal-black ${
                     active ? "bg-gray-100" : ""
                   }`}
-                  onClick={() => handleDeleteClick(vendor.productID || 1)}
+                  onClick={() => handleDeleteClick(vendor.vendorID || 1)}
                 >
                   <svg
                     width="20"
@@ -122,10 +128,22 @@ const VendorComponent = ({
     "Status",
     "Actions",
   ]; // Added "Actions" to match the vendor row actions
+ 
+  const limit = 10;
+  const page = 1;
+  const status = 'active'; // example status
+  const query = ''; // example search query
+  const isDisabled = false;
 
+  const { data: vendors = [], isLoading, error } = useAdminListVendorsQuery({limit,page,status,query,isDisabled})
+
+  // // const vendorList = useMemo(()=>{
+    console.log("vendors:: ",vendors)
+  // // },[])
+// const 
   return (
     <ListComponent
-      data={Items} // Use mock data directly
+      data={vendors} // Use mock data directly
       dropdownOptions={["All Vendors", "Inactive Vendors"]}
       title="Vendors"
       headers={headers} // Pass the headers
@@ -146,9 +164,11 @@ const VendorComponent = ({
   );
 };
 
-const VendorList = () => {
-  const [selectedItems, setSelectedItems] = useState([]);
 
+const VendorList = () => {
+  console.log("@VendorList")
+  
+  const [selectedItems, setSelectedItems] = useState([]);
   // Handle checkbox selection/deselection
   const handleCheckboxChange = (id) => {
     setSelectedItems((prevSelected) =>
@@ -157,6 +177,7 @@ const VendorList = () => {
         : [...prevSelected, id]
     );
   };
+  // console.log("useAdminListItemsByVendorsQuery:: ",items)
 
   // Handle delete action
   const handleDeleteClick = (id) => {

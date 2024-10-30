@@ -36,10 +36,12 @@ export const itemApiSlice = apiSlice.injectEndpoints({
     getItemById : builder.query({
         query : (id) => `items/${id}`,
     }),
+
     searchItems: builder.query({
       query: ({searchTerm, country, filter}) => `items/search?query=${searchTerm}&country=${country}&filter=${filter}`,
       providesTags: ['item'],
     }),
+   
   }),
 });
 
@@ -50,5 +52,5 @@ export const {
   useUpdateItemMutation,
   useDeleteItemMutation,
   useSearchItemsQuery,
-  useGetItemByIdQuery
+  useGetItemByIdQuery,
 } = itemApiSlice;

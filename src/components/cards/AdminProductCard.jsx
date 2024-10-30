@@ -3,12 +3,14 @@ import { numberWithCommas, ReplaceImage } from "../../utils";
 import { Menu } from "@headlessui/react";
 import ProductStatus from "../ProductStatus";
 const AdminProductCard = ({ item, handleDeleteClick, handleProductClick }) => {
+  const   baseUrl = import.meta.env.VITE_APP_API_URL
+
   return (
-    <div key={item.productID} className="text-sm font-[500] animate-fade-in">
+    <div key={item?.itemID} className="text-sm font-[500] animate-fade-in">
       <div className="relative bg-white rounded-lg overflow-hidden h-[200px] group">
         <img
-          src={item.image || ReplaceImage}
-          alt={item.name}
+          src={item?.images ? `${baseUrl+item?.images[0]}` : ReplaceImage}
+          alt={item?.itemName}
           onError={ReplaceImage}
           className="w-full h-full object-contain"
         />
@@ -20,7 +22,7 @@ const AdminProductCard = ({ item, handleDeleteClick, handleProductClick }) => {
         <button className="text-sm font-[400] mb-3 line-clamp-2 "
            onClick={() => handleProductClick(item)} 
         >
-          {item?.name}{" "}
+          {item?.itemName}{" "}
        
         </button>
         <Menu as="button" className="relative inline-block text-right">
@@ -92,14 +94,23 @@ const AdminProductCard = ({ item, handleDeleteClick, handleProductClick }) => {
           </Menu>
         </div>
 
-        <span className="text-xs text-regal-light-gray mb-3">
-          {item?.country}
-        </span>
+        {item?.itemSupportedCountries?.map((country, index) => (
+            
+              <span key={index} 
+              className="text-xs text-regal-light-gray mb-3 px-0.5">
+              {country}
+              {/* <IoClose
+                className="cursor-pointer"
+                onClick={() => handleRemoveCountry(country)}
+              /> */}
+            {index != item?.itemSupportedCountries.length-1 ? ",": ""}
+            </span>
+          ))}
         <p className="text-regal-sky-blue font-[600] text-sm md:text-[16px] flex items-center gap-2 ">
           ₦{numberWithCommas(item?.price)}{" "}
           {item?.percentageOFF !== null ? (
             <s className="font-[400] text-xs text-regal-light-gray ">
-              ₦ {numberWithCommas(item?.old_price)}
+              ₦ {numberWithCommas(item?.newPrice ? item?.price :0)}
             </s>
           ) : (
             ""

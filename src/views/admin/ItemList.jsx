@@ -16,113 +16,55 @@ import { LuBox } from "react-icons/lu";
 import { HiUsers } from "react-icons/hi2";
 import { FaHouseChimneyWindow } from "react-icons/fa6";
 import {useErrorMessageHooks} from "../../hooks/useErrorMessageHooks";
-import { useGetAdminCategoriesQuery,useGetSubcategoriesQuery } from "../../features/category/categoryApiSlice";
+
+import { Menu } from "@headlessui/react";
+import { PiDotsThreeOutline } from "react-icons/pi";
 import DefaultStatus from "../../components/order/DefaultStatus";
 import { useGetCountriesQuery } from "../../features/auth/authApiSlice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-const ProductList = () => {
+import { useAdminListNewItemsQuery, useApproveItemMutation } from "../../features/admin/adminApiSlice";
+
+const ItemList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [modalState, setModalState] = useState({ type: null, data: null });
   const [activeTab, setActiveTab] = useState("all");
   const [success, setSuccess] = useState(false);
   const { handleError, setErrMsg,  setErrorMessagesList, handleErrorMessagesList, errMsg} = useErrorMessageHooks();
+  const dispatch = useDispatch()
+
+  const limit = 10;
+  const page = 1;
+  const status = 'active'; // example status
   const {
-    data: products = [],
+    data: items = [],
     isLoading: loadingProducts,
     error,
-  } = useGetProductsAdminQuery();
-  const {
-    data: countries = [],
-    isLoading: loadingCountries,
-    errorCountries,
-  } = useGetCountriesQuery();
-  const countriesList = useSelector((state) => state?.auth?.countries);
-  const { data: categories = [], isLoading, errorCategory } = useGetAdminCategoriesQuery();
-  const { data: subCategories = [], isLoading: subIsLoading, error : subError} = useGetSubcategoriesQuery();
-  const [addProduct, { isLoading: addLoading }] = useAddProductMutation();
-  const [updateProduct, { isLoading: editLoading }] =
-    useUpdateProductMutation();
-  const [deleteProduct, { isLoading: deleteLoading }] =
-    useDeleteProductMutation();
-  const tabItems = useMemo(
-    () => [
-      {
-        name: "Total Products",
-        icon: <LuBox className="text-lg text-regal-blue" />,
-        total: "₦15k",
-      },
-      {
-        name: "Active Products",
-        icon: <HiUsers className="text-lg text-regal-blue" />,
-        total:  products.data?.filter((i)=> i?.productStatus?.toLowerCase() === "active")?.length ,
-      },
-      {
-        name: "Inactive Products",
-        icon: <FaHouseChimneyWindow className="text-lg text-regal-blue" />,
-        total: products.data?.filter((i)=> i?.productStatus?.toLowerCase() === "inactive")?.length,
-      },
-    ],
-    [products]
-  );
+  } = useAdminListNewItemsQuery({limit,page});
+  const [approveItem, {isLoading: addLoading},] = useApproveItemMutation();
+
+  console.log("items:: ",items)
+  
 
   const columns = [
     {
-      key: "productName",
-      label: "PRODUCT NAME",
-      render: (value, item) => (
-        <ProductName
-        value={value}
-        viewProduct={() => setModalState({ type: "view", data: item })}
-      />
-      ),
-    },
-    {
-      key: "productCategory",
-      label: "CATEGORY",
-      render: (value) => (
-        <ProductCategoryName
-        value={value}
-        categories={categories}
-      />
-      ),
-    },
-    {
-      key: "productSubCategory",
-      label: "SUB CATEGORY",
-      render: (value) => (
-        <ProductSubCategoryName
-        value={value}
-        subCategories={subCategories}
-      />
-      ),
+      key: "itemName",
+      label: "ITEM NAME",
     },
     { key: "price", label: "PRICE" },
-    { key: "stock", label: "STOCK" },
-    { key: "productSupportedCountries", label: "SUPPORTED COUNTRIES",
-      render: (value) => (
-        <ProductCountryList
-        value={value}
-        countriesList={countriesList}
-      />
-      ),
-     },
-    { key: "unsupported countries", label: "UNSUPPORTED COUNTRIES" },
-    { key: "productStatus", label: "STATUS", render: (value) => <DefaultStatus status={value} /> },
+    { key: "quantity", label: "STOCK" },
+    
+    { key: "itemsSupportedCountries", label: "SUPPORTED COUNTRIES" },
+    { key: "status", label: "STATUS", render: (value) => <DefaultStatus status={value} /> },
   ];
 
   const actions = [
     {
-      label: "Edit Product",
+      label: "Approve Item",
       icon: <FaEdit />,
-      onClick: (item) => setModalState({ type: "edit", data: item }),
-    },
-    {
-      label: "Delete Product",
-      icon: <IoTrashOutline />,
-      onClick: (item) => setModalState({ type: "delete", data: item }),
-    },
+      onClick: (item) => setModalState({ type: "approve", data: item }),
+    }
   ];
 
   const handleDeleteConfirm = async () => {
@@ -132,114 +74,61 @@ const ProductList = () => {
     setModalState({ type: null, data: null });
   };
 
+  const handleApproveItem = async () => {
+    console.log("handleApproveItem:: ",modalState?.data)
+
+    if (modalState.data) {
+      console.log("handleApproveItem:: ",modalState?.data?.itemID)
+
+      // const newList = 
+      await approveItem({itemID:modalState?.data.itemID, ...modalState?.data}).unwrap();;
+      // dispatch(approveItem(modalState.data))
+      setSuccess(true)
+      // handleModalClose()
+
+    }
+    setModalState({ type: null, data: null });
+  };
+
   const handleModalClose = () => {
     setSuccess(false);
     setModalState({ type: null, data: null });
   };
 
-  const handleCreateProduct = async (formData) => {
-    setErrMsg("");
-    setErrorMessagesList([]);
-    if (modalState.type === "create") {
-      try {
-        console.log(formData,"formData");
-        
-        const newCategory = await addProduct({ ...formData }).unwrap();
-        // dispatch(addCategoryToRedux(newCategory));
-        console.log("Product Created:", newCategory);
-        // handleModalClose();
-        setSuccess(true);
-      } catch (err) {
-        handleError(err, "Product");
-        console.error("Failed to Product:", err);
-      }
-    } else if (modalState.type === "edit") {
-      try {
-        console.log(editLoading);
-        const updatedProduct = await updateProduct({
-          id: modalState.data.productID,
-          ...formData,
-        }).unwrap();
-        // dispatch(updateSubcategory({ id: modalState.data.id, updatedCategory }));
-        console.log("sub Product Updated:", updatedProduct);
-        setSuccess(true);
-      } catch (err) {
-        console.error("Failed to update Product:", err);
-      }
-    }
-  };
+ 
 
-  const tabOptions = useMemo(
-    () => [
-      { id: "all", name: "All" },
-      { id: "active", name: "Active" },
-      { id: "inactive", name: "Inactive" },
-    ],
-    []
-  );
+  const tabOptions =[]
 
-  const filteredItems = useMemo(() => {
-    if (activeTab !== 'all') {
-      return products?.data?.filter((item) =>
-        item?.productName?.toLowerCase().includes(searchTerm.toLowerCase()) && item?.productStatus?.toLowerCase() === activeTab
-      );
-    }else{
-      return products?.data?.filter((item) =>
-        item?.productName?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    
-  }, [searchTerm, products, activeTab]);
-
+ 
   return (
     <div className="product-list">
       <main className="flex flex-col md:flex-row justify-between items-center mt-6">
-        <DateFilters />
-        <button
+        {/* <button
           className="text-white flex flex-row items-center gap-1 text-xs py-2 px-4 border rounded-md bg-regal-sky-blue transition font-[500] active:scale-95"
           onClick={() => setModalState({ type: "create" })}
         >
           Add Product
-        </button>
+        </button> */}
       </main>
 
-      <TabOverview items={tabItems} />
+      {/* <TabOverview items={tabItems} /> */}
 
       <section className="rounded-2xl border animate-fade-in mt-8 bg-white">       
           {/* Modals */}
-          {modalState?.type === "edit" && (
+          
+          {modalState?.type === "approve" && (
             <ModalForm
               setCreateModel={handleModalClose}
-              formType="product"
-              onSubmit={handleCreateProduct}
+              formType="item"
+              onSubmit={handleApproveItem}
               icon={Bag}
               isEdit={true}
-              handleErrorMessagesList={handleErrorMessagesList}
-              errMsg={errMsg}
-              initialData={modalState.data}
-              loading={editLoading}
-              success={success}
-              categories={categories.data}
-              subCategories={subCategories.data}
-              countries={countries}
-              loadingCountries={loadingCountries}
-            />
-          )}
+              initialData={modalState?.data}
 
-          {modalState?.type === "create" && (
-            <ModalForm
-              setCreateModel={handleModalClose}
-              formType="product"
-              onSubmit={handleCreateProduct}
-              icon={Bag}
               handleErrorMessagesList={handleErrorMessagesList}
               errMsg={errMsg}
               loading={addLoading}
               success={success}
-              categories={categories.data}
-              subCategories={subCategories.data}
-              countries={countries}
-              loadingCountries={loadingCountries}
             />
           )}
 
@@ -259,7 +148,7 @@ const ProductList = () => {
 
        
             {modalState?.type === "view" && modalState?.data !== null ? (
-              <ProductView
+              <ItemView
                 product={modalState?.data}
                 filteredItems={filteredItems}
                 close={() => setModalState({ type: null, data: null })}
@@ -267,36 +156,82 @@ const ProductList = () => {
             ) : (
               <main className="p-4 md:px-8 md:pt-8 pb-4">
               <div className="flex flex-col md:flex-row justify-between overflow-x-scroll">
-              <TabButtons
-                options={tabOptions}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-              />
+              
   
-              {/* Search bar */}
-              <div className="w-full flex items-center border border-gray-300 max-w-[400px] rounded-md overflow-hidden mt-3 md:mt-0">
-                <span className="pl-2 text-regal-light-gray">
-                  <FiSearch />
-                </span>
-                <input
-                  type="text"
-                  className="w-full p-2 outline-none text-xs"
-                  placeholder="Search Product"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
+            
             </div>
           <section className="mt-8">
-              <PaginatedTable
-                columns={columns}
-                data={products}
-                actions={actions}
-                itemsPerPage={10}
-                isLoading={loadingProducts} // Add loading state for the table
-              />
+          <table className="min-w-full">
+          <thead>
+            <tr>
+              {columns.map((column) => (
+                <th
+                  key={column.key}
+                  className="px-6 py-4 text-left text-xs font-medium text-nowrap text-regal-black tracking-wider"
+                >
+                  {column.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+           
+          {items.data?.map((item, index) => (
+
+          <tr key={index}>
+                {columns.map((column) => (
+                  <td
+                    key={column.key}
+                    className="px-6 py-2 text-xs text-regal-black whitespace-nowrap font-[500]"
+                  >
+                    {
+                      column.key == "itemSupportedCountries" ?
+                      item[column.key].map((country, index) => (
+            
+                        <span key={index} 
+                        className="text-xs text-regal-light-gray mb-3 px-0.5">
+                        {country}
+                        {/* <IoClose
+                          className="cursor-pointer"
+                          onClick={() => handleRemoveCountry(country)}
+                        /> */}
+                      {index != item?.itemSupportedCountries.length-1 ? ",": ""}
+                      </span>
+                    ))
+                    :
+                    column.render ? column.render(item[column.key], item) : item[column.key]
+                    }
+                  </td>
+                ))}
+                  <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
+                    
+                    <Menu>
+                        {actions.map((action, idx) => ( 
+                            <Menu.Item >
+                              {({ active }) => (
+                                <button
+                                  className={`flex items-center w-full px-4 py-2 text-xs gap-2 text-regal-black ${
+                                    active ? "bg-gray-100" : ""
+                                  }`}
+                                  onClick={() => action.onClick(item)}
+                                >
+                                  {action.icon}
+                                  {action.label}
+                                </button>
+                              )}
+                            </Menu.Item>
+                         ))}
+                    </Menu>
+                  </td>
+                </tr>
+          ))}
+
               {loadingProducts && <div>Loading data...</div>}
               {error && <div>Error loading Product: {error?.message  || "Unknown error"}</div>}
+           
+           
+           </tbody>
+           </table>
            </section>
            </main>
             )}
@@ -367,7 +302,7 @@ const TabButtons = ({ options, activeTab, onTabChange }) => (
 
 
 
-const ProductView = ({ product, filteredItems, close }) => {
+const ItemView = ({ item, filteredItems, close }) => {
   return (
     <div className="rounded-2xl border bg-white overflow-hidden">
     
@@ -388,7 +323,7 @@ const ProductView = ({ product, filteredItems, close }) => {
                             className="w-6 h-6 rounded-full object-cover"
                         /> */}
                         <span className="text-xs capitalize text-regal-black whitespace-nowrap font-[600]">
-                            {product?.productName}
+                            {item?.itemName}
                         </span>
                     </div>
                     <div className="flex flex-row items-center gap-2">
@@ -409,7 +344,7 @@ const ProductView = ({ product, filteredItems, close }) => {
           className="w-32 h-32 object-cover rounded-md"
         /> */}
         <div>
-          <h2 className="text-2xl font-bold capitalize">{product?.productName}</h2>
+          <h2 className="text-2xl font-bold capitalize">{item?.itemName}</h2>
           {/* <p className="text-xl font-semibold text-gray-700 mt-1">₦{product?.price}</p> */}
         </div>
       </div>
@@ -424,7 +359,7 @@ const ProductView = ({ product, filteredItems, close }) => {
           <input
             type="text"
            className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
-            value={product?.productName}
+            value={item?.itemName}
             readOnly
           />
         </div>
@@ -477,7 +412,6 @@ const ProductName = ({ value, image, viewProduct }) => (
     <span className="text-sm capitalize">{value}</span>{" "}
   </div>
 );
-
 const ProductCategoryName =  ({ value, categories }) => {
   const catgoryDetails = categories.data?.find((i) => i?.categoryID === value)
   if (catgoryDetails) {  
@@ -491,7 +425,6 @@ const ProductCategoryName =  ({ value, categories }) => {
     return <p>Category not found</p>
   }
 }
-
 const ProductSubCategoryName =  ({ value, subCategories }) => {
   const catgoryDetails = subCategories?.data?.find((i) => i?.subCategoryID === value)
   if (catgoryDetails) {  
@@ -503,19 +436,19 @@ const ProductSubCategoryName =  ({ value, subCategories }) => {
   }
 }
 
-const ProductCountryList =  ({ value, countriesList }) => {
-  const countriesDetails = countriesList?.filter((i) => value?.includes(i?.name))
-  if (countriesDetails) {  
-  return  <div className="flex items-center gap-3 cursor-pointer capitalize" >
-    {countriesDetails?.map((i)=> (
-          <span className="flex items-center gap-1 text-xs mx-2">
-              <img src={`https://flagcdn.com/w320/${i?.code?.toLowerCase()}.png`} alt={i?.name} className="w-4 h-2" />
-            {i?.name}
-            </span>
-    ))}
-  </div>
-  }else{
-    return <p>Category not found</p>
-  }
-}
-export default ProductList;
+// const ProductCountryList =  ({ value, countriesList }) => {
+//   const countriesDetails = countriesList?.filter((i) => value?.includes(i?.name))
+//   if (countriesDetails) {  
+//   return  <div className="flex items-center gap-3 cursor-pointer capitalize" >
+//     {countriesDetails?.map((i)=> (
+//           <span className="flex items-center gap-1 text-xs mx-2">
+//               <img src={`https://flagcdn.com/w320/${i?.code?.toLowerCase()}.png`} alt={i?.name} className="w-4 h-2" />
+//             {i?.name}
+//             </span>
+//     ))}
+//   </div>
+//   }else{
+//     return <p>Category not found</p>
+//   }
+// }
+export default ItemList;
