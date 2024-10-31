@@ -27,10 +27,10 @@ export const adminApiSlice = apiSlice.injectEndpoints({
             invalidatesTags:['admin']
         }),
         approveItem: builder.mutation({
-            query: ({itemID,...credentials}) => ({
+            query: (itemID) => ({
                 url: `admin/items/approve/${itemID}`,
                 method: 'PATCH',
-                body: {credentials},
+                // body: {credentials},
             }),
             invalidatesTags:['admin']
         }),

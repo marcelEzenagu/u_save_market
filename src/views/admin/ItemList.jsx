@@ -41,6 +41,7 @@ const ItemList = () => {
     data: items = [],
     isLoading: loadingProducts,
     error,
+    refetch
   } = useAdminListNewItemsQuery({limit,page});
   const [approveItem, {isLoading: addLoading},] = useApproveItemMutation();
 
@@ -75,17 +76,14 @@ const ItemList = () => {
   };
 
   const handleApproveItem = async () => {
-    console.log("handleApproveItem:: ",modalState?.data)
 
     if (modalState.data) {
-      console.log("handleApproveItem:: ",modalState?.data?.itemID)
 
       // const newList = 
-      await approveItem({itemID:modalState?.data.itemID, ...modalState?.data}).unwrap();;
-      // dispatch(approveItem(modalState.data))
+      await approveItem(modalState?.data.itemID)
+      refetch()
       setSuccess(true)
-      // handleModalClose()
-
+      handleModalClose()
     }
     setModalState({ type: null, data: null });
   };

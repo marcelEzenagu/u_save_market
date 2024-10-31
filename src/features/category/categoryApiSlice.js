@@ -22,7 +22,7 @@ export const categoryApiSlice =  apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['category'],
     }),
-    
+
     updateCategory: builder.mutation({
       query: ({ id, ...updatedCategory }) => ({
         url: `admin/categories/${id}`,
@@ -54,6 +54,7 @@ export const categoryApiSlice =  apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['subcategory'],
     }),
+    
     updateSubcategory: builder.mutation({
       query: ({ id, ...updatedSubcategory }) => ({
         url: `admin/sub-categories/${id}`,
