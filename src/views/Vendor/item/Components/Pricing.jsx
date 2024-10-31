@@ -10,7 +10,7 @@ function Pricing({handleChange, data, setData, handleErrorMessagesList}) {
          htmlFor=" Old Price"
          className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
        >
-       Ooriginal Price
+       Original Price
        </label>
        <input
        type='number'

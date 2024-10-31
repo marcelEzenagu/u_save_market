@@ -53,7 +53,6 @@ function OverViewAgent() {
     []
   );
 
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth?.user);
 
   const handleOptionChange = (option) => {

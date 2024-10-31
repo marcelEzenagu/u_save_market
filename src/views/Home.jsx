@@ -44,7 +44,7 @@ function Home() {
         <div className="flex flex-wrap gap-2">
           {categories?.map(category => (
             <Link
-              to={`/products?category=${category.name.toLowerCase()}`}
+              // to={`/products?category=${category.name.toLowerCase()}`}
               key={category.id}
               className="flex items-center p-1 hover:bg-gray-200 rounded-md transition"
             >

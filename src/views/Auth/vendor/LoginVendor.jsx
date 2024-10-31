@@ -16,7 +16,8 @@ const handleSubmit = async (e) => {
   setErrMsg("");
   setErrorMessagesList([]);
   try {
-    const {response } = await login({ email : data.email, password : data.password }).unwrap()
+    // const {response } = await login({ email : data.email, password : data.password }).unwrap()
+    const {response } = await login({ email : "marcelovendor@gmail.com", password : "@W4string;" }).unwrap()
     setCookie("accessToken", response?.access_data?.access_token)
     setCookie("role", response?.access_data?.role)
     dispatch(setCredentials({ accessToken: response?.access_data?.access_token, user : response?.vendor, role: response?.access_data?.role,}))

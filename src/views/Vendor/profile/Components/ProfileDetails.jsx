@@ -125,32 +125,22 @@ function ProfileDetails() {
             <label htmlFor="firstName" className="block text-xs md:text-[12px] font-[400] leading-6 mb-2 text-regal-black">
               First Name
             </label>
-            <input
-              type="text"
-              name="firstName"
-              id="firstName"
-              value={data.firstName}
-              onChange={(e) => setData({ ...data, firstName: e.target.value })}
-              placeholder="Enter name"
+            <div
               className="w-full p-3 md:p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
-            />
-            {handleErrorMessagesList("firstName")}
+            
+            >{data.firstName}</div>
+           
           </div>
 
           <div className="mb-1 col-span-2">
             <label htmlFor="lastName" className="block text-xs md:text-[12px] font-[400] leading-6 mb-2 text-regal-black">
               Last Name
             </label>
-            <input
-              type="text"
-              name="lastName"
-              id="lastName"
-              value={data.lastName}
-              onChange={(e) => setData({ ...data, lastName: e.target.value })}
-              placeholder="Enter name"
+            <div
               className="w-full p-3 md:p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
-            />
-            {handleErrorMessagesList("lastName")}
+            
+            >{data.lastName}</div>
+           
           </div>
 
           <div className="mb-1 col-span-2">

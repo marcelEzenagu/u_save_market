@@ -14,7 +14,8 @@ function Sidebar() {
 
     const [activeTab, setActiveTab] = useState(false);
     useEffect(()=>{
-        if (name != '') {
+        if (name != '') {console.log("NAME::: ",name)
+       console.log("NAME::: ",data)
          const findData = data.filter((e)=> e?.name?.toLowerCase() === name?.toLowerCase())
         if(findData.length > 0) {
             setActiveTab(true)

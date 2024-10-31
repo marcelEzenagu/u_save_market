@@ -44,8 +44,6 @@ const ItemList = () => {
     refetch
   } = useAdminListNewItemsQuery({limit,page});
   const [approveItem, {isLoading: addLoading},] = useApproveItemMutation();
-
-  console.log("items:: ",items)
   
 
   const columns = [

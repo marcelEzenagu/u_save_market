@@ -15,6 +15,7 @@ import { LiaBoxSolid } from "react-icons/lia";
 import { Items } from "../../data/mockData";
 import ReactPaginate from "react-paginate";
 import OrderVendorStatus from "../../components/order/OrderVendorStatus";
+import { useSelector } from "react-redux";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -24,7 +25,9 @@ ChartJS.register(
   Legend
 );
 function Home() {
+  const user = useSelector((state) => state.auth?.user);
 
+  console.log(user,("useruseruseruser"))
     const data = {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
         datasets: [
@@ -130,7 +133,7 @@ const BestSeller = () => {
   // (This could be items from props; or items loaded in a local state
   // from an API endpoint with useEffect and useState)
   const endOffset = itemOffset + itemsPerPage;
-  console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+  console.log(`Loading BestSeller items from ${itemOffset} to ${endOffset}`);
   const currentItems = Items.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(Items.length / itemsPerPage);
 
@@ -227,6 +230,7 @@ const BestSeller = () => {
     </div>
   );
 };
+
 const Orders = () => {
     const itemsPerPage = 5;
     // Here we use item offsets; we could also use page offsets
@@ -237,7 +241,7 @@ const Orders = () => {
     // (This could be items from props; or items loaded in a local state
     // from an API endpoint with useEffect and useState)
     const endOffset = itemOffset + itemsPerPage;
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+    console.log(`Loading Orders items from ${itemOffset} to ${endOffset}`);
     const currentItems = Items.slice(itemOffset, endOffset);
     const pageCount = Math.ceil(Items.length / itemsPerPage);
   

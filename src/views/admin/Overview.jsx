@@ -142,14 +142,12 @@ function Overview() {
   );
   
   const handleShowDate = (dateType) => {
-    console.log("DATE_type::: ")
     console.log("DATE_type::: ",dateType)
   }
 
   return (
     <div className="">
 
-     
       <DateRangeFilter
         openDate={dto.openDate}
         showDate={handleShowDate}

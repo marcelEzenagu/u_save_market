@@ -63,7 +63,6 @@ const CategoryList = () => {
       try {
         await deleteCategory(modalState.data.categoryID);
         // dispatch(deleteCategory(modalState.data.id));
-        console.log("Category deleted:", modalState.data.categoryName);
         setModalState({ type: null, data: null });
         setSuccess(true)
 
@@ -97,13 +96,11 @@ const CategoryList = () => {
       }
     } else if (modalState.type === "edit") {
       try {
-        console.log(editLoading);
         const updatedCategory = await updateCategory({
           id: modalState.data.categoryID,
           ...formData,
         }).unwrap();
         // dispatch(updateCategory({ id: modalState.data.id, updatedCategory }));
-        console.log("Category Updated:", updatedCategory);
         setSuccess(true)
       } catch (err) {
         console.error("Failed to update category:", err);
@@ -112,7 +109,6 @@ const CategoryList = () => {
   };
 
   const filteredItems = useMemo(() => {
-    console.log("vendors:: ",vendors)
     return categories.data?.filter((item) =>
       item?.categoryName?.toLowerCase().includes(searchTerm?.toLowerCase())
     );
