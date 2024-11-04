@@ -240,7 +240,10 @@ function Shippinginfo(props) {
         <div className="w-full mb-14">
           <button className="py-3 px-10 float-end text-xs md:text-sm active:scale-95 font-[500] text-white rounded-md bg-regal-sky-blue"
            type="button"
-          onClick={()=>{props.setActiveTab('2')}}
+          onClick={
+            ()=>{props.setActiveTab('2')}
+          
+          }
           >
             Save and Continue
           </button>

@@ -26,7 +26,18 @@ export const vendorApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags:['vendor']
         }),
+       
+
+        getVendorOrders: builder.query({
+            query: (data) => {
+                const { status = '', daysDifference = '' } = data;
+                return    {url: `vendors/orders?status=${status}&daysDifference=${daysDifference}`,
+                };
+            },
+            invalidatesTags:['vendor'],
+
+        }),
     })
 })
 
-export const {useViewVendorQuery, useUpdateVendorProfileMutation, useUpdateVendorProfilePictureMutation} = vendorApiSlice
+export const {useViewVendorQuery,useGetVendorOrdersQuery, useUpdateVendorProfileMutation, useUpdateVendorProfilePictureMutation} = vendorApiSlice

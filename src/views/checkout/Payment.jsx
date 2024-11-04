@@ -100,20 +100,21 @@ function Payment() {
     setPlaceOrder(true);
 
     try {
+      console.log("cartDetails==cartDetails::cartDetails=== ",cartDetails)
       let total = cartDetails?.products?.reduce(
         (acc, item) => acc + item?.price * item?.quantity,
         0
       );
 
       const CheckoutDetails = JSON.parse(localStorage.getItem("checkoutDetails"));
+      console.log("CheckoutDetails::CheckoutDetails=== ",CheckoutDetails)
       const totalCost = total + CheckoutDetails?.shippingPay;
-
       const orderPayload = {
         cartID: cartDetails?.cartID,
         items: cartDetails?.products,
         totalCost: totalCost,
         userID: userData?.userID,
-        clientSecret : intentId
+        clientSecret : intentId,
       };
 
       const response = await fetch(`${api}orders`, {

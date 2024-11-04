@@ -84,7 +84,9 @@ const CartItem = React.memo(
           </button>
         </div>
         <span className="text-regal-black font-[600] text-xs md:text-sm">
-        {exchangeRate?.currency}{' '}{ numberWithCommas((item?.newPrice ? item?.newPrice* exchangeRate?.rate :item?.salesPrice * exchangeRate?.rate).toFixed(2))}
+        {exchangeRate?.currency}{' '}{ numberWithCommas((
+          (item?.newPrice ? item?.newPrice : item?.salesPrice) 
+          * exchangeRate?.rate).toFixed(2))}
         </span>
       </div>
     );
@@ -215,7 +217,7 @@ function Cart() {
   };
 
   const total = useMemo(
-    () => Items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+    () => Items.reduce((acc, item) => acc + (item.newPrice ? item.newPrice :item.salesPrice) * item.quantity, 0),
     [Items]
   );
   const lastItemId = useMemo(

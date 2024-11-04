@@ -112,10 +112,10 @@ const ProductCard = ({ item, category }) => {
           {item.country}
         </span> */}
         <p className="text-regal-sky-blue font-[600] text-sm md:text-[16px] flex items-center gap-2  w-[160px] clamp-1 whitespace-nowrap">
-          {exchangeRate?.currency}{' '}{ numberWithCommas((item?.salesPrice * exchangeRate?.rate).toFixed(2))}{" "}
+          {exchangeRate?.currency}{' '}{ numberWithCommas(((item.newPrice? item.newPrice : item.salesPrice )* exchangeRate?.rate).toFixed(2))}{" "}
           {item?.percentageOFF !== null ? (
             <s className="font-[400] text-xs text-regal-light-gray ">
-            {exchangeRate?.currency}{' '}{ numberWithCommas((item?.newPrice ? item?.salesPrice -item?.newPrice : 0 * exchangeRate?.rate).toFixed(2))}
+            {exchangeRate?.currency}{' '}{ numberWithCommas(((item?.newPrice ? item?.salesPrice : 0) * exchangeRate?.rate).toFixed(2))}
             </s>
           ) : (
             ""

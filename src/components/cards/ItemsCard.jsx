@@ -9,7 +9,7 @@ function ItemsCard({ item, category }) {
       <div className="relative bg-white h-[200px]  rounded-lg  overflow-hidden ">
         <img
           src={item.image || ReplaceImage}
-          alt={item.name}
+          alt={item.itemName}
           onError={ReplaceImage}
           className="w-full h-full object-contain"
         />
@@ -21,16 +21,16 @@ function ItemsCard({ item, category }) {
           className="text-xs font-[500] mb-2 line-clamp-2"
           // to={`/products/${category}/${item.name}`}
         >
-          {item.name}
+          {item.itemName}
         </h5>
         <p  className="text-xs font-[400] ">
-            Quantity : 1
+            Quantity : {item.quantity}
         </p>
         <p className="text-regal-sky-blue font-[600] text-sm md:text-[14px] ">
-          ₦{numberWithCommas(item?.price)}{" "}
+          ₦{numberWithCommas(item?.newPrice ? item?.newPrice :item?.salesPrice)}{" "}
             {item?.percentageOFF  !== null ?
           <s className="font-[400] text-xs text-regal-light-gray ">
-            {item?.old_price && '₦'+ numberWithCommas(item?.old_price) }
+            {item?.newPrice && '₦'+ numberWithCommas(item?.salesPrice) }
           </s>
            : ''}
         </p>

@@ -293,7 +293,7 @@ const Router = createBrowserRouter([
                     ]
                 },
                 {
-                    path:'/vendor/orders/:name',
+                    path:'/vendor/orders/:orderID',
                     element: <VendorOrderview/>
                 },
 

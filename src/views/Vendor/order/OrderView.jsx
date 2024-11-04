@@ -3,9 +3,15 @@ import { Items } from "../../../data/mockData";
 import Status from "../../../components/order/OrderStatus";
 import ItemsCard from "../../../components/cards/ItemsCard";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from 'react-router-dom';
+
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+
 function OrderView() {
+  const { orderID } = useParams();
+  const location = useLocation();
+  const { orderData } = location.state || {};  // Retrieve data passed in `state`
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const toggleModal = () => {
       setIsModalOpen(!isModalOpen);
@@ -23,10 +29,7 @@ function OrderView() {
         <h5 className="text-regal-black text-lg md:text-2xl font-[700]">
         Orders Details
         </h5>
-        <input
-          type="date"
-          className=" px-2 py-2 bg-white text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
-        />
+       
       </div>
 
         <div className="border round-md py-8 bg-white  my-8">
@@ -34,14 +37,14 @@ function OrderView() {
             <div className="rounded-md border p-5 mt-4">
             <div className="flex flex-col md:flex-row items-start justify-between">
               <div className="">
-                <p className="text-sm text-start flex flex-row items-center  gap-2 text-regal-black font-[700]  capitalize cursor-pointer">
-                  ID: 9065379 <Status key={""} />
+                <p className="text-sm text-start flex flex-row items-center  gap-2 text-regal-black font-[700]  capitalize ">
+                  ID: {orderID} <Status key={""} />
                 </p>
                 <p className="text-xs text-regal-light-gray text-start mt-1">
                   Order on: 3rd Aug, 2024
                 </p>
                 <p className="text-xs text-regal-black font-[700] text-start mt-1">
-                  Total: ₦1,585.00
+                  Total: ${orderData.totalCost}
                 </p>
               </div>
             </div>
@@ -106,7 +109,7 @@ function OrderView() {
             <div className="flex flex-row items-start justify-between">
               <div className="">
                 <p className="text-sm  text-start flex flex-row items-center  gap-2 text-regal-black font-[700]  capitalize cursor-pointer">
-                  Items in this order (5)
+                  Items in this order ({orderData.items.length})
                 </p>
               </div>
               <button className="flex items-center gap-2 font-[600] text-regal-sky-blue text-xs md:text-sm ">
@@ -115,8 +118,8 @@ function OrderView() {
               </button>
             </div>
             <div className="mt-5  flex flex-row gap-4 overflow-x-scroll">
-              {Items &&
-                Items.map((e) => (
+              {orderData.items &&
+                orderData.items.map((e) => (
                   <div className="w-[170px]" key={e.id}>
                     <ItemsCard item={e} />
                   </div>

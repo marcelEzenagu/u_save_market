@@ -22,38 +22,38 @@ const TabComponent = React.memo(
       <>
         {tabs.map((tab) => {
           const Component = tab.component;
-          return (
-            <div
-              className="border shadow-sm bg-white py-4 md:py-6 rounded-xl"
-              key={tab.id}
-            >
-              <div className="px-4 md:px-6">
-                <div className="flex flex-row items-center justify-between">
-                  <h6 className="text-regal-blue text-sm md:text-[16px] mb-4 font-[700]">
-                    {tab.id}.{tab.name}
+            return (
+              <div
+                className="border shadow-sm bg-white py-4 md:py-6 rounded-xl"
+                key={tab.id}
+              >
+                <div className="px-4 md:px-6">
+                  <div className="flex flex-row items-center justify-between">
+                    <h6 className="text-regal-blue text-sm md:text-[16px] mb-4 font-[700]">
+                      {tab.id}.{tab.name}
+                    </h6>
+                    {tab.id !== activeTab && (
+                      <button
+                        className="text-regal-sky-blue text-xs md:text-sm mb-4 font-[700] active:scale-95"
+                        onClick={() => setActiveTab(tab.id)}
+                      >
+                        Show more
+                      </button>
+                    )}
+                  </div>
+                  <h6 className="text-regal-light-gray text-xs md:text-sm">
+                    {tab.details}
                   </h6>
-                  {tab.id !== activeTab && (
-                    <button
-                      className="text-regal-sky-blue text-xs md:text-sm mb-4 font-[700] active:scale-95"
-                      onClick={() => setActiveTab(tab.id)}
-                    >
-                      Show more
-                    </button>
-                  )}
                 </div>
-                <h6 className="text-regal-light-gray text-xs md:text-sm">
-                  {tab.details}
-                </h6>
+                {tab.id === activeTab && (
+                  <Component
+                    data={data}
+                    handleChange={handleChange}
+                    setActiveTab={setActiveTab}
+                  />
+                )}
               </div>
-              {tab.id === activeTab && (
-                <Component
-                  data={data}
-                  handleChange={handleChange}
-                  setActiveTab={setActiveTab}
-                />
-              )}
-            </div>
-          );
+            );
         })}
       </>
     );
@@ -340,7 +340,7 @@ export default function CheckoutWrapper() {
 
   const total = useMemo(() => {
     return cartDetails?.products?.reduce(
-      (acc, item) => acc + item?.price * item?.quantity,
+      (acc, item) => acc + (item.newPrice ? item.newPrice :item.salesPrice) * item?.quantity,
       0
     );
   }, [cartDetails]);
@@ -376,6 +376,7 @@ export default function CheckoutWrapper() {
 
     getClientKey();
   }, [cartDetails]);
+  // }, []);
 
   const appearance = {
     theme: 'stripe',
@@ -394,7 +395,8 @@ export default function CheckoutWrapper() {
         <Checkout 
           clientSecret={clientSecret} 
           cartDetails={cartDetails}  
-          setData={setData} data={data} 
+          setData={setData} 
+          data={data} 
           estTotal={estTotal} 
           total={total} 
         />

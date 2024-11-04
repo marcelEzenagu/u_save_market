@@ -30,7 +30,7 @@ function Product() {
   };
 
 
-  // console.log("userProduct1:: ",userProduct)
+  console.log("userProduct1:: ",userProduct)
   const handlePriceSelect = (price) => {
     setSelectedPrice(price);
     setIsPriceOpen(false);
@@ -97,9 +97,9 @@ function Product() {
 
   // Sorting based on Price
   if (selectedPrice === 'Low to High') {
-    filteredItems.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+    filteredItems.sort((a, b) => parseFloat(a.newPrice? a.newPrice : a.salesPrice) - parseFloat(b.newPrice? b.newPrice : b.salesPrice));
   } else if (selectedPrice === 'High to Low') {
-    filteredItems.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+    filteredItems.sort((a, b) => parseFloat(b.newPrice? b.newPrice : b.salesPrice) - parseFloat(a.newPrice? a.newPrice : a.salesPrice));
   }
 
   return (

@@ -51,7 +51,7 @@ const CartDropdown = () => {
     };
   }, []);
 
-  const total = useMemo(() => cart?.reduce((acc, item) => acc + item.price * item.quantity, 0), [cart]);
+  const total = useMemo(() => cart?.reduce((acc, item) => acc + (item.newPrice ? item.newPrice :item.salesPrice) * item.quantity, 0), [cart]);
   const cartLength = useMemo(() => cart?.length, [cart]);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -121,7 +121,7 @@ const CartDropdown = () => {
                                 {item?.itemName}
                               </span>
                               <span className="text-regal-sky-blue font-[400] text-xs md:text-sm">
-                              {exchangeRate?.currency}{' '}{ numberWithCommas((item?.price * exchangeRate?.rate).toFixed(2))}{" "}
+                              {exchangeRate?.currency}{' '}{ numberWithCommas(((item.newPrice ? item.newPrice :item.salesPrice) * exchangeRate?.rate).toFixed(2))}{" "}
                               </span>
                             </div>
                           </div>
