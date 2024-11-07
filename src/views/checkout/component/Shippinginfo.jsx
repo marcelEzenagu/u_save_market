@@ -20,8 +20,8 @@ function Shippinginfo(props) {
             </label>
             <input
               type="text"
-              value={props.data?.firstName}
-              onChange={props.handleChange}
+              value={props.data?.shippingDetails?.firstName}
+              onChange={(e)=>props.handleChange("shippingDetails",e)}
               name="firstName"
               id="text"
               placeholder="Enter First Name"
@@ -39,8 +39,9 @@ function Shippinginfo(props) {
             <input
               type="text"
               name="lastName"
-              value={props.data?.lastName}
-              onChange={props.handleChange}
+              value={props.data?.shippingDetails?.lastName}
+              onChange={e=>props.handleChange("shippingDetails",e)}
+
               id="text"
               placeholder="Enter Last Name"
               className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
@@ -89,6 +90,7 @@ function Shippinginfo(props) {
                         <li
                           key={index}
                           onClick={() => handleSelect(country)}
+
                           className="flex items-center text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer"
                         >
                           <img
@@ -107,8 +109,9 @@ function Shippinginfo(props) {
                 type="text"
                 name="phoneNumber"
                 id="phoneNumber"
-                value={props.data?.phoneNumber}
-                onChange={props.handleChange}
+                value={props.data?.shippingDetails?.phoneNumber}
+                onChange={e=>props.handleChange("shippingDetails",e)}
+
                 className="w-full py-3 pl-28 text-xs md:text-sm border rounded-sm bg-transparent text-regal-crum-gray focus:outline-none"
                 placeholder="Phone"
                 required
@@ -126,8 +129,9 @@ function Shippinginfo(props) {
               type="email"
               name="email"
               id="email"
-              value={props.data?.email}
-              onChange={props.handleChange}
+              value={props.data?.shippingDetails?.email}
+              onChange={e=>props.handleChange("shippingDetails",e)}
+
               placeholder="Enter Email"
               className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
                 required
@@ -143,8 +147,9 @@ function Shippinginfo(props) {
             <input
               type="text"
               name="street"
-              value={props.data?.street}
-              onChange={props.handleChange}
+              value={props.data?.shippingDetails?.street}
+              onChange={e=>props.handleChange("shippingDetails",e)}
+
               id="text"
               placeholder="Enter Street Name"
               className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
@@ -161,8 +166,9 @@ function Shippinginfo(props) {
             <select
               name="country"
               id="country"
-              value={props.data?.country}
-              onChange={props.handleChange}
+              value={props.data?.shippingDetails?.country}
+              onChange={e=>props.handleChange("shippingDetails",e)}
+
               placeholder="Enter Country"
               className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
            required
@@ -182,8 +188,9 @@ function Shippinginfo(props) {
             <select
               name="city"
               id="city"
-              value={props.data?.city}
-              onChange={props.handleChange}
+              value={props.data?.shippingDetails?.city}
+              onChange={e=>props.handleChange("shippingDetails",e)}
+
               placeholder="Enter City"
               className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
             >
@@ -201,8 +208,9 @@ function Shippinginfo(props) {
             <select
               name="state"
               id="state"
-              value={props.data?.state}
-              onChange={props.handleChange}
+              value={props.data?.shippingDetails?.state}
+              onChange={e=>props.handleChange("shippingDetails",e)}
+
               placeholder="Enter State/Region"
               className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
             >
@@ -221,15 +229,21 @@ function Shippinginfo(props) {
             <input
               name="zipCode"
               id="zipCode"
-              value={props.data?.zipCode}
-              onChange={props.handleChange}
+              value={props.data?.shippingDetails?.zipCode}
+              onChange={e=>props.handleChange("shippingDetails",e)}
               placeholder="Enter Zip Code"
               className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
             />
           </div>
         </div>
-        <div className="flex items-center my-4">
-          <input type="checkbox" id="checkbox" name="checkbox" />
+        <div className="flex items-center my-4" >
+
+          <input 
+                        value={props.data?.shippingDetails?.isDefault}
+
+            type="checkbox" id="checkbox" name="isDefault" 
+            onChange={e=>props.handleChange("shippingDetails",e)}
+          />
           <label
             htmlFor="checkbox"
             className=" text-xs  font-[500]  leading-6 mx-2 text-regal-black"
@@ -242,7 +256,6 @@ function Shippinginfo(props) {
            type="button"
           onClick={
             ()=>{props.setActiveTab('2')}
-          
           }
           >
             Save and Continue

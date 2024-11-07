@@ -108,6 +108,7 @@ function Payment() {
 
       const CheckoutDetails = JSON.parse(localStorage.getItem("checkoutDetails"));
       console.log("CheckoutDetails::CheckoutDetails=== ",CheckoutDetails)
+     
       const totalCost = total + CheckoutDetails?.shippingPay;
       const orderPayload = {
         cartID: cartDetails?.cartID,
@@ -115,6 +116,8 @@ function Payment() {
         totalCost: totalCost,
         userID: userData?.userID,
         clientSecret : intentId,
+        shippingAddress:CheckoutDetails.shippingDetails,
+        billingAddress:CheckoutDetails.billingDetails,
       };
 
       const response = await fetch(`${api}orders`, {

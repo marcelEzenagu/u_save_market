@@ -19,8 +19,8 @@ function PaymentDetails(props) {
           <input
             type="text"
             name="cardHolderName"
-            value={props.data?.cardHolderName}
-            onChange={props.handleChange}
+            value={props.data?.paymentDetails?.cardHolderName}
+            onChange={e=>props.handleChange("paymentDetails",e)}
             id="text"
             placeholder="Enter name"
             className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
@@ -45,8 +45,8 @@ function PaymentDetails(props) {
               type="text"
               name="cardNumber"
               id="card"
-              value={props.data?.cardNumber}
-              onChange={props.handleChange}
+              value={props.data?.paymentDetails?.cardNumber}
+              onChange={e=>props.handleChange("paymentDetails",e)}
               className="w-full p-3 text-xs md:text-sm border rounded-sm bg-transparent text-regal-crum-gray focus:outline-none"
               placeholder="0000 0000 0000 0000"
               required
@@ -64,8 +64,8 @@ function PaymentDetails(props) {
             type="text"
             name="expiry"
             id="expiry"
-            value={props.data?.expiry}
-            onChange={props.handleChange}
+            value={props.data?.paymentDetails?.expiry}
+            onChange={e=>props.handleChange("paymentDetails",e)}
             placeholder="MM/YY"
             className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
             required
@@ -81,8 +81,8 @@ function PaymentDetails(props) {
           <input
             type="text"
             name="cvv"
-            value={props.data?.cvv}
-            onChange={props.handleChange}
+            value={props.data?.paymentDetails?.cvv}
+            onChange={e=>props.handleChange("paymentDetails",e)}
             id="cvv"
             placeholder="123"
             className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
@@ -91,7 +91,10 @@ function PaymentDetails(props) {
         </div>
       </div>
       <div className="flex items-center my-4">
-        <input type="checkbox" id="checkbox" name="checkbox" />
+        <input type="checkbox" id="checkbox" name="isDefault" 
+          onChange={e=>props.handleChange("paymentDetails",e)}
+          value={props.data?.paymentDetails?.isDefault}
+        />
         <label
           htmlFor="checkbox"
           className=" text-xs  font-[500]  leading-6 mx-2 text-regal-black"
@@ -99,13 +102,13 @@ function PaymentDetails(props) {
           Set as default
         </label>
       </div>
-      <div className="w-full mb-14">
+      {/* <div className="w-full mb-14">
         <button
         type="button"
         className="py-3 px-10 float-end text-xs md:text-sm active:scale-95 font-[500] text-white rounded-md bg-regal-sky-blue">
           Save and Continue
         </button>
-      </div>
+      </div> */}
     </div>
     </div>
   );

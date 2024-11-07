@@ -61,8 +61,6 @@ const TabComponent = React.memo(
 );
 
 const OrderSummary = React.memo(({ cartDetails, data, estTotal, total,  loadingPayment }) => {
-
-
   return (
     <div className="border shadow-sm bg-white py-4 mt-5 md:mt-0 rounded-xl ">
       {cartDetails?.loading ? (
@@ -161,7 +159,26 @@ function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
     }
   }, [userData]);
 
-  const handleChange = useCallback((e) => {
+  const handleChange = (section,e) => {
+    console.log("e.target.name",e.target.name)
+    if(!section){
+      setData((prevData) => ({
+        ...prevData,
+        [e.target.name]: e.target.value,
+        
+      }));
+    }else{
+      setData((prevData) => ({
+        ...prevData,
+      [section]: { ...prevData[section],   [e.target.name]:  e.target.value }
+        
+      }));
+
+    }
+  }
+
+  const oldhandleChange = useCallback((e) => {
+    console.log("e.target.name",e.target.value)
     setData((prevData) => ({
       ...prevData,
       [e.target.name]: e.target.value,
@@ -171,15 +188,15 @@ function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
 
   const validateForm = useCallback((formData) => {
     const requiredFields = [
-      "firstName",
-      "lastName",
-      "phoneNumber",
-      "email",
-      "street",
-      "country",
-      "city",
-      "state",
-      "zipCode",
+      // "firstName",
+      // "lastName",
+      // "phoneNumber",
+      // "email",
+      // "street",
+      // "country",
+      // "city",
+      // "state",
+      // "zipCode",
     ];
 
     for (const field of requiredFields) {
@@ -205,6 +222,8 @@ function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
       if (validateForm(data)) {
         try {
           if (cartDetails?.products?.length > 0) {
+
+            console.log("DATA::: ",data)
             localStorage.setItem("checkoutDetails", JSON.stringify(data));
             setLoadingPayment(true);
   
@@ -292,7 +311,7 @@ function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
                 handleChange={handleChange}
                
               />
-                <PaymentDetails clientSecret={clientSecret} />
+              <PaymentDetails clientSecret={clientSecret} />
             </div>
             <div>
               <OrderSummary  loadingPayment={loadingPayment} cartDetails={cartDetails} data={data} total={total} estTotal={estTotal} />
@@ -308,75 +327,101 @@ function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
 }
 
 export default function CheckoutWrapper() {
+  
   const [clientSecret, setClientSecret] = useState("");
   const { isLoading, isAuthenticated } = useAuth();
   const token = useSelector(state => state?.auth?.token);
   const cartData = useSelector(state => state?.cart)
   const exchangeRate = useSelector((state)=> state?.auth?.exchangeRate);
 
-    const {
+  const {
     data: cartDetails,
     isLoading: loading,
     refetch,
   } = useGetUserCartQuery();
 
   const [data, setData] = useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    email: "",
-    street: "",
-    country: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    // cardHolderName: "",
-    // cardNumber: "",
-    // expiry: "",
-    // cvv: "",
-    companyName: "",
-    shippingPay: 0,
-  });
+    // firstName: "",
+    // lastName: "",
+    // phoneNumber: "",
+    // email: "",
+    // street: "",
+    // country: "",
+    // city: "",
+    // state: "",
+    // zipCode: "",
+    shippingDetails:{ 
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: "",
+      street: "",
+      country: "",
+      city: "",
+      isDefault:false,
+      state: "",
+      zipCode: "",},
 
+      billingDetails:{ 
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: "",
+      isDefault:false,
+      street: "",
+      country: "",
+      city: "",
+      state: "",
+      zipCode: "",},
+      paymentDetails:{ 
+        cvv: "",
+        expiry: "",
+        cardNumber: "",
+        cardHolderName: "",
+      isDefault:false,},
+    
+    // companyName: "",
+    // shippingPay: 0,
+  });
   const total = useMemo(() => {
     return cartDetails?.products?.reduce(
       (acc, item) => acc + (item.newPrice ? item.newPrice :item.salesPrice) * item?.quantity,
       0
     );
   }, [cartDetails]);
-  console.log("CART total::: ",total)
+ 
 
   const estTotal = useMemo(() => total + data?.shippingPay, [total, data]);
  
   useEffect(()=>{
     const getClientKey  = async () => {
-          if(total){
-            console.log("CART---total::: ",total)
+      if(total){
+        console.log("CART---total::: ",total)
 
-            const body = { products: cartDetails?.products, totalCost: estTotal };
-           console.log("BODY::",body)
-            // return 
-            const headers = {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
-            };
-            const response = await fetch(
-              `${import.meta.env.VITE_APP_API_URL}orders/pay-intent`, 
-              {
-                method: "POST",
-                headers: headers,
-                body: JSON.stringify(body),
-              }
-            );
-      
-            const { clientSecret } = await response.json();
-            setClientSecret(clientSecret);
+        const body = { products: cartDetails?.products, totalCost: estTotal };
+        console.log("BODY::",body)
+        // return 
+        const headers = {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        };
+        const response = await fetch(
+          `${import.meta.env.VITE_APP_API_URL}orders/pay-intent`, 
+          {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(body),
           }
+        );
+  
+        const { clientSecret } = await response.json();
+        setClientSecret(clientSecret);
+      }
     }
 
     getClientKey();
   }, [cartDetails]);
-  // }, []);
+
 
   const appearance = {
     theme: 'stripe',
@@ -387,7 +432,6 @@ export default function CheckoutWrapper() {
   }
 
   if(clientSecret){
-
     return (
       <Elements options={{   
         clientSecret,
@@ -406,7 +450,5 @@ export default function CheckoutWrapper() {
   }else{
     return <LoadingScreen />;
   }
-
-
 
 }
