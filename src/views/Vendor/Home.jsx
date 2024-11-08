@@ -16,6 +16,9 @@ import { Items } from "../../data/mockData";
 import ReactPaginate from "react-paginate";
 import OrderVendorStatus from "../../components/order/OrderVendorStatus";
 import { useSelector } from "react-redux";
+import { useGetVendorStatsQuery } from "../../features/vendor/vendorApiSlice";
+import DateRangeFilter from "../../components/dateRangeFilter";
+import DateFilter from "../../components/DateFilter";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -27,7 +30,10 @@ ChartJS.register(
 function Home() {
   const user = useSelector((state) => state.auth?.user);
 
-  console.log(user,("useruseruseruser"))
+  const [option, setOption] = useState("7 days ago")
+  
+  const{data: stats= [], isloading, error} = useGetVendorStatsQuery(option)
+  // console.log(user,("===>useruseruseruser",stats))
     const data = {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
         datasets: [
@@ -49,16 +55,25 @@ function Home() {
           },
         },
       };
+
       
+      const handleRangeChange = (value)=>{
+        setOption(value)
+      }
+      const combinedData = stats.reduce((acc, obj) => ({ ...acc, ...obj }), {});
+
   return (
     <div className="px-4 py-8">
       <div className="flex flex-row items-center justify-between ">
         <h5 className="text-regal-black text-lg md:text-2xl font-[700]">
           Dashboard
         </h5>
-        <input
+        {/* <input
           type="date"
           className=" px-2 py-2 bg-white text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+        /> */}
+        <DateFilter
+          onDateRangeChange={handleRangeChange}
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 md:gap-4 mt-4 overflow-hidden">
@@ -83,10 +98,10 @@ function Home() {
       </div>
   <div className="grid grid-cols-2 md:gap-4 md:px-8 relative">
   {[
-    { name: 'Orders', icon: <FaShoppingCart />, total: 183, percentage: '+12%' },
-    { name: 'New Customers', icon: <FaUserPlus />, total: 96, percentage: '+5%' },
-    { name: 'Total sections', icon: <LiaBoxSolid />, total: 12, percentage: '+3%' },
-    { name: 'Total Products', icon: <LiaBoxSolid />, total: 25, percentage: '+3%' },
+    { name: 'Orders', icon: <FaShoppingCart />, total: combinedData?.totalOrders, percentage: '+12%' },
+    { name: 'New Customers', icon: <FaUserPlus />, total: combinedData?.totalNewCustomers, percentage: '+5%' },
+    { name: 'Total sections', icon: <LiaBoxSolid />, total:  combinedData?.totalSections, percentage: '+3%' },
+    { name: 'Total Products', icon: <LiaBoxSolid />, total:  combinedData?.totalItems, percentage: '+3%' },
   ].map((item) => (
     <div key={item.name} className="flex flex-row items-start justify-between p-4">
       <div className="flex flex-col gap-2">

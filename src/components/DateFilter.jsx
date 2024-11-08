@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 function DateFilter({ onDateRangeChange, onCustomDateChange }) {
-  const [dateRange, setDateRange] = useState("last7Days");
+  const [dateRange, setDateRange] = useState("7 Days ago");
   const [customDates, setCustomDates] = useState({ startDate: "", endDate: "" });
 
   const handleDateRangeChange = (event) => {
@@ -40,11 +40,11 @@ function DateFilter({ onDateRangeChange, onCustomDateChange }) {
         onChange={handleDateRangeChange}
         className="px-2 py-2 bg-white border rounded-lg focus:outline-none text-sm text-regal-black"
       >
-        <option value="last7Days">Last 7 Days</option>
-        <option value="lastFortnight">Last Fortnight</option>
-        <option value="lastMonth">Last Month</option>
-        <option value="lastQuarter">Last Quarter</option>
-        <option value="lastYear">Last Year</option>
+        <option value="7 days Ago">7 Days Ago</option>
+        <option value="a fortnight ago">A Fortnight Ago</option>
+        <option value="a month ago">A Month Ago</option>
+        {/* <option value="lastQuarter">Last Quarter</option> */}
+        <option value="a year ago">A Year Ago</option>
         <option value="customRange">Custom Range</option>
       </select>
 
