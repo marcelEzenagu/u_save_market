@@ -8,7 +8,28 @@ import { IoInformationCircle } from "react-icons/io5";
 import ReactPaginate from "react-paginate";
 import { Items } from "../../../data/mockData";
 import AgentItemCard from "../../../components/cards/AgentItemCard";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useAcceptShipmentMutation } from "../../../features/agent/agentApiSlice";
 function WarehousingView() {
+const {id} = useParams()
+const location = useLocation()
+
+console.log("location''' ",location)
+const state = location.state || {}
+const [acceptShipment, {isLoading}] = useAcceptShipmentMutation()
+
+
+console.log("state''' ",state)
+const {
+  orderID,
+  vendorID,
+  items,
+itemsCost,
+  status,
+  destination,
+  createdAt,
+  shippingID
+} = state
 
   const orderTracking = [
     { id: "1", name: "Order Accepted" },
@@ -18,6 +39,7 @@ function WarehousingView() {
     { id: "6", name: "Delivered" },
     { id: "6", name: "completed" },
   ];
+
   const trackingDetails = useMemo(
     () =>
       orderTracking.map((stage) => ({
@@ -31,7 +53,18 @@ function WarehousingView() {
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
+
   const handleModalPackageToggle = () => {
+    setIsModalOpenPackage(!isModalOpenPackage);
+  };
+  const navigate = useNavigate();
+
+  const handleAcceptModalPackageToggle = async() => {
+   const resp = await acceptShipment({shipmentID:shippingID})
+   console.log("RESP===",resp)
+   if(resp.data != undefined && resp.data.status === "ACCEPTED"){
+     navigate("/agent/warehousing")
+   }
     setIsModalOpenPackage(!isModalOpenPackage);
   };
   return (
@@ -39,7 +72,7 @@ function WarehousingView() {
     <div className="bg-white p-4 md:p-6">
         <div className="flex flex-row items-center justify-between">
           <h5 className="text-regal-black text-xs md:text-2xl font-[700] flex flex-row items-center gap-2">
-            <span className='text-regal-crum-gray'>Warehousing</span> <IoIosArrowForward className='text-regal-crum-gray'/> <span>ID: 099084057</span> 
+            <span className='text-regal-crum-gray'>Warehousing</span> <IoIosArrowForward className='text-regal-crum-gray'/> <span>ID: {id}</span> 
           </h5>
           <div className='flex flex-row items-center gap-2'>
           <div className="flex flex-row items-center gap-2">
@@ -70,13 +103,13 @@ function WarehousingView() {
       <div className="flex flex-col md:flex-row items-start justify-between">
           <div>
             <p className="text-xs md:text-sm text-start flex gap-2 text-regal-black font-bold">
-              ID: 9692893
+              ID: {id}
             </p>
             <p className="text-xs text-regal-light-gray text-start mt-1">
-            Order placed: 16th Aug
+            Order placed: {createdAt}
             </p>
             <p className="text-xs text-regal-black font-bold text-start mt-1">
-            Total: ₦1,585.00
+            Total: ₦{itemsCost}
             </p>
           </div>
 
@@ -85,7 +118,7 @@ function WarehousingView() {
       <main className='p-4 pb-8  mt-4  border-b'>
       <div className="flex justify-between">
         <p className="text-xs md:text-sm font-bold text-regal-black">
-        Item List ({Items?.length})
+        Item List ({items?.length})
       </p>
         <button
           onClick={handleModalToggle}
@@ -99,11 +132,13 @@ function WarehousingView() {
       <ProductTableTab
                 setActiveOrder={() =>
                   setActiveOrder({
-                    orderID: "1892423",
-                    products: [],
+                    orderID,
+                    products: items,
                   })
                 }
-              />
+
+                items={items}
+      />
       </main>
 
       <main className='p-4 pb-8  mt-4  border-b'>
@@ -117,7 +152,7 @@ function WarehousingView() {
       </p>
     </div>
     <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
-    ₦1,585.00
+    ₦{itemsCost}
     </p>
   </div>
   <div className="flex flex-row items-end justify-between border-b pb-5">
@@ -229,7 +264,7 @@ function WarehousingView() {
                   </p>
                   <div className="flex justify-center gap-4">
                     <button
-                      onClick={handleModalPackageToggle}
+                      onClick={handleAcceptModalPackageToggle}
                       className="bg-regal-sky-blue text-white py-2 px-4 text-sm rounded-md w-full font-[600]"
                     >
                         Yes, Accept
@@ -275,16 +310,17 @@ function WarehousingView() {
   )
 } 
 
-const ProductTableTab = React.memo(({ setActiveOrder }) => {
+const ProductTableTab = React.memo(({ setActiveOrder,items=[]} ) => {
   const itemsPerPage = 8;
   const [itemOffset, setItemOffset] = useState(0);
 
+  console.log("ITEMS::::",items)
   const endOffset = itemOffset + itemsPerPage;
-  const currentItems = Items.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(Items.length / itemsPerPage);
+  const currentItems = items?.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(items?.length / itemsPerPage);
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % Items.length;
+    const newOffset = (event.selected * itemsPerPage) % items?.length;
     setItemOffset(newOffset);
   };
 
@@ -298,7 +334,7 @@ const ProductTableTab = React.memo(({ setActiveOrder }) => {
                NO
               </th>
               <th className="px-6 py-4 text-left text-xs font-medium text-nowrap text-regal-black tracking-wider">
-                PRODUCT NAME
+                ITEM NAME
               </th>
               <th className="px-6 py-4 text-left text-xs font-medium text-nowrap text-regal-black tracking-wider">
                 CATEGORY
@@ -328,7 +364,7 @@ const ProductTableTab = React.memo(({ setActiveOrder }) => {
                       alt=""
                       className="w-10 h-10 rounded-full object-cover"
                     />
-                    <h6 className="truncate max-w-[150px]">{product?.name}</h6>
+                    <h6 className="truncate max-w-[150px]">{product?.itemName}</h6>
                   </div>
                 </td>
                 <td className="px-6 py-2 text-xs text-regal-black whitespace-nowrap font-[600]">
@@ -375,6 +411,7 @@ const ProductTableTab = React.memo(({ setActiveOrder }) => {
     </div>
   );
 });
+
 const GetStatus = ({status}) => {
   switch (status) {
       case 'accepted':

@@ -26,7 +26,31 @@ export const agentApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags:['agent']
         }),
+        
+        acceptShipment: builder.mutation({
+            query: (credentials) => ({
+                url: 'agents/warehouse',
+                method: 'PATCH',
+                body: {...credentials},
+            }),
+            invalidatesTags:['agent']
+        }),
+
+        findAllOpenShipment: builder.query({
+            query: (data) => {
+                const { status = '',perPage,page, daysDifference = '',countries,orderID="" } = data;
+                // console.log("DATA",data.countries)
+                const queryString = countries?.map(country => `countries=${encodeURIComponent(country)}`).join('&');
+
+                return {url:`agents/warehouse?${queryString}&status=${status}&orderID=${orderID}&limit=${perPage}&page=${page}&daysDiff=${daysDifference}`}
+            } ,
+            providesTags: ['agent']
+        }),
+
+
     })
 })
 
-export const {useViewAgentQuery, useUpdateAgentProfileMutation, useUpdateAgentProfilePictureMutation} = agentApiSlice
+export const {useViewAgentQuery,
+    useAcceptShipmentMutation,
+    useFindAllOpenShipmentQuery, useUpdateAgentProfileMutation, useUpdateAgentProfilePictureMutation} = agentApiSlice

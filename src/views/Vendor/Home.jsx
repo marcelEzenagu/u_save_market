@@ -85,17 +85,7 @@ function Home() {
 
       {/* Right Side: Stats */}
       <div className="bg-white pt-4 rounded shadow space-y-4 mt-4">
-      <div className="px-6 flex flex-row items-center justify-between">
-        <h3></h3>
-          <button
-            className="gap-2 text-xs  py-2 px-3 font-[400]
-         text-regal-sky-blue  bg-regal-secondary-light rounded-md
-        "
-          >
-            View all
-          </button>
       
-      </div>
   <div className="grid grid-cols-2 md:gap-4 md:px-8 relative">
   {[
     { name: 'Orders', icon: <FaShoppingCart />, total: combinedData?.totalOrders, percentage: '+12%' },

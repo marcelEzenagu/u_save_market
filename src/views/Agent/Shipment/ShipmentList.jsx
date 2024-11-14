@@ -4,6 +4,13 @@ import { FiBarChart } from "react-icons/fi";
 import AgentListComponent from "../../../components/agent/AgentListComponent";
 
 function ShipmentList() {
+
+  const [fields, setFields] = useState({
+    status:"PROCESSING",
+    perPage:50,
+    page:1,
+    countries:["nigeria","ghana"]
+  }) 
   const tab = useMemo(
     () => [
       {
@@ -60,9 +67,17 @@ function ShipmentList() {
     { header: "ACTION", key: "action" }, // action for buttons/menus
   ];
 
+  const handleChange =(name,value)=>{
+    setFields(prev=>({
+      ...prev,
+      [name]:value
+    }))
+  }
   return (
     <div>
-       <AgentListComponent  columns={columns} header={'Shipments'} tabs={tab} tabOptions={tabOptions} data={Items}  filterKeys={['name']}  />
+       <AgentListComponent             
+         handleChange={handleChange}
+  columns={columns} header={'Shipments'} tabs={tab} tabOptions={tabOptions} data={Items}  filterKeys={['name']}  />
     </div>
   );
 }

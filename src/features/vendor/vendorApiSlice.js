@@ -31,11 +31,10 @@ export const vendorApiSlice = apiSlice.injectEndpoints({
         getVendorOrders: builder.query({
             query: (data) => {
                 const { status = '', daysDifference = '' } = data;
-                return    {url: `vendors/orders?status=${status}&daysDifference=${daysDifference}`,
+                return  {url: `vendors/orders?status=${status}&daysDifference=${daysDifference}`,
                 };
             },
             invalidatesTags:['vendor'],
-
         }),
         getVendorStats: builder.query({
             query: (data) => {

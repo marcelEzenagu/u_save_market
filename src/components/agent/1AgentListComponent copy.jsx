@@ -4,9 +4,12 @@ import ReactPaginate from "react-paginate";
 import { SlArrowDown } from "react-icons/sl";
 import { Menu } from "@headlessui/react";
 import { FiBarChart, FiSearch } from "react-icons/fi";
-import { Link,useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import OrderVendorStatus from "../../components/order/OrderVendorStatus";
 import { FiInfo } from "react-icons/fi";
+import { useFindAllOpenShipmentQuery } from "../../features/agent/agentApiSlice";
+
+
 function AgentListComponent({
     header,
   tabs,            
@@ -14,45 +17,43 @@ function AgentListComponent({
   data,            
   filterKeys, // Keys to search in the table (e.g., ['orderID', 'destination'])
   columns,    
-  note ,
-  total=10,
-  handleChange
+  note 
 }) {
+  const [fields, setFields] = useState({
+    status:"PROCESSING",
+    perPage:50,
+    page:1,
+    countries:["nigeria","ghana"]
+  })
 
-  
+  const {data:shipments,isloading, error}=useFindAllOpenShipmentQuery(fields)
+
   const [dropdownOption, setDropdownOption] = useState("This Month");
   const [isOpenSelect, setIsOpenSelect] = useState(false);
-  const [activeTab, setActiveTab] = useState(tabOptions[0].status);  
+  const [activeTab, setActiveTab] = useState(tabOptions[0].id);  
   const [searchQuery, setSearchQuery] = useState("");
   const [itemOffset, setItemOffset] = useState(0);
 
-  const itemsPerPage = 12;
 
 
   const filteredData = useMemo(() => {
-    if (!searchQuery) return data;
+    if (!searchQuery) return shipments?.data;
 
-    return data.filter(item =>
+    return shipments?.data?.filter(item =>
       filterKeys.some(key =>
         item[key]?.toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
-  }, [searchQuery, data]);
-
-
-  const handleStatusChange = (tab)=>{
-    setActiveTab(tab.name)
-    handleChange("status",tab.status)
-
-  }
+  }, [searchQuery, shipments?.data]);
+  console.log("filteredData::::",filteredData)
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % filteredData.length;
+    const newOffset = (event.selected * fields.perPage) % filteredData?.length;
     setItemOffset(newOffset);
   };
 
-  const currentItems = filteredData?.slice(itemOffset, itemOffset + itemsPerPage);
-  const pageCount = Math.ceil(filteredData?.length / itemsPerPage);
+  const currentItems = filteredData?.slice(itemOffset, itemOffset + fields.perPage);
+  const pageCount = Math.ceil(data?.total/ fields.perPage);
 
   return (
     <div>
@@ -107,9 +108,9 @@ function AgentListComponent({
                 <button
                   key={tab.id}
                   className={`shadow-sm rounded-full py-2 px-4 mr-3 hover:text-white hover:bg-regal-black text-xs md:text-xs font-[600] ${
-                    activeTab === tab.status ? "bg-regal-black text-white" : "text-regal-black bg-regal-dashboard-active-tab-gray"
+                    activeTab === tab.id ? "bg-regal-black text-white" : "text-regal-black bg-regal-dashboard-active-tab-gray"
                   }`}
-                  onClick={()=>handleStatusChange(tab)}
+                  onClick={() => setActiveTab(tab.id)}
                 >
                   {tab.name}
                 </button>
@@ -153,7 +154,7 @@ function AgentListComponent({
           </div>
 
           <div className=" p-4 text-regal-crum-gray">
-         {note ? (<span className="flex items-center gap-2 text-sm"> <FiInfo /> {note} </span>) : '' }
+            {note ? (<span className="flex items-center gap-2 text-sm"> <FiInfo /> {note} </span>) : '' }
           </div>
 
           {/* Table */}
@@ -172,7 +173,7 @@ function AgentListComponent({
 
         <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-between mt-4">
           <h6 className="text-xs text-regal-crum-gray">
-            Showing {currentItems?.length} items out of {total} results found
+            Showing {currentItems?.length} items out of {shipments?.total} results found
           </h6>
 
           <ReactPaginate
@@ -214,9 +215,14 @@ const ProductTableTab = React.memo(({ data, columns, header }) => (
         <tbody>
           {data?.map((item, rowIndex) => (
             <tr key={rowIndex} className="bg-white">
-              {columns.map((col, colIndex) => (
+              <Link  to={{
+                pathname:`/agent/${header.toLowerCase()}/${item.shippingID}`,
+              state:{data:item}
+            }}>
+             {columns.map((col, colIndex) => (
                 <td key={colIndex} className="px-6 py-4 text-left text-xs font-medium text-nowrap text-regal-black truncate max-w-[150px]">
                   {/* Special rendering logic for "status" or any custom field */}
+               
                   {col.key === "status" ? (
                     <OrderVendorStatus status={item[col.key]} />
                   ) : col.key === "action" ? (
@@ -236,11 +242,19 @@ const ProductTableTab = React.memo(({ data, columns, header }) => (
                     </Menu>
                   ) : (
                     <HandleCol item={item} col={col.key} header={header}/>
+                   
+                   
                      // Default case: render data directly from the item
                   )}
                 </td>
               ))}
+
+              <td>
+                {item.vendorID}
+              </td>
+              </Link>
             </tr>
+           
           ))}
         </tbody>
       </table>
@@ -250,30 +264,21 @@ const ProductTableTab = React.memo(({ data, columns, header }) => (
 export default AgentListComponent;
 
 const HandleCol =({item, col, header}) => {
-  const navigate = useNavigate();
-
+  console.log(col)
     switch (col) {
         case "name":
             return <Link to={`/agent/${header.toLowerCase()}/123`}>{item[col.key] || '290902'}</Link>
         case "orderID":
-            return <span
-              onClick={(e)=>navigate(
-                `/agent/${header.toLowerCase()}/${item.shippingID}`,
-              {state:item}
-
-              )}
-            >{item.orderID}
-            </span>
-           case "vendorID":
-            return <>{item.vendorID}</>
-        case "phone":
-            return <>{item.phone}</>
-        case "noOfItems":
-          return <>{item.items.length}</>
-        case "destination":
-            return <>{item.destination}</>
-     
-            default:
+            return <>{item.orderID}</>
+        // case "vendorID":
+        //     return <>{item.vendorID}</>
+        // case "phone":
+        //     return <>{item.phone}</>
+        // case "noOfItems":
+        //   return <>{item.items.length}</>
+        // case "destination":
+        //     return <>{item.destination}</>
+        default:
             break;
     }
 }
