@@ -60,233 +60,361 @@ itemsCost,
   const navigate = useNavigate();
 
   const handleAcceptModalPackageToggle = async() => {
-   const resp = await acceptShipment({shipmentID:shippingID})
-   console.log("RESP===",resp)
+   const resp = await acceptShipment({shipmentID:shippingID,status})
    if(resp.data != undefined && resp.data.status === "ACCEPTED"){
      navigate("/agent/warehousing")
    }
     setIsModalOpenPackage(!isModalOpenPackage);
   };
+  
+  const confirmReceived = async() => {
+    const resp = await acceptShipment({shipmentID:shippingID,status})
+    if(resp.data != undefined && resp.data.status === "WAREHOUSED"){
+     navigate("/agent/warehousing")
+   }
+    setIsModalOpenPackage(!isModalOpenPackage);
+  };
+
+  const handleWarehousedShipment = async() => {
+    const resp = await acceptShipment({shipmentID:shippingID,status})
+    if(resp.data != undefined && resp.data.status === "WAREHOUSED"){
+     navigate("/agent/warehousing")
+   }
+    setIsModalOpenPackage(!isModalOpenPackage);
+  };
+  const handleRejectShipment = async() => {
+  //   const resp = await acceptShipment({shipmentID:shippingID,status})
+  //   if(resp.data != undefined && resp.data.status === "WAREHOUSED"){
+  //    navigate("/agent/warehousing")
+  //  }
+    setIsModalOpenPackage(!isModalOpenPackage);
+  };
+
   return (
-    <div>   <main className=" bg-regal-auth-bg-color">
-    <div className="bg-white p-4 md:p-6">
-        <div className="flex flex-row items-center justify-between">
-          <h5 className="text-regal-black text-xs md:text-2xl font-[700] flex flex-row items-center gap-2">
-            <span className='text-regal-crum-gray'>Warehousing</span> <IoIosArrowForward className='text-regal-crum-gray'/> <span>ID: {id}</span> 
-          </h5>
-          <div className='flex flex-row items-center gap-2'>
-          <div className="flex flex-row items-center gap-2">
-                        <IoIosArrowBack className="text-regal-crum-gray text-sm" />
-                        <span className="text-regal-black text-xs">
-                            <span className="text-regal-crum-gray text-xs">1 of</span> 350
-                        </span>
-                        <IoIosArrowForward className="text-regal-black text-sm" />
-                    </div>
-
-                    <button
+    <div>
+      {" "}
+      <main className=" bg-regal-auth-bg-color">
+        <div className="bg-white p-4 md:p-6">
+          <div className="flex flex-row items-center justify-between">
+            <h5 className="text-regal-black text-xs md:text-2xl font-[700] flex flex-row items-center gap-2">
+              <span className="text-regal-crum-gray">Warehousing</span>{" "}
+              <IoIosArrowForward className="text-regal-crum-gray" />{" "}
+              <span>ID: {id}</span>
+            </h5>
+            <div className="flex flex-row items-center gap-2">
+              {/* <div className="flex flex-row items-center gap-2">
+            <IoIosArrowBack className="text-regal-crum-gray text-sm" />
+            <span className="text-regal-black text-xs">
+                <span className="text-regal-crum-gray text-xs">1 of</span> 350
+            </span>
+            <IoIosArrowForward className="text-regal-black text-sm" />
+          </div> */}
+              {status == "PROCESSING" ? (
+                <button
+                  onClick={handleModalPackageToggle}
+                  className="py-2 px-2 md:px-6 text-xs md:text-sm rounded-md text-white bg-regal-sky-blue"
+                >
+                  Accept
+                </button>
+              ) : status == "IN_TRANSIT" ? (
+                <button
+                  onClick={handleModalPackageToggle}
+                  className="py-2 px-2 md:px-6 text-xs md:text-sm rounded-md text-white bg-regal-sky-blue"
+                >
+                  Confirm
+                </button>
+              ) : status == "WAREHOUSE" ? (
+                <div>
+                  <button
                     onClick={handleModalPackageToggle}
-                    className='py-2 px-2 md:px-6 text-xs md:text-sm rounded-md text-white bg-regal-sky-blue'> 
-                          Accept
-                    </button>
+                    className="py-2 px-2 md:px-6 text-xs md:text-sm rounded-md text-white bg-regal-sky-blue"
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    onClick={handleModalPackageToggle}
+                    className="py-2 px-2 md:px-6 text-xs md:text-sm rounded-md text-white bg-regal-sky-blue"
+                  >
+                    Confirm
+                  </button>
+                </div>
+              ) : null}
+            </div>
           </div>
         </div>
-      </div>
-    </main>
-    
-    <main className="grid grid-cols-1 md:grid-cols-4">
-    <section className='bg-white m-4 rounded-lg md:col-span-3'>
-        
-      <div className=" flex items-center gap-4 p-3 rounded-md text-orange-400 bg-orange-100 text-xs font-semibold">
-        <IoInformationCircle className="text-2xl md:text-lg" /> Accept orders which shipment you’ll like to carry out
-      </div>
-      <main className='p-4 pb-8 mt-4   border-b'>
-      <div className="flex flex-col md:flex-row items-start justify-between">
-          <div>
-            <p className="text-xs md:text-sm text-start flex gap-2 text-regal-black font-bold">
-              ID: {id}
+      </main>
+      <main className="grid grid-cols-1 md:grid-cols-4">
+        <section className="bg-white m-4 rounded-lg md:col-span-3">
+          {status === "PROCESSING" ? (
+            <div className=" flex items-center gap-4 p-3 rounded-md text-orange-400 bg-orange-100 text-xs font-semibold">
+              <IoInformationCircle className="text-2xl md:text-lg" /> Accept
+              orders which shipment you’ll like to carry out
+            </div>
+          ) : status === "IN_TRANSIT" ? (
+            <div className=" flex items-center gap-4 p-3 rounded-md text-orange-400 bg-orange-100 text-xs font-semibold">
+              <IoInformationCircle className="text-2xl md:text-lg" /> Orders in
+              transit takes 4-5 days to reach you location for shipment
+            </div>
+          ) : status === "WAREHOUSED" ? (
+            <div className=" flex items-center gap-4 p-3 rounded-md text-orange-400 bg-orange-100 text-xs font-semibold">
+              <IoInformationCircle className="text-2xl md:text-lg" /> Confirm
+              products are in good conditions
+            </div>
+          ) : null}
+          <main className="p-4 pb-8 mt-4   border-b">
+            <div className="flex flex-col md:flex-row items-start justify-between">
+              <div>
+                <p className="text-xs md:text-sm text-start flex gap-2 text-regal-black font-bold">
+                  ID: {id}
+                </p>
+                <p className="text-xs text-regal-light-gray text-start mt-1">
+                  Order placed: {createdAt}
+                </p>
+                <p className="text-xs text-regal-black font-bold text-start mt-1">
+                  Total: ₦{itemsCost}
+                </p>
+              </div>
+            </div>
+          </main>
+          <main className="p-4 pb-8  mt-4  border-b">
+            <div className="flex justify-between">
+              <p className="text-xs md:text-sm font-bold text-regal-black">
+                Item List ({items?.length})
+              </p>
+              <button
+                onClick={handleModalToggle}
+                className="font-semibold text-regal-sky-blue text-xs md:text-sm flex items-center gap-2"
+              >
+                View
+              </button>
+            </div>
+
+            <ProductTableTab
+              setActiveOrder={() =>
+                setActiveOrder({
+                  orderID,
+                  products: items,
+                })
+              }
+              items={items}
+            />
+          </main>
+
+          <main className="p-4 pb-8  mt-4  border-b">
+            <p className="text-xs md:text-sm font-bold text-regal-black">
+              Order Summary
             </p>
-            <p className="text-xs text-regal-light-gray text-start mt-1">
-            Order placed: {createdAt}
-            </p>
-            <p className="text-xs text-regal-black font-bold text-start mt-1">
-            Total: ₦{itemsCost}
-            </p>
+            <div className="flex flex-row items-end justify-between border-b pb-5">
+              <div className="">
+                <p className="text-xs md:text-sm text-regal-black  mt-5">
+                  Items Amount
+                </p>
+              </div>
+              <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
+                ₦{itemsCost}
+              </p>
+            </div>
+            <div className="flex flex-row items-end justify-between border-b pb-5">
+              <div className="">
+                <p className="text-xs md:text-sm text-regal-black  mt-5">
+                  Delivery Free
+                </p>
+              </div>
+              <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
+                ₦1,585.00
+              </p>
+            </div>
+            <div className="flex flex-row items-end justify-between border-b pb-5">
+              <div className="">
+                <p className="text-xs md:text-sm text-regal-black  mt-5">
+                  Total
+                </p>
+              </div>
+              <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
+                ₦1,585.00
+              </p>
+            </div>
+          </main>
+        </section>
+
+        <section className="bg-white m-4 rounded-lg">
+          <div className="grid grid-cols-1 ">
+            <div className="flex flex-col items-start gap-4 p-4 pb-8  mt-4  border-b">
+              <div className=" text-sm md:text-sm gap-2 font-bold">
+                <h3>Customer Details</h3>
+              </div>
+
+              <div>
+                <h5 className="uppercase  text-regal-light-gray  text-xs  font-[500]">
+                  FULL NAME
+                </h5>
+                <h6 className=" text-xs font-[500] mt-1">Adebayo Samuel</h6>
+              </div>
+              <div>
+                <h5 className="uppercase  text-regal-light-gray  text-xs  font-[500]">
+                  EMAIL
+                </h5>
+                <h6 className=" text-xs font-[500] mt-1">
+                  adebayosamuel@gmail.com
+                </h6>
+              </div>
+
+              <div>
+                <h5 className="uppercase  text-regal-light-gray  text-xs  font-[500]">
+                  PHONE NUMBER
+                </h5>
+                <h6 className=" text-xs font-[500] mt-1">+1 6937 7563 583</h6>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-start gap-4 p-4 pb-8  mt-4  border-b">
+              <div className="flex items-center  text-sm md:text-sm gap-2 font-bold">
+                <h3>Vendor Details</h3>
+              </div>
+
+              <div>
+                <h5 className="uppercase  text-regal-light-gray  text-xs  font-[500]">
+                  FULL NAME
+                </h5>
+                <h6 className=" text-xs font-[500] mt-1">Adebayo Samuel</h6>
+              </div>
+              <div>
+                <h5 className="uppercase  text-regal-light-gray  text-xs  font-[500]">
+                  EMAIL
+                </h5>
+                <h6 className=" text-xs font-[500] mt-1">
+                  adebayosamuel@gmail.com
+                </h6>
+              </div>
+
+              <div>
+                <h5 className="uppercase  text-regal-light-gray  text-xs  font-[500]">
+                  PHONE NUMBER
+                </h5>
+                <h6 className=" text-xs font-[500] mt-1">+1 6937 7563 583</h6>
+              </div>
+              <div>
+                <h5 className="uppercase  text-regal-light-gray  text-xs  font-[500]">
+                  STORE LOCATION
+                </h5>
+                <h6 className=" text-xs font-[500] mt-1">Abuja, Nigeria</h6>
+              </div>
+            </div>
+            <div className="flex flex-col items-start gap-4 p-4 pb-8  mt-4  ">
+              <div className="flex items-center  text-sm md:text-sm gap-2 font-bold">
+                <h3>Shipping Details</h3>
+              </div>
+
+              <div>
+                <h5 className="uppercase  text-regal-light-gray  text-xs  font-[500]">
+                  ADDRESS
+                </h5>
+                <h6 className=" text-xs font-[500] mt-1">
+                  Idugboe Estate, off Elf Road, Ogunu, Lagos, Nigeria
+                </h6>
+              </div>
+
+              <div>
+                <h5 className="uppercase  text-regal-light-gray  text-xs  font-[500]">
+                  EXPECTED DELIVERY TIME
+                </h5>
+                <h6 className=" text-xs font-[500] mt-1">2 weeks</h6>
+              </div>
+            </div>
           </div>
-
-        </div>
+        </section>
       </main>
-      <main className='p-4 pb-8  mt-4  border-b'>
-      <div className="flex justify-between">
-        <p className="text-xs md:text-sm font-bold text-regal-black">
-        Item List ({items?.length})
-      </p>
-        <button
-          onClick={handleModalToggle}
-          className="font-semibold text-regal-sky-blue text-xs md:text-sm flex items-center gap-2"
-        >
-          View
-        </button>
-        </div>
-   
-
-      <ProductTableTab
-                setActiveOrder={() =>
-                  setActiveOrder({
-                    orderID,
-                    products: items,
-                  })
-                }
-
-                items={items}
-      />
-      </main>
-
-      <main className='p-4 pb-8  mt-4  border-b'>
-      <p className="text-xs md:text-sm font-bold text-regal-black">
-        Order Summary 
-      </p>
-      <div className="flex flex-row items-end justify-between border-b pb-5">
-    <div className="">
-      <p className="text-xs md:text-sm text-regal-black  mt-5">
-        Items Amount
-      </p>
-    </div>
-    <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
-    ₦{itemsCost}
-    </p>
-  </div>
-  <div className="flex flex-row items-end justify-between border-b pb-5">
-    <div className="">
-      <p className="text-xs md:text-sm text-regal-black  mt-5">
-       Delivery Free
-      </p>
-    </div>
-    <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
-    ₦1,585.00
-    </p>
-  </div>
-  <div className="flex flex-row items-end justify-between border-b pb-5">
-    <div className="">
-      <p className="text-xs md:text-sm text-regal-black  mt-5">
-       Total
-      </p>
-    </div>
-    <p className="text-xs md:text-sm  items-center  gap-2 text-regal-black font-[700]  ">
-    ₦1,585.00
-    </p>
-  </div>
-
-      </main>
-
-    </section>
-
-    <section className="bg-white m-4 rounded-lg">
-    <div className='grid grid-cols-1 '>
-            <div className='flex flex-col items-start gap-4 p-4 pb-8  mt-4  border-b'>
-            <div className=' text-sm md:text-sm gap-2 font-bold'>
-              <h3>Customer Details</h3>
-              </div>
-
-              <div>
-                <h5 className='uppercase  text-regal-light-gray  text-xs  font-[500]'>FULL NAME</h5>
-                <h6 className=' text-xs font-[500] mt-1'>Adebayo Samuel</h6>
-              </div>
-              <div>
-                <h5 className='uppercase  text-regal-light-gray  text-xs  font-[500]'>EMAIL</h5>
-                <h6 className=' text-xs font-[500] mt-1'>adebayosamuel@gmail.com</h6>
-              </div>
-
-              <div>
-                <h5 className='uppercase  text-regal-light-gray  text-xs  font-[500]'>PHONE NUMBER</h5>
-                <h6 className=' text-xs font-[500] mt-1'>+1 6937 7563 583</h6>
-              </div>
-              
-            </div>
-
-            <div className='flex flex-col items-start gap-4 p-4 pb-8  mt-4  border-b'>
-              <div className='flex items-center  text-sm md:text-sm gap-2 font-bold'>
-      
-              <h3>Vendor Details</h3>
-              </div>
-
-              <div>
-                <h5 className='uppercase  text-regal-light-gray  text-xs  font-[500]'>FULL NAME</h5>
-                <h6 className=' text-xs font-[500] mt-1'>Adebayo Samuel</h6>
-              </div>
-              <div>
-                <h5 className='uppercase  text-regal-light-gray  text-xs  font-[500]'>EMAIL</h5>
-                <h6 className=' text-xs font-[500] mt-1'>adebayosamuel@gmail.com</h6>
-              </div>
-
-              <div>
-                <h5 className='uppercase  text-regal-light-gray  text-xs  font-[500]'>PHONE NUMBER</h5>
-                <h6 className=' text-xs font-[500] mt-1'>+1 6937 7563 583</h6>
-              </div>
-              <div>
-                <h5 className='uppercase  text-regal-light-gray  text-xs  font-[500]'>STORE LOCATION</h5>
-                <h6 className=' text-xs font-[500] mt-1'>Abuja, Nigeria</h6>
-              </div>
-              
-            </div>
-            <div className='flex flex-col items-start gap-4 p-4 pb-8  mt-4  '>
-              <div className='flex items-center  text-sm md:text-sm gap-2 font-bold'>
-              <h3>Shipping Details</h3>
-              </div>
-
-              <div>
-                <h5 className='uppercase  text-regal-light-gray  text-xs  font-[500]'>ADDRESS</h5>
-                <h6 className=' text-xs font-[500] mt-1'>Idugboe Estate, off Elf Road, Ogunu,
-                Lagos, Nigeria</h6>
-              </div>
-
-              <div>
-                <h5 className='uppercase  text-regal-light-gray  text-xs  font-[500]'>EXPECTED DELIVERY TIME</h5>
-                <h6 className=' text-xs font-[500] mt-1'>2 weeks</h6>
-              </div>
-              
-            </div>
-        </div>
-    </section>
-
-
-    </main>
-
-    {isModalOpenPackage && (
-            <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-              <div className="bg-white p-6 rounded-lg max-w-[500px] w-full">
-                <div className="max-w-[350px] px-2  py-8 mx-auto">
-               
-                  <h3 className="text-xl font-bold text-center mb-2">
+      {isModalOpenPackage && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg max-w-[500px] w-full">
+            {status == "PROCESSING" ? (
+              <div className="max-w-[350px] px-2  py-8 mx-auto">
+                <h3 className="text-xl font-bold text-center mb-2">
                   Accept Package
-                  </h3>
-                  <p className="text-center text-xs max-w-[300px] mx-auto mb-4">
-                  Are you sure you’ll ike to carry out this shipment? Once accepted, it can’t be rejected
-                  </p>
-                  <div className="flex justify-center gap-4">
-                    <button
-                      onClick={handleAcceptModalPackageToggle}
-                      className="bg-regal-sky-blue text-white py-2 px-4 text-sm rounded-md w-full font-[600]"
-                    >
-                        Yes, Accept
-                    </button>
-                    <button
-                      onClick={handleModalPackageToggle}
-                      className="bg-white text-sm border border-regal-sky-blue text-regal-sky-blue py-2 px-4 font-[600] rounded-md w-full"
-                    >
-                      No, Cancel
-                    </button>
-                  </div>
+                </h3>
+                <p className="text-center text-xs max-w-[300px] mx-auto mb-4">
+                  Are you sure you’ll ike to carry out this shipment? Once
+                  accepted, it can’t be rejected
+                </p>
+                <div className="flex justify-center gap-4">
+                  <button
+                    onClick={handleAcceptModalPackageToggle}
+                    className="bg-regal-sky-blue text-white py-2 px-4 text-sm rounded-md w-full font-[600]"
+                  >
+                    Yes, Accept
+                  </button>
+                  <button
+                    onClick={handleModalPackageToggle}
+                    className="bg-white text-sm border border-regal-sky-blue text-regal-sky-blue py-2 px-4 font-[600] rounded-md w-full"
+                  >
+                    No, Cancel
+                  </button>
                 </div>
               </div>
-            </div>
-          )}
-
-    {isModalOpen && (
+            ) : status == "IN_TRANSIT" ? (
+              <div className="max-w-[350px] px-2  py-8 mx-auto">
+                <h3 className="text-xl font-bold text-center mb-2">
+                  Confirm Package Received?
+                </h3>
+                <p className="text-center text-xs max-w-[300px] mx-auto mb-4">
+                  Confirm if you've received package from vendor
+                </p>
+                <div className="flex justify-center gap-4">
+                  <button
+                    onClick={confirmReceived}
+                    className="bg-regal-sky-blue text-white py-2 px-4 text-sm rounded-md w-full font-[600]"
+                  >
+                    Yes, I've Received
+                  </button>
+                  <button
+                    onClick={handleModalPackageToggle}
+                    className="bg-white text-sm border border-regal-sky-blue text-regal-sky-blue py-2 px-4 font-[600] rounded-md w-full"
+                  >
+                    No, Cancel
+                  </button>
+                </div>
+              </div>
+            ) : status == "WAREHOUSED" ? (
+              <div className="max-w-[350px] px-2  py-8 mx-auto">
+                <h3 className="text-xl font-bold text-center mb-2">
+                  Accept Package
+                </h3>
+                <p className="text-center text-xs max-w-[300px] mx-auto mb-4">
+                  Are you sure you’ll ike to carry out this shipment? Once
+                  accepted, it can’t be rejected
+                </p>
+                <div className="flex justify-center gap-4">
+                  <button
+                    onClick={handleModalPackageToggle}
+                    className="bg-regal-sky-blue text-white py-2 px-4 text-sm rounded-md w-full font-[600]"
+                  >
+                    Yes, Accept
+                  </button>
+                  <button
+                    onClick={handleModalPackageToggle}
+                    className="bg-white text-sm border border-regal-sky-blue text-regal-sky-blue py-2 px-4 font-[600] rounded-md w-full"
+                  >
+                    No, Cancel
+                  </button>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      )}
+      {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white w-full max-w-md p-6 rounded-lg">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold">Items in this order ({Items?.length})</h2>
-              <button onClick={handleModalToggle} className="text-red-500 text-xl">&times;</button>
+              <h2 className="text-lg font-bold">
+                Items in this order ({Items?.length})
+              </h2>
+              <button
+                onClick={handleModalToggle}
+                className="text-red-500 text-xl"
+              >
+                &times;
+              </button>
             </div>
 
             <div className="max-h-[500px] md:max-h-[700px] grid grid-cols-1 overflow-y-auto">
@@ -307,7 +435,7 @@ itemsCost,
         </div>
       )}
     </div>
-  )
+  );
 } 
 
 const ProductTableTab = React.memo(({ setActiveOrder,items=[]} ) => {

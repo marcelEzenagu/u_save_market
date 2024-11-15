@@ -17,7 +17,7 @@ function WarehousingList() {
           { id: "1", name: "Processing",status:"PROCESSING"},
           { id: "2", name: "Accepted",status:"ACCEPTED"},
           { id: "3", name: "In Transit",status:"IN_TRANSIT"},
-          { id: "4", name: "Warehouse",status:"WAREHOUSE"},
+          { id: "4", name: "Warehouse",status:"WAREHOUSED"},
           { id: "5", name: "For Shipments",status:"SHIPPED"}
         ],
         []

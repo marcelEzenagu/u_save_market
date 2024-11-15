@@ -258,20 +258,20 @@ const HandleCol =({item, col, header}) => {
         case "orderID":
             return <span
               onClick={(e)=>navigate(
-                `/agent/${header.toLowerCase()}/${item.shippingID}`,
+                `/agent/${header.toLowerCase()}/${item?.shippingID}`,
               {state:item}
 
               )}
-            >{item.orderID}
+            >{item?.orderID}
             </span>
            case "vendorID":
-            return <>{item.vendorID}</>
+            return <>{item?.vendorID}</>
         case "phone":
-            return <>{item.phone}</>
+            return <>{item?.phone}</>
         case "noOfItems":
-          return <>{item.items.length}</>
+          return <>{item?.items?.length}</>
         case "destination":
-            return <>{item.destination}</>
+            return <>{item?.destination}</>
      
             default:
             break;
