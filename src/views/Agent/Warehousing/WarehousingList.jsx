@@ -18,7 +18,8 @@ function WarehousingList() {
           { id: "2", name: "Accepted",status:"ACCEPTED"},
           { id: "3", name: "In Transit",status:"IN_TRANSIT"},
           { id: "4", name: "Warehouse",status:"WAREHOUSED"},
-          { id: "5", name: "For Shipments",status:"SHIPPED"}
+          { id: "5", name: "For Shipments",status:"FOR_SHIPPING"},
+          { id: "5", name: "Rejected",status:"REJECTED"}
         ],
         []
       );

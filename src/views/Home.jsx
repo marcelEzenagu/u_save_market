@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import GridBox from "../components/cards/GridBox";
-import { MockData } from "../data/mockData";
 import { Link } from "react-router-dom";
 import { useGetCategoriesQuery } from "../features/category/categoryApiSlice";
 

@@ -6,16 +6,47 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { Link, useLocation, useParams } from 'react-router-dom';
 
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { useCompleteOrderMutation } from "../../../features/vendor/vendorApiSlice";
 
 function OrderView() {
   const { orderID } = useParams();
+
   const location = useLocation();
   const { orderData } = location.state || {};  // Retrieve data passed in `state`
+  const [itemList, setItemList] = useState([])
+
+
+  const [completeOrder,{isLoading}] = useCompleteOrderMutation()
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const toggleModal = () => {
       setIsModalOpen(!isModalOpen);
     };
+
+    const handleItemListing = (e)=>{
+console.log("LIST::",itemList)
+const {name,value} = e.target
+console.log("value::",value)
+      
+
+      setItemList((prevList) =>
+        e.target.checked
+          ? [...prevList, value] // Add value to the list if checked
+          : prevList.filter((id) => id !== value) // Remove itemID if unchecked
+      );
+    }
+
+    const handleCompleteOrder = async ()=>{      
+      try{
+        const resp = await completeOrder({itemIDs:itemList,orderID}).unwrap();
+      console.log("RESP::; ",resp)
+        if(resp.data != undefined && resp.data.status === "ACCEPTED"){
+        navigate("/agent/warehousing")
+      }
+    } catch (error) {
+      console.error('Failed to complete order:', error);
+    }
+    }
   return (
     <div className="px-4 py-8">
             <Link
@@ -47,6 +78,12 @@ function OrderView() {
                   Total: ${orderData.totalCost}
                 </p>
               </div>
+              <button
+                className="font-[600] p-2 rounded text-white bg-green-500 text-xs md:text-sm "
+                onClick={handleCompleteOrder}
+              >
+                Complete Order
+              </button>
             </div>
           </div>
 {/* 
@@ -121,6 +158,12 @@ function OrderView() {
               {orderData.items &&
                 orderData.items.map((e) => (
                   <div className="w-[170px]" key={e.id}>
+                    <input type="checkbox" 
+                      name="itemCheck"
+                      value={e.itemID}
+                      onChange={handleItemListing}
+                    />
+
                     <ItemsCard item={e} />
                   </div>
                 ))}

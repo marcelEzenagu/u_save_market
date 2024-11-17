@@ -45,12 +45,33 @@ export const vendorApiSlice = apiSlice.injectEndpoints({
             invalidatesTags:['vendor'],
 
         }),
+        completeOrder: builder.mutation({
+            // query: (data) => ({
+            //         url: `vendors/complete-order`,
+            //         method: 'PATCH',
+            //         body: {...data},
+            //     }
+            // ),
+
+            
+            query: (data) => {
+                const {orderID} = data
+                
+                return {
+                url: `vendors/complete-order?orderID=${orderID}`,
+                method: 'PATCH',
+                body: { ...data },
+              }
+            },
+            invalidatesTags:['vendor'],
+        })
     })
 })
 
 export const {
     useViewVendorQuery,
     useGetVendorStatsQuery,
+    useCompleteOrderMutation,
     useGetVendorOrdersQuery, 
     useUpdateVendorProfileMutation, 
     useUpdateVendorProfilePictureMutation} = vendorApiSlice

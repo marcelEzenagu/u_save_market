@@ -39,7 +39,6 @@ export const agentApiSlice = apiSlice.injectEndpoints({
         findAllOpenShipment: builder.query({
             query: (data) => {
                 const { status = '',perPage,page, daysDifference = '',countries,orderID="" } = data;
-                // console.log("DATA",data.countries)
                 const queryString = countries?.map(country => `countries=${encodeURIComponent(country)}`).join('&');
 
                 return {url:`agents/warehouse?${queryString}&status=${status}&orderID=${orderID}&limit=${perPage}&page=${page}&daysDiff=${daysDifference}`}

@@ -41,7 +41,7 @@ function AgentListComponent({
 
 
   const handleStatusChange = (tab)=>{
-    setActiveTab(tab.name)
+    setActiveTab(tab.status)
     handleChange("status",tab.status)
 
   }
@@ -257,6 +257,7 @@ const HandleCol =({item, col, header}) => {
             return <Link to={`/agent/${header.toLowerCase()}/123`}>{item[col.key] || '290902'}</Link>
         case "orderID":
             return <span
+            className="cursor-pointer"
               onClick={(e)=>navigate(
                 `/agent/${header.toLowerCase()}/${item?.shippingID}`,
               {state:item}

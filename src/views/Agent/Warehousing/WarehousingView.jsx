@@ -49,6 +49,11 @@ itemsCost,
     []
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [data, setData] = useState({
+    rejectMessage:"",
+    option:""
+  });
+
   const [isModalOpenPackage, setIsModalOpenPackage] = useState(false);
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
@@ -74,6 +79,14 @@ itemsCost,
    }
     setIsModalOpenPackage(!isModalOpenPackage);
   };
+  const handleApprove = async() => {
+    const resp = await acceptShipment({shipmentID:shippingID,status})
+    conso
+    if(resp.data != undefined && resp.data.status === "FOR_SHIPPING"){
+     navigate("/agent/warehousing")
+   }
+    setIsModalOpenPackage(!isModalOpenPackage);
+  };
 
   const handleWarehousedShipment = async() => {
     const resp = await acceptShipment({shipmentID:shippingID,status})
@@ -82,13 +95,37 @@ itemsCost,
    }
     setIsModalOpenPackage(!isModalOpenPackage);
   };
+
   const handleRejectShipment = async() => {
-  //   const resp = await acceptShipment({shipmentID:shippingID,status})
-  //   if(resp.data != undefined && resp.data.status === "WAREHOUSED"){
-  //    navigate("/agent/warehousing")
-  //  }
-    setIsModalOpenPackage(!isModalOpenPackage);
+    console.log("REJECT MESSAGE", data.rejectMessage)
+    const resp = await acceptShipment({shipmentID:shippingID,
+      rejectMessage:data.rejectMessage})
+    if(resp.data != undefined && resp.data.status === "WAREHOUSED"){
+     navigate("/agent/warehousing")
+   }
+
+    // setIsModalOpenPackage(!isModalOpenPackage);
   };
+
+  const handleTextChange =(e)=>{
+    const {value, name} =e.target
+    setData(prev=>({
+      ...prev,
+      [name]:value
+    }))
+  }
+
+  const showRejectModal = ()=>{
+     
+    setData(prev=>({
+      ...prev,
+      option:"reject"
+    }),()=>{
+
+    })
+    handleModalPackageToggle()
+  }
+
 
   return (
     <div>
@@ -123,19 +160,19 @@ itemsCost,
                 >
                   Confirm
                 </button>
-              ) : status == "WAREHOUSE" ? (
-                <div>
+              ) : status == "WAREHOUSED" ? (
+                <div className="flex ">
                   <button
-                    onClick={handleModalPackageToggle}
-                    className="py-2 px-2 md:px-6 text-xs md:text-sm rounded-md text-white bg-regal-sky-blue"
+                    onClick={showRejectModal}
+                    className="py-2 px-2 mr-2 md:px-6 text-xs md:text-sm rounded-md text-white bg-red-600"
                   >
-                    Confirm
+                    Reject v
                   </button>
                   <button
                     onClick={handleModalPackageToggle}
-                    className="py-2 px-2 md:px-6 text-xs md:text-sm rounded-md text-white bg-regal-sky-blue"
+                    className="py-2 px-2 ml-2  md:px-6 text-xs md:text-sm rounded-md text-white bg-regal-sky-blue"
                   >
-                    Confirm
+                    Approve
                   </button>
                 </div>
               ) : null}
@@ -375,20 +412,27 @@ itemsCost,
                 </div>
               </div>
             ) : status == "WAREHOUSED" ? (
-              <div className="max-w-[350px] px-2  py-8 mx-auto">
+
+               data.option === "reject" ?
+                <div className="max-w-[350px] px-2  py-8 mx-auto">
                 <h3 className="text-xl font-bold text-center mb-2">
-                  Accept Package
+                  Reject Package
                 </h3>
                 <p className="text-center text-xs max-w-[300px] mx-auto mb-4">
-                  Are you sure you’ll ike to carry out this shipment? Once
-                  accepted, it can’t be rejected
+                   Write a feedback for rejection
                 </p>
+                <div className="mx-auto">
+                  <textarea rows={5} name="rejectMessage" value={data.rejectMessage}  className="p-2 text-red-600 mx-auto w-[400px] border border-round" 
+                  // onChange={handleTextChange} />
+                  onChange={(e)=>handleTextChange(e)} />
+                  </div>
+
                 <div className="flex justify-center gap-4">
                   <button
-                    onClick={handleModalPackageToggle}
-                    className="bg-regal-sky-blue text-white py-2 px-4 text-sm rounded-md w-full font-[600]"
+                    onClick={handleRejectShipment}
+                    className="bg-red-600 text-white py-2 px-4 text-sm rounded-md w-full font-[600]"
                   >
-                    Yes, Accept
+                    Yes, I Reject
                   </button>
                   <button
                     onClick={handleModalPackageToggle}
@@ -397,7 +441,31 @@ itemsCost,
                     No, Cancel
                   </button>
                 </div>
+                </div>
+              :
+              <div className="max-w-[350px] px-2  py-8 mx-auto">
+              <h3 className="text-xl font-bold text-center mb-2">
+                Approve Items Received?
+              </h3>
+              <p className="text-center text-xs max-w-[300px] mx-auto mb-4">
+                Confirm if you've received items in good conditions from vendor
+              </p>
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={handleApprove}
+                  className="bg-regal-sky-blue text-white py-2 px-4 text-sm rounded-md w-full font-[600]"
+                >
+                  Yes, I Approve
+                </button>
+                <button
+                  onClick={handleModalPackageToggle}
+                  className="bg-white text-sm border border-regal-sky-blue text-regal-sky-blue py-2 px-4 font-[600] rounded-md w-full"
+                >
+                  No, Cancel
+                </button>
               </div>
+            </div>
+              
             ) : null}
           </div>
         </div>
@@ -511,7 +579,7 @@ const ProductTableTab = React.memo(({ setActiveOrder,items=[]} ) => {
             ))}
           </tbody>
         </table>
-        <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-between mt-4">
+        {/* <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-between mt-4">
         <h6 className="text-xs text-regal-crum-gray">
           Showing {currentItems.length} items out of {Items.length} results
           found
@@ -532,7 +600,7 @@ const ProductTableTab = React.memo(({ setActiveOrder,items=[]} ) => {
           containerClassName="flex flex-row items-center justify-end"
           activeClassName="border border-regal-sky-blue text-white bg-regal-sky-blue font-[500]"
         />
-      </div>
+        </div> */}
       </div>
 
 
