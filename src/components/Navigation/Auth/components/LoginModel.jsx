@@ -31,6 +31,9 @@ const LoginModel = ({handleToggle , onClose}) => {
       setErrorMessagesList([]);
       try {
         const value = await loginUser({
+
+          // email:"vanyanka@yahoo.com",
+          // password: "@123A234233"
           email: data.email,
           password: data.password,
         }).unwrap();
@@ -55,6 +58,7 @@ const LoginModel = ({handleToggle , onClose}) => {
             dispatch(setCountry(country));
             dispatch(setCurrency(country));
           }
+          
         }
   
         setCookie("accessToken", userData?.access_data?.access_token);

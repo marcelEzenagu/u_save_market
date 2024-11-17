@@ -128,6 +128,9 @@ function Payment() {
         },
         body: JSON.stringify(orderPayload),
       });
+
+
+      console.log("orderDetails HERE",response)
       if (!response.ok) {
         console.log("ENTERED HERE")
         throw new Error('Error creating order');
@@ -140,8 +143,8 @@ function Payment() {
         console.log("orderD222  HERE")
         setErrMsg(null);
         dispatch(setOrders([orderDetails]));
-        setOrder(orderDetails);
         handleRemoveAllCartAfterCreateOrder();
+        setOrder(orderDetails);
         localStorage.removeItem("checkoutDetails");
       }
     } catch (err) {

@@ -61,6 +61,11 @@ const TabComponent = React.memo(
 );
 
 const OrderSummary = React.memo(({ cartDetails, data, estTotal, total,  loadingPayment }) => {
+  const exchangeRate = useSelector((state)=> state?.auth?.exchangeRate);
+  console.log("estTotal:: ",estTotal)
+  console.log("data:: ",data)
+
+  console.log("exchangeRate=====",exchangeRate)
   return (
     <div className="border shadow-sm bg-white py-4 mt-5 md:mt-0 rounded-xl ">
       {cartDetails?.loading ? (
@@ -78,7 +83,8 @@ const OrderSummary = React.memo(({ cartDetails, data, estTotal, total,  loadingP
               </p>
             </div>
             <p className="text-sm font-[600] text-regal-black">
-              ₦{numberWithCommas(total)}
+              {exchangeRate?.currency}{' '}{ numberWithCommas((total * exchangeRate?.rate).toFixed(2))}{" "}
+
             </p>
           </div>
           <div className="flex flex-row justify-between items-start m-4">
@@ -91,7 +97,9 @@ const OrderSummary = React.memo(({ cartDetails, data, estTotal, total,  loadingP
               </p>
             </div>
             <p className="text-sm font-[600] text-regal-black">
-              ₦{numberWithCommas(data?.shippingPay)}
+              {/* ₦{numberWithCommas(data?.shippingPay)} */}
+              {exchangeRate?.currency}{' '}{ numberWithCommas((data?.shippingPay * exchangeRate?.rate).toFixed(2))}{" "}
+
             </p>
           </div>
           <div className="flex flex-row justify-between items-start py-4 border-t">
@@ -99,7 +107,9 @@ const OrderSummary = React.memo(({ cartDetails, data, estTotal, total,  loadingP
               <h6 className="text-sm font-[500] text-regal-black">Est.Total</h6>
             </div>
             <p className="text-lg font-[600] text-regal-black px-4">
-              ₦{numberWithCommas(estTotal)}
+              {/* ₦{numberWithCommas(estTotal)} */}
+              {exchangeRate?.currency}{' '}{ numberWithCommas(((total + data?.shippingPay)* exchangeRate?.rate).toFixed(2))}{" "}
+
             </p>
           </div>
           <div className="px-4 py-2 w-full">
@@ -215,7 +225,7 @@ function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
       e.preventDefault();
   
       if (!stripe || !elements) {
-        console.log("Stripe.js has not loaded yet.");
+        conso3le.log("Stripe.js has not loaded yet.");
         return;
       }
   
@@ -332,7 +342,6 @@ export default function CheckoutWrapper() {
   const { isLoading, isAuthenticated } = useAuth();
   const token = useSelector(state => state?.auth?.token);
   const cartData = useSelector(state => state?.cart)
-  const exchangeRate = useSelector((state)=> state?.auth?.exchangeRate);
 
   const {
     data: cartDetails,
@@ -391,14 +400,15 @@ export default function CheckoutWrapper() {
   }, [cartDetails]);
  
 
-  const estTotal = useMemo(() => total + data?.shippingPay, [total, data]);
+  const estTotal = useMemo(() => total + data?.shippingPay, [total]);
  
   useEffect(()=>{
     const getClientKey  = async () => {
       if(total){
         console.log("CART---total::: ",total)
+        console.log("CART---estTotal::: ",estTotal)
 
-        const body = { products: cartDetails?.products, totalCost: estTotal };
+        const body = { products: cartDetails?.products, totalCost: total };
         console.log("BODY::",body)
         // return 
         const headers = {

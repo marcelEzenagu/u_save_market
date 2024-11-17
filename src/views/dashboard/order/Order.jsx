@@ -137,6 +137,8 @@ const EmptyState = () => (
 
 const OrderCard = React.memo(({ order }) => {
   const navigate = useNavigate();
+
+  console.log("ORDER===",order)
   return (
     <div className="rounded-md border p-5 mt-4" >
       <div className="flex flex-col md:flex-row items-start justify-between">
@@ -148,7 +150,7 @@ const OrderCard = React.memo(({ order }) => {
             ID: {order.orderID} <Status status={order?.status} />
           </p>
           <p className="text-xs text-regal-light-gray text-start mt-1">
-            No of Items: {order.products.length}
+            No of Items: {order?.products?.length}
           </p>
         </div>
         <span className="text-xs md:text-sm text-regal-light-gray">
@@ -157,8 +159,8 @@ const OrderCard = React.memo(({ order }) => {
       </div>
 
       <div className="mt-5 border-t flex flex-row gap-4 overflow-x-scroll">
-        {order.products.map((item) => (
-          <div className="w-[170px]" key={item.productID}>
+        {order?.items.map((item) => (
+          <div className="w-[170px]" key={item?.itemID}>
             <ItemsCard item={item} />
           </div>
         ))}

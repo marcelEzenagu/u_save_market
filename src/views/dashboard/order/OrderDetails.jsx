@@ -2,6 +2,8 @@ import React, { useState, useMemo } from "react";
 import { IoInformationCircle } from "react-icons/io5";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import ItemsCard from "../../../components/cards/ItemsCard";
+import {  useSelector } from "react-redux";
+
 import Status from "../../../components/order/OrderStatus";
 import Cancelicon from "../../../assets/images/order/cancel.png";
 import moment from "moment";
@@ -79,6 +81,8 @@ function OrderDetails({ order, setTrackOrderDetails }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
+  const exchangeRate = useSelector((state)=> state?.auth?.exchangeRate);
+
   const trackingDetails = useMemo(
     () =>
       orderTracking.map((stage) => ({
@@ -127,7 +131,9 @@ function OrderDetails({ order, setTrackOrderDetails }) {
               Order on: {moment(createdAt).format("DD MMM, YYYY : HH:mm")}
             </p>
             <p className="text-xs text-regal-black font-bold text-start mt-1">
-              Total: ₦{numberWithCommas(totalCost)}
+              Total: 
+              {exchangeRate?.currency}{' '}{numberWithCommas((totalCost* exchangeRate?.rate).toFixed(2))}
+              {/* ₦{numberWithCommas(totalCost)} */}
             </p>
           </div>
           <button

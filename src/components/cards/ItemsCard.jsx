@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 function ItemsCard({ item, category }) {
 
   return (
-    <div key={item.id} className="text-sm font-[500] animate-fade-in w-[150px] ">
+    <div key={item.itemID} className="text-sm font-[500] animate-fade-in w-[150px] ">
       <div className="relative bg-white h-[200px]  rounded-lg  overflow-hidden ">
         <img
           src={item.image || ReplaceImage}

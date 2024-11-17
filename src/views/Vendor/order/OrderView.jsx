@@ -40,9 +40,9 @@ console.log("value::",value)
       try{
         const resp = await completeOrder({itemIDs:itemList,orderID}).unwrap();
       console.log("RESP::; ",resp)
-        if(resp.data != undefined && resp.data.status === "ACCEPTED"){
-        navigate("/agent/warehousing")
-      }
+        // if(resp.data != undefined && resp.data.status === "ACCEPTED"){
+        navigate("/vendor/orders")
+      // }
     } catch (error) {
       console.error('Failed to complete order:', error);
     }
@@ -79,8 +79,9 @@ console.log("value::",value)
                 </p>
               </div>
               <button
-                className="font-[600] p-2 rounded text-white bg-green-500 text-xs md:text-sm "
+                className={`font-[600] p-2 rounded text-white text-xs md:text-sm ${itemList.length ? "bg-green-500" : "bg-green-100"}`}
                 onClick={handleCompleteOrder}
+                disabled={!itemList.length}
               >
                 Complete Order
               </button>
