@@ -58,7 +58,7 @@ const LoginModel = ({handleToggle , onClose}) => {
             dispatch(setCountry(country));
             dispatch(setCurrency(country));
           }
-          
+
         }
   
         setCookie("accessToken", userData?.access_data?.access_token);
@@ -68,7 +68,9 @@ const LoginModel = ({handleToggle , onClose}) => {
           password: "",
           eye: false,
         });
+
         navigate("/");
+        
       } catch (err) {
         console.log(err);
         handleError(err, "login");

@@ -13,7 +13,7 @@ export function useProfileUploadHooks() {
       setError("");
       setImagePreview("");
     }
-    const handleFileChange = (event) => {
+    const handleFileChange = async(event) => {
       setError("");
         const file = event.target.files[0]; // Get the selected file
         try {
@@ -25,18 +25,19 @@ export function useProfileUploadHooks() {
             setError('File size exceeds the 2GB limit. Please choose a smaller file.');
           }
           if (file) {
-            const reader = new FileReader();
-           
+            const reader = await  new FileReader();
             // Define the callback for when the file is read
+
+            // Read the file as a Data URL (which contains the base64 string)
+            reader.readAsDataURL(file);
             reader.onloadend = () => {
               const base64String = reader.result; // Get the base64 string     
               setBase64String(base64String);
               setImagePreview(base64String); // Set image preview
               setUploadStatus("")
             };
-            // Read the file as a Data URL (which contains the base64 string)
-            reader.readAsDataURL(file);
           }
+          
           
         } catch (error) {
           console.log(error);

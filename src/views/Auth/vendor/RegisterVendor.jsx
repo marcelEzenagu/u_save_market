@@ -17,12 +17,15 @@ const handleSubmit = async (e) => {
   setErrMsg("");
   setErrorMessagesList([]);
   try {
-    const  {
-      access_data,
-      vendor
-       } = await Register({ firstName: data.firstName, lastName:data.lastName,  email : data.email, password : data.password }).unwrap()
-    setCookie("accessToken", access_data?.token)
-    dispatch(setCredentials({ accessToken: access_data?.token, user : vendor, role: access_data?.role,}))
+    // const  {
+    //   access_data,
+    //   vendor
+    //    } 
+
+    const {requestID,user} = await Register({ firstName: data.firstName, lastName:data.lastName,  email : data.email, password : data.password }).unwrap()
+    
+    //    setCookie("accessToken", access_data?.token)
+    // dispatch(setCredentials({  user }))
     setData({
       firstName:'',
       lastName: '',
@@ -33,7 +36,7 @@ const handleSubmit = async (e) => {
       eyeConfirm:false
     })
     // setModal(true)
-    navigate('/vendor/home')
+    navigate(`/vendor/verify-email`,{state:{requestID,email:data.email}})
   }catch (err) {
     console.log(err);
     handleError(err, "Register");

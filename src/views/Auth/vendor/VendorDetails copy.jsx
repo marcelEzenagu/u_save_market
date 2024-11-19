@@ -18,10 +18,10 @@ import { PiTrash } from "react-icons/pi";
 const ProgressFormPage = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [images, setImages] = useState({});
+  const [images, setImages] = useState({}); 
 
   const [body, setBody] = useState({
-    profilePicture: "",
+    profileImage: "",
     fullName: "",
     country: "",
     phoneNumber: "",
@@ -39,12 +39,11 @@ const ProgressFormPage = () => {
     businessBankAccountName: "",
     idDocument: "",
     idDocumentPrev: "",
-    hasAcknowleged: false,
+    acknowledgment: false,
   });
-  const [error, setError] = useState("");
 
   const [storeName, setStoreName] = useState("");
-  const [profilePicture, setProfilePicture] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
   const [businessDetails, setBusinessDetails] = useState("");
   const [selectedId, setSelectedId] = useState("");
   const [selectedCountry, setSelectedCountry] = useState(countries[0] || null);
@@ -53,15 +52,10 @@ const ProgressFormPage = () => {
   const fileInputRef = useRef(null);
   const profileInputRef = useRef(null);
 
-  const {
-    base64String,
-    clearData,
-    imagePreview,
-    error: uploadErr,
-    handleFileChange,
-  } = useProfileUploadHooks();
+  const { base64String, clearData, imagePreview, error, handleFileChange } =
+    useProfileUploadHooks();
 
-  const [updateVendor, isLoading] = useUpdateVendorProfileMutation();
+  const [updateVendor,isLoading] = useUpdateVendorProfileMutation();
 
   const user = useSelector((state) => state.auth?.user);
 
@@ -132,22 +126,16 @@ const ProgressFormPage = () => {
   };
 
   const handleComplete = async () => {
- 
+    console.log("DATAAAA====", body);
+    console.log("profileImage====", profileImage);
+    console.log("file====", file);
+    console.log("selectedCountry====", selectedCountry);
+
     const req = {
       ...body,
-      profilePicture:images.profilePicture,
-      cacDocument:images.cacDocument,
-      idDocument:images.idDocument,
-
-
     };
-    const res = await updateVendor(req).unwrap();
-    if(res.hasAcknowleged){
-      navigate("/vendor/registration/successful")
-    }
-    console.log("res======",res)
+    await updateVendor();
   };
-
 
   const handlePrevious = () => {
     if (step > 1) setStep(step - 1);
@@ -169,12 +157,12 @@ const ProgressFormPage = () => {
 
     setBody((prev) => ({
       ...prev,
-      [name]: name != "hasAcknowleged" ? value : !body.hasAcknowleged,
+      [name]: name != "acknowledgment" ? value : !body.acknowledgment,
     }));
   };
 
   const handleImageUpload = (event) => {
-    setProfilePicture(URL.createObjectURL(event.target.files[0]));
+    setProfileImage(URL.createObjectURL(event.target.files[0]));
   };
 
   // const handleFileChange = (event) => {
@@ -239,44 +227,30 @@ const ProgressFormPage = () => {
     event.preventDefault();
   };
 
-  const handleImageSelect = async (e) => {
+  const handleImageSelect = (e) => {
     const { name } = e.target;
-    const MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+    // const selectedFile = e.target.files[0];
+    handleFileChange(e);
+    // console.log("base64String=====", imagePreview);
+    // setBody((prev) => ({
+    //   ...prev,
+    //   [name]: base64String,
+    //   [name + "Prev"]: imagePreview,
+    // }));
 
-    setError("");
-    const file = e.target.files[0]; // Get the selected file
-    console.log("file", file);
-    try {
-      if (!file) {
-        setError("No file selected");
-        return;
-      }
-      if (file.size > MAX_FILE_SIZE) {
-        setError(
-          "File size exceeds the 2GB limit. Please choose a smaller file."
-        );
-      }
-      if (file) {
-        const reader = new FileReader();
-        console.log("setting file");
-        // Define the callback for when the file is read
-        reader.onloadend = () => {
-          const base64String = reader.result; // Get the base64 string
-          // setBase64String(base64String);
-          // setImagePreview(base64String); // Set image preview
-          setImages((prev) => ({
-            ...prev,
-            [name]: base64String,
-            // preview: base64String,
-          }));
-        };
-        // Read the file as a Data URL (which contains the base64 string)
-        reader.readAsDataURL(file);
-      }
-    } catch (error) {
-      console.log(error);
-      setError("something went wrong selecting your image.", error);
-    }
+    setImages((prev) => ({
+      ...prev,
+      [name]: {
+        base64: base64String,
+        preview: imagePreview,
+      },
+    }));
+  
+
+
+    // if (selectedFile && (selectedFile.type === 'application/vnd.ms-excel' || selectedFile.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
+    //   setFile(selectedFile);
+    // }
   };
 
   // const handleImageSelect = (e) => {
@@ -295,17 +269,20 @@ const ProgressFormPage = () => {
   //   // }
   // };
 
-  const clearFile = (name) => {
-    setImages((prev) => ({
-      ...prev,
-      [name]:  "",
-    }));
+
+  const handleFileSelect = (event) => {
+    const selectedFile = event.target.files[0];
+    if (
+      selectedFile &&
+      (selectedFile.type === "application/vnd.ms-excel" ||
+        selectedFile.type ===
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    ) {
+      setFile(selectedFile);
+    }
   };
 
   const renderForm = ({ user }) => {
-    {
-      error && <div className="bg-red-500 text-white p-3 mx-auto">{error}</div>;
-    }
     switch (step) {
       case 1:
         //   return (
@@ -325,65 +302,89 @@ const ProgressFormPage = () => {
         // case 2:
         return (
           <div className="animated fadeInDown">
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                {images.profilePicture ? (
-                  <img
-                    src={images.profilePicture}
-                    alt="Profile"
-                    className="w-[70px] h-[70px] rounded-full object-cover border border-gray-300"
+            <div className="mb-4 flex flex-row items-center ">
+              <input
+                type="file"
+                ref={profileInputRef}
+                onChange={handleImageSelect}
+                className="w-full p-3 hidden text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
+              />
+              {profileImage ? (
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  className=" w-24 h-24 rounded-full object-cover"
+                  onClick={handleProfileINput}
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center bg-gray-400  w-24 h-24 rounded-full">
+                  <IoCameraOutline
+                    className="text-white text-3xl"
+                    onClick={handleProfileINput}
                   />
-                ) : (
-                  <img
-                    src={"https://via.placeholder.com/150"}
-                    alt="Profile"
-                    className="w-[70px] h-[70px] rounded-full object-cover border border-gray-300"
-                  />
-                )}
-              </div>
+                </div>
+              )}
 
-              <div className="flex flex-row items-center gap-4">
-                {images.profilePicture ? (
-                  <>
-                    <button
-                      onClick={handleUpload}
-                      className="md:text-xs flex items-center px-4 py-1 space-x-1 border-[1.5px] text-white border-regal-sky-blue bg-regal-sky-blue rounded-md"
-                    >
-                      <RxUpdate className="text-lg" />
-                      <span
-                        className="font-[600] text-[10px] md:text-xs py-1"
-                        disabled={isLoading}
-                      >
-                        {isLoading ? "Updating..." : "Update"}
-                      </span>
-                    </button>
-                    <button
-                      onClick={clearData}
-                      className="flex items-center px-4 py-1 space-x-1 border-[1.5px] text-regal-light-gray border-regal-light-gray rounded-md"
-                    >
-                      <PiTrash className="text-lg" />
-                      <span className="font-[600] text-[10px] md:text-xs py-1">
-                        Remove
-                      </span>
-                    </button>
-                  </>
-                ) : (
-                  <label className="block text-[10px] md:text-xs font-medium text-gray-700">
-                    <span className="inline-block px-4 py-2 md:py-2 text-[10px] md:text-xs text-white border-regal-sky-blue bg-regal-sky-blue rounded-md cursor-pointer">
-                      Change Picture
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageSelect}
-                        name="profilePicture"
-                        className="hidden"
-                      />
-                    </span>
-                  </label>
-                )}
+              <div className="flex flex-col gap-2 ml-5">
+                <h5 className="block text-xs font-bold text-regal-black">
+                  Upload profile
+                </h5>
+                <h5 className="block text-xs font-[400] text-regal-black">
+                  Recommended Image is 1200 x 1200
+                </h5>
+                <h5 className="block text-xs font-[400] text-regal-black">
+                  Format .jpg, .png
+                </h5>
               </div>
             </div>
 
+            <div className="flex items-center space-x-4">
+        <div className="relative">
+          {imagePreview ? (
+            <img
+              src={imagePreview}
+              alt="Profile"
+              className="w-[70px] h-[70px] rounded-full object-cover border border-gray-300"
+            />
+          ) : (
+            <img
+              src={'https://via.placeholder.com/150'}
+              alt="Profile"
+              className="w-[70px] h-[70px] rounded-full object-cover border border-gray-300"
+            />
+          )}
+        </div>
+
+        <div className="flex flex-row items-center gap-4">
+          {imagePreview ? (
+            <>
+              <button onClick={handleUpload} className="md:text-xs flex items-center px-4 py-1 space-x-1 border-[1.5px] text-white border-regal-sky-blue bg-regal-sky-blue rounded-md">
+                <RxUpdate className="text-lg" />
+                <span className="font-[600] text-[10px] md:text-xs py-1" disabled={isLoading}>
+                  {isLoading ? 'Updating...' : 'Update'}
+                </span>
+              </button>
+              <button onClick={clearData} className="flex items-center px-4 py-1 space-x-1 border-[1.5px] text-regal-light-gray border-regal-light-gray rounded-md">
+                <PiTrash className="text-lg" />
+                <span className="font-[600] text-[10px] md:text-xs py-1">Remove</span>
+              </button>
+            </>
+          ) : (
+            <label className="block text-[10px] md:text-xs font-medium text-gray-700">
+              <span className="inline-block px-4 py-2 md:py-2 text-[10px] md:text-xs text-white border-regal-sky-blue bg-regal-sky-blue rounded-md cursor-pointer">
+                Change Picture
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+              </span>
+            </label>
+          )}
+        </div>
+      </div>
+            
             <div className="mb-4">
               <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
                 Full Name
@@ -647,57 +648,87 @@ const ProgressFormPage = () => {
               </h5>
               <div className="mt-4">
                 <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
-                  CAC Document Image
+                  ID Image
                 </label>
 
-                {images.cacDocument ? (
-                  <div className="flex flex-row items-center justify-between mt-4">
-                    <img
-                      src={images.cacDocument}
-                      alt="Profile"
-                      className="w-[200px] h-[200px] rounded-lg object-cover border border-gray-300"
-                    />
-                    <button
-                      onClick={() => clearFile("cacDocument")}
-                      className="flex items-center px-4 py-1 space-x-1 border-[1.5px] text-regal-light-gray border-regal-light-gray rounded-md"
+                {images.cacDocument?.preview ? (
+                <img
+                  src={images.cacDocument?.preview}
+                  alt="Profile"
+                  className="w-[70px] h-[70px] rounded-full object-cover border border-gray-300"
+                /> ):
+                <>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  className="hidden"
+                  name="cacDocument"
+                />
+                                  <div
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                    className="flex flex-col items-center justify-center border-2 bg-gray-100  border-dashed border-gray-400 rounded-lg p-12 text-center cursor-pointer hover:border-regal-black transition-colors max-w-[400px]"
+                  >
+                    <MdCloudUpload className="text-5xl text-gray-400 mb-4" />
+
+                    <label
+                      htmlFor="file-upload"
+                      className="text-sm  text-regal-black mb-2"
+                      onClick={handleImageSelect}
                     >
-                      <PiTrash className="text-lg" />
-                      <span className="font-[600] text-[10px] md:text-xs py-1">
-                        Remove
-                      </span>
-                    </button>
+                      Click or drag file here to upload.
+                      <br />
+                      Files accepted- pdf, png, jpeg, jpg
+                    </label>
+                  </div>
+                </>
+    }
+                {/* {!file ? (
+                  <div
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                    className="flex flex-col items-center justify-center border-2 bg-gray-100  border-dashed border-gray-400 rounded-lg p-12 text-center cursor-pointer hover:border-regal-black transition-colors max-w-[400px]"
+                  >
+                    <MdCloudUpload className="text-5xl text-gray-400 mb-4" />
+
+                    <label
+                      htmlFor="file-upload"
+                      className="text-sm  text-regal-black mb-2"
+                      onClick={handleButtonClick}
+                    >
+                      Click or drag file here to upload.
+                      <br />
+                      Files accepted- pdf, png, jpeg, jpg
+                    </label>
                   </div>
                 ) : (
                   <>
-                    <div
-                      onDrop={handleDrop}
-                      onDragOver={handleDragOver}
-                      onClick={() => fileInputRef.current.click()} 
-                      className="flex flex-col items-center justify-center border-2 bg-gray-100  border-dashed border-gray-400 rounded-lg p-12 text-center cursor-pointer hover:border-regal-black transition-colors max-w-[400px]"
-                    >
-                      <MdCloudUpload className="text-5xl text-gray-400 mb-4" />
-
-                      <label
-                        htmlFor="file-upload"
-                        className="text-sm  text-regal-black mb-2"
-                      >
-                        <span>
-                          Click or drag file here to upload.
-                          <br />
-                          Files accepted- pdf, png, jpeg, jpg
-                          <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageSelect}
-                            // className="hidden"
-                            name="cacDocument"
-                          />
-                        </span>
-                      </label>
+                    <div className="flex flex-row items-center justify-between mt-4">
+                      <div className="flex flex-row items-center gap-4">
+                        <div className="w-10 h-10 rounded-lg bg-regal-auth-bg-color flex flex-col items-center justify-center">
+                          <FaRegFileLines className="text-regal-blue" />
+                        </div>
+                        <h6 className="text-xs font-[400] text-regal-black">
+                          {file?.name}
+                        </h6>
+                      </div>
+                      <div className="flex flex-row items-center gap-4">
+                        <FaEdit
+                          className="text-xl text-regal-light-gray"
+                          onClick={handleButtonClick}
+                        />
+                        <RiDeleteBin6Line
+                          className="text-xl text-regal-light-gray"
+                          onClick={() => {
+                            setFile(null);
+                          }}
+                        />
+                      </div>
                     </div>
                   </>
-                )}
+                )} */}
               </div>
             </div>
           </div>
@@ -763,7 +794,7 @@ const ProgressFormPage = () => {
               <div className="flex items-center py-2">
                 <input
                   type="checkbox"
-                  name="hasAcknowleged"
+                  name="acknowledgment"
                   value={body.acknowledgment}
                   onChange={handleChange}
                   className="text-xs mr-3 md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
@@ -778,29 +809,31 @@ const ProgressFormPage = () => {
     }
   };
 
+  
   const renderFormFields = () => {
-    let formField;
-
+    let formFields;
+  
     switch (selectedId) {
       case "drivers_license":
-        formField = (
-          <div>
+        formFields = (
+          <>
             <div className="mt-4">
               <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
                 Driver’s License Number
               </label>
-
               <input
                 type="text"
                 className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
                 placeholder="Enter your Driver’s License Number"
               />
             </div>
-          </div>
+          </>
         );
+        break;
+  
       case "passport":
-        formField = (
-          <div>
+        formFields = (
+          <>
             <div className="mt-4">
               <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
                 Passport Number
@@ -810,7 +843,9 @@ const ProgressFormPage = () => {
                 className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
                 placeholder="Enter your Passport Number"
               />
-              <label className="block text-sm font-medium text-gray-700 mt-4">
+            </div>
+            <div className="mt-4">
+              <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
                 Country of Issue
               </label>
               <input
@@ -819,11 +854,13 @@ const ProgressFormPage = () => {
                 placeholder="Enter the Country of Issue"
               />
             </div>
-          </div>
+          </>
         );
+        break;
+  
       case "national_id":
-        formField = (
-          <div>
+        formFields = (
+          <>
             <div className="mt-4">
               <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
                 National ID Number
@@ -834,75 +871,320 @@ const ProgressFormPage = () => {
                 placeholder="Enter your National ID Number"
               />
             </div>
-          </div>
+          </>
         );
+        break;
+  
       default:
-        formField = null;
+        formFields = null;
+        break;
     }
-
+  
     return (
       <div>
-        {formField}
+        {formFields}
         {/* Common ID Image Field */}
-        {selectedId && (
-          <div className="mt-4">
-            <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
-              ID Image
-            </label>
-
-            {images.idDocument ? (
-              <div className="flex flex-row items-center justify-between mt-4">
-                <img
-                  src={images.idDocument}
-                  alt="Profile"
-                  className="w-[200px] h-[200px] rounded-lg object-cover border border-gray-300"
-                />
-                <button
-                  onClick={() => clearFile("idDocument")}
-                  className="flex items-center px-4 py-1 space-x-1 border-[1.5px] text-regal-light-gray border-regal-light-gray rounded-md"
-                >
-                  <PiTrash className="text-lg" />
-                  <span className="font-[600] text-[10px] md:text-xs py-1">
-                    Remove
-                  </span>
-                </button>
+        <div className="mt-4">
+          <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
+            ID Image
+          </label>
+          {images?.idDocument?.preview ? (
+            <img
+              src={images?.idDocument?.preview}
+              alt="Profile"
+              className="w-[70px] h-[70px] rounded-full object-cover border border-gray-300"
+            />
+          ) : (
+            <input
+              type="file"
+              name="idDocument"
+              accept="image/*"
+              onChange={handleImageSelect}
+              className="hidden"
+            />
+          )}
+          {!images?.idDocument?.preview  ? (
+            <div
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              className="flex flex-col items-center justify-center border-2 bg-gray-100 border-dashed border-gray-400 rounded-lg p-12 text-center cursor-pointer hover:border-regal-black transition-colors max-w-[400px]"
+            >
+              <MdCloudUpload className="text-5xl text-gray-400 mb-4" />
+              <label
+                className="text-sm text-regal-black mb-2"
+                onClick={handleButtonClick}
+              >
+                Click or drag file here to upload.
+                <br />
+                Files accepted- pdf, png, jpeg, jpg
+              </label>
+            </div>
+          ) : (
+            <div className="flex flex-row items-center justify-between mt-4">
               </div>
-            ) : (
-              <>
-                <div
-                  onDrop={handleDrop}
-                  onDragOver={handleDragOver}
-                  onClick={() => fileInputRef.current.click()} 
-                  className="flex flex-col items-center justify-center border-2 bg-gray-100  border-dashed border-gray-400 rounded-lg p-12 text-center cursor-pointer hover:border-regal-black transition-colors max-w-[400px]"
-                >
-                  <MdCloudUpload className="text-5xl text-gray-400 mb-4" >
-                  
-                  </MdCloudUpload>
-
-                  <label
-                    htmlFor="file-upload"
-                    className="text-sm  text-regal-black mb-2"
-                  >
-                      Click or drag file here to upload.
-                      <br />
-                      Files accepted- pdf, png, jpeg, jpg
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageSelect}
-                        className="hidden"
-                        name="idDocument"
-                      />
-                  </label>
-                </div>
-              </>
-            )}
+          )}
           </div>
-        )}
-      </div>
-    );
-  };
+        </div>
+        )
+      }
+
+  // const renderFormFields = () => {
+  //   switch (selectedId) {
+  //     case "drivers_license":
+  //       return (
+  //         <div>
+  //           <div className="mt-4">
+  //             <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
+  //               Driver’s License Number
+  //             </label>
+
+  //             <input
+  //               type="text"
+  //               className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
+  //               placeholder="Enter your Driver’s License Number"
+  //             />
+  //           </div>
+  //           <div className="mt-4">
+  //             <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
+  //               ID Image
+  //             </label>
+
+  //             {images?.idDocument?.preview ? (
+  //               <img
+  //                 src={images?.idDocument?.preview}
+  //                 alt="Profile"
+  //                 className="w-[70px] h-[70px] rounded-full object-cover border border-gray-300"
+  //               />
+  //             ) : (
+  //               <input
+  //                 ref={fileInputRef}
+  //                 type="file"
+  //                 name="idDocument"
+  //                 accept="image/*"
+  //                 onChange={ handleImageSelect}
+  //                 className="hidden"
+  //               />
+  //             )}
+  //             {!file ? (
+  //               <div
+  //                 onDrop={handleDrop}
+  //                 onDragOver={handleDragOver}
+  //                 className="flex flex-col items-center justify-center border-2 bg-gray-100  border-dashed border-gray-400 rounded-lg p-12 text-center cursor-pointer hover:border-regal-black transition-colors max-w-[400px]"
+  //               >
+  //                 <MdCloudUpload className="text-5xl text-gray-400 mb-4" />
+
+  //                 <label
+  //                   htmlFor="file-upload"
+  //                   className="text-sm  text-regal-black mb-2"
+  //                   onClick={handleButtonClick}
+  //                 >
+  //                   Click or drag file here to upload.
+  //                   <br />
+  //                   Files accepted- pdf, png, jpeg, jpg
+  //                 </label>
+  //               </div>
+  //             ) : (
+  //               <>
+  //                 <div className="flex flex-row items-center justify-between mt-4">
+  //                   <div className="flex flex-row items-center gap-4">
+  //                     <div className="w-10 h-10 rounded-lg bg-regal-auth-bg-color flex flex-col items-center justify-center">
+  //                       <FaRegFileLines className="text-regal-blue" />
+  //                     </div>
+  //                     <h6 className="text-xs font-[400] text-regal-black">
+  //                       {file?.name}
+  //                     </h6>
+  //                   </div>
+  //                   <div className="flex flex-row items-center gap-4">
+  //                     <FaEdit
+  //                       className="text-xl text-regal-light-gray"
+  //                       onClick={handleButtonClick}
+  //                     />
+  //                     <RiDeleteBin6Line
+  //                       className="text-xl text-regal-light-gray"
+  //                       onClick={() => {
+  //                         setFile(null);
+  //                       }}
+  //                     />
+  //                   </div>
+  //                 </div>
+  //               </>
+  //             )}
+  //           </div>
+  //         </div>
+  //       );
+  //     case "passport":
+  //       return (
+  //         <div>
+  //           <div className="mt-4">
+  //             <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
+  //               Passport Number
+  //             </label>
+  //             <input
+  //               type="text"
+  //               className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
+  //               placeholder="Enter your Passport Number"
+  //             />
+  //             <label className="block text-sm font-medium text-gray-700 mt-4">
+  //               Country of Issue
+  //             </label>
+  //             <input
+  //               type="text"
+  //               className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
+  //               placeholder="Enter the Country of Issue"
+  //             />
+  //           </div>
+  //           <div className="mt-4">
+  //             <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
+  //               ID Image
+  //             </label>
+
+  //             {images?.idDocument?.preview ? (
+  //               <img
+  //                 src={images?.idDocument?.preview}
+  //                 alt="Profile"
+  //                 className="w-[70px] h-[70px] rounded-full object-cover border border-gray-300"
+  //               />
+  //             ) : (
+  //               <input
+  //                 ref={fileInputRef}
+  //                 type="file"
+  //                 name="idDocument"
+  //                 accept="image/*"
+  //                 onChange={handleImageSelect}
+  //                 className="hidden"
+  //               />
+  //             )}
+  //             {!file ? (
+  //               <div
+  //                 onDrop={handleDrop}
+  //                 onDragOver={handleDragOver}
+  //                 className="flex flex-col items-center justify-center border-2 bg-gray-100  border-dashed border-gray-400 rounded-lg p-12 text-center cursor-pointer hover:border-regal-black transition-colors max-w-[400px]"
+  //               >
+  //                 <MdCloudUpload className="text-5xl text-gray-400 mb-4" />
+
+  //                 <label
+  //                   htmlFor="file-upload"
+  //                   className="text-sm  text-regal-black mb-2"
+  //                   onClick={handleButtonClick}
+  //                 >
+  //                   Click or drag file here to upload.
+  //                   <br />
+  //                   Files accepted- pdf, png, jpeg, jpg
+  //                 </label>
+  //               </div>
+  //             ) : (
+  //               <>
+  //                 <div className="flex flex-row items-center justify-between mt-4">
+  //                   <div className="flex flex-row items-center gap-4">
+  //                     <div className="w-10 h-10 rounded-lg bg-regal-auth-bg-color flex flex-col items-center justify-center">
+  //                       <FaRegFileLines className="text-regal-blue" />
+  //                     </div>
+  //                     <h6 className="text-xs font-[400] text-regal-black">
+  //                       {file?.name}
+  //                     </h6>
+  //                   </div>
+  //                   <div className="flex flex-row items-center gap-4">
+  //                     <FaEdit
+  //                       className="text-xl text-regal-light-gray"
+  //                       onClick={handleButtonClick}
+  //                     />
+  //                     <RiDeleteBin6Line
+  //                       className="text-xl text-regal-light-gray"
+  //                       onClick={() => {
+  //                         setFile(null);
+  //                       }}
+  //                     />
+  //                   </div>
+  //                 </div>
+  //               </>
+  //             )}
+  //           </div>
+  //         </div>
+  //       );
+  //     case "national_id":
+  //       return (
+  //         <div>
+  //           <div className="mt-4">
+  //             <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
+  //               National ID Number
+  //             </label>
+  //             <input
+  //               type="text"
+  //               className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
+  //               placeholder="Enter your National ID Number"
+  //             />
+  //           </div>
+  //           <div className="mt-4">
+  //             <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
+  //               ID Image
+  //             </label>
+  //             {images?.idDocument?.preview ? (
+  //               <img
+  //                 src={images?.idDocument?.preview}
+  //                 alt="Profile"
+  //                 className="w-[70px] h-[70px] rounded-full object-cover border border-gray-300"
+  //               />
+  //             ) : (
+  //               <input
+  //                 ref={fileInputRef}
+  //                 type="file"
+  //                 name="idDocument"
+  //                 accept="image/*"
+  //                 onChange={handleImageSelect}
+  //                 className="hidden"
+  //               />
+  //             )}
+  //             {!file ? (
+  //               <div
+  //                 onDrop={handleDrop}
+  //                 onDragOver={handleDragOver}
+  //                 className="flex flex-col items-center justify-center border-2 bg-gray-100  border-dashed border-gray-400 rounded-lg p-12 text-center cursor-pointer hover:border-regal-black transition-colors max-w-[400px]"
+  //               >
+  //                 <MdCloudUpload className="text-5xl text-gray-400 mb-4" />
+
+  //                 <label
+  //                   htmlFor="file-upload"
+  //                   className="text-sm  text-regal-black mb-2"
+  //                   onClick={handleButtonClick}
+  //                 >
+  //                   Click or drag file here to upload.
+  //                   <br />
+  //                   Files accepted- pdf, png, jpeg, jpg
+  //                 </label>
+  //               </div>
+  //             ) : (
+  //               <>
+  //                 <div className="flex flex-row items-center justify-between mt-4">
+  //                   <div className="flex flex-row items-center gap-4">
+  //                     <div className="w-10 h-10 rounded-lg bg-regal-auth-bg-color flex flex-col items-center justify-center">
+  //                       <FaRegFileLines className="text-regal-blue" />
+  //                     </div>
+  //                     <h6 className="text-xs font-[400] text-regal-black">
+  //                       {file?.name}
+  //                     </h6>
+  //                   </div>
+  //                   <div className="flex flex-row items-center gap-4">
+  //                     <FaEdit
+  //                       className="text-xl text-regal-light-gray"
+  //                       onClick={handleButtonClick}
+  //                     />
+  //                     <RiDeleteBin6Line
+  //                       className="text-xl text-regal-light-gray"
+  //                       onClick={() => {
+  //                         setFile(null);
+  //                       }}
+  //                     />
+  //                   </div>
+  //                 </div>
+  //               </>
+  //             )}
+  //           </div>
+  //         </div>
+  //       );
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   return (
     <div className="p-2 md:p-8 max-w-[1366px] mx-auto">

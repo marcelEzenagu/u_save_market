@@ -63,67 +63,83 @@ function Home() {
       const combinedData = stats.reduce((acc, obj) => ({ ...acc, ...obj }), {});
 
   return (
-    <div className="px-4 py-8">
-      <div className="flex flex-row items-center justify-between ">
-        <h5 className="text-regal-black text-lg md:text-2xl font-[700]">
-          Dashboard
-        </h5>
-        {/* <input
-          type="date"
-          className=" px-2 py-2 bg-white text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
-        /> */}
-        <DateFilter
-          onDateRangeChange={handleRangeChange}
-        />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-4 mt-4 overflow-hidden">
-    {/* Left Side: Chart */}
-    <div className="bg-white p-4 rounded shadow mt-4" >
-        <h2  className="text-sm md:text-lg font-[700] ">Sales</h2>
-        <Bar data={data} options={options} />
-      </div>
 
-      {/* Right Side: Stats */}
-      <div className="bg-white pt-4 rounded shadow space-y-4 mt-4">
-      
-  <div className="grid grid-cols-2 md:gap-4 md:px-8 relative">
-  {[
-    { name: 'Orders', icon: <FaShoppingCart />, total: combinedData?.totalOrders, percentage: '+12%' },
-    { name: 'New Customers', icon: <FaUserPlus />, total: combinedData?.totalNewCustomers, percentage: '+5%' },
-    { name: 'Total sections', icon: <LiaBoxSolid />, total:  combinedData?.totalSections, percentage: '+3%' },
-    { name: 'Total Products', icon: <LiaBoxSolid />, total:  combinedData?.totalItems, percentage: '+3%' },
-  ].map((item) => (
-    <div key={item.name} className="flex flex-row items-start justify-between p-4">
-      <div className="flex flex-col gap-2">
-        <div className="text-xs md:text-sm font-[400]">{item.name}</div>
-        <div className="text-lg md:text-xl font-bold">{item.total}</div>
-        <span>
-          <span className="text-xs font-[500] py-1 px-3 bg-green-100 text-green-800 rounded-full">
-            {item.percentage}
+    <div>
+      {!user.isVerified ?
+        <main className="bg-regal-auth-bg-color h-screen mt-4 flex flex-col items-center justify-center">
+          <div className="text-3xl font-bold text-orange-600 bg-regal-auth-bg-color">
+            <span className="py-3">
+              Your approval is pending, 
+            </span>
+            <br/>
+            <span>
+            we would email you once the process is completed.
+            </span>
+          </div>
+        </main> :
+      <div className="px-4 py-8">
+        <div className="flex flex-row items-center justify-between ">
+          <h5 className="text-regal-black text-lg md:text-2xl font-[700]">
+            Dashboard
+          </h5>
+          {/* <input
+            type="date"
+            className=" px-2 py-2 bg-white text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+          /> */}
+          <DateFilter
+            onDateRangeChange={handleRangeChange}
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 md:gap-4 mt-4 overflow-hidden">
+      {/* Left Side: Chart */}
+      <div className="bg-white p-4 rounded shadow mt-4" >
+          <h2  className="text-sm md:text-lg font-[700] ">Sales</h2>
+          <Bar data={data} options={options} />
+        </div>
+  
+        {/* Right Side: Stats */}
+        <div className="bg-white pt-4 rounded shadow space-y-4 mt-4">
+        
+    <div className="grid grid-cols-2 md:gap-4 md:px-8 relative">
+    {[
+      { name: 'Orders', icon: <FaShoppingCart />, total: combinedData?.totalOrders, percentage: '+12%' },
+      { name: 'New Customers', icon: <FaUserPlus />, total: combinedData?.totalNewCustomers, percentage: '+5%' },
+      { name: 'Total sections', icon: <LiaBoxSolid />, total:  combinedData?.totalSections, percentage: '+3%' },
+      { name: 'Total Products', icon: <LiaBoxSolid />, total:  combinedData?.totalItems, percentage: '+3%' },
+    ].map((item) => (
+      <div key={item.name} className="flex flex-row items-start justify-between p-4">
+        <div className="flex flex-col gap-2">
+          <div className="text-xs md:text-sm font-[400]">{item.name}</div>
+          <div className="text-lg md:text-xl font-bold">{item.total}</div>
+          <span>
+            <span className="text-xs font-[500] py-1 px-3 bg-green-100 text-green-800 rounded-full">
+              {item.percentage}
+            </span>
           </span>
-        </span>
+        </div>
+        <div className="w-10 h-10 rounded-full text-white bg-regal-sky-blue flex items-center justify-center text-sm">
+          {item.icon}
+        </div>
       </div>
-      <div className="w-10 h-10 rounded-full text-white bg-regal-sky-blue flex items-center justify-center text-sm">
-        {item.icon}
-      </div>
+    ))}
+  
+    {/* Pseudo-element to create borders between the gaps */}
+    <div className="absolute inset-0 grid grid-cols-2    md:px-8  pointer-events-none">
+      <div className="border-r border-b border-gray-300"></div>
+      <div className="border-b border-gray-300"></div>
+      <div className="border-r border-gray-300"></div>
+      <div></div>
     </div>
-  ))}
-
-  {/* Pseudo-element to create borders between the gaps */}
-  <div className="absolute inset-0 grid grid-cols-2    md:px-8  pointer-events-none">
-    <div className="border-r border-b border-gray-300"></div>
-    <div className="border-b border-gray-300"></div>
-    <div className="border-r border-gray-300"></div>
-    <div></div>
   </div>
-</div>
-
-
+  
+  
+        </div>
+  
+          <BestSeller />
+          <Orders />
+        </div>
       </div>
-
-        <BestSeller />
-        <Orders />
-      </div>
+     }
     </div>
   );
 }
@@ -280,56 +296,56 @@ const Orders = () => {
           </div>
         </div>
         <div className="w-full overflow-x-scroll">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-         
-              <th className="px-6 py-4 text-left text-xs font-medium text-regal-black  tracking-wider">
-              Order ID
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-medium text-regal-black  tracking-wider">
-             Status
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-medium text-regal-black  tracking-wider">
-                Amount
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-medium text-regal-black tracking-wider">
-                Product
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-medium text-regal-black  tracking-wider">
-                Name
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white ">
-            {currentItems.map((product) => (
-              <tr key={product.id}>
-                      <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
-                      199090879
-                </td>
-
-                <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
-                <OrderVendorStatus />
-                </td>
-                <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
-                  $1000
-                </td>
-                <td className="px-6 py-2 whitespace-nowrap">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                 className="w-12 h-14 object-cover rounded"
-                  />
-                </td>
-                <td className="px-6 py-2 text-xs font-medium text-regal-black w-[200px] line-clamp-3">
-                  {product.name}
-                </td>
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
           
-   
+                <th className="px-6 py-4 text-left text-xs font-medium text-regal-black  tracking-wider">
+                Order ID
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-regal-black  tracking-wider">
+              Status
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-regal-black  tracking-wider">
+                  Amount
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-regal-black tracking-wider">
+                  Product
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-regal-black  tracking-wider">
+                  Name
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white ">
+              {currentItems.map((product) => (
+                <tr key={product.id}>
+                        <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
+                        199090879
+                  </td>
+
+                  <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
+                  <OrderVendorStatus />
+                  </td>
+                  <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
+                    $1000
+                  </td>
+                  <td className="px-6 py-2 whitespace-nowrap">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                  className="w-12 h-14 object-cover rounded"
+                    />
+                  </td>
+                  <td className="px-6 py-2 text-xs font-medium text-regal-black w-[200px] line-clamp-3">
+                    {product.name}
+                  </td>
+            
+    
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         <ReactPaginate
           breakLabel="..."

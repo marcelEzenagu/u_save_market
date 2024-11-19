@@ -81,6 +81,8 @@ import OtpAgent from "./views/Auth/Agent/OtpAgent";
 import ResetPasswordAgent from "./views/Auth/Agent/ResetPasswordAgent";
 import AdminAuthLayout from "./components/Layouts/AdminAuthLayout";
 import ItemList from "./views/admin/ItemList";
+import VerifyOTP from "./views/Auth/vendor/VerifyEmail";
+import VerifyEmail from "./views/Auth/vendor/VerifyEmail";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -192,6 +194,10 @@ const Router = createBrowserRouter([
                 {
                     path:'/vendor/otp',
                     element: <OtpVendor/>
+                },
+                {
+                    path:'/vendor/verify-email',
+                    element: <VerifyEmail/>
                 },
                 {
                     path:'/vendor/reset-password',

@@ -1,18 +1,27 @@
 import React, { useState, useEffect } from "react";
 import RightImage from "../../../assets/images/vendor/Auth/otp.webp";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {useSelector} from 'react-redux'
 import Logo from "../../../assets/images/nav/logo.webp";
 import { Timer } from "../../../components/Timer"
 import { usePinInput } from "react-pin-input-hook"
-import { useForgotPasswordMutation, useVerifyOtpMutation } from "../../../features/auth/authApiSlice";
+import { useForgotPasswordMutation, useVerifyOtpMutation, useVerifyVendorEmailMutation } from "../../../features/auth/authApiSlice";
 import {useErrorMessageHooks} from "../../../hooks/useErrorMessageHooks";
-import { setVerifiedDetails } from "../../../features/auth/authSlice";
-const OtpVendor = () => {
+import { setCredentials, setVerifiedDetails } from "../../../features/auth/authSlice";
+import { setCookie } from "../../../utils";
+const VerifyEmail = () => {
   const [intervals, setIntervals] = useState([]);
 
-  const {requestID} = useParams()
-  const [verifyOtp, {isLoading}] = useVerifyOtpMutation()
+
+const location = useLocation()
+
+console.log("location''' ",location)
+const {requestID,email} = location.state || {}
+  // const {requestID} = useParams()
+
+  // console.log("requestID====",requestID)
+
+  const [verifyEmail, {isLoading}] = useVerifyVendorEmailMutation()
   const [resetPassword, { isLoading: loading }] = useForgotPasswordMutation();
   const { verifiedDetails } = useSelector((state) => state.auth);
   const {
@@ -34,10 +43,10 @@ const OtpVendor = () => {
     })
 
     useEffect(()=>{
-    console.log(verifiedDetails);
-    if (!verifiedDetails?.email || !verifiedDetails?.requestID){
-      navigate('vendor/auth/forgot-password');
-    }
+    console.log(verifiedDetails,"====verifiedDetails");
+    // if (!verifiedDetails?.email || !verifiedDetails?.requestID){
+    //   navigate('vendor/auth/forgot-password');
+    // }
     }, [verifiedDetails])
 
      const handleResendOtp = async () => {
@@ -58,10 +67,11 @@ const OtpVendor = () => {
       setErrMsg("");
       setErrorMessagesList([]);
       try {
-        const {access_data} = await verifyOtp({ otp : data, requestID : verifiedDetails?.requestID, email: verifiedDetails?.email}).unwrap();
-        console.log(access_data?.access_token);
-        dispatch(setVerifiedDetails({...verifiedDetails, token: access_data?.access_token }))
-        navigate('/vendor/reset-password')
+        const {access_data,user} = await verifyEmail({ otp : data, requestID, email}).unwrap();
+        setCookie("accessToken", access_data?.access_token);
+
+        dispatch(setCredentials({ accessToken: access_data?.access_token, user , role:access_data?.role,}))
+        navigate('/vendor/registration')
       }catch (err) {
        console.log(err);
        handleError(err, 'OTP');
@@ -88,7 +98,7 @@ const OtpVendor = () => {
           </h1>
           {/* Description Text */}
           <p className="text-center text-xs md:text-sm text-regal-light-gray mb-8 font-[400]">
-          A reset PIN has been sent to your email {verifiedDetails?.email}
+          A verification PIN has been sent to your email {verifiedDetails?.email}
           </p>
 
             <div className="mb-3 col-span-2 md:mx-2">
@@ -151,4 +161,4 @@ const OtpVendor = () => {
   );
 };
 
-export default OtpVendor;
+export default VerifyEmail;
