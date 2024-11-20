@@ -2,7 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FaCheck } from "react-icons/fa6";
-function BusinessVerification({onClose}) {
+const   baseUrl = import.meta.env.VITE_APP_API_URL
+
+function BusinessVerification({onClose,data}) {
   return (
     <div className="p-4 md:p-8 animate-fade-in">
      <button
@@ -65,7 +67,9 @@ function BusinessVerification({onClose}) {
             >
              ID Image
             </label>
-            <img src="" alt="" className="w-72 h-44 object-contain bg-gray-100" />
+            <img src={`${baseUrl}${data.cacDocument}`}alt="cacDocument" className="w-72 h-44 object-contain bg-gray-100" />
+
+         
           </div>
         </div>
       </section>

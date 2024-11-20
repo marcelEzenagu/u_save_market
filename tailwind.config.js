@@ -70,6 +70,26 @@ export default {
       },
     },
   },
-  plugins: [],
-}
+
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.no-spinner': {
+          // Chrome, Safari, Edge, Opera
+          '&::-webkit-outer-spin-button': {
+            '-webkit-appearance': 'none',
+            margin: '0',
+          },
+          '&::-webkit-inner-spin-button': {
+            '-webkit-appearance': 'none',
+            margin: '0',
+          },
+          // Firefox
+          '&': {
+            '-moz-appearance': 'textfield',
+          },
+        },
+      });
+    },
+  ],}
 

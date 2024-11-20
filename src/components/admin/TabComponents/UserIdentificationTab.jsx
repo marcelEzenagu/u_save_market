@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import IdentifyComponent from '../../Identification/IdentifyComponent'
-function UserIdentificationTab({vendorID}) {
+function UserIdentificationTab({data}) {
 
     const [interview, setInterview] = useState(false);
     const handleSet = () => {
@@ -10,7 +10,10 @@ function UserIdentificationTab({vendorID}) {
     return (
     <div className='p-4 md:px-8 md:pt-8 pb-4 animate-fade-in'>
   <section className='max-w-[800px] '>
-    <IdentifyComponent scheduleInterview={interview} handleSet={handleSet}/>
+    <IdentifyComponent 
+      scheduleInterview={interview} handleSet={handleSet}
+      data={data}
+    />
     {!interview && 
                 <button
                 onClick={()=>{

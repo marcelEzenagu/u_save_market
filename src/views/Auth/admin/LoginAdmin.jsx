@@ -30,10 +30,10 @@ const LoginAdmin = () => {
     
     try {
       const { response } = await loginAdmin({
-        // email: "usave_admin@wave.com",
-        // password: "s08182090541@E",
-        email: data.email,
-        password: data.password,
+        email: "usave_admin@wave.com",
+        password: "s08182090541@E",
+        // email: data.email,
+        // password: data.password,
       }).unwrap();
 
       setCookie("accessToken", response?.access_data?.access_token);

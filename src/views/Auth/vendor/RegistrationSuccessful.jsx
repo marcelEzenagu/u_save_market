@@ -23,7 +23,10 @@ function RegistrationSuccessful() {
           <h2 className="text-xl font-bold mb-2">Verification Successful!</h2>
           <h6 className="text-regal-black text-sm mt-4 mb-6"> 
           Your documents have been received successfully! A 
-              <span className="font-[700]"> one-on-one interview session will be conducted in 2 weeks to complete your verification</span>
+              <span className="font-[700]">One-on-one interview session and Quality check will be conducted in a week to complete your verification.
+                <br/>
+                Do keep an eye on your email.
+              </span>
           </h6>
           {/* Buttons in flex-col with gap */}
           <div className="flex flex-col gap-4   mx-auto">

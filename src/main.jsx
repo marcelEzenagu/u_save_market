@@ -8,9 +8,9 @@ import { store } from "./app/store";
 import { ToasterProvider } from './components/ToasterContext.jsx';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-      <ToasterProvider>
+    <ToasterProvider>
      <Provider store={store}>
-    <RouterProvider router={Router}/>
+        <RouterProvider router={Router}/>
     </Provider>
     </ToasterProvider>
   </StrictMode>,

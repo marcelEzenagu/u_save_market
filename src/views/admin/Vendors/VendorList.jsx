@@ -30,7 +30,10 @@ const renderVendorRow = (
           alt=""
           className="w-6 h-6 rounded-full object-cover"
         />
-        <Link to={`/admin/vendors/${vendor.vendorID}`}>{vendor.firstName.toUpperCase()}{" "}{vendor.lastName.toUpperCase()}</Link>
+        <Link to={`/admin/vendors/${vendor.vendorID}`}
+        state={vendor}
+        
+        >{vendor.firstName.toUpperCase()}{" "}{vendor.lastName.toUpperCase()}</Link>
       </div>
     </td>
     <td className="px-6 py-2 text-xs font-medium text-regal-black">

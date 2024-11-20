@@ -5,7 +5,7 @@ import InterviewMeeting from "../Identification/Verifications/InterviewMeeting";
 import GovernmentIssued from "../Identification/Verifications/GovernmentIssued";
 import BusinessVerification from "../Identification/Verifications/BusinessVerification";
 
-function IdentifyComponent({scheduleInterview, handleSet}) {
+function IdentifyComponent({scheduleInterview, handleSet,data}) {
   const [activeTab, setActiveTab] = useState("");
   useEffect(()=>{
     if (scheduleInterview) {
@@ -29,7 +29,7 @@ function IdentifyComponent({scheduleInterview, handleSet}) {
         description:
           "Verify your business to keep the marketplace safe for everyone",
         component: GovernmentIssued,
-        props: { userId: "12345", status: "Pending" },
+        props: { data},
       },
       {
         id: "2",
@@ -37,7 +37,7 @@ function IdentifyComponent({scheduleInterview, handleSet}) {
         description:
           "Verify your business to keep the marketplace safe for everyone",
         component: BusinessVerification,
-        props: { userId: "12345", company: "TechCorp" },
+        props: { data},
       },
       {
         id: "3",
@@ -46,7 +46,7 @@ function IdentifyComponent({scheduleInterview, handleSet}) {
           "Verify your business to keep the marketplace safe for everyone",
         component: InterviewMeeting,
         props: { interviewDate: "2024-09-15", interviewer: "John Doe" },
-        status: "pending",
+        // status: "pending",
       },
     ],
     []
@@ -72,7 +72,15 @@ function IdentifyComponent({scheduleInterview, handleSet}) {
             <div className="flex flex-col items-center gap-2 mt-2">
               <div
                 className={`w-7 h-7 rounded-full border ${
-                  tab.status === "pending" ? "bg-yellow-600" : "bg-green-600"
+                  
+                 ( (tab.header === "Government-issued photo ID" && data.isVerified) 
+                 ||
+                 (tab.header === "Business verification" && data.isVerified) 
+                 ||
+                 (tab.header === "Interview meeting" && data.isVerified) )?
+                  "bg-green-600"
+                  : 
+                  "bg-yellow-600" 
                 } flex items-center justify-center text-white`}
               >
                 <FaCheck className="text-sm" />
@@ -88,7 +96,13 @@ function IdentifyComponent({scheduleInterview, handleSet}) {
               <div>
                 <h5 className="text-regal-black text-[12px] md:text-sm font-[600] flex flex-row items-center gap-2">
                   {tab.header}
-                  {tab.status === "pending" && (
+                  {
+                 ( (tab.header === "Government-issued photo ID" && !data.isVerified) 
+                  ||
+                  (tab.header === "Business verification" && !data.isVerified) 
+                  ||
+                  (tab.header === "Interview meeting" && !data.isVerified) )
+                  && (
                     <span className="font-bold text-yellow-600 bg-yellow-100 py-1 px-2 text-[10px] md:text-xs rounded-sm">
                       Pending
                     </span>

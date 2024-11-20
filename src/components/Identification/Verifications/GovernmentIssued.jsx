@@ -2,7 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FaCheck } from "react-icons/fa6";
-function GovernmentIssued({onClose}) {
+const   baseUrl = import.meta.env.VITE_APP_API_URL
+
+function GovernmentIssued({onClose,data}) {
   return (
     <div className="p-4 md:p-8 animate-fade-in">
      <button
@@ -47,13 +49,13 @@ function GovernmentIssued({onClose}) {
               htmlFor="IDNumber"
               className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
             >
-             ID Number
+             ID Type
             </label>
             <input
               type="text"
               name="text"
-              id="IDNumber"
-              placeholder="02547402856"
+              id="IdType"
+              placeholder={data?.idDocumentType?.toUpperCase()}
               className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
             />
           </div>
@@ -65,7 +67,22 @@ function GovernmentIssued({onClose}) {
             >
              ID Image
             </label>
-            <img src="" alt="" className="w-72 h-44 object-contain bg-gray-100" />
+            
+              <div className="flex  items-center justify-between mt-4 pr-3">
+                <div className="flex flex-col items-center justify-between mt-4">
+                  <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
+                    ID Image (Front)
+                  </label>
+                  <img src={`${baseUrl}${data.idDocumentFront}`}alt={`${data.idDocumentType?.toUpperCase()} front`}className="w-72 h-44 object-contain bg-gray-100" />
+                </div>
+                <div className="flex flex-col items-center justify-between mt-4">
+                  <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
+                    ID Image (Back)
+                  </label>
+                  <img src={`${baseUrl}${data.idDocumentBack}`}alt={`${data.idDocumentType?.toUpperCase()} back`}className="w-72 h-44 object-contain bg-gray-100" />
+                </div>
+              </div>
+
           </div>
         </div>
       </section>

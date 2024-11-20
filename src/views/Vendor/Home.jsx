@@ -65,7 +65,7 @@ function Home() {
   return (
 
     <div>
-      {!user.isVerified ?
+      {(user != null && !user.isVerified )?
         <main className="bg-regal-auth-bg-color h-screen mt-4 flex flex-col items-center justify-center">
           <div className="text-3xl font-bold text-orange-600 bg-regal-auth-bg-color">
             <span className="py-3">

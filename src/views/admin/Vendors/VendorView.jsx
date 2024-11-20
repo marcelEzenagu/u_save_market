@@ -7,29 +7,32 @@ import VendorProducts from  "../../../components/admin/TabComponents/UserProduct
 import NewVendorProducts from  "../../../components/admin/TabComponents/UserProductTab";
 import VendorBankDetails from  "../../../components/admin/TabComponents/UserBankDetails";
 import VendorReport from "../../../components/admin/TabComponents/UserPasswordTab";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useAdminGetVendorQuery } from "../../../features/admin/adminApiSlice";
 
 const VendorView = () => {
     const {id:vendorID} = useParams()
-    const {data: vendorDetails,isLoading,error}=useAdminGetVendorQuery({vendorID})
+    // console.log("vendorID::::",vendorID)
+    const {state} = useLocation()
+    console.log("vendorID-vendorDetails::::",state)
+    // const {data: vendorDetails,isLoading,error}=useAdminGetVendorQuery({vendorID})
 
     const vendorTabs = useMemo(()=> [
         { id: '1', name: 'Profile Details', 
             component: <VendorProfileDetails 
-                            data={vendorDetails}
+                            data={state}
                             /> 
                         },
         {   id: '2', 
             name: 'Identification', 
             component: <VendorIdentification 
-                            data={vendorDetails}
+                            data={state}
                         /> 
         },
         { id: '3', name: 'Password', component: <VendorPasswordTab /> },
         { id: '4', name: 'NewProducts', component: <NewVendorProducts /> },
         { id: '5', name: 'Products', component: <VendorProducts 
-            vendorID={vendorDetails?.vendorID}
+            vendorID={state?.vendorID}
 
         /> },
         { id: '6', name: 'Bank Details', component: <VendorBankDetails /> },
@@ -37,8 +40,7 @@ const VendorView = () => {
     ]);
     const vendorInfo = { name: "Vendor Name", profileImage: "https://via.placeholder.com/40" };
 
-    console.log("vendorDetails:: ",vendorDetails)
-    return <TabsView tabs={vendorTabs} userInfo={vendorDetails} url={'/admin/vendors'} />;
+    return <TabsView tabs={vendorTabs} userInfo={state} url={'/admin/vendors'} />;
 };
 
 export default VendorView;

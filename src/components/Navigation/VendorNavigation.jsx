@@ -13,10 +13,14 @@ import VendorDropdown from './Auth/VendorDropdown';
 import { Items } from '../../data/mockData';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { SlArrowDown } from "react-icons/sl";
+import { useSelector } from 'react-redux';
 function VendorNavigation() {
     const [active, setActive]= useState('');
     const [searchDiv, setSearchDiv] = useState(false);
     const location = useLocation();
+
+    const user = useSelector((state) => state.auth?.user);
+
     const handleSearchDiv = () => {
         setSearchDiv(!searchDiv)
     }
@@ -72,7 +76,10 @@ function VendorNavigation() {
                 className=" w-[100px] md:w-[140px] lg:w-[140px]"
               />
             </Link>
-        {!searchDiv && <ul className='hidden lg:flex flex-row items-center space-x-6  animate-fade-in '>
+          {user?.isVerified && 
+         !searchDiv && <ul className='hidden lg:flex flex-row items-center space-x-6  animate-fade-in '>
+           
+
             {Links?.map((e, index) => (
         <li key={index} className="relative w-full">
         <Link
@@ -85,12 +92,17 @@ function VendorNavigation() {
     </li>
     
             ))}
-
+          
           </ul>}
-    
+          
 
           <div className='flex flex-row gap-4 items-center'>
-            {!searchDiv ? <FiSearch className='text-regal-black text-lg cursor-default' onClick={handleSearchDiv} /> : <SearchForm handleSearchDiv={handleSearchDiv}/> }
+            { user?.isVerified && 
+            (  !searchDiv ? 
+                <FiSearch className='text-regal-black text-lg cursor-default' onClick={handleSearchDiv} />
+                :
+                <SearchForm handleSearchDiv={handleSearchDiv}/> )
+            }
           
          
           <FaRegBell className='text-regal-black text-lg' />

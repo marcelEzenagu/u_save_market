@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import Logo from "../../../assets/images/nav/logo.webp";
 import { Link, useNavigate } from "react-router-dom";
-import { countries } from "../../../data/mockData";
+// import { countries } from "../../../data/mockData";
 import { SlArrowDown } from "react-icons/sl";
 import { IoCameraOutline } from "react-icons/io5";
 import { MdCloudUpload } from "react-icons/md";
@@ -19,6 +19,14 @@ const ProgressFormPage = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [images, setImages] = useState({});
+  const countries = JSON.parse(localStorage.getItem("countries"));
+
+  const handleCountrySelect = (country) => {
+    setBody((prev) => ({
+      ...prev,
+      country,
+    }));
+  };
 
   const [body, setBody] = useState({
     profilePicture: "",
@@ -65,7 +73,6 @@ const ProgressFormPage = () => {
 
   const user = useSelector((state) => state.auth?.user);
 
-  console.log("USER-body-images::::", images);
   // const [base64String, setBase64String] = useState('');
   // const [imagePreview, setImagePreview] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("");
@@ -74,10 +81,15 @@ const ProgressFormPage = () => {
   // manage not verified email
   useLayoutEffect(() => {
     // console
-    if (user && !user?.isEmailVerified) {
-      navigate("vendor/verify-email");
+    if (user) {
+      if (!user?.isEmailVerified) {
+        navigate("vendor/verify-email");
+      }
+      if (user.isVerified) {
+        return navigate("/vendor/home");
+      }
     }
-  }, []);
+  }, [user, navigate]);
 
   const handleButtonClick = () => {
     fileInputRef.current.click(); // Trigger the file input click event
@@ -101,28 +113,28 @@ const ProgressFormPage = () => {
     //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras elementum elit eget purus suscipit, sed egestas ",
     // },
     {
-      name: "IDENTIFICATION",
-      header: "Upload documents",
+      name: "PERSONAL DETAILS",
+      header: "Tell us about yourself",
       Description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras elementum elit eget purus suscipit, sed egestas ",
+        "1 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras elementum elit eget purus suscipit, sed egestas ",
     },
     {
       name: "BUSINESS DETAILS",
       header: "Tell us about your business",
       Description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras elementum elit eget purus suscipit, sed egestas ",
+        " 2 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras elementum elit eget purus suscipit, sed egestas ",
     },
     {
       name: "BUSINESS DETAILS",
       header: "Enter account details",
       Description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras elementum elit eget purus suscipit, sed egestas ",
+        "3 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras elementum elit eget purus suscipit, sed egestas ",
     },
     {
       name: "ACCEPTANCE FORM",
       header: "Acceptance Form",
       Description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras elementum elit eget purus suscipit, sed egestas ",
+        "4 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras elementum elit eget purus suscipit, sed egestas ",
     },
   ];
 
@@ -131,32 +143,27 @@ const ProgressFormPage = () => {
     handleComplete();
   };
 
-  const handleComplete = async () => {
- 
-    const req = {
-      ...body,
-      profilePicture:images.profilePicture,
-      cacDocument:images.cacDocument,
-      idDocument:images.idDocument,
-
-
-    };
-    const res = await updateVendor(req).unwrap();
-    if(res.hasAcknowleged){
-      navigate("/vendor/registration/successful")
-    }
-    console.log("res======",res)
-  };
-
-
   const handlePrevious = () => {
     if (step > 1) setStep(step - 1);
   };
 
+  const handleComplete = async () => {
+    const req = {
+      ...body,
+      profilePicture: images.profilePicture,
+      cacDocument: images.cacDocument,
+      idDocumentFront: images.idDocumentFront,
+      idDocumentBack: images.idDocumentBack,
+    };
+    const res = await updateVendor(req).unwrap();
+    if (res.hasAcknowleged) {
+      navigate("/vendor/registration/successful");
+    }
+    console.log("res======", res);
+  };
+
   const handlePhoneChange = (event) => {
     const { name, value } = event.target;
-
-    // console.log("selectedCountry:::",selectedCountry)
 
     setBody((prev) => ({
       ...prev,
@@ -173,28 +180,18 @@ const ProgressFormPage = () => {
     }));
   };
 
-  const handleImageUpload = (event) => {
-    setProfilePicture(URL.createObjectURL(event.target.files[0]));
+  const handleNumberChange = (event) => {
+    let { name, type, value, checked } = event.target;
+
+    if (name == "businessBankAccount") {
+      if (value.length <= 10) {
+        setBody((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      }
+    }
   };
-
-  // const handleFileChange = (event) => {
-  //   const file = event.target.files[0]; // Get the selected file
-
-  //   if (file) {
-  //     const reader = new FileReader();
-
-  //     // Define the callback for when the file is read
-  //     reader.onloadend = () => {
-  //       const base64String = reader.result; // Get the base64 string
-  //       setBase64String(base64String);
-  //       setImagePreview(base64String); // Set image preview
-  //       setUploadStatus("")
-  //       console.log("base64String",base64String); // Logs the base64 string of the image
-  //     };
-  //     // Read the file as a Data URL (which contains the base64 string)
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
 
   const handleUpload = async () => {
     try {
@@ -218,8 +215,13 @@ const ProgressFormPage = () => {
     setIsOpenSelect(false); // Close dropdown after selection
   };
 
-  const handleSelection = (event) => {
-    setSelectedId(event.target.value);
+  const handleSelection = (e) => {
+    const {name,value} = e.target
+    setSelectedId(value);
+    setBody(prev => ({
+      ...prev,
+      [name]:value
+    }))
   };
 
   const handleDrop = (event) => {
@@ -241,11 +243,12 @@ const ProgressFormPage = () => {
 
   const handleImageSelect = async (e) => {
     const { name } = e.target;
+
+    console.log("NAME===",name)
     const MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 2GB in bytes
 
     setError("");
     const file = e.target.files[0]; // Get the selected file
-    console.log("file", file);
     try {
       if (!file) {
         setError("No file selected");
@@ -298,7 +301,7 @@ const ProgressFormPage = () => {
   const clearFile = (name) => {
     setImages((prev) => ({
       ...prev,
-      [name]:  "",
+      [name]: "",
     }));
   };
 
@@ -405,14 +408,23 @@ const ProgressFormPage = () => {
               <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
                 Country
               </label>
-              <input
-                type="text"
-                placeholder="Enter country"
-                value={storeName}
-                onChange={(e) => setStoreName(e.target.value)}
-                className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
-              />
+
+              {!body.country ? (
+                <SearchableDropdown
+                  options={countries}
+                  onSelect={handleCountrySelect}
+                />
+              ) : (
+                <input
+                  type="text"
+                  placeholder="Enter country"
+                  readOnly
+                  value={body.country}
+                  className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
+                />
+              )}
             </div>
+
             <div className="mb-4">
               <label
                 htmlFor="phone"
@@ -433,11 +445,10 @@ const ProgressFormPage = () => {
                     >
                       {selectedCountry ? (
                         <div className="flex items-center text-sm">
-                          <img
-                            src={selectedCountry.flag}
-                            alt="flag"
-                            className="w-6 h-4 mr-2"
-                          />
+                          <span className="w-6 h-6 mr-2 text-lg">
+                            {selectedCountry.flag}
+                          </span>
+
                           {selectedCountry.number}
                         </div>
                       ) : (
@@ -456,11 +467,9 @@ const ProgressFormPage = () => {
                             onClick={() => handleSelect(country)}
                             className="flex items-center text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer"
                           >
-                            <img
-                              src={country.flag}
-                              alt={country.name}
-                              className="w-6 h-4  mr-2"
-                            />
+                            <span className="w-6 h-6 mr-2 text-lg">
+                              {country.flag}
+                            </span>
                             {country.number}
                           </li>
                         ))}
@@ -469,15 +478,16 @@ const ProgressFormPage = () => {
                   </div>
                 </div>
                 <input
-                  type="text"
-                  name="phonenumber"
-                  id="phonenumber"
+                  type="number"
+                  name="phoneNumber"
+                  id="phoneNumber"
                   onChange={handlePhoneChange}
-                  className="w-full p-3 pl-28 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
+                  className="w-full no-spinner p-3 pl-28 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
                   placeholder="Enter phone number"
                 />
               </div>
             </div>
+            {/*  */}
             <div className="mb-4">
               <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
                 Home Address
@@ -593,11 +603,9 @@ const ProgressFormPage = () => {
                     >
                       {selectedCountry ? (
                         <div className="flex items-center text-sm">
-                          <img
-                            src={selectedCountry.flag}
-                            alt="flag"
-                            className="w-6 h-4 mr-2"
-                          />
+                          <span className="w-6 h-6 mr-2 text-lg">
+                            {selectedCountry.flag}
+                          </span>
                           {selectedCountry.number}
                         </div>
                       ) : (
@@ -616,11 +624,9 @@ const ProgressFormPage = () => {
                             onClick={() => handleSelect(country)}
                             className="flex items-center text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer"
                           >
-                            <img
-                              src={country.flag}
-                              alt={country.name}
-                              className="w-6 h-4  mr-2"
-                            />
+                            <span className="w-6 h-6 mr-2 text-lg">
+                              {country.flag}
+                            </span>
                             {country.number}
                           </li>
                         ))}
@@ -641,6 +647,8 @@ const ProgressFormPage = () => {
 
             <hr className="mt-5 mb-8 border-[1.2px]" />
 
+{/* {
+  body.cacNumber && */}
             <div>
               <h5 className="text-sm font-[600] text-regal-black">
                 Upload CAC Document
@@ -672,7 +680,7 @@ const ProgressFormPage = () => {
                     <div
                       onDrop={handleDrop}
                       onDragOver={handleDragOver}
-                      onClick={() => fileInputRef.current.click()} 
+                      onClick={() => fileInputRef.current.click()}
                       className="flex flex-col items-center justify-center border-2 bg-gray-100  border-dashed border-gray-400 rounded-lg p-12 text-center cursor-pointer hover:border-regal-black transition-colors max-w-[400px]"
                     >
                       <MdCloudUpload className="text-5xl text-gray-400 mb-4" />
@@ -690,7 +698,7 @@ const ProgressFormPage = () => {
                             type="file"
                             accept="image/*"
                             onChange={handleImageSelect}
-                            // className="hidden"
+                            className="hidden"
                             name="cacDocument"
                           />
                         </span>
@@ -700,6 +708,7 @@ const ProgressFormPage = () => {
                 )}
               </div>
             </div>
+{/* } */}
           </div>
         );
       case 3:
@@ -715,7 +724,7 @@ const ProgressFormPage = () => {
                 name="bankName"
                 value={body.bankName}
                 onChange={handleChange}
-                className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
+                className="w-full p-3 no-spinner text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
               />
             </div>
             <div className="mb-4">
@@ -733,18 +742,18 @@ const ProgressFormPage = () => {
             </div>
             <div className="mb-4">
               <label
-                htmlFor="phone"
+                htmlFor="businessBankAccount"
                 className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
               >
                 Account Number
               </label>
 
               <input
-                type="text"
+                type="number"
                 name="businessBankAccount"
                 placeholder="Enter bank Name"
                 value={body.businessBankAccount}
-                onChange={handleChange}
+                onChange={handleNumberChange}
                 className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
               />
             </div>
@@ -764,6 +773,7 @@ const ProgressFormPage = () => {
                 <input
                   type="checkbox"
                   name="hasAcknowleged"
+                  required
                   value={body.acknowledgment}
                   onChange={handleChange}
                   className="text-xs mr-3 md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
@@ -844,45 +854,92 @@ const ProgressFormPage = () => {
       <div>
         {formField}
         {/* Common ID Image Field */}
-        {selectedId && (
-          <div className="mt-4">
-            <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
-              ID Image
-            </label>
+        {body.idDocumentType && (
+          <div className="flex-col items-center justify-between">
+            <div className="mt-4">
+              <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
+                ID Image (Front)
+              </label>
 
-            {images.idDocument ? (
-              <div className="flex flex-row items-center justify-between mt-4">
-                <img
-                  src={images.idDocument}
-                  alt="Profile"
-                  className="w-[200px] h-[200px] rounded-lg object-cover border border-gray-300"
-                />
-                <button
-                  onClick={() => clearFile("idDocument")}
-                  className="flex items-center px-4 py-1 space-x-1 border-[1.5px] text-regal-light-gray border-regal-light-gray rounded-md"
-                >
-                  <PiTrash className="text-lg" />
-                  <span className="font-[600] text-[10px] md:text-xs py-1">
-                    Remove
-                  </span>
-                </button>
-              </div>
-            ) : (
-              <>
-                <div
-                  onDrop={handleDrop}
-                  onDragOver={handleDragOver}
-                  onClick={() => fileInputRef.current.click()} 
-                  className="flex flex-col items-center justify-center border-2 bg-gray-100  border-dashed border-gray-400 rounded-lg p-12 text-center cursor-pointer hover:border-regal-black transition-colors max-w-[400px]"
-                >
-                  <MdCloudUpload className="text-5xl text-gray-400 mb-4" >
-                  
-                  </MdCloudUpload>
-
-                  <label
-                    htmlFor="file-upload"
-                    className="text-sm  text-regal-black mb-2"
+              {images.idDocumentFront ? (
+                <div className="flex flex-row items-center justify-between mt-4">
+                  <img
+                    src={images.idDocumentFront}
+                    alt="Profile"
+                    className="w-[200px] h-[200px] rounded-lg object-cover border border-gray-300"
+                  />
+                  <button
+                    onClick={() => clearFile("idDocumentFront")}
+                    className="flex items-center px-4 py-1 space-x-1 border-[1.5px] text-regal-light-gray border-regal-light-gray rounded-md"
                   >
+                    <PiTrash className="text-lg" />
+                    <span className="font-[600] text-[10px] md:text-xs py-1">
+                      Remove
+                    </span>
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex flex-col items-center justify-center border-2 bg-gray-100  border-dashed border-gray-400 rounded-lg p-12 text-center cursor-pointer hover:border-regal-black transition-colors max-w-[400px]"
+                  >
+                    <MdCloudUpload className="text-5xl text-gray-400 mb-4"></MdCloudUpload>
+
+                    <label
+                      htmlFor="file-upload"
+                      className="text-sm  text-regal-black mb-2"
+                    >
+                      Click or drag file here to upload.
+                      <br />
+                      Files accepted- pdf, png, jpeg, jpg
+                      <input
+                        // ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageSelect}
+                        className="hidden"
+                        name="idDocumentFront"
+                      />
+                    </label>
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="mt-4">
+              <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
+                ID Image (Back)
+              </label>
+
+              {images.idDocumentBack ? (
+                <div className="flex flex-row items-center justify-between mt-4">
+                  <img
+                    src={images.idDocumentBack}
+                    alt="Profile"
+                    className="w-[200px] h-[200px] rounded-lg object-cover border border-gray-300"
+                  />
+                  <button
+                    onClick={() => clearFile("idDocumentBack")}
+                    className="flex items-center px-4 py-1 space-x-1 border-[1.5px] text-regal-light-gray border-regal-light-gray rounded-md"
+                  >
+                    <PiTrash className="text-lg" />
+                    <span className="font-[600] text-[10px] md:text-xs py-1">
+                      Remove
+                    </span>
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div
+                    onClick={() => fileInputRef.current.click()}
+                    className="flex flex-col items-center justify-center border-2 bg-gray-100  border-dashed border-gray-400 rounded-lg p-12 text-center cursor-pointer hover:border-regal-black transition-colors max-w-[400px]"
+                  >
+                    <MdCloudUpload className="text-5xl text-gray-400 mb-4"></MdCloudUpload>
+
+                    <label
+                      htmlFor="file-upload"
+                      className="text-sm  text-regal-black mb-2"
+                    >
                       Click or drag file here to upload.
                       <br />
                       Files accepted- pdf, png, jpeg, jpg
@@ -892,12 +949,13 @@ const ProgressFormPage = () => {
                         accept="image/*"
                         onChange={handleImageSelect}
                         className="hidden"
-                        name="idDocument"
+                        name="idDocumentBack"
                       />
-                  </label>
-                </div>
-              </>
-            )}
+                    </label>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -917,15 +975,15 @@ const ProgressFormPage = () => {
           <div className="mb-4 mt-8">
             <span className="text-[13px]  font-[500] text-regal-light-gray">
               0{step}/0{StepDetails.length}{" "}
-              <span className="ml-3"> {StepDetails[step]?.name}</span>
+              <span className="ml-3"> {StepDetails[step - 1]?.name}</span>
             </span>
             <h2 className="text-tabs-header-text font-bold text-gray-800 mt-3 max-w-[470px] leading-[3.2rem]  animate-fade-in">
-              {StepDetails[step]?.header}
+              {StepDetails[step - 1]?.header}
             </h2>
           </div>
           {/* Description */}
           <p className="text-gray-600 text-[12px] lg:text-[17px]  font-[400] text-regal-light-gray max-w-[500px]  animate-fade-in">
-            {StepDetails[step]?.Description}
+            {StepDetails[step - 1]?.Description}
           </p>
         </div>
 
@@ -962,9 +1020,11 @@ const ProgressFormPage = () => {
           <button
             type="button"
             onClick={handleNext}
-            // disabled={step === (StepDetails.length)}
+            disabled={step === StepDetails.length && !body.hasAcknowleged}
             className={`px-4 md:px-14 py-2 rounded-md  border text-xs md:text-sm font-[500]  ${
-              step === StepDetails.length
+              step === StepDetails.length && !body.hasAcknowleged
+                ? "border-regal-sky-blue text-regal-sky-blue "
+                : step === StepDetails.length
                 ? "text-white bg-regal-sky-blue"
                 : "border-regal-sky-blue text-regal-sky-blue "
             }`}
@@ -973,6 +1033,75 @@ const ProgressFormPage = () => {
           </button>
         </div>
       </div>
+    </div>
+  );
+};
+
+const SearchableDropdown = ({ options, onSelect }) => {
+  const [search, setSearch] = useState(""); // State to manage search input
+  const [selectedCountry, setSelectedCountry] = useState(null); // State to track selected country
+
+  // Filter countries based on the search input
+  const filteredCountries = options
+    .filter((country) =>
+      country?.name?.toLowerCase().includes(search?.toLowerCase())
+    )
+    .map((country) => country.name);
+
+  // Handle country selection
+  const handleSelect = (country) => {
+    setSelectedCountry(country);
+    setSearch(""); // Reset search input after selecting
+    onSelect(country); // Call the onSelect callback with the selected country
+  };
+
+  return (
+    <div>
+      {/* Input field for search */}
+      <input
+        type="text"
+        placeholder="Type to search..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{ marginBottom: "10px", width: "100%", padding: "8px" }}
+      />
+
+      {/* Filtered country list */}
+      {search && (
+        <ul
+          style={{
+            border: "1px solid #ccc",
+            maxHeight: "150px",
+            overflowY: "scroll",
+            paddingLeft: "0",
+            listStyleType: "none",
+          }}
+        >
+          {filteredCountries.length > 0 ? (
+            filteredCountries.map((country, index) => (
+              <li
+                key={index}
+                onClick={() => handleSelect(country)}
+                style={{
+                  padding: "8px",
+                  cursor: "pointer",
+                  backgroundColor:
+                    selectedCountry === country ? "#f0f0f0" : "white",
+                }}
+              >
+                {country}
+              </li>
+            ))
+          ) : (
+            <li style={{ padding: "8px" }}>No countries found</li>
+          )}
+        </ul>
+      )}
+
+      {/* Display the selected country */}
+      {selectedCountry && (
+        <div style={{ marginTop: "10px" }}>{selectedCountry}</div>
+      )}
     </div>
   );
 };

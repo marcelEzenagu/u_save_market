@@ -4,6 +4,9 @@ import { SlArrowDown } from "react-icons/sl";
 import { countries } from '../../../data/mockData';
 import { PiCopy } from "react-icons/pi";
 import { IoIosCheckmarkCircle } from "react-icons/io";
+
+const   baseUrl = import.meta.env.VITE_APP_API_URL
+
 function UserAccountTab({data}) {
     const [image, setImage] = useState(null); // State for the uploaded image
     const [selectedCountry, setSelectedCountry] = useState(countries[0] || null);
@@ -13,28 +16,35 @@ function UserAccountTab({data}) {
       setIsOpenSelect(false); // Close dropdown after selection
     };
 
+    console.log("UserAccountTab data===",data)
   
     // Handle image removal
     const handleImageRemove = () => {
       setImage(null); // Remove the image
     };
-    return (
+
+    return data &&
+     (
       <div className="p-4 md:px-8 md:pt-8 pb-4 animate-fade-in">
         <div className="flex items-end space-x-4">
           <div className="relative">
             <img
-              src={image || "https://via.placeholder.com/150"} // Default image if no image is selected
+              src={`${baseUrl}${data.profilePicture}` || "https://via.placeholder.com/150"} // Default image if no image is selected
               alt="Profile"
               className="w-[100px] h-[10] rounded-full object-cover border border-gray-300"
             />
           </div>
           <div className="flex flex-col items-start gap-4 ">
+            {
+              data.isVerified ?
+              
             <div className="flex items-center gap-1">
               <IoIosCheckmarkCircle className="text-xl text-green-800" />
               <span className="text-sm text-green-800 font-[600]">
                 Verified
               </span>
             </div>
+            :
             <div className="flex flex-row items-center gap-2">
               <div className="flex items-center gap-1">
                 <svg
@@ -71,6 +81,7 @@ function UserAccountTab({data}) {
                 </u>
               </div>
             </div>
+            }
             <button
               onClick={handleImageRemove}
               className="flex items-center  px-8 p py-1 md:py-1  space-x-1 text-red-600 border border-red-600 bg-white rounded-md"
@@ -173,7 +184,8 @@ function UserAccountTab({data}) {
                               alt={country.name}
                               className="w-6 h-4  mr-2"
                             />
-                            {country.number}
+                            {/* {country.number} */}
+                            {data.phoneNumber.split("-")[0]}
                           </li>
                         ))}
                       </ul>
@@ -184,6 +196,8 @@ function UserAccountTab({data}) {
                   type="text"
                   name="phone"
                   id="phone"
+                  readOnly
+                  value={data.phoneNumber.split("-")[1]}
                   className="w-full py-3 md:py-4 text-xs pl-28 md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                   placeholder="Phone"
                 />
@@ -200,7 +214,8 @@ function UserAccountTab({data}) {
                 type="text"
                 name="text"
                 id=" Home Address"
-                placeholder="Demo 22, Anthony Cresent Avenue, Old Montane road, Ikoyi, Lagos"
+                // value={data.homeAddress}
+                placeholder={data.homeAddress}
                 className="w-full p-3 md:p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
               />
             </div>

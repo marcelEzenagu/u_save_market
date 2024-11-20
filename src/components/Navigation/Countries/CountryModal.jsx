@@ -17,7 +17,8 @@ const Modal = ({
   const [search, setSearch] = useState("");
   const countries = useSelector((state) => state?.auth?.countries);
   const [pickedCountry, setPickedCountry] = useState(preferredCountry);
-  const filteredCountries = (countries || [])?.filter(
+ 
+  const filteredCountries = countries?.filter(
     (country) =>
       search === "" ||
       country?.name?.toLowerCase()?.includes(search?.toLowerCase())

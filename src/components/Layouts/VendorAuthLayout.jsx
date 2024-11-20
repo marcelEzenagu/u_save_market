@@ -8,7 +8,7 @@ function VendorAuthLayout() {
   const user = useSelector((state) => state.auth?.user);
 console.log("user====",user)
   // if (userToken && validateToken(userToken) && user != null && user.isEmailVerified) {
-  if (user != null && userToken && validateToken(userToken))  {
+  if (user?.isVerified && userToken && validateToken(userToken))  {
   return  <Navigate to='/vendor/home'/>
 }
 // else if(!user?.isEmailVerified){

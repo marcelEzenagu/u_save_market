@@ -303,9 +303,6 @@ export const MockData = [
     }
 ];
 
-
-
-
 export const countries = [
   { code: 'US', name: 'United States', number: '+1', flag: 'https://flagcdn.com/w320/us.png', currency: '$', currencyName: 'US Dollar', currency_code: 'USD' },
   { code: 'CA', name: 'Canada', number: '+1', flag: 'https://flagcdn.com/w320/ca.png', currency: 'CAD', currencyName: 'Canadian Dollar', currency_code: 'CAD' },
