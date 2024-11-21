@@ -55,7 +55,7 @@ const ProgressFormPage = () => {
   const [profilePicture, setProfilePicture] = useState(null);
   const [businessDetails, setBusinessDetails] = useState("");
   const [selectedId, setSelectedId] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState(countries[0] || null);
+  const [selectedCountry, setSelectedCountry] = useState(countries[0]);
   const [isOpenSelect, setIsOpenSelect] = useState(false);
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
@@ -1090,6 +1090,7 @@ const SearchableDropdown = ({ options, onSelect }) => {
 
   // Handle country selection
   const handleSelect = (country) => {
+    console.log("COUNTRY:: =",country)
     setSelectedCountry(country);
     setSearch(""); // Reset search input after selecting
     onSelect(country); // Call the onSelect callback with the selected country
