@@ -161,6 +161,7 @@ export const authApiSlice =  apiSlice.injectEndpoints({
                     authorization:meta.response.headers.get('Authorization')};
               }
         }),
+
         updateUser: builder.mutation({
             query: credentials => ({
                 url:'users/',
@@ -173,6 +174,7 @@ export const authApiSlice =  apiSlice.injectEndpoints({
                     authorization:meta.response.headers.get('Authorization')};
               }
         }),
+        
         registerUser: builder.mutation({
             query: credentials => ({
                 url:'auth/users/register',

@@ -241,6 +241,46 @@ const ProgressFormPage = () => {
     event.preventDefault();
   };
 
+  const handleImage = async (e) => {
+    const { name } = e.target;
+
+    console.log("NAME===",name)
+    const MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+
+    setError("");
+    const file = e.target.files[0]; // Get the selected file
+    try {
+      if (!file) {
+        setError("No file selected");
+        return;
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        setError(
+          "File size exceeds the 2GB limit. Please choose a smaller file."
+        );
+      }
+      if (file) {
+        const reader = new FileReader();
+        console.log("setting file");
+        // Define the callback for when the file is read
+        reader.onloadend = () => {
+          const base64String = reader.result; // Get the base64 string
+          // setBase64String(base64String);
+          // setImagePreview(base64String); // Set image preview
+          setImages((prev) => ({
+            ...prev,
+            [name]: base64String,
+            // preview: base64String,
+          }));
+        };
+        // Read the file as a Data URL (which contains the base64 string)
+        reader.readAsDataURL(file);
+      }
+    } catch (error) {
+      console.log(error);
+      setError("something went wrong selecting your image.", error);
+    }
+  };
   const handleImageSelect = async (e) => {
     const { name } = e.target;
 
@@ -894,7 +934,7 @@ const ProgressFormPage = () => {
                       <br />
                       Files accepted- pdf, png, jpeg, jpg
                       <input
-                        // ref={fileInputRef}
+                        ref={fileInputRef}
                         type="file"
                         accept="image/*"
                         onChange={handleImageSelect}
@@ -906,7 +946,7 @@ const ProgressFormPage = () => {
                 </>
               )}
             </div>
-            <div className="mt-4">
+            {/* <div className="mt-4">
               <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
                 ID Image (Back)
               </label>
@@ -947,7 +987,7 @@ const ProgressFormPage = () => {
                         ref={fileInputRef}
                         type="file"
                         accept="image/*"
-                        onChange={handleImageSelect}
+                        onChange={handleImage}
                         className="hidden"
                         name="idDocumentBack"
                       />
@@ -955,7 +995,7 @@ const ProgressFormPage = () => {
                   </div>
                 </>
               )}
-            </div>
+            </div> */}
           </div>
         )}
       </div>

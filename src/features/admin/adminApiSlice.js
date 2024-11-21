@@ -35,6 +35,8 @@ export const adminApiSlice = apiSlice.injectEndpoints({
             invalidatesTags:['admin']
         }),
 
+        
+
         // items
         adminListNewItems: builder.query({
             query: ({vendorID,limit,page}) => ({
@@ -81,6 +83,16 @@ export const adminApiSlice = apiSlice.injectEndpoints({
             console.log("STARTED")
             }
         }),
+
+        scheduleVendorMeeting: builder.mutation({
+        query: (data) => ({
+            method: 'PATCH',
+            url:`admin/vendors/${data.vendorID}`,
+            body: {...data}
+        }),
+        providesTags: ['vendors'],
+        
+        }),
     })
 })
 
@@ -88,8 +100,10 @@ export const {useViewAdminQuery,
     useAdminApproveItemQuery, 
     useAdminListNewItemsQuery,
     useAdminListItemsByVendorsQuery,
+
     useAdminListVendorsQuery,
     useAdminGetVendorQuery,
+    useScheduleVendorMeetingMutation,
     useApproveItemMutation,
     useUpdateAdminProfileMutation, 
     useUpdateAdminProfilePictureMutation} = adminApiSlice

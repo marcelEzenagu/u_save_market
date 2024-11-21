@@ -39,13 +39,14 @@ function IdentifyComponent({scheduleInterview, handleSet,data}) {
         component: BusinessVerification,
         props: { data},
       },
+      
       {
         id: "3",
         header: "Interview meeting",
         description:
           "Verify your business to keep the marketplace safe for everyone",
         component: InterviewMeeting,
-        props: { interviewDate: "2024-09-15", interviewer: "John Doe" },
+        props: { data},
         // status: "pending",
       },
     ],
