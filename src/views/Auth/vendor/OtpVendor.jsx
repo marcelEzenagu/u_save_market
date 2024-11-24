@@ -5,14 +5,14 @@ import {useSelector} from 'react-redux'
 import Logo from "../../../assets/images/nav/logo.webp";
 import { Timer } from "../../../components/Timer"
 import { usePinInput } from "react-pin-input-hook"
-import { useForgotPasswordMutation, useVerifyOtpMutation } from "../../../features/auth/authApiSlice";
+import { useForgotPasswordMutation, useVerifyOtpVendorMutation } from "../../../features/auth/authApiSlice";
 import {useErrorMessageHooks} from "../../../hooks/useErrorMessageHooks";
 import { setVerifiedDetails } from "../../../features/auth/authSlice";
 const OtpVendor = () => {
   const [intervals, setIntervals] = useState([]);
 
   const {requestID} = useParams()
-  const [verifyOtp, {isLoading}] = useVerifyOtpMutation()
+  const [verifyOtp, {isLoading}] = useVerifyOtpVendorMutation()
   const [resetPassword, { isLoading: loading }] = useForgotPasswordMutation();
   const { verifiedDetails } = useSelector((state) => state.auth);
   const {

@@ -77,12 +77,13 @@ import CreateItem from "./views/Vendor/item/CreateItem";
 import LoginAgent from "./views/Auth/Agent/LoginAgent";
 import LoginAdmin from "./views/Auth/admin/LoginAdmin";
 import ForgotPasswordAgent from "./views/Auth/Agent/ForgotPasswordAgent";
-import OtpAgent from "./views/Auth/Agent/OtpAgent";
+import OtpAgent from "./views/Auth/Agent/component/OtpAgent"
 import ResetPasswordAgent from "./views/Auth/Agent/ResetPasswordAgent";
 import AdminAuthLayout from "./components/Layouts/AdminAuthLayout";
 import ItemList from "./views/admin/ItemList";
 import VerifyOTP from "./views/Auth/vendor/VerifyEmail";
 import VerifyEmail from "./views/Auth/vendor/VerifyEmail";
+import AgentProfile from "./views/Agent/profile/AgentProfile";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -327,7 +328,10 @@ const Router = createBrowserRouter([
             },
             {
                 path:'/agent/otp',
-                element: <OtpAgent/>
+                element: <OtpAgent
+                otpType="reset-password"
+
+                />
             },
             {
                 path:'/agent/reset-password',
@@ -387,7 +391,48 @@ const Router = createBrowserRouter([
             {
                 path: '/agent/payments/:id',
                 element : <PaymentOverview/>
-            }
+            },
+            {
+                path:'/agent/profile',
+                element: <AgentProfile/>,
+                children: [
+                    {
+                        path: '/agent/profile',
+                        element : <Navigate to="/agent/profile/profile-details"/>
+                    },
+                    {   
+                     path:'profile-details',
+                        element: <ProfileDetails/>,
+                    },
+                    {   
+                        path:'/agent/profile/password-security',
+                           element: <PasswordAndSecurity/>,
+                       },
+                       {   
+                        path:'/agent/profile/settings',
+                           element: <SettingsVendor/>,
+                       },
+                    // {   
+                    //     path:'/agent/profile/identification',
+                    //        element: <Identification/>,
+                    //     //    children: [
+                    //     //     {   
+                    //     //         path:'/vendor/profile/identification/business-verification',
+                    //     //            element: <BusinessVerification/>,
+                    //     //        },
+
+                    //     //        {   
+                    //     //         path:'/vendor/profile/identification/government-issued-id',
+                    //     //            element: <GovernmentIssued/>,
+                    //     //        },
+                    //     //        {   
+                    //     //         path:'/vendor/profile/identification/interview-meeting',
+                    //     //            element: <InterviewMeeting/>,
+                    //     //        },
+                    //     //    ]
+                    //    }
+                ]
+            },
         ]
     },
     {

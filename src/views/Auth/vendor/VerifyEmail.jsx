@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux'
 import Logo from "../../../assets/images/nav/logo.webp";
 import { Timer } from "../../../components/Timer"
 import { usePinInput } from "react-pin-input-hook"
-import { useForgotPasswordMutation, useVerifyOtpMutation, useVerifyVendorEmailMutation } from "../../../features/auth/authApiSlice";
+import { useForgotPasswordMutation, useVerifyVendorEmailMutation } from "../../../features/auth/authApiSlice";
 import {useErrorMessageHooks} from "../../../hooks/useErrorMessageHooks";
 import { setCredentials, setVerifiedDetails } from "../../../features/auth/authSlice";
 import { setCookie } from "../../../utils";

@@ -101,7 +101,9 @@ const AgentOnboarding = () => {
       case 1:
         return <RegisterAgent handleNext={handleNext} countries={countries}/>
       case 2:
-        return <OtpAgent handleNext={handleNext} />
+        return <OtpAgent handleNext={handleNext}
+                otpType="email-verification"
+        />  
       case 3:
         return <UploadDocumentAgent handleNext={handleNext}/>
         case 4:
@@ -178,10 +180,10 @@ const AgentOnboarding = () => {
         {/* Right Section */}
         <div className="w-full col-span-2 md:p-8 flex flex-col justify-between">
           {/* Form */}
-          <div className="mb-8 w-full px-2 md:px-0  mx-auto">{renderForm()}</div>
+          <div className="mb-8 w-full px-2 md:px-0 mx-auto">{renderForm()}</div>
 
           {/* Progress Bar */}
-          <div className="md:w-[400px] mx-auto flex items-center gap-3">
+          <div className="md:w-[400px] mx-auto flex items-center gap-3 ">
               {StepDetails?.map((tab) => (
             <div className="flex-1 h-2 mb-3 bg-gray-300 rounded-full" key={tab?.header}>
               <div

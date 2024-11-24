@@ -14,6 +14,7 @@ function VendorLayout() {
   // useEffect(()=>{
     
     // },[])
+
   useLayoutEffect(()=>{
     if(user ){
       if(!user.hasAcknowleged){

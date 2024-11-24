@@ -7,15 +7,15 @@ import useProfileUploadHooks from '../../../../hooks/useProfileUploadHooks';
 import { useErrorMessageHooks } from '../../../../hooks/useErrorMessageHooks';
 import { selectCurrentUser, setUserCredentails } from '../../../../features/auth/authSlice';
 import { RxUpdate } from "react-icons/rx";
-import { useUpdateVendorProfilePictureMutation, useUpdateVendorProfileMutation } from '../../../../features/vendor/vendorApiSlice';
+import { useUpdateAgentProfileMutation, useUpdateAgentProfilePictureMutation } from '../../../../features/agent/agentApiSlice';
 
 function ProfileDetails() {
   const [isEditingPersonalInfo, setIsEditingPersonalInfo] = useState(false);
   const [image, setImage] = useState(null); // State for the uploaded image
   const [selectedCountry, setSelectedCountry] = useState(countries[0] || null);
   const [isOpenSelect, setIsOpenSelect] = useState(false);
-  const [updateVendorProfilePicture, { isLoading }] = useUpdateVendorProfilePictureMutation();
-  const [updateVendorProfile, { isLoading: loading }] = useUpdateVendorProfileMutation();
+  const [updateAgentProfilePicture, { isLoading }] = useUpdateAgentProfilePictureMutation();
+  const [updateAgentProfile, { isLoading: loading }] = useUpdateAgentProfileMutation();
   const { base64String, clearData, imagePreview, error, handleFileChange } = useProfileUploadHooks();
   const { errMsg, data, setData, setErrMsg, dispatch, handleError, setErrorMessagesList, handleErrorMessagesList } = useErrorMessageHooks();
   const user = useSelector(selectCurrentUser);
@@ -42,7 +42,7 @@ function ProfileDetails() {
     if (base64String) {
       try {
         const profilePicture = base64String;
-        const response = await updateVendorProfilePicture({ profilePicture }).unwrap();
+        const response = await updateAgentProfilePicture({ profilePicture }).unwrap();
         reduxDispatch(setUserCredentails({ user: response }));
       } catch (err) {
         handleError(err, "Update profile picture failed, please check your image might be too large");
@@ -54,7 +54,7 @@ function ProfileDetails() {
     setErrMsg("");
     setErrorMessagesList([]);
     try {
-      const updateUserDetails = await updateVendorProfile({
+      const updateUserDetails = await updateAgentProfile({
         firstName: data.firstName,
         lastName: data.lastName,
         phone: data.phone,

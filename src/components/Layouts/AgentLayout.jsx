@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation,useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/nav/logo.webp";
 import "../../assets/css/admin.css";
 import { FiSearch, FiBell, FiChevronDown } from "react-icons/fi";
@@ -8,6 +8,7 @@ import LoadingScreen from "../Loading/LoadingScreen";
 import { useSelector, useDispatch } from "react-redux";
 import { logOut } from "../../features/auth/authSlice";
 function AgentLayout() {
+  const navigate = useNavigate()
 
    const sidebarLinks = [
         {
@@ -123,6 +124,7 @@ function AgentLayout() {
     useLayoutEffect(()=>{
       getActiveTabName();
       setIsOpen(false)
+      
     }, [location]);
   
     // Function to get the active tab name based on the URL
@@ -140,7 +142,19 @@ function AgentLayout() {
       setActiveTab(activeLink)
       return activeLink ? activeLink.name : 'Overview';
     };
-
+    useLayoutEffect(()=>{
+      if(user ){
+        console.log("user===rrr",user)
+        if(!user.hasAcknowleged){
+          return navigate("/agent/register")
+        }
+        if(!user.isVerified){
+        return  navigate("/agent/home")
+        }
+       
+      }
+    },[user,navigate])
+  
     const { isLoading, isAuthenticated } = useAgentAuth();
 
     if (isLoading || !isAuthenticated) {
@@ -228,7 +242,7 @@ function AgentLayout() {
                 <ul className="py-2 text-sm text-gray-700">
                   <li>
                     <Link
-                      to="/profile"
+                      to="/agent/profile"
                       className="block px-4 py-2 hover:bg-gray-100"
                     >
                       Profile

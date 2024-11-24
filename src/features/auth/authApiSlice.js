@@ -84,13 +84,15 @@ export const authApiSlice =  apiSlice.injectEndpoints({
                 headers: {Authorization: `Bearer ${credentials?.token}`} 
             })
         }),
-        verifyOtp: builder.mutation({
+
+        verifyOtpVendor: builder.mutation({
             query: credentials => ({
                 url:'/auth/vendors/verify-password',
                 method:'POST',
                 body: {...credentials},
             })
         }),
+       
         verifyOtpAgent: builder.mutation({
             query: credentials => ({
                 url:'/auth/agents/verify-password',
@@ -113,6 +115,15 @@ export const authApiSlice =  apiSlice.injectEndpoints({
                 body: {...credentials},
             })
         }),
+
+        verifyAgentEmail: builder.mutation({
+            query: credentials => ({
+                url:'/auth/agents/verify-email',
+                method:'POST',
+                body: {...credentials},
+            })
+        }),
+
         forgotPasswordUser: builder.mutation({
             query: credentials => ({
                 url:'/auth/users/forgot-password',
@@ -123,6 +134,14 @@ export const authApiSlice =  apiSlice.injectEndpoints({
         resetPasswordUser: builder.mutation({
             query: credentials => ({
                 url:'/users/reset-password',
+                method:'POST',
+                body: {...credentials},
+                headers: {Authorization: `Bearer ${credentials?.token}`} 
+            })
+        }),
+        resendOTP: builder.mutation({
+            query: credentials => ({
+                url:'/auth/resend-otp',
                 method:'POST',
                 body: {...credentials},
                 headers: {Authorization: `Bearer ${credentials?.token}`} 
@@ -191,11 +210,11 @@ export const {
      useRegisterMutation, 
      useUpdateUserMutation,
      useRegisterUserMutation, 
+     useResendOTPMutation,
      useForgotPasswordMutation,
      useResetPasswordMutation,
      useForgotPasswordUserMutation,
      useResetPasswordUserMutation,
-     useVerifyOtpMutation,
      useVerifyOtpUserMutation,
      useGetCountriesQuery,
      useGetExchangeRateQuery,
@@ -205,6 +224,8 @@ export const {
      useForgotPasswordAgentMutation,
      useResetPasswordAgentMutation,
      useVerifyOtpAgentMutation,
+     useVerifyAgentEmailMutation,
+     useVerifyOtpVendorMutation,
      useVerifyVendorEmailMutation
      
     } = authApiSlice

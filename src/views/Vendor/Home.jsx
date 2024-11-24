@@ -47,19 +47,20 @@ function Home() {
         ],
       };
       
-      const options = {
-        scales: {
-          y: {
-            beginAtZero: true,
-            suggestedMax: 2500,
-          },
+    const options = {
+      scales: {
+        y: {
+          beginAtZero: true,
+          suggestedMax: 2500,
         },
-      };
+      },
+    };
 
       
       const handleRangeChange = (value)=>{
         setOption(value)
       }
+
       const combinedData = stats.reduce((acc, obj) => ({ ...acc, ...obj }), {});
 
   return (
@@ -72,8 +73,11 @@ function Home() {
               Your approval is pending, 
             </span>
             <br/>
+            Keep an eye on your email ({user.email})
+            <br/>
+              for the next instruct .ion
             <span>
-            we would email you once the process is completed.
+              
             </span>
           </div>
         </main> :

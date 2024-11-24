@@ -71,7 +71,7 @@ export const Timer = props => {
 
     // This is where you need to adjust if
     // you entend to add more time
-    deadline.setSeconds(deadline.getSeconds() + 120)
+    deadline.setSeconds(deadline.getSeconds() + 2)
     return deadline
   }
 

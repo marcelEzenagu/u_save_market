@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useLayoutEffect } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import Googleicon from "../../../../assets/images/auth/google.png"
 import { useRegisterAgentMutation } from "../../../../features/auth/authApiSlice";
@@ -11,7 +11,7 @@ const RegisterAgent = ({handleNext, countries, loadingCountries = false,}) => {
   const [registerAgent, {isLoading}] = useRegisterAgentMutation()
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredCountries, setFilteredCountries] = useState([]);
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     defaultData()
   }, [])
   const defaultData = () => {

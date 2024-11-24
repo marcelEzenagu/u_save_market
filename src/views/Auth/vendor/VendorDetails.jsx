@@ -14,6 +14,12 @@ import { useUpdateVendorProfileMutation } from "../../../features/vendor/vendorA
 import useProfileUploadHooks from "../../../hooks/useProfileUploadHooks";
 import { RxUpdate } from "react-icons/rx";
 import { PiTrash } from "react-icons/pi";
+import { FaPauseCircle } from "react-icons/fa";
+import { FaCirclePlay } from "react-icons/fa6";
+import { BiSolidVideoRecording } from "react-icons/bi";
+import { FaStopCircle } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+const MAX_DURATION = 60;
 
 const ProgressFormPage = () => {
   const navigate = useNavigate();
@@ -73,6 +79,146 @@ const ProgressFormPage = () => {
 
   const user = useSelector((state) => state.auth?.user);
 
+  const [recording, setRecording] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [videoBase64, setVideoBase64] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const videoRef = useRef(null);
+  const previewRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const chunks = useRef([]);
+  const timerRef = useRef(null);
+
+  // Start the timer
+  const startTimer = () => {
+    timerRef.current = setInterval(() => {
+      setElapsedTime((prev) => {
+        
+        if (prev + 1 >= MAX_DURATION) {
+          // Stop recording when max duration is reached
+          stopRecording();
+          alert('Maximum recording time of 1 minute reached.');
+          return prev; // Prevent further updates after stop
+        }
+        return prev + 1;      
+      });
+    }, 1000);
+  };
+
+  // Stop the timer
+  const stopTimer = () => {
+    clearInterval(timerRef.current);
+    setElapsedTime(0);
+  };
+
+  const startRecording = async () => {
+    try {
+      setVideoBase64(null);
+
+
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      videoRef.current.srcObject = stream;
+
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (event) => {
+        chunks.current.push(event.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        const blob = new Blob(chunks.current, { type: 'video/webm' });
+        chunks.current = [];
+
+        // Convert the blob to Base64
+        const base64 = await blobToBase64(blob);
+        setVideoBase64(base64);
+
+        videoRef.current.srcObject = null; // Stop showing the live stream
+        stream.getTracks().forEach((track) => track.stop()); // Stop the video stream
+      };
+
+      mediaRecorder.start();
+      setRecording(true);
+      startTimer();
+    } catch (err) {
+      console.error('Error accessing media devices:', err);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      setRecording(false);
+      setPaused(false);
+      stopTimer();
+    }
+  };
+
+  const clearRecording = () => {
+    setVideoBase64(null);
+    setElapsedTime(0);
+    setRecording(false)
+  };
+
+  const pauseRecording = () => {
+    if (mediaRecorderRef.current && recording) {
+      mediaRecorderRef.current.pause();
+      setPaused(true);
+      
+      clearInterval(timerRef.current);
+    }
+  };
+
+  const resumeRecording = () => {
+    if (mediaRecorderRef.current && paused) {
+      mediaRecorderRef.current.resume();
+      setPaused(false);
+      startTimer();
+    }
+  };
+
+  const playVideo = () => {
+    if (previewRef.current) {
+      previewRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const pauseVideo = () => {
+    if (previewRef.current) {
+      previewRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const uploadVideo = async () => {
+    try {
+      let req = {
+        ...body,
+        videoVerification: videoBase64
+      }
+    if (!videoBase64) return alert('No video to upload');
+
+    
+      const response = await updateVendor(req).unwrap()
+      console.log("response======", response);
+    } catch (err) {
+      console.error('Upload failed:', err);
+    }
+  };
+
+  const blobToBase64 = (blob) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob); // Convert blob to Base64
+    });
+  };
+
   // const [base64String, setBase64String] = useState('');
   // const [imagePreview, setImagePreview] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("");
@@ -131,6 +277,12 @@ const ProgressFormPage = () => {
         "3 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras elementum elit eget purus suscipit, sed egestas ",
     },
     {
+      name: "VIDEO VERIFICATION",
+      header: "Video",
+      Description:
+        "4 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras elementum elit eget purus suscipit, sed egestas ",
+    },
+    {
       name: "ACCEPTANCE FORM",
       header: "Acceptance Form",
       Description:
@@ -139,7 +291,7 @@ const ProgressFormPage = () => {
   ];
 
   const handleNext = () => {
-    if (step < 4) setStep(step + 1);
+    if (step < StepDetails.length) setStep(step + 1);
     handleComplete();
   };
 
@@ -154,6 +306,8 @@ const ProgressFormPage = () => {
       cacDocument: images.cacDocument,
       idDocumentFront: images.idDocumentFront,
       idDocumentBack: images.idDocumentBack,
+      // videoVerification: videoBase64
+
     };
     const res = await updateVendor(req).unwrap();
     if (res.hasAcknowleged) {
@@ -281,6 +435,7 @@ const ProgressFormPage = () => {
       setError("something went wrong selecting your image.", error);
     }
   };
+
   const handleImageSelect = async (e) => {
     const { name } = e.target;
 
@@ -433,7 +588,7 @@ const ProgressFormPage = () => {
               </label>
 
               <div className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black">
-                {user?.firstName} {user?.lastName}
+                {user?.firstName.toUpperCase()} {user?.lastName.toUpperCase()}
               </div>
 
               {/* <input
@@ -800,6 +955,53 @@ const ProgressFormPage = () => {
           </div>
         );
       case 4:
+        
+      return (
+        <div>
+          <h1>Video Recorder</h1>
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            style={{ width: '100%', height: 'auto', marginBottom: '1rem' }}
+          />
+          {recording && (
+            <p>Elapsed Time: {Math.floor(elapsedTime / 60)}:{elapsedTime % 60}</p>
+          )}
+          <div className="flex justify-evenly">
+            {!recording && 
+              <button onClick={startRecording} className="bg-red-400 rounded p-2 text-white">
+                <BiSolidVideoRecording />
+              </button>}
+            {recording && !paused && <button onClick={pauseRecording} className="bg-red-400 p-2 rounded text-white"><FaPauseCircle/></button>}
+            {recording && paused && <button onClick={resumeRecording} className="bg-red-400 p-2 rounded text-white">                  <FaCirclePlay />
+            </button>}
+            {recording && <button onClick={stopRecording} className="bg-red-400 p-2 rounded text-white"><FaStopCircle/></button>}
+          </div>
+          {videoBase64 && (
+            <div>
+              <h2>Preview</h2>
+              <video
+                ref={previewRef}
+                src={videoBase64}
+                controls={false}
+                style={{ width: '100%', height: 'auto' }}
+              />
+              <div className="flex justify-around pt-3">
+                {!isPlaying && <button onClick={playVideo} className="bg-red-400 p-2 rounded text-white">
+                  <FaCirclePlay />
+                </button>}
+                {isPlaying && <button onClick={pauseVideo} className="bg-red-400 p-2 rounded text-white">
+                <FaPauseCircle /></button>}
+                {isPlaying && <button onClick={clearRecording} className="bg-red-400 p-2 rounded text-white">
+                <MdDelete/></button>}
+              </div>
+              <button onClick={uploadVideo}>Upload Video</button>
+            </div>
+          )}
+        </div>
+      );
+      case 5:
         return (
           <div className="animated fadeInDown">
             <div className="mb-4">

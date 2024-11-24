@@ -5,19 +5,22 @@ import {useSelector} from 'react-redux'
 import Logo from "../../../../assets/images/nav/logo.webp";
 import { Timer } from "../../../../components/Timer"
 import { usePinInput } from "react-pin-input-hook"
-import { useForgotPasswordMutation, useVerifyOtpMutation } from "../../../../features/auth/authApiSlice";
+import {useResendOTPMutation, useVerifyAgentEmailMutation, useVerifyOtpAgentMutation } from "../../../../features/auth/authApiSlice";
 import {useErrorMessageHooks} from "../../../../hooks/useErrorMessageHooks";
 import { setVerifiedDetails } from "../../../../features/auth/authSlice";
-const OtpAgent = ({handleNext}) => {
+const OtpAgent = ({otpType}) => {
   const [intervals, setIntervals] = useState([]);
-  const [verifyOtp, {isLoading}] = useVerifyOtpMutation()
-  const [resetPassword, { isLoading: loading }] = useForgotPasswordMutation();
-  const { verifiedDetails } = useSelector((state) => state.auth);
+  const [verifyOtp, {isLoading}] = useVerifyOtpAgentMutation()
+  const [verifyEmail,{ isLoading: e_loading }] = useVerifyAgentEmailMutation()
+  const [resendOTP, { isLoading: loading }] = useResendOTPMutation();
+  let { verifiedDetails } = useSelector((state) => state.auth);
+  const [email, setEmail] = useState("" || verifiedDetails.email);
   const {
     setErrorMessagesList,
     handleErrorMessagesList,
     setErrMsg,
     navigate,
+
     dispatch,
     errMsg,
     handleError,
@@ -25,46 +28,60 @@ const OtpAgent = ({handleNext}) => {
     data,
     } = useErrorMessageHooks();
 
-  const { fields, clear } = usePinInput({
-    onComplete: OTP => {
+    const { fields, clear } = usePinInput({
+      onComplete: OTP => {
         setData(OTP)
-    },
-  })
-//   useEffect(()=>{
-//       console.log(verifiedDetails);
-//       if (!verifiedDetails?.email || !verifiedDetails?.requestID){
-//         navigate('vendor/auth/forgot-password');
-//       }
-//      }, [verifiedDetails])
-
-     const handleResendOtp = async () => {
-
+      },
+    })
+    
+    const handleResendOtp = async () => {
+      setErrMsg("");
+      setErrorMessagesList([]);
+      if (!email){
+        const enteredEmail = window.prompt("Please enter your email:");
+        if (enteredEmail !== null) { // Ensure user didn't cancel the prompt
+          setEmail(enteredEmail)
+        }
+        
+      }
       setErrMsg("");
       setErrorMessagesList([]);
       try {
-        const userData = await resetPassword({email : verifiedDetails?.email}).unwrap();
-        dispatch(setVerifiedDetails({...verifiedDetails, requestID : userData?.requestID}));
-        navigate("/")
+        const userData = await resendOTP({email,resendType:otpType}).unwrap();
+        dispatch(setVerifiedDetails({...verifiedDetails, requestID : userData?.requestID,email}));
       }catch (err) {
-       console.log(err);
-       handleError(err, 'OTP');
-    }
+        console.log(err);
+        handleError(err, 'OTP');
+      }
     }
 
-     const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault()
       setErrMsg("");
       setErrorMessagesList([]);
+      console.log(otpType,"otpType")
+      console.log("verifiedDetails===3=",verifiedDetails,otpType,"otpType")
+      // return
       try {
-        const {access_data} = await verifyOtp({ otp : data, requestID : verifiedDetails?.requestID, email: verifiedDetails?.email}).unwrap();
-        console.log(access_data?.access_token);
-        dispatch(setVerifiedDetails({...verifiedDetails, token: access_data?.access_token }))
-        navigate('/agent/reset-password')
+        console.log("CHECKING",otpType,otpType == "reset-password",otpType == "email-verification")
+
+        if(otpType == "reset-password"){
+          console.log(otpType,"1==otpType")
+          
+          const {access_data} = await verifyOtp({ otp : data, requestID : verifiedDetails?.requestID, email: verifiedDetails?.email}).unwrap();
+          dispatch(setVerifiedDetails({...verifiedDetails, token: access_data?.access_token }))
+          navigate('/agent/reset-password')
+          
+        }else if(otpType == "email-verification"){
+          console.log(otpType,"2==otpType")
+          const {access_data} = await verifyEmail({ otp : data, requestID : verifiedDetails?.requestID, email: verifiedDetails?.email}).unwrap();
+          dispatch(setVerifiedDetails({...verifiedDetails, token: access_data?.access_token }))
+       }
       }catch (err) {
-       console.log(err);
-       handleError(err, 'OTP');
+        console.log(err);
+        handleError(err, 'OTP');
     }
-   }
+    }
 
   const registerInterval = (id) => {
     setIntervals(intervals.concat([id]));
@@ -119,8 +136,9 @@ const OtpAgent = ({handleNext}) => {
             ""
           )}
             </div>
+            {handleErrorMessagesList("otp")}
 
-            <p className="text-red-600 text-xs">{errMsg && errMsg}</p>
+            {/* <p className="text-red-600 text-xs">{errMsg && errMsg}</p> */}
             <div className="w-full ">
             <button className="mt-10 text-xs md:text-[12px] bg-regal-sky-blue text-white px-4  py-3 font-semibold w-full rounded-md hover:bg-blue-600  "
             type="submit"
