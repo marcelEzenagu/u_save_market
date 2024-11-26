@@ -42,9 +42,9 @@ function IdentifyComponent({scheduleInterview, handleSet,data}) {
       
       {
         id: "3",
-        header: "Interview meeting",
+        header: "Production Process Video",
         description:
-          "Verify your business to keep the marketplace safe for everyone",
+          "This video helps us and the business to keep the marketplace safe for everyone",
         component: InterviewMeeting,
         props: { data},
         // status: "pending",

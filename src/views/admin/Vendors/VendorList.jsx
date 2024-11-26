@@ -1,4 +1,4 @@
-import React, { useState,useMemo ,useEffect} from "react";
+import React, { useState,useMemo,useRef ,useEffect} from "react";
 import ListComponent from "../../../components/admin/ListComponent";
 import { Items } from "../../../data/mockData"; 
 // No need to rename to vendors
@@ -140,11 +140,14 @@ const VendorComponent = ({
 
   const { data: vendors = [], isLoading, error } = useAdminListVendorsQuery({limit,page,status,query,isDisabled})
 
+  const [createModel, setCreateModel] = useState(false);
+
   // // const vendorList = useMemo(()=>{
     console.log("vendors:: ",vendors)
   // // },[])
 // const 
   return (
+    <>
     <ListComponent
       data={vendors} // Use mock data directly
       dropdownOptions={["All Vendors", "Inactive Vendors"]}
@@ -158,18 +161,28 @@ const VendorComponent = ({
           handleDeleteClick
         )
       }
+      setCreateModel={() => {
+        setCreateModel(!createModel);
+      }}
       selectedItems={selectedItems}
       handleCheckboxChange={handleCheckboxChange}
       withActions={true} // To display action column
       handleDeleteClick={handleDeleteClick}
       url={"/admin/vendors"}
     />
+    {createModel && (
+      <AddAgentModal
+        setCreateModel={() => {
+          setCreateModel(!createModel);
+        }}
+      />
+    )}
+    </>
   );
 };
 
 
 const VendorList = () => {
-  console.log("@VendorList")
   
   const [selectedItems, setSelectedItems] = useState([]);
   // Handle checkbox selection/deselection
@@ -180,7 +193,6 @@ const VendorList = () => {
         : [...prevSelected, id]
     );
   };
-  // console.log("useAdminListItemsByVendorsQuery:: ",items)
 
   // Handle delete action
   const handleDeleteClick = (id) => {
@@ -197,5 +209,111 @@ const VendorList = () => {
     />
   );
 };
+
+function AddAgentModal({ setCreateModel }) {
+  const [agentCreated, setAgentCreated] = useState(false);
+  const dropdownRef = useRef(null);
+  const handleCreateAgent = () => {
+    // Logic to create agent goes here
+    setAgentCreated(true);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setCreateModel();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+      <div
+        className={`bg-white rounded-2xl shadow-lg w-full  ${
+          !agentCreated ? "max-w-xl" : "max-w-md"
+        } relative overflow-hidden`}
+        ref={dropdownRef}
+      >
+        {!agentCreated ? (
+          <>
+            {/* Profile Image */}
+            <div className="flex px-8 py-9   relative bg-gray-50">
+              <div className="absolute top-5 flex flex-col items-center justify-center bg-gray-200 px-2 rounded-full border-4 border-white">
+                <img
+                  src={""}
+                  alt="Profile"
+                  className="w-16 h-20 rounded-full object-contain  "
+                />
+              </div>
+            </div>
+            <div className="p-8 mt-5">
+              {/* Header */}
+              <h2 className="text-2xl font-bold  mb-1">Add Vendor</h2>
+
+              {/* Description */}
+              <p className="text-gray-600 text-xs  mb-6">
+                To create a new vendor you need to provide the correct details
+                stated below.
+              </p>
+
+              {/* Form */}
+              <div className="mb-4">
+                <label className="block text-xs md:text-[12px] font-[600]  leading-6 mb-2 text-regal-black">
+                  Vendor Name
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-3 md:p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+                  placeholder="Enter  name"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-xs md:text-[12px] font-[600]  leading-6 mb-2 text-regal-black">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  className="w-full p-3 md:p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+                  placeholder="Enter  email"
+                />
+              </div>
+
+              {/* Create Agent Button */}
+              <button
+                // onClick={handleCreateAgent}
+                className=" bg-regal-sky-blue text-xs text-white py-3 px-4 rounded-md hover:bg-regal-sky-blue transition-colors mb-4"
+              >
+                Create New Vendor
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="flex flex-col items-center py-14 justify-center">
+            {/* Success Image */}
+            <img src={Success} alt="Success" className="w-20 h-20 mb-4" />
+
+            {/* Success Text */}
+            <h2 className="text-2xl  mb-4 font-bold text-regal-black ">
+              New Vendor Added
+            </h2>
+
+            {/* Close Button */}
+            <button
+              onClick={() => setCreateModel()}
+              className=" bg-regal-sky-blue text-xs text-white py-3 px-20 rounded-md hover:bg-regal-sky-blue transition-colors mb-4"
+            >
+              Close
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default VendorList;

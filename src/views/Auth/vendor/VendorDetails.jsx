@@ -202,7 +202,7 @@ const ProgressFormPage = () => {
       }
     if (!videoBase64) return alert('No video to upload');
 
-    
+
       const response = await updateVendor(req).unwrap()
       console.log("response======", response);
     } catch (err) {

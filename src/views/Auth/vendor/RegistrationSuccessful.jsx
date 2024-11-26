@@ -20,13 +20,9 @@ function RegistrationSuccessful() {
     <section className='border  rounded-lg  mt-14 max-w-[1200px] mx-auto h-[600px] flex flex-col  items-center justify-center'>
     <div className=" flex flex-col  items-center justify-center  px-4  rounded-lg mx-auto max-w-[420px] text-center ">
       <img src={PaymentSuccess} alt=""  className="text-center my-3 mx-auto"/>
-          <h2 className="text-xl font-bold mb-2">Verification Successful!</h2>
+          <h2 className="text-xl font-bold mb-2">Verification Pending!</h2>
           <h6 className="text-regal-black text-sm mt-4 mb-6"> 
-          Your documents have been received successfully! A 
-              <span className="font-[700]">One-on-one interview session and Quality check will be conducted in a week to complete your verification.
-                <br/>
-                Do keep an eye on your email.
-              </span>
+          Your documents have been received successfully!
           </h6>
           {/* Buttons in flex-col with gap */}
           <div className="flex flex-col gap-4   mx-auto">

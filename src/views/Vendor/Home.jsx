@@ -75,8 +75,15 @@ function Home() {
             <br/>
             Keep an eye on your email ({user.email})
             <br/>
-              for the next instruct .ion
-            <span>
+              for the next instruction.
+            <br/>
+            While you wait checkout the video {" "}
+              <a href="" className="cursor-pointer text-blue-400" target="_blank"  >
+                  getting-started-as a vendor
+                <video>
+                </video>
+              </a>            
+              <span>
               
             </span>
           </div>
