@@ -63,25 +63,33 @@ function Home() {
 
       const combinedData = stats.reduce((acc, obj) => ({ ...acc, ...obj }), {});
 
+
+      const handleClick = () => {
+        window.open("https://www.youtube.com/watch?v=uBp6P5cuP7M", "_blank");
+      };
   return (
 
     <div>
       {(user != null && !user.isVerified )?
         <main className="bg-regal-auth-bg-color h-screen mt-4 flex flex-col items-center justify-center">
           <div className="text-3xl font-bold text-orange-600 bg-regal-auth-bg-color">
-            <span className="py-3">
+            <span className="py-3 text-5xl">
               Your approval is pending, 
             </span>
             <br/>
+            <span className="text-black ">
             Keep an eye on your email ({user.email})
             <br/>
               for the next instruction.
             <br/>
-            While you wait checkout the video {" "}
-              <a href="" className="cursor-pointer text-blue-400" target="_blank"  >
+            While you wait checkout, this video {" "}
+
+            </span>
+                <a
+                  className="cursor-pointer text-blue-400 rounded"
+                  onClick={handleClick}
+                >
                   getting-started-as a vendor
-                <video>
-                </video>
               </a>            
               <span>
               

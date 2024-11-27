@@ -46,7 +46,7 @@ function GovernmentIssued({onClose,data}) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 mb-4">
           <div className="mb-1 col-span-2">
             <label
-              htmlFor="IDNumber"
+              htmlFor="IdType"
               className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
             >
              ID Type
@@ -56,6 +56,21 @@ function GovernmentIssued({onClose,data}) {
               name="text"
               id="IdType"
               placeholder={data?.idDocumentType?.toUpperCase()}
+              className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+            />
+          </div>
+          <div className="mb-1 col-span-2">
+            <label
+              htmlFor="IDNumber"
+              className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black"
+            >
+             ID Number
+            </label>
+            <input
+              type="text"
+              name="text"
+              id="IDNumber"
+              placeholder={data?.idDocumentNumber.toUpperCase()}
               className="w-full p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
             />
           </div>
@@ -79,7 +94,7 @@ function GovernmentIssued({onClose,data}) {
                   <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
                     ID Image (Back)
                   </label>
-                  <img src={`${baseUrl}${data.idDocumentBack}`}alt={`${data.idDocumentType?.toUpperCase()} back`}className="w-72 h-44 object-contain bg-gray-100" />
+                  <img src={`${baseUrl}${data.idDocumentBack}`} alt={`${data.idDocumentType?.toUpperCase()} back`}className="w-72 h-44 object-contain bg-gray-100" />
                 </div>
               </div>
 

@@ -1,10 +1,10 @@
 import React from 'react'
 import PaymentSuccess from '../../../assets/images/payment/success.png'
 import Logo from "../../../assets/images/nav/logo.webp";
-import {  Link } from 'react-router-dom'
+import {  Link, useNavigate } from 'react-router-dom'
 
 function RegistrationSuccessful() {
-   
+   const navigate = useNavigate()
   return (
     <div className=''>
         <nav className='p-4'>
@@ -25,13 +25,11 @@ function RegistrationSuccessful() {
           Your documents have been received successfully!
           </h6>
           {/* Buttons in flex-col with gap */}
-          <div className="flex flex-col gap-4   mx-auto">
-            <Link
-            to={'/vendor/home'}
-              className="bg-regal-sky-blue text-white py-2 px-14 rounded-md hover:bg-blue-900 transition font-[600]  text-xs md:text-sm"
+          <div className="flex flex-col gap-4   mx-auto bg-regal-sky-blue text-white py-2 px-14 rounded-md hover:bg-blue-900 transition font-[600]  text-xs md:text-sm"
+            onClick={()=>navigate("/vendor/home")}
            >
              Proceed
-            </Link>
+            {/* </Link> */}
 
           </div>
         </div>

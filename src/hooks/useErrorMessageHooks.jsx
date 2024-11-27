@@ -111,7 +111,7 @@ export const useErrorMessageHooks = () => {
     if (err?.status >= 400 && err?.status < 500) {
       console.log("entere 1")
       setErrorMessagesList(err?.data?.message || []);
-      // setErrMsg(err?.data?.message);
+      setErrMsg(err?.data?.message);
     } else if (err?.status >= 500) {
       console.log("entere 2")
       setErrMsg(name + ' failed');

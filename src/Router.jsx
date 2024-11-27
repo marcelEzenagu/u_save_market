@@ -223,7 +223,7 @@ const Router = createBrowserRouter([
                 element : <Navigate to='/vendor/home'/>
             },
                 {
-                    path:'/vendor/home',
+                    path:"/vendor/home",
                     element: <VendorHome/>
                 },
                 {
