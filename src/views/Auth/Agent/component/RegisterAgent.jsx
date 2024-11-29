@@ -14,6 +14,7 @@ const RegisterAgent = ({handleNext, countries, loadingCountries = false,}) => {
   useLayoutEffect(()=>{
     defaultData()
   }, [])
+
   const defaultData = () => {
     setData({
       firstName:'',
@@ -31,11 +32,14 @@ const handleSubmit = async (e) => {
   setErrMsg("");
   setErrorMessagesList([]);
   try {
-    const {access_data, user} = await registerAgent({ firstName: data.firstName, lastName:data.lastName,  email : data.email, password : data.password, servicingCountries: data?.servicingCountries }).unwrap()
+    const {requestID,user} = await registerAgent({ firstName: data.firstName, lastName:data.lastName,  email : data.email, password : data.password, servicingCountries: data?.servicingCountries }).unwrap()
+    // console.log("resp===",resp);
+    // return
     // setCookie("accessToken", access_data?.token)
     dispatch(setCredentials({ requestID:requestID, user : user}))
     defaultData();
-  navigate('/agent/overview')
+    handleNext()
+  // navigate('/agent/overview')
   }catch (err) {
     console.log(err);
     handleError(err, "Register");

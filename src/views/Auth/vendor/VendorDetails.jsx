@@ -428,7 +428,7 @@ const ProgressFormPage = () => {
     const { name } = e.target;
 
     console.log("NAME===",name)
-    const MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+    const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
 
     setError("");
     const file = e.target.files[0]; // Get the selected file
@@ -439,7 +439,7 @@ const ProgressFormPage = () => {
       }
       if (file.size > MAX_FILE_SIZE) {
         setError(
-          "File size exceeds the 2GB limit. Please choose a smaller file."
+          "File size exceeds the 2MB limit. Please choose a smaller file."
         );
       }
       if (file) {
@@ -469,7 +469,7 @@ const ProgressFormPage = () => {
     const { name } = e.target;
 
     console.log("NAME===",name)
-    const MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+    const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
 
     setError("");
     const file = e.target.files[0]; // Get the selected file
@@ -480,7 +480,7 @@ const ProgressFormPage = () => {
       }
       if (file.size > MAX_FILE_SIZE) {
         setError(
-          "File size exceeds the 2GB limit. Please choose a smaller file."
+          "File size exceeds the 2MB limit. Please choose a smaller file."
         );
       }
       if (file) {
@@ -510,7 +510,7 @@ const ProgressFormPage = () => {
     const { name } = e.target;
 
     console.log("NAME===",name)
-    const MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+    const MAX_FILE_SIZE = 50 * 1024 * 1024 ; // 50MB in bytes
 
     setError("");
     const file = e.target.files[0]; // Get the selected file
@@ -521,7 +521,7 @@ const ProgressFormPage = () => {
       }
       if (file.size > MAX_FILE_SIZE) {
         setError(
-          "File size exceeds the 2GB limit. Please choose a smaller file."
+          "File size exceeds the 50MB limit. Please choose a smaller file."
         );
       }
       if (file) {

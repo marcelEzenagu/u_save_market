@@ -7,6 +7,7 @@ import Success from "../../../assets/images/payment/success.png";
 import OrderVendorStatus from "../../../components/order/OrderVendorStatus";
 import { PiDotsThreeOutline } from "react-icons/pi";
 import { Menu } from "@headlessui/react";
+import { useAdminListagentsQuery } from "../../../features/admin/adminApiSlice";
 const renderVendorRow = (
   User,
   selectedItems,
@@ -28,14 +29,17 @@ const renderVendorRow = (
           alt=""
           className="w-6 h-6 rounded-full object-cover"
         />
-        <Link to={`/admin/agents/${User.productID}`}>Theresa Webb</Link>
+        <Link to={`/admin/agents/${User.agentID}`}
+        state={User}
+        
+        >{User.firstName.toUpperCase()}{" "}{User.lastName.toUpperCase()}</Link>
       </div>
     </td>
     <td className="px-6 py-2 text-xs font-medium text-regal-black">
       {User.email}
     </td>
     <td className="px-6 py-2 text-xs font-medium text-regal-black">
-      {User.phone}
+      {User.phoneNumber}
     </td>
     <td className="px-6 py-2 text-xs font-medium text-regal-black">
       <OrderVendorStatus />
@@ -119,10 +123,19 @@ const AgentComponent = ({
 }) => {
   const headers = ["Name", "Email Address", "Phone Number", "Country"]; // Added "Actions" to match the User row actions
   const [createModel, setCreateModel] = useState(false);
+  const limit = 10;
+  const page = 1;
+  const status = 'active'; // example status
+  const query = ''; // example search query
+  const isDisabled = false;
+
+  const { data: agents = [], isLoading, error } = useAdminListagentsQuery({limit,page,status,query,isDisabled})
+
+
   return (
     <>
       <ListComponent
-        data={Items} // Use mock data directly
+        data={agents} // Use mock data directly
         dropdownOptions={["All Agents", "Inactive Agents"]}
         title="Agents"
         headers={headers} // Pass the headers

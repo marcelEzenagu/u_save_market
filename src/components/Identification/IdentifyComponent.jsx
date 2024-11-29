@@ -40,15 +40,14 @@ function IdentifyComponent({scheduleInterview, handleSet,data}) {
         props: { data},
       },
       
-      {
-        id: "3",
-        header: "Production Process Video",
-        description:
-          "This video helps us and the business to keep the marketplace safe for everyone",
-        component: InterviewMeeting,
-        props: { data},
-        // status: "pending",
-      },
+        {
+          id: "3",
+          header: "Production Process Video",
+          description:
+            "This video helps us and the business to keep the marketplace safe for everyone",
+          component: InterviewMeeting,
+          props: { data},
+        }
     ],
     []
   );

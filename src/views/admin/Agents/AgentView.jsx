@@ -8,16 +8,24 @@ import UserPaymentMethod from "../../../components/admin/TabComponents/UserPayme
 import UserSavedItemsTab from "../../../components/admin/TabComponents/UserSavedItemsTab";
 import TabsView from "../../../components/admin/TabsView";
 import AgentIdentification from  "../../../components/admin/TabComponents/UserIdentificationTab";
+import { useLocation } from "react-router-dom";
 function AgentView() {
+    const {state} = useLocation()
 
     const tabs = useMemo(()=> [
         {
             id: '1',
             name: 'Profile Details',
-            component: <UserAccountTab />
+            component: <UserAccountTab
+            data={state}
+
+            />
         },
         {
-            id: '2', name: 'Identification', component: <AgentIdentification /> 
+            id: '2', name: 'Identification', component: <AgentIdentification 
+            data={state}
+
+            /> 
         },
         {
             id: '4',
@@ -31,7 +39,7 @@ function AgentView() {
 
     const userInfo = { name: "Theresa Webb", profileImage: "https://via.placeholder.com/40" };
 
-    return <TabsView tabs={tabs} userInfo={userInfo} url={'/admin/agents'}  />;
+    return <TabsView tabs={tabs} userInfo={state} url={'/admin/agents'}  />;
 }
 
 export default AgentView;

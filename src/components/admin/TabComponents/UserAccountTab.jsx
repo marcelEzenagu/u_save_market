@@ -137,6 +137,10 @@ function UserAccountTab({data}) {
                 {data?.lastName.toUpperCase()}
               </div>            
             </div>
+            {
+
+data?.phoneNumber &&
+
             <div className="mb-1  col-span-2">
               <label
                 htmlFor="phone"
@@ -197,12 +201,13 @@ function UserAccountTab({data}) {
                   name="phone"
                   id="phone"
                   readOnly
-                  value={data.phoneNumber.split("-")[1]}
+                  value={data?.phoneNumber?.split("-")[1]}
                   className="w-full py-3 md:py-4 text-xs pl-28 md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                   placeholder="Phone"
                 />
               </div>
             </div>
+            }
             <div className="mb-1 col-span-2">
               <label
                 htmlFor=" Home Address"

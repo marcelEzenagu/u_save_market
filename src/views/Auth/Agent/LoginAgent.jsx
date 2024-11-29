@@ -122,7 +122,7 @@ const handleSubmit = async (e) => {
               </div>
               {handleErrorMessagesList("password")}
             </div>
-            <p className="text-red-600 text-xs">{ errMsg}</p>
+            {/* <p className="text-red-600 text-xs">{ errMsg}</p> */}
 
             <Link to="/agent/forgot-password" className="text-xs text-regal-blue">Forgot Password ?</Link>
 
@@ -136,7 +136,7 @@ const handleSubmit = async (e) => {
             </div>
                 
          
-            <div className="flex flex-row items-center my-6">
+            {/* <div className="flex flex-row items-center my-6">
                 <hr  className="w-full border-b-[1px]"/>
                 <span className="mx-4 text-[12px] font-[600] text-regal-black ">OR</span>
                 <hr className="w-full border-b-[1px]"/>
@@ -148,7 +148,7 @@ const handleSubmit = async (e) => {
                 >
                 <img src={Googleicon} alt="" className=" mr-4" />
                     Log in with Google</button>
-            </div>
+            </div> */}
 
             <h5 className="text-regal-black text-sm font-[500] text-center mt-4">Don't have an account <Link to="/agent/register"  className="underline">Sign up for free</Link></h5>
           </form>

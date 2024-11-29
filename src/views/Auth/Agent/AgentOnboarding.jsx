@@ -9,14 +9,15 @@ import UploadDocumentAgent from "./component/UploadDocumentAgent";
 import AcceptanceFormAgent from "./component/AcceptanceFormAgent";
 import RegistrationSuccessfulAgent from "./component/RegisterationSuccessfulAgent";
 import useFetchCountries from "../../../hooks/useFetchCountries";
+import { useUpdateAgentProfileMutation } from "../../../features/agent/agentApiSlice";
 const AgentOnboarding = () => {
   const [step, setStep] = useState(1);
-  const { countriesWithCurrency } = useFetchCountries();
+  const [body, setBody] = useState({});
+  // const { countriesWithCurrency } = useFetchCountries();
   const user =  useSelector((state)=> state?.auth?.user)
+  const [updateAgent, isLoading] = useUpdateAgentProfileMutation();
+
   
-  useEffect(()=>{
-    countriesWithCurrency;
-  }, []);
 
   // manage not verified email
   useEffect(()=>{
@@ -26,7 +27,6 @@ const AgentOnboarding = () => {
     }
   }, []);
 
-  const totalSteps = 5;
   const StepDetails = [
     {
       icon:<svg width="18" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -86,18 +86,53 @@ const AgentOnboarding = () => {
         step:5,
     },
   ];
-  
+
+  const totalSteps = StepDetails.length
+  useEffect(()=>{
+    if (step ==totalSteps)handleComplete()
+    
+      }, [step]);
   const countries = useSelector((state) => state?.auth?.countries)
+
   const handleNext = () => {
-    if (step < totalSteps) setStep(step + 1);
+    console.log("got called")
+    if (step < totalSteps){
+      setStep(step + 1);
+    }else{
+      handleComplete()
+    }
   };
 
   // const handlePrevious = () => {
   //   if (step > 1) setStep(step - 1);
   // };
+
+  const handleComplete = async () => {
+    try{
+
+    const req = {
+      ...body,
+  };
+    const res = await updateAgent(req).unwrap();
+    if (res.hasAcknowledged) {
+      setBody(prev=>({
+        ...prev,
+        "success":true
+      }))
+    }
+    // console.log("res======", res);
+  }catch(e){
+    console.log("ERROR======", e);
+    // setErrorMessagesList(e)
+    // handleErrorMessagesList("onboarding Vendor")
+
+  }
+  };
+
   
   const renderForm = () => {
     switch (step) {
+
       case 1:
         return <RegisterAgent handleNext={handleNext} countries={countries}/>
       case 2:
@@ -105,11 +140,15 @@ const AgentOnboarding = () => {
                 otpType="email-verification"
         />  
       case 3:
-        return <UploadDocumentAgent handleNext={handleNext}/>
+        return <UploadDocumentAgent setData={setBody} body={body} />
         case 4:
-          return <AcceptanceFormAgent handleNext={handleNext}/>
+          return <AcceptanceFormAgent setData={setBody} body={body}/>
           case 5:
-            return <RegistrationSuccessfulAgent handleNext={handleNext}/>
+            // return <RegistrationSuccessfulAgent handleNext={handleNext}/>
+            return <RegistrationSuccessfulAgent 
+              body={body}
+              handleComplete={handleComplete}
+            />
       default:
         return null;
     }

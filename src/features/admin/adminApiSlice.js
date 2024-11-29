@@ -83,6 +83,23 @@ export const adminApiSlice = apiSlice.injectEndpoints({
             console.log("STARTED")
             }
         }),
+        //   agents
+        adminListagents: builder.query({
+            query: ({limit,page,status,query,isDisabled}) =>  `admin/agents?query=${query}&limit=${limit}&page=${page}&status=${status}&isDisabled=${isDisabled}`,
+            providesTags: ['agents'],
+            onQueryStarted(){
+
+                console.log("STARTED")
+                }
+          }),
+
+        adminGetAgent: builder.query({
+        query: ({vendorID}) =>  `admin/agents/${vendorID}`,
+        providesTags: ['agents'],
+        onQueryStarted(){
+            console.log("STARTED")
+            }
+        }),
 
         scheduleVendorMeeting: builder.mutation({
         query: (data) => ({
@@ -104,6 +121,7 @@ export const {useViewAdminQuery,
     useAdminListVendorsQuery,
     useAdminGetVendorQuery,
     useScheduleVendorMeetingMutation,
+    useAdminListagentsQuery,
     useApproveItemMutation,
     useUpdateAdminProfileMutation, 
     useUpdateAdminProfilePictureMutation} = adminApiSlice

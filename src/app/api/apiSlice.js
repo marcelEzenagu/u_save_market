@@ -10,6 +10,7 @@ const baseQuery = fetchBaseQuery({
   prepareHeaders: (headers, { getState }) => {
     //We are attaching the AccessToken to every Request that we make to the api
     const token = getState().auth.token === null ? getSecureCookie("accessToken") : getState().auth.token;
+   console.log("accessToken===",token)
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
     }

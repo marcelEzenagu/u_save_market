@@ -8,13 +8,15 @@ import { usePinInput } from "react-pin-input-hook"
 import {useResendOTPMutation, useVerifyAgentEmailMutation, useVerifyOtpAgentMutation } from "../../../../features/auth/authApiSlice";
 import {useErrorMessageHooks} from "../../../../hooks/useErrorMessageHooks";
 import { setVerifiedDetails } from "../../../../features/auth/authSlice";
-const OtpAgent = ({otpType}) => {
+import { setCookie } from "../../../../utils";
+const OtpAgent = ({otpType,handleNext}) => {
   const [intervals, setIntervals] = useState([]);
   const [verifyOtp, {isLoading}] = useVerifyOtpAgentMutation()
   const [verifyEmail,{ isLoading: e_loading }] = useVerifyAgentEmailMutation()
   const [resendOTP, { isLoading: loading }] = useResendOTPMutation();
   let { verifiedDetails } = useSelector((state) => state.auth);
-  const [email, setEmail] = useState("" || verifiedDetails.email);
+
+  const [email, setEmail] = useState(verifiedDetails.email);
   const {
     setErrorMessagesList,
     handleErrorMessagesList,
@@ -65,18 +67,19 @@ const OtpAgent = ({otpType}) => {
       try {
         console.log("CHECKING",otpType,otpType == "reset-password",otpType == "email-verification")
 
-        if(otpType == "reset-password"){
-          console.log(otpType,"1==otpType")
-          
-          const {access_data} = await verifyOtp({ otp : data, requestID : verifiedDetails?.requestID, email: verifiedDetails?.email}).unwrap();
+        if(otpType == "reset-password"){          
+          const {access_data} = await verifyOtp({ otp : data, requestID : verifiedDetails?.requestID, email}).unwrap();
           dispatch(setVerifiedDetails({...verifiedDetails, token: access_data?.access_token }))
           navigate('/agent/reset-password')
           
         }else if(otpType == "email-verification"){
-          console.log(otpType,"2==otpType")
-          const {access_data} = await verifyEmail({ otp : data, requestID : verifiedDetails?.requestID, email: verifiedDetails?.email}).unwrap();
+          const res = await verifyEmail({ otp : data, requestID : verifiedDetails?.requestID, email}).unwrap();
+          const {access_data} = res
+          setCookie("accessToken", access_data?.access_token)
+
           dispatch(setVerifiedDetails({...verifiedDetails, token: access_data?.access_token }))
-       }
+          handleNext()
+        }
       }catch (err) {
         console.log(err);
         handleError(err, 'OTP');

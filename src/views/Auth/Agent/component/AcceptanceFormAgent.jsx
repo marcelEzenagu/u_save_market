@@ -1,12 +1,21 @@
 import React from "react";
 
-function AcceptanceFormAgent({handleNext}) {
+function AcceptanceFormAgent({setData,body}) {
+  console.log("BODY=AcceptanceFormAgent=",body)
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setData((prev) => ({
+      ...prev,
+      "hasAcknowledged":body.hasAcknowledged?  !body.hasAcknowledged:true
+    }));
+  };
   return (
     <div className="animated fadeInDown ">
       {" "}
       <div className="md:w-[450px] mx-auto">
       <h1 className="text-2xl md:text-[30px] font-bold text-center mb-5 w-[350px] mx-auto ">
-        Upload Documents
+        Acceptance Documents
       </h1>
       {/* Description Text */}
       <p className="text-center text-xs md:text-sm text-regal-light-gray mb-8 font-[400]">
@@ -24,7 +33,11 @@ function AcceptanceFormAgent({handleNext}) {
         </div>
 
         <div className="terms-checkbox flex items-center gap-1 mb-20">
-            <input type="checkbox" id="terms" name="terms" className=" p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black" />
+            <input type="checkbox"  
+              id="terms"
+              value={body.hasAcknowledged}
+              onChange={handleChange}
+              name="terms" className=" p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black" />
             <label htmlFor="terms" className=" text-xs md:text-sm">I accept the terms & conditions</label>
         </div>
         </div>

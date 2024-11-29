@@ -145,11 +145,11 @@ function AgentLayout() {
     useLayoutEffect(()=>{
       if(user ){
         console.log("user===rrr",user)
-        if(!user.hasAcknowleged){
+        if(!user.hasAcknowledged){
           return navigate("/agent/register")
         }
         if(!user.isVerified){
-        return  navigate("/agent/home")
+        return  navigate("/agent/overview")
         }
        
       }

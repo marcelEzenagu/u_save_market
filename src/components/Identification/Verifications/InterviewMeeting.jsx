@@ -60,6 +60,10 @@ function InterviewMeeting({ onClose, data }) {
         <IoIosArrowRoundBack className="text-lg" />
         Back
       </button>
+
+      {
+        data?.vendorID &&
+      <>
       <div className="flex flex-row items-start gap-4 mt-2">
         <div className="flex flex-col items-center gap-2 mt-2">
           <div
@@ -126,6 +130,9 @@ function InterviewMeeting({ onClose, data }) {
           </button>
         </div>
       )}
+      </>
+
+      }
     </div>
   );
 }
