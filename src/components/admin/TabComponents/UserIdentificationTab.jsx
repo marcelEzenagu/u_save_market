@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import IdentifyComponent from '../../Identification/IdentifyComponent'
+import AgentIdentifyComponent from '../../Identification/AgentIdentifyComponent'
 function UserIdentificationTab({data}) {
 
     const [interview, setInterview] = useState(false);
@@ -14,7 +14,7 @@ function UserIdentificationTab({data}) {
     return (
     <div className='p-4 md:px-8 md:pt-8 pb-4 animate-fade-in'>
   <section className='max-w-[800px] '>
-    <IdentifyComponent 
+    <AgentIdentifyComponent 
       scheduleInterview={interview} handleSet={handleSet}
       data={data}
     />

@@ -9,6 +9,8 @@ import UserSavedItemsTab from "../../../components/admin/TabComponents/UserSaved
 import TabsView from "../../../components/admin/TabsView";
 import AgentIdentification from  "../../../components/admin/TabComponents/UserIdentificationTab";
 import { useLocation } from "react-router-dom";
+import AgentVerification from "../../../components/Identification/Verifications/AgentVerification";
+import AgentShipmentTab from "../../../components/admin/TabComponents/AgentShipmentTab";
 function AgentView() {
     const {state} = useLocation()
 
@@ -22,15 +24,19 @@ function AgentView() {
             />
         },
         {
-            id: '2', name: 'Identification', component: <AgentIdentification 
+            id: '2', name: 'Identification', component: <AgentVerification 
             data={state}
 
             /> 
         },
         {
             id: '4',
-            name: 'Deliveries',
-            component: <UserOrderTab />
+            name: 'Shipments',
+            component: <AgentShipmentTab
+            
+            data={state}
+            />
+
         },
 
 

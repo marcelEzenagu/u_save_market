@@ -8,6 +8,7 @@ import OrderVendorStatus from "../../../components/order/OrderVendorStatus";
 import { PiDotsThreeOutline } from "react-icons/pi";
 import { Menu } from "@headlessui/react";
 import { useAdminListagentsQuery } from "../../../features/admin/adminApiSlice";
+import UserStatus from "../../../components/user/UserStatus";
 const renderVendorRow = (
   User,
   selectedItems,
@@ -42,7 +43,10 @@ const renderVendorRow = (
       {User.phoneNumber}
     </td>
     <td className="px-6 py-2 text-xs font-medium text-regal-black">
-      <OrderVendorStatus />
+      <UserStatus
+        status={User.isVerified ? "verified":""}
+      />
+
     </td>
     <td className="px-6 py-2 text-xs font-medium text-regal-black">
       <Menu as="button" className="relative inline-block text-right">
@@ -121,7 +125,7 @@ const AgentComponent = ({
   handleCheckboxChange,
   handleDeleteClick,
 }) => {
-  const headers = ["Name", "Email Address", "Phone Number", "Country"]; // Added "Actions" to match the User row actions
+  const headers = ["Name", "Email Address", "Phone Number", "Status","Actions"]; // Added "Actions" to match the User row actions
   const [createModel, setCreateModel] = useState(false);
   const limit = 10;
   const page = 1;

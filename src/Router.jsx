@@ -518,8 +518,12 @@ const Router = createBrowserRouter([
     },
     {
         path: '*',
+
         element: <Notfound />
     }
+
+    // <Route component={NotFound} />
+
 ]);
 
 export default Router

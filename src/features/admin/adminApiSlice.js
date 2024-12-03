@@ -26,6 +26,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags:['admin']
         }),
+
         approveItem: builder.mutation({
             query: (itemID) => ({
                 url: `admin/items/approve/${itemID}`,
@@ -83,31 +84,42 @@ export const adminApiSlice = apiSlice.injectEndpoints({
             console.log("STARTED")
             }
         }),
+
         //   agents
         adminListagents: builder.query({
             query: ({limit,page,status,query,isDisabled}) =>  `admin/agents?query=${query}&limit=${limit}&page=${page}&status=${status}&isDisabled=${isDisabled}`,
             providesTags: ['agents'],
-            onQueryStarted(){
-
-                console.log("STARTED")
-                }
-          }),
+        }),
 
         adminGetAgent: builder.query({
-        query: ({vendorID}) =>  `admin/agents/${vendorID}`,
-        providesTags: ['agents'],
-        onQueryStarted(){
-            console.log("STARTED")
+            query: ({agentID}) =>  `admin/agents/${agentID}`,
+            providesTags: ['agents'],
+            onQueryStarted(){
+            }
+        }),
+        adminListAgentShipment: builder.query({
+            query: ({agentID}) =>  `admin/agents/${agentID}/`,
+            providesTags: ['agents'],
+            onQueryStarted(){
             }
         }),
 
-        scheduleVendorMeeting: builder.mutation({
-        query: (data) => ({
-            method: 'PATCH',
-            url:`admin/vendors/${data.vendorID}`,
-            body: {...data}
+        verifyAgent: builder.mutation({
+            query: (data) => ({
+                method: 'PATCH',
+                url:`admin/agents/${data.agentID}`,
+                body: {...data}
+            }),
+            providesTags: ['agents'],
         }),
-        providesTags: ['vendors'],
+
+        scheduleVendorMeeting: builder.mutation({
+            query: (data) => ({
+                method: 'PATCH',
+                url:`admin/vendors/${data.vendorID}`,
+                body: {...data}
+            }),
+            providesTags: ['vendors'],
         
         }),
     })
@@ -117,11 +129,12 @@ export const {useViewAdminQuery,
     useAdminApproveItemQuery, 
     useAdminListNewItemsQuery,
     useAdminListItemsByVendorsQuery,
-
+useAdminListAgentShipmentQuery,
     useAdminListVendorsQuery,
     useAdminGetVendorQuery,
     useScheduleVendorMeetingMutation,
     useAdminListagentsQuery,
+    useVerifyAgentMutation,
     useApproveItemMutation,
     useUpdateAdminProfileMutation, 
     useUpdateAdminProfilePictureMutation} = adminApiSlice

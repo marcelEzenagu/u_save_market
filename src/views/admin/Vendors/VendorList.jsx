@@ -44,7 +44,7 @@ const renderVendorRow = (
     </td>
     <td className="px-6 py-2 text-xs font-medium text-regal-black">
       <UserStatus 
-        status={vendor.status}
+        status={vendor.isVerified ? "verified":""}
       />
     </td>
     <td className="px-6 py-2 text-xs font-medium text-regal-black">
