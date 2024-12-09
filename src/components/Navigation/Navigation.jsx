@@ -33,10 +33,12 @@ function Navigation() {
   const {data: countries, isSuccess: successResponse } = useGetCountriesQuery();
   const [countriesWithCurrency, setCountriesWithCurrency] = useState([]);
   
+  useEffect(()=>{
+    if(countries?.length){
+      localStorage.setItem("countries",JSON.stringify(countries))
+    }
+  },[])
 
-  if(countries?.length){
-    localStorage.setItem("countries",JSON.stringify(countries))
-  }
   useEffect(()=>{
     // useLayoutEffect(()=>{
     fetch('https://restcountries.com/v3.1/all')
@@ -221,11 +223,15 @@ function Navigation() {
             {activeUser && user !== null ? <UserDropdown /> : <AuthModal />}
 
             <div className="hidden lg:block">
-              <CountryModal />
+              {
+                countries?.length &&
+
+                <CountryModal />
+              }
             </div>
             <div className="hidden lg:block">
               {
-                countriesWithCurrency.length &&
+                countriesWithCurrency?.length &&
                 <CurrencyModal />
 
               }

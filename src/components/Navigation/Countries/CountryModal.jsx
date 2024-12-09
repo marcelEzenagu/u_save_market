@@ -66,7 +66,9 @@ const Modal = ({
               <IoCloseCircleOutline className="text-xl text-regal-black" />
             </button>
           </div>
-
+{
+  filteredCountries.length
+  &&
           <div className="lg:pt-12 lg:pb-8 p-4 lg:p-8 relative">
             <h2 className="text-lg lg:text-xl font-bold text-regal-blue mb-2 lg:mb-3">
               Choose Country
@@ -110,6 +112,8 @@ const Modal = ({
               <p className='text-sm text-center my-12'>The country you are searching for is not Supported </p>
             </div> : ""}
           </div>
+}
+
           <div className=" w-full px-4 pb-8 bg-white">
             {pickedCountry && (
               <button
@@ -132,14 +136,15 @@ function CountryModal() {
   const preferredCountry = useSelector((state) => state.auth?.preferredCountry);
   const isLoggedIn = useSelector((state) => state.auth?.user);
   const dispatch = useDispatch();
+  const { data,isSuccess } = useGetCountriesQuery();
   const [updateUser, { isLoading }] = useUpdateUserMutation();
   const [errorMsg, setErrMsg] = useState("");
-  const { isSuccess } = useGetCountriesQuery();
   const [loading, setLoading] = useState(true); // Track loading state
 
+  console.log("CountryModal=DATA--CountryModal",data)
   useEffect(() => {
     if (isSuccess) {
-        setLoading(false); // Mark as ready when data is successfully fetched
+        setLoading(false); 
     }
 }, [isSuccess]);
 
@@ -200,12 +205,20 @@ function CountryModal() {
   };
  
 
-if (loading) {
-    // Show a loading view or return null to render nothing
-    return <p>Loading countries...</p>;
-}
+// if (loading) {
+//     // Show a loading view or return null to render nothing
+//     return 
+// }
   return (
     <>
+
+    {
+loading ?
+
+<p>Loading countries...</p>
+:
+<>
+
       <button
         className="flex items-center hover:text-regal-blue text-sm xl:text-sm text-regal-black cursor-pointer font-[500]"
         onClick={() => setIsModalOpen(true)}
@@ -226,6 +239,8 @@ if (loading) {
         preferredCountry={preferredCountry}
         isLoading={isLoading}
       />
+    </>
+    }
     </>
   );
 }
