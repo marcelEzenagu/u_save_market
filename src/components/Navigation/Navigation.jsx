@@ -18,7 +18,7 @@ import { setWishList } from "../../features/user/userSlice";
 import BottomLinks from "../Sidebar/BottomLinks";
 import { useGetCountriesQuery } from "../../features/auth/authApiSlice";
 import { useSearchItemsQuery } from "../../features/item/itemApiSlice";
-function Navigation() {
+function Navigation({countries,successResponse}) {
   const [mobileDropdown, setMobileDropdown] = useState(false);
   const [activeUser, setActiveuser] = useState(false);
   const user = useSelector(selectCurrentUser);
@@ -30,7 +30,6 @@ function Navigation() {
   const { data: whishList, isSuccess } = useUserWishListQuery(user, {
     skip: !user,
   });
-  const {data: countries, isSuccess: successResponse } = useGetCountriesQuery();
   const [countriesWithCurrency, setCountriesWithCurrency] = useState([]);
   
   useEffect(()=>{
@@ -173,6 +172,7 @@ function Navigation() {
     };
   }, []);
 
+  console.log("countries:",countries)
   return (
     <header className="sticky top-0  z-50 ">
       {showMessage && (
@@ -248,14 +248,17 @@ function Navigation() {
             }   flex-col bg-white items-start self-end py-8 space-y-6  sm:self-center w-full h-[100vh] drop-shadow-md`}
           >
             <div className="flex flex-col gap-3 px-4 pb-5 w-full border-b">
-              {/* {
-                // countries && */}
+{
+                countries?.length &&
+
                 <CountryModal />
+              }
 
-              {/* } */}
+              {
+                countriesWithCurrency?.length &&
+                <CurrencyModal />
 
-              <CurrencyModal />
-            </div>
+              }            </div>
             <div className=" flex flex-col items-start gap-6 px-4 mb-10">
               {dataCategory &&
                 dataCategory.map((e, i) => (

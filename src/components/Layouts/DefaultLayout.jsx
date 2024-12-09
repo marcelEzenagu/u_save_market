@@ -9,11 +9,13 @@ import Best from "../../assets/images/Default/icons/best.webp";
 import Footer from "../Footer/Footer";
 import LoadingScreen from "../Loading/LoadingScreen";
 import useGuestAuth from "../../hooks/useGuestAuth";
+import { useGetCountriesQuery } from "../../features/auth/authApiSlice";
 
 function DefaultLayout() {
   const { isLoading, userToken } = useGuestAuth();
   const [tab, setTab] = useState(true);
   const location = useLocation();
+  const {data: countries, isSuccess } = useGetCountriesQuery();
 
   // useLayoutEffect hook should be used unconditionally
   useLayoutEffect(() => {
@@ -40,7 +42,10 @@ function DefaultLayout() {
 
   return (
     <div>
-      <Navigation />
+      <Navigation 
+        countries={countries}
+        successResponse={isSuccess}
+      />
       {tab && (
         <div className="w-full py-3 px-1 md:px-4 hidden lg:block border-b-[1px] bg-white">
           <div className="max-w-[1200px] flex flex-row items-center gap-2 md:gap-8 mx-auto md:px-4">

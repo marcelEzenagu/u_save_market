@@ -194,8 +194,8 @@ function CountryModal() {
         console.error("Failed to update user preferred country:", err);
       }
     } else {
-      localStorage.setItem("preferredCountry", JSON.stringify(country));
-      localStorage.setItem("preferredCurrency", JSON.stringify(country));
+      // localStorage.setItem("preferredCountry", JSON.stringify(country));
+      // localStorage.setItem("preferredCurrency", JSON.stringify(country));
       dispatch(setCountry(country));
       dispatch(setCurrency(country));
       setIsModalOpen(false);
