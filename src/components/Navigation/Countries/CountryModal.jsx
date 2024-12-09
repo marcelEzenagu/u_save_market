@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Location from "../../../assets/images/nav/icons/location.webp";
 import { IoCloseCircleOutline } from "react-icons/io5";
-import { useUpdateUserMutation } from "../../../features/auth/authApiSlice";
+import { useGetCountriesQuery, useUpdateUserMutation } from "../../../features/auth/authApiSlice";
 import { setCountry, setCurrency } from "../../../features/auth/authSlice";
 import { FaCheckCircle } from "react-icons/fa";
 
@@ -134,6 +134,15 @@ function CountryModal() {
   const dispatch = useDispatch();
   const [updateUser, { isLoading }] = useUpdateUserMutation();
   const [errorMsg, setErrMsg] = useState("");
+  const { isSuccess } = useGetCountriesQuery();
+  const [loading, setLoading] = useState(true); // Track loading state
+
+  useEffect(() => {
+    if (isSuccess) {
+        setLoading(false); // Mark as ready when data is successfully fetched
+    }
+}, [isSuccess]);
+
 
   useEffect(() => {
     const lspc = JSON.parse(localStorage.getItem("preferredCountry"));
@@ -189,7 +198,12 @@ function CountryModal() {
 
     // Avoid window.location.reload() if possible; handle state updates instead.
   };
+ 
 
+if (loading) {
+    // Show a loading view or return null to render nothing
+    return <p>Loading countries...</p>;
+}
   return (
     <>
       <button

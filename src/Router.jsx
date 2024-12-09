@@ -84,6 +84,7 @@ import ItemList from "./views/admin/ItemList";
 import VerifyOTP from "./views/Auth/vendor/VerifyEmail";
 import VerifyEmail from "./views/Auth/vendor/VerifyEmail";
 import AgentProfile from "./views/Agent/profile/AgentProfile";
+import DonationPage from "./views/donation";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -114,6 +115,10 @@ const Router = createBrowserRouter([
     {
         path:'/payment-success',
         element: <Payment/>
+    },
+    {
+        path:'/donations',
+        element: <DonationPage/>
     },
     {
         path:'/payment-error',

@@ -18,7 +18,7 @@ function GridBox() {
   return (
     <div>
       <div>
-      {categories?.map((category, index) => {
+      {categories.length && categories?.map((category, index) => {
         const isEven = parseInt(category.id) % 2 === 0;
         const hasFiveOrMoreSubcats = category.subcat.length >= 5;
         const color = gridColors[index % gridColors.length]

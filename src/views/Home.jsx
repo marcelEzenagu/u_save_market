@@ -2,6 +2,8 @@ import React, { useMemo } from "react";
 import GridBox from "../components/cards/GridBox";
 import { Link } from "react-router-dom";
 import { useGetCategoriesQuery } from "../features/category/categoryApiSlice";
+import { IoIosArrowForward } from "react-icons/io";
+import { AiOutlineArrowRight } from "react-icons/ai";
 
 function Home() {
   const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
@@ -38,6 +40,9 @@ function Home() {
         ))}
       </div>
 
+        
+      <DonationCard/>
+
       {/* Category List (Mobile) */}
       <div className="lg:hidden mt-4">
         <div className="flex flex-wrap gap-2">
@@ -70,4 +75,64 @@ function Home() {
   );
 }
 
+
+
+function DonationCard() {
+  return (
+    <div className="flex flex-col text-sm font-medium leading-loose text-black space-x-4  ">
+      <Link to= "/donations" >
+        <ImageContainer 
+          src="https://cdn.builder.io/api/v1/image/assets/b53670262f1d4935bfecfb9f234abb33/2e6826af42933c1a96966cbf71723578a0b2ab07fdbbfb4a72ed872e620ef807?apiKey=b53670262f1d4935bfecfb9f234abb33&" 
+          alt="Main content image"
+        />
+        <ContentRow 
+          iconSrc="https://cdn.builder.io/api/v1/image/assets/b53670262f1d4935bfecfb9f234abb33/b983e2ffd7ca2cd3a0ef0f3dabd6ebabcd04657148a8cf2dc5b1949e0adf868b?apiKey=b53670262f1d4935bfecfb9f234abb33&"
+          text="Put a smile on a face, far and beyond"
+          indicatorSrc="https://cdn.builder.io/api/v1/image/assets/b53670262f1d4935bfecfb9f234abb33/13793f7018ffda8ec1861ea3a39517193ae44d8ddbf463122afadbdbca6c61a5?apiKey=b53670262f1d4935bfecfb9f234abb33&"
+        />
+      
+      </Link>
+    </div>
+  );
+}
+
+
+function ImageContainer({ src, alt }) {
+  return (
+    <img
+      loading="lazy"
+      src={src}
+      alt={alt}
+      className="object-contain w-full rounded-xl aspect-[2.88] max-md:max-w-full"
+    />
+  );
+}
+
+
+function ContentRow({ iconSrc, text, indicatorSrc }) {
+  return (
+    <div className="flex overflow-hidden flex-wrap gap-5 justify-between py-2.5 pl-4 mt-4 w-full bg-gray-200 rounded-xl max-md:max-w-full">
+      <div className="flex gap-1">
+        <img
+          loading="lazy"
+          src={iconSrc}
+          alt=""
+          className="object-contain shrink-0 rounded-lg aspect-[1.08] w-[43px]"
+        />
+        <div className="flex-auto my-auto">
+          {text}
+        </div>
+      </div>
+      <div
+        // loading="lazy"
+        // src={indicatorSrc}
+        // alt=""
+        className="object-contain shrink-0 m-auto w-3.5 aspect-[0.58] mr-4"
+     >
+  <AiOutlineArrowRight />
+
+      </div>
+    </div>
+  );
+}
 export default Home;

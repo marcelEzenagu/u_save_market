@@ -35,11 +35,10 @@ function Navigation() {
   
 
   if(countries?.length){
-    console.log("COUNRTIES:::::",countries[0])
     localStorage.setItem("countries",JSON.stringify(countries))
   }
-  // useEffect(()=>{
-    useLayoutEffect(()=>{
+  useEffect(()=>{
+    // useLayoutEffect(()=>{
     fetch('https://restcountries.com/v3.1/all')
     .then(response => response.json())
     .then(data => {
@@ -220,11 +219,16 @@ function Navigation() {
 
           <div className="flex flex-row-reverse lg:flex-row items-center gap-4">
             {activeUser && user !== null ? <UserDropdown /> : <AuthModal />}
+
             <div className="hidden lg:block">
               <CountryModal />
             </div>
             <div className="hidden lg:block">
-              <CurrencyModal />
+              {
+                countriesWithCurrency.length &&
+                <CurrencyModal />
+
+              }
             </div>
             <CartDropdown />
             <SearchFormMobile preferredCountry={preferredCountry}  showMessage={showMessage}/>
@@ -238,11 +242,11 @@ function Navigation() {
             }   flex-col bg-white items-start self-end py-8 space-y-6  sm:self-center w-full h-[100vh] drop-shadow-md`}
           >
             <div className="flex flex-col gap-3 px-4 pb-5 w-full border-b">
-              {
-                countries &&
+              {/* {
+                // countries && */}
                 <CountryModal />
 
-              }
+              {/* } */}
 
               <CurrencyModal />
             </div>
