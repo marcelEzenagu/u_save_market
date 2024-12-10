@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Navigation from "../Navigation/Navigation";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
@@ -12,18 +12,30 @@ import useGuestAuth from "../../hooks/useGuestAuth";
 import { useGetCountriesQuery } from "../../features/auth/authApiSlice";
 
 function DefaultLayout() {
-  const { isLoading, userToken } = useGuestAuth();
+  let { isLoading, userToken } = useGuestAuth();
   const [tab, setTab] = useState(true);
   const location = useLocation();
-  const {data: countries, isSuccess } = useGetCountriesQuery();
+  const {data, isSuccess } = useGetCountriesQuery();
+
+
+  let countries, currencies = []
+  if(isSuccess){
+     countries = data?.countries 
+     currencies = data?.currencies 
+
+    localStorage.setItem("countries",JSON.stringify(countries))
+  }
+
 
   // useLayoutEffect hook should be used unconditionally
-  useLayoutEffect(() => {
+  useEffect(() => {
+    isLoading = true
     if (location?.pathname === "/cart") {
       setTab(false);
     } else {
       setTab(true);
     }
+    isLoading = false
   }, [location?.pathname]);
   const dataCategory = [
     { id: "1", name: "Recommended", image: Like },
@@ -32,18 +44,19 @@ function DefaultLayout() {
     { id: "4", name: "Deals", image: Price },
   ];
 
+  console.log("isSuccess===",isSuccess)
 
   // Conditional rendering based on isLoading and userToken
-  if (isLoading && userToken) {
+  if (isLoading && userToken ) {
     return <LoadingScreen />;
-  }
+  }else if(!isSuccess){
+    return <LoadingScreen />;
 
-
-
-  return (
-    <div>
+  }else {
+   return (<div>
       <Navigation 
         countries={countries}
+        data={currencies}
         successResponse={isSuccess}
       />
       {tab && (
@@ -77,7 +90,9 @@ function DefaultLayout() {
       </section>
       <Footer />
     </div>
-  );
+  )
+}
+  
 }
 
 export default DefaultLayout;

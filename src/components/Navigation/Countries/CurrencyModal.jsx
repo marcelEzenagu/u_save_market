@@ -65,7 +65,6 @@ const Modal = ({ isOpen, onClose, onCurrencySelect, errorMsg, preferredCurrency,
           <div className="lg:pt-12 lg:pb-8 p-4 lg:p-8 relative">
             <h2 className="text-lg lg:text-xl font-bold text-regal-blue mb-2 lg:mb-3">Choose Currency</h2>
             <p className="text-xs lg:text-[14px] font-[500] text-regal-black mb-4">Select currency you’d like prices to be displayed in</p>
-            <label htmlFor="search" className='hidden lg:block mb-2 text-sm text-regal-black font-[500]'>Currency</label>
             <input
               type="text"
               id="search"

@@ -18,31 +18,29 @@ import { setWishList } from "../../features/user/userSlice";
 import BottomLinks from "../Sidebar/BottomLinks";
 import { useGetCountriesQuery } from "../../features/auth/authApiSlice";
 import { useSearchItemsQuery } from "../../features/item/itemApiSlice";
-function Navigation({countries,successResponse}) {
+function Navigation({countries,successResponse,data}) {
   const [mobileDropdown, setMobileDropdown] = useState(false);
   const [activeUser, setActiveuser] = useState(false);
   const user = useSelector(selectCurrentUser);
   const [showMessage, setShowMessage] = useState(false);
   const preferredCountry = useSelector(
     (state) => state?.auth?.preferredCountry
-  );
+  ) || "Nigeria"
   const dispatch = useDispatch();
   const { data: whishList, isSuccess } = useUserWishListQuery(user, {
     skip: !user,
   });
+
   const [countriesWithCurrency, setCountriesWithCurrency] = useState([]);
   
-  useEffect(()=>{
-    if(countries?.length){
-      localStorage.setItem("countries",JSON.stringify(countries))
-    }
-  },[])
+  // useEffect(()=>{
+  //   if(countries?.length){
+  //     localStorage.setItem("countries",JSON.stringify(countries))
+  //   }
+  // },[])
 
-  useEffect(()=>{
-    // useLayoutEffect(()=>{
-    fetch('https://restcountries.com/v3.1/all')
-    .then(response => response.json())
-    .then(data => {
+    useEffect(()=>{
+   
   const countriesWithCurrency = data.map(country => ({
     name: country.name.common, 
     currency: country.currencies
@@ -53,12 +51,13 @@ function Navigation({countries,successResponse}) {
         }))
       : null, 
   }));
+
   setCountriesWithCurrency(countriesWithCurrency);
 
-    })
-    .catch(error => {
-      console.error('Error fetching countries:', error);
-    });
+    // })
+    // .catch(error => {
+    //   console.error('Error fetching countries:', error);
+    // });
   }, [])
 
   useEffect(()=> {
@@ -173,6 +172,8 @@ function Navigation({countries,successResponse}) {
   }, []);
 
   console.log("countries:",countries)
+  console.log("countriesWithCurrency===",countriesWithCurrency)
+
   return (
     <header className="sticky top-0  z-50 ">
       {showMessage && (

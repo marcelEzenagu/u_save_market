@@ -136,17 +136,20 @@ function CountryModal() {
   const preferredCountry = useSelector((state) => state.auth?.preferredCountry);
   const isLoggedIn = useSelector((state) => state.auth?.user);
   const dispatch = useDispatch();
-  const { data,isSuccess } = useGetCountriesQuery();
+  // const { data,isSuccess } = useGetCountriesQuery();
   const [updateUser, { isLoading }] = useUpdateUserMutation();
   const [errorMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(true); // Track loading state
 
-  console.log("CountryModal=DATA--CountryModal",data)
+  const countries = localStorage.getItem("countries")
+
+  console.log("CountryModal=DATA--CountryModal",countries)
   useEffect(() => {
-    if (isSuccess) {
+    // if (countries.length) {
+    if (countries) {
         setLoading(false); 
     }
-}, [isSuccess]);
+}, []);
 
 
   useEffect(() => {
