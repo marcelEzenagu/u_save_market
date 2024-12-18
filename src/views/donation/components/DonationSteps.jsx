@@ -2,7 +2,7 @@ import React,{useState,useMemo} from "react";
 
 
 
-export default function DonationSteps({ steps }) {
+export default function DonationSteps({ steps,confirm }) {
   const [active, setActive] = useState(steps[0]?.id); // Set the first tab as active by default
 
   const activeTab = useMemo(() => steps.find(tab => tab.id === active), [active, steps]);
@@ -17,6 +17,9 @@ export default function DonationSteps({ steps }) {
     console.log(currentIndex,"currentIndex")
     if (currentIndex < steps.length - 1) {
       setActive(steps[currentIndex + 1].id);
+    }else{
+      console.log(currentIndex,"currentIndex", "called CONFIRM")
+      confirm()
     }
   };
 
@@ -56,7 +59,7 @@ export default function DonationSteps({ steps }) {
         type="submit"
         className="flex overflow-hidden flex-col justify-center items-center px-20 py-3 mt-8 max-w-full text-base text-center text-white whitespace-nowrap bg-sky-600 rounded-lg min-h-[48px] w-[670px] max-md:px-5"
         aria-label="Proceed to next step"
-        disabled={active === steps[steps.length - 1].id}
+        // disabled={active === steps[steps.length - 1].id}
       >
         
         {active === steps[steps?.length-1]?.id ? 

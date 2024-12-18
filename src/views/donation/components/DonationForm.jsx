@@ -4,15 +4,30 @@ import DonationSteps from "./DonationSteps";
 export default function DonationForm() {
   const [data,setData] = useState({
     amount:0,
+    isAnonymous:false
   })
   const amounts = [20, 50, 100, 200, 500]
   
   const handleChange =(e)=>{
     const {name, value} = e.target
     console.log("NAME===",name)
-    setData({
-      [name]:value
-    })
+
+    setData(prev => ({
+      ...prev,
+      [name]:name === "isAnonymous" ? !data.isAnonymous :value
+    }))
+  }
+
+  const confirm =()=>{
+    console.log("DATA===",data)
+    let {isAnonymous,firstName,lastName} = data
+
+    if(isAnonymous){
+      data.firstName= undefined
+      data.lastName = undefined
+    }
+console.log("lastData",data)
+   
   }
 
 
@@ -30,12 +45,15 @@ export default function DonationForm() {
       
       component: <UserForm
       handleChange={handleChange}
-
+      data={data}
+      
       /> 
       
     },
     { id: "payment", label: "Payments",
-      component: <PaymentForm/> 
+      component: <PaymentForm
+      
+      /> 
 
 
      }
@@ -43,7 +61,9 @@ export default function DonationForm() {
 
   return (
     <div className="flex flex-col items-start mt-1.5 w-full text-sm font-semibold max-md:mt-10 max-md:max-w-full">
-      <DonationSteps steps={steps} />
+      <DonationSteps steps={steps}       
+        confirm={confirm}
+      />
       <div className="flex shrink-0 self-stretch w-full h-1 bg-gray-200 rounded" />
       
     
@@ -95,6 +115,7 @@ export default function DonationForm() {
               className="overflow-hidden gap-2.5 self-stretch px-4 py-5 mt-2.5 whitespace-nowrap rounded-lg border border-gray-200 border-solid shadow-lg min-h-[56px] text-zinc-500"
               aria-label="Select donation frequency"
               onChange={handleChange}
+              value={data.frequency}
 
             >
               <option value="">Select</option>
@@ -113,7 +134,7 @@ export default function DonationForm() {
 
 
 
-function UserForm({handleChange}) {
+function UserForm({handleChange,data}) {
   return (
     <div className="flex flex-col mt-11 max-w-full leading-none w-[670px] max-md:mt-10">
       <form className="flex flex-col text-sm leading-none max-w-[625px]">
@@ -125,6 +146,7 @@ function UserForm({handleChange}) {
                 placeholder="Enter first name"
                 name="firstName"
                 handleChange={handleChange}
+                value={data.firstName}
               />
 
               <FormInput
@@ -133,6 +155,8 @@ function UserForm({handleChange}) {
                 placeholder="Enter last name"
                 className="z-10 max-md:mr-0"
                 handleChange={handleChange}
+                value={data.lastName}
+
               />
             </div>
 
@@ -142,6 +166,7 @@ function UserForm({handleChange}) {
               placeholder="Enter Email"
               className="mt-6 w-full max-md:max-w-full"
               handleChange={handleChange}
+              value={data.email}
             />
 
             <FormInput
@@ -150,6 +175,8 @@ function UserForm({handleChange}) {
               placeholder="Enter address"
               className="mt-6 w-full max-md:max-w-full"
               handleChange={handleChange}
+              value={data.address}
+
             />
 
             <div className="flex flex-wrap gap-7 mt-6 w-full whitespace-nowrap max-md:max-w-full">
@@ -163,7 +190,8 @@ function UserForm({handleChange}) {
                   placeholder="Enter City"
                   className="mt-6 w-full max-md:max-w-full"
                   handleChange={handleChange}
-              // className="flex overflow-hidden gap-10 justify-between items-center p-4 mt-2.5 rounded-lg border border-gray-200 border-solid shadow-lg min-h-[56px] text-zinc-500"
+                  value={data.city}
+
                 />
                   
                   </div>
@@ -176,6 +204,8 @@ function UserForm({handleChange}) {
                   placeholder="Enter State/Region"
                   className="mt-6 w-full max-md:max-w-full"
                   handleChange={handleChange}
+                  value={data.state}
+
                 />
 
                 </div>
@@ -193,8 +223,10 @@ function UserForm({handleChange}) {
             id="anonymous"
             name="isAnonymous"
             className="w-6 h-6"
-            onChange={() => handleChange}
+            onChange={handleChange}
             aria-label="Make donation anonymous"
+            value={data.isAnonymous}
+
           />
           <label
             htmlFor="anonymous"
@@ -209,27 +241,7 @@ function UserForm({handleChange}) {
 }
 
 
- function SelectInput({ label, className = "" }) {
-  return (
-    <div className={`flex flex-col flex-1 grow shrink-0 basis-0 w-fit ${className}`}>
-      <label className="self-start text-black">{label}</label>
-      <div className="flex overflow-hidden gap-10 justify-between items-center p-4 mt-2.5 rounded-lg border border-gray-200 border-solid shadow-lg min-h-[56px] text-zinc-500">
-        <select 
-          className="w-full bg-transparent border-none outline-none"
-          aria-label={label}
-        >
-          <option value="">Select</option>
-        </select>
-        <img
-          loading="lazy"
-          src="https://cdn.builder.io/api/v1/image/assets/b53670262f1d4935bfecfb9f234abb33/f8ca57a426f289fcc3c6421b0976a50a9ca20983df8bb5a2d76bd430e5991e7b?apiKey=b53670262f1d4935bfecfb9f234abb33&"
-          alt=""
-          className="object-contain shrink-0 self-stretch my-auto w-6 aspect-square"
-        />
-      </div>
-    </div>
-  );
-}
+ 
 
 
  function FormInput({ label, placeholder,name,handleChange, className = "" }) {
