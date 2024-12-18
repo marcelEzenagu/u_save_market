@@ -1,18 +1,37 @@
 import React,{useState,useMemo} from "react";
-import AmountSelector from "./AmountSelector";
 import DonationSteps from "./DonationSteps";
 
 export default function DonationForm() {
+  const [data,setData] = useState({
+    amount:0,
+  })
+  const amounts = [20, 50, 100, 200, 500]
+  
+  const handleChange =(e)=>{
+    const {name, value} = e.target
+    console.log("NAME===",name)
+    setData({
+      [name]:value
+    })
+  }
 
 
   const steps = useMemo(()=> [
     { id: "amount", label: "Amount",
-      component: <AmountForm/> 
+      component: <AmountForm
+                  handleChange ={handleChange}
+                  data={data}
+                  setData={setData}
+                  amounts={amounts}
+                /> 
       
     },
     { id: "personal", label: "Personal Info" ,
       
-      component: <UserForm/> 
+      component: <UserForm
+      handleChange={handleChange}
+
+      /> 
       
     },
     { id: "payment", label: "Payments",
@@ -31,17 +50,37 @@ export default function DonationForm() {
     </div>
   );
 
-  function AmountForm(){
+  function AmountForm({ handleChange,amounts,setData,data}){
+   const [active, setActive] = useState(false)
+
+    const setAmount =(dataAmount)=>{
+      setData({amount:dataAmount},()=>setActive(true))
+    }
+
     return (
       <div className="flex flex-col mt-11 max-w-full leading-none w-[670px] max-md:mt-10">
-        <AmountSelector />
-
+        <div className="flex gap-5 items-start self-start text-white whitespace-nowrap">
+          {amounts?.map((amt) => (
+            <div key={amt} className="flex flex-col w-[60px]">
+              <button 
+                className={`overflow-hidden gap-2.5 self-stretch p-4 hover:bg-gray-300 rounded-lg bg-neutral-400 ${amt==data.amount ?  "bg-gray-700 text-white":"text-gray-700 bg-gray-100 "}`}
+                // aria-label={`Donate $${amount}`}
+                onClick={()=>setAmount(amt)}
+              >
+                ${amt}
+              </button>
+            </div>
+          ))}
+        </div>
       <div className="flex flex-col mt-6 w-full whitespace-nowrap max-md:max-w-full">
-            <label htmlFor="customAmount" className="self-start text-black">Amount</label>
+            <label htmlFor="customAmount" className="self-start text-black">Amount($)</label>
             <div className="overflow-hidden gap-2.5 self-stretch px-4 py-5 mt-2.5 rounded-lg border border-gray-200 border-solid shadow-lg min-h-[56px]">
               <input
                 type="number"
-                id="customAmount"
+                name ="amount"
+                value = {data.amount}
+                onChange={handleChange}
+              
                 placeholder="$"
                 className="w-full text-neutral-300 bg-transparent border-none outline-none"
                 aria-label="Enter custom donation amount"
@@ -52,8 +91,11 @@ export default function DonationForm() {
             <label htmlFor="frequency" className="self-start text-black">Donation Frequency</label>
             <select
               id="frequency"
+              name="frequency"
               className="overflow-hidden gap-2.5 self-stretch px-4 py-5 mt-2.5 whitespace-nowrap rounded-lg border border-gray-200 border-solid shadow-lg min-h-[56px] text-zinc-500"
               aria-label="Select donation frequency"
+              onChange={handleChange}
+
             >
               <option value="">Select</option>
               <option value="one-off">One-Off</option>
@@ -71,53 +113,97 @@ export default function DonationForm() {
 
 
 
-function UserForm() {
+function UserForm({handleChange}) {
   return (
     <div className="flex flex-col mt-11 max-w-full leading-none w-[670px] max-md:mt-10">
-
-    <form className="flex flex-col text-sm leading-none max-w-[625px]">
-      <div className="flex flex-col w-full max-md:max-w-full">
+      <form className="flex flex-col text-sm leading-none max-w-[625px]">
         <div className="flex flex-col w-full max-md:max-w-full">
-          <div className="flex flex-wrap gap-7 w-full max-md:max-w-full">
-            <FormInput label="First Name" placeholder="Enter first name" />
-            <FormInput 
-              label="Last Name" 
-              placeholder="Enter last name" 
-              className="z-10 max-md:mr-0"
-            />
-          </div>
-          
-          <FormInput 
-            label="Email" 
-            placeholder="Enter Email"
-            className="mt-6 w-full max-md:max-w-full" 
-          />
-          
-          <FormInput 
-            label="Address" 
-            placeholder="Enter address"
-            className="mt-6 w-full max-md:max-w-full" 
-          />
+          <div className="flex flex-col w-full max-md:max-w-full">
+            <div className="flex flex-wrap gap-7 w-full max-md:max-w-full">
+              <FormInput
+                label="First Name"
+                placeholder="Enter first name"
+                name="firstName"
+                handleChange={handleChange}
+              />
 
-          <div className="flex flex-wrap gap-7 mt-6 w-full whitespace-nowrap max-md:max-w-full">
-            <SelectInput label="City" />
-            <SelectInput label="State/Region" className="z-10 max-md:mr-0" />
+              <FormInput
+                label="Last Name"
+                name="lastName"
+                placeholder="Enter last name"
+                className="z-10 max-md:mr-0"
+                handleChange={handleChange}
+              />
+            </div>
+
+            <FormInput
+              label="Email"
+              name="email"
+              placeholder="Enter Email"
+              className="mt-6 w-full max-md:max-w-full"
+              handleChange={handleChange}
+            />
+
+            <FormInput
+              label="Address"
+              name="address"
+              placeholder="Enter address"
+              className="mt-6 w-full max-md:max-w-full"
+              handleChange={handleChange}
+            />
+
+            <div className="flex flex-wrap gap-7 mt-6 w-full whitespace-nowrap max-md:max-w-full">
+             
+                <div
+                 className="flex flex-col flex-1 grow shrink-0 basis-0 w-fit "
+                >
+                <FormInput
+                  label="City"
+                  name="city"
+                  placeholder="Enter City"
+                  className="mt-6 w-full max-md:max-w-full"
+                  handleChange={handleChange}
+              // className="flex overflow-hidden gap-10 justify-between items-center p-4 mt-2.5 rounded-lg border border-gray-200 border-solid shadow-lg min-h-[56px] text-zinc-500"
+                />
+                  
+                  </div>
+                <div
+                  className="flex flex-col flex-1 grow shrink-0 basis-0 w-fit "
+               >
+                <FormInput
+                  label="State/Region"
+                  name="state"
+                  placeholder="Enter State/Region"
+                  className="mt-6 w-full max-md:max-w-full"
+                  handleChange={handleChange}
+                />
+
+                </div>
+             
+
+            
+              </div>
+
           </div>
         </div>
-      </div>
 
-      <div className="flex gap-2 items-center self-start mt-8 text-black">
-        <input
-          type="checkbox"
-          id="anonymous"
-          className="w-6 h-6"
-          aria-label="Make donation anonymous"
-        />
-        <label htmlFor="anonymous" className="self-stretch my-auto rounded-none w-[222px]">
-          Make this donation anonymous
-        </label>
-      </div>
-    </form>
+        <div className="flex gap-2 items-center self-start mt-8 text-black">
+          <input
+            type="checkbox"
+            id="anonymous"
+            name="isAnonymous"
+            className="w-6 h-6"
+            onChange={() => handleChange}
+            aria-label="Make donation anonymous"
+          />
+          <label
+            htmlFor="anonymous"
+            className="self-stretch my-auto rounded-none w-[222px]"
+          >
+            Make this donation anonymous
+          </label>
+        </div>
+      </form>
     </div>
   );
 }
@@ -146,13 +232,16 @@ function UserForm() {
 }
 
 
- function FormInput({ label, placeholder, className = "" }) {
+ function FormInput({ label, placeholder,name,handleChange, className = "" }) {
   return (
     <div className={`flex flex-col flex-1 grow shrink-0 basis-0 w-fit ${className}`}>
       <label className="self-start text-black">{label}</label>
       <input
         type="text"
+        name={name}
         placeholder={placeholder}
+        onChange={handleChange}
+
         className="overflow-hidden gap-2.5 self-stretch px-4 py-5 mt-2.5 rounded-lg border border-gray-200 border-solid shadow-lg min-h-[56px] text-neutral-300"
         aria-label={label}
       />

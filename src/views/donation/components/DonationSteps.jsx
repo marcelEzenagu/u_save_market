@@ -4,8 +4,7 @@ import React,{useState,useMemo} from "react";
 
 export default function DonationSteps({ steps }) {
   const [active, setActive] = useState(steps[0]?.id); // Set the first tab as active by default
-  
-  
+
   const activeTab = useMemo(() => steps.find(tab => tab.id === active), [active, steps]);
 
   // Function to move to the next step
@@ -20,6 +19,11 @@ export default function DonationSteps({ steps }) {
       setActive(steps[currentIndex + 1].id);
     }
   };
+
+
+  console.log("steps[steps?.length]?.id ",steps?.length )
+  console.log("steps[steps?.length]?.id ",steps[steps?.length-1]?.id )
+  console.log("active",active)
   return (
     <div className="flex flex-col mt-11 max-w-full leading-none w-[670px] max-md:mt-10">
       <div className="flex z-10 gap-10 items-center text-lg leading-loose text-center text-zinc-500">
@@ -50,13 +54,16 @@ export default function DonationSteps({ steps }) {
         onClick={goToNextStep}
 
         type="submit"
-        className="flex overflow-hidden flex-col justify-center items-center px-20 py-3 mt-8 max-w-full text-base text-center text-white whitespace-nowrap bg-sky-600 rounded-lg min-h-[48px] w-[670px] max-md:px-5
-        "
+        className="flex overflow-hidden flex-col justify-center items-center px-20 py-3 mt-8 max-w-full text-base text-center text-white whitespace-nowrap bg-sky-600 rounded-lg min-h-[48px] w-[670px] max-md:px-5"
         aria-label="Proceed to next step"
-
         disabled={active === steps[steps.length - 1].id}
       >
-        Next
+        
+        {active === steps[steps?.length-1]?.id ? 
+          "Submit"
+          :
+          "Next"
+        }
       </button>
     </div>
   );
