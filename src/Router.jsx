@@ -85,6 +85,8 @@ import VerifyOTP from "./views/Auth/vendor/VerifyEmail";
 import VerifyEmail from "./views/Auth/vendor/VerifyEmail";
 import AgentProfile from "./views/Agent/profile/AgentProfile";
 import DonationPage from "./views/donation";
+import News from "./views/news/index";
+import Extra from "./views/extra";
 const Router = createBrowserRouter([
     {
         path:'/',
@@ -117,8 +119,13 @@ const Router = createBrowserRouter([
         element: <Payment/>
     },
     {
-        path:'/donations',
-        element: <DonationPage/>
+        path:'/news',
+        element: <News/>
+    },
+    
+    {
+        path:'/extra',
+        element: <Extra/>
     },
     {
         path:'/payment-error',

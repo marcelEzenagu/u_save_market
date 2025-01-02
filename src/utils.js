@@ -1,4 +1,3 @@
-import { ENV } from "./custom-config";
 export const postData = async (url = "", data = {}, headers) => {
   // Default options are marked with *
   const response = await fetch(url, {

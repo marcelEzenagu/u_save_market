@@ -205,13 +205,8 @@ function UserForm({handleChange,data}) {
                   className="mt-6 w-full max-md:max-w-full"
                   handleChange={handleChange}
                   value={data.state}
-
                 />
-
                 </div>
-             
-
-            
               </div>
 
           </div>

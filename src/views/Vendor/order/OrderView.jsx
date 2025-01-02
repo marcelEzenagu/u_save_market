@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Items } from "../../../data/mockData";
 import Status from "../../../components/order/OrderStatus";
 import ItemsCard from "../../../components/cards/ItemsCard";
 import { IoIosArrowRoundBack } from "react-icons/io";
@@ -12,7 +11,7 @@ function OrderView() {
   const { orderID } = useParams();
 
   const location = useLocation();
-  const { orderData } = location.state || {};  // Retrieve data passed in `state`
+  const { orderData } = location.state || {};  
   const [itemList, setItemList] = useState([])
 
 
@@ -23,18 +22,16 @@ function OrderView() {
       setIsModalOpen(!isModalOpen);
     };
 
-    const handleItemListing = (e)=>{
-console.log("LIST::",itemList)
-const {name,value} = e.target
-console.log("value::",value)
-      
+    const handleItemListing = (e) => {
+      const { name, value } = e.target;
 
-      setItemList((prevList) =>
-        e.target.checked
-          ? [...prevList, value] // Add value to the list if checked
-          : prevList.filter((id) => id !== value) // Remove itemID if unchecked
+      setItemList(
+        (prevList) =>
+          e.target.checked
+            ? [...prevList, value] // Add value to the list if checked
+            : prevList.filter((id) => id !== value) // Remove itemID if unchecked
       );
-    }
+    };
 
     const handleCompleteOrder = async ()=>{      
       try{
