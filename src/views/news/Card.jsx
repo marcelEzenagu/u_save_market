@@ -1,31 +1,28 @@
+import React from "react";
+import { MdOutlineCalendarMonth } from "react-icons/md";
 
-import React from 'react'
-
-function Card({data}) {
+function Card({ data }) {
   return (
-    <div className='flex'>
-        <p className=''>
-            <span className='flex'>
-                <div>Icon</div>
-                <div className='px-1'>{data.createdAt}</div>
-            </span>
+    <div className="p-2">
+      <div className="flex">
+        <p className="flex flex-col">
+          <p className="flex items-center text-xs">
             <span>
-                {data.title}
+                <MdOutlineCalendarMonth/>
             </span>
-            <span>
-                {data.content}
-            </span>
-            <span>Read More </span>
-            
-        </p>
-        <div>
-            <img 
-                src={`${data.image}`}
-            />
+            <span className="px-2">{data.createdAt}</span>
+          </p>
+          <span className="font-bold text-lg">{data.title}</span>
+          <span>{data.content}</span>
+          <span className="text-blue-500">Read More</span>
+          </p >
+
+        <div className="px-3">
+          <img src={`${data.image}`} alt={data.title.toLowerCase()} />
         </div>
-    
+      </div>
     </div>
-  )
+  );
 }
 
-export default Card
+export default Card;
