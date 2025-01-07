@@ -12,7 +12,7 @@ export default class DateRangeFilter extends Component {
           onChange={(e)=>this.props.showDate(e.target.value)}
 
         >
-          {["All", "Today", "Last 7 Days", "Last 30 Days", "Custom Date"].map(
+          {["All", "Today", "Last 7 Days", "Last 30 Days", "Custom Date"]?.map(
             (i, index) => (
               <option
                 key={index}

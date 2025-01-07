@@ -57,7 +57,7 @@ export const useErrorMessageHooks = () => {
       );
       return (
         <div className="mt-2">
-          {message.map((e, index) => (
+          {message?.map((e, index) => (
             <p className="text-red-600 text-xs" key={index}>
               {e?.message.replaceAll('Path ', '').replaceAll('`', '')}
             </p>
@@ -90,7 +90,7 @@ export const useErrorMessageHooks = () => {
       // console.log("handleErrorMessagesList3message ",message)
         return (
           <div className="mt-2">
-            {errorMessagesList.map((e, index) => (
+            {errorMessagesList?.map((e, index) => (
               <p className="text-red-600 text-xs" key={index}>
                 {e}
               </p>
