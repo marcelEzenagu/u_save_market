@@ -89,7 +89,7 @@ function OverViewAgent() {
             <main className="p-4 ">
               <section>
                 <div className="grid grid-cols-2 md:grid-cols-4  gap-4  relative   mt-8">
-                  {tab.map((item) => (
+                  {tab?.map((item) => (
                     <div
                       key={item.name}
                       className="flex bg-white flex-row items-center gap-4 p-4 border rounded-xl"
@@ -226,7 +226,7 @@ const ProductTableTab = React.memo(({ setActiveOrder }) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {currentItems.map((product) => (
+            {currentItems?.map((product) => (
               <tr key={product.productID}>
                 <td className="px-6 py-2 text-xs text-regal-black whitespace-nowrap font-[600]">
                   099084057

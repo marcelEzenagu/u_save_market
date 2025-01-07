@@ -164,7 +164,7 @@ const handleRemoveCountry = (country) => {
                       {searchTerm && (
                         <ul className="absolute w-full bg-white border mt-1 z-10 max-h-40 overflow-y-auto">
                           {filteredCountries.length > 0 ? (
-                            filteredCountries.map((country) => (
+                            filteredCountries?.map((country) => (
                               <li
                                 key={country.id}
                                 onClick={() => handleSelectCountry(country.name)}

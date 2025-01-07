@@ -66,7 +66,7 @@ function Order() {
     <div className="p-4">
       <h6 className="text-regal-black text-sm md:text-xl font-bold">My Orders</h6>
       <div className="mt-2 flex flex-row gap-4">
-        {tabOptions.map((tab) => (
+        {tabOptions?.map((tab) => (
           <button
             key={tab.id}
             className={`shadow-sm rounded-full py-2 px-4 hover:text-white hover:bg-regal-black text-xs md:text-sm font-[600] ${
@@ -89,7 +89,7 @@ function Order() {
         </>
       ) : currentItems.length > 0 ? (
         <>
-          {currentItems.reverse().map((order) => (
+          {currentItems.reverse()?.map((order) => (
             <OrderCard key={order.orderID} order={order} />
           ))}
           <ReactPaginate
@@ -159,7 +159,7 @@ const OrderCard = React.memo(({ order }) => {
       </div>
 
       <div className="mt-5 border-t flex flex-row gap-4 overflow-x-scroll">
-        {order?.items.map((item) => (
+        {order?.items?.map((item) => (
           <div className="w-[170px]" key={item?.itemID}>
             <ItemsCard item={item} />
           </div>

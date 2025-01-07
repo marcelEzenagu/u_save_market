@@ -106,7 +106,7 @@ const OtpAgent = ({otpType,handleNext}) => {
 
             <div className="mb-3 col-span-2 md:mx-2">
             <div className="flex flex-row gap-4 md:pl-2">
-                {fields.map((propsField, index) => (
+                {fields?.map((propsField, index) => (
               <input
               key={index}
               className="otp mb-3"

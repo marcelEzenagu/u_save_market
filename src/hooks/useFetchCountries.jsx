@@ -13,10 +13,10 @@ const useFetchCountries = () => {
         const response = await fetch("https://restcountries.com/v3.1/all");
         const data = await response.json();
 
-        const countriesWithCurrency = data.map((country) => ({
+        const countriesWithCurrency = data?.map((country) => ({
           name: country.name.common,
           currency: country.currencies
-            ? Object.keys(country.currencies).map((code) => ({
+            ? Object.keys(country.currencies)?.map((code) => ({
                 code,
                 name: country.currencies[code]?.name,
                 symbol: country.currencies[code]?.symbol,
@@ -36,7 +36,7 @@ const useFetchCountries = () => {
   // Filter and dispatch countries
   useEffect(() => {
     if (successResponse && countries && countriesWithCurrency.length > 0) {
-      const filteredCountries = countries.map((country) => {
+      const filteredCountries = countries?.map((country) => {
         const restCountry = countriesWithCurrency.find(
           (c) => c?.name?.toLowerCase() === country?.name?.toLowerCase()
         );

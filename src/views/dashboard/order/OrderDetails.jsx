@@ -85,7 +85,7 @@ function OrderDetails({ order, setTrackOrderDetails }) {
 
   const trackingDetails = useMemo(
     () =>
-      orderTracking.map((stage) => ({
+      orderTracking?.map((stage) => ({
         ...stage,
         isActive: stage.id === "1", // Example: logic to highlight active stage
       })),
@@ -183,7 +183,7 @@ const TrackingComponent = ({ trackingDetails, setTrackOrderDetails }) => (
       </button>
     </div>
     <div className="flex my-4 overflow-x-scroll">
-      {trackingDetails.map(({ id, name, isActive }) => (
+      {trackingDetails?.map(({ id, name, isActive }) => (
         <div key={id} className="mt-3">
           <div className="flex items-center">
             <div

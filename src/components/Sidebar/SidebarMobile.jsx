@@ -46,7 +46,7 @@ const FilterSider = ({name,categories}) => {
           <div className='overflow-x-scroll'>
             
           <div className='flex flex-row items-start '>
-              {data && data.map((e)=> (
+              {data && data?.map((e)=> (
                       <div key={e.id}>
                       <div className={`flex items-center w-full rounded-md my-1 py-1 p-2 gap-2 hover:bg-active-gray  ${active === e.name.toLowerCase() && 'bg-active-gray'}`}
                       onClick={()=> {
@@ -98,7 +98,7 @@ function DefaultSidebar ({name=name?.toLowerCase(),categories})
       <div className='mt-3 lg:hidden'>
           <div className='overflow-x-scroll'>
               <div className='flex flex-row items-start '>
-              {categories && categories.map((e)=> (
+              {categories && categories?.map((e)=> (
                       <div key={e.id}>
                       <div className={`flex items-center w-full rounded-md my-1 py-1 p-2 gap-2 hover:bg-active-gray ${active === e.id && 'bg-active-gray'}`}
                       onClick={()=> {

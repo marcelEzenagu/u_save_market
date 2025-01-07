@@ -32,7 +32,7 @@ function Home() {
       {/* Image List */}
       <div className="overflow-x-auto flex space-x-4 scrollbar-hide my-4">
         {imageList.length
-          ? imageList.map((src, index) => (
+          ? imageList?.map((src, index) => (
               <div
                 key={index}
                 className="flex-shrink-0 w-[140px] lg:w-[10rem] h-[150px] relative overflow-hidden rounded-2xl shadow-lg group animate-fade-in"

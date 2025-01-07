@@ -10,7 +10,7 @@ import { Items } from "../../data/mockData";
 const Tracking = ({ trackingSteps, activeStep }) => {
   const trackingDetails = useMemo(
     () =>
-      trackingSteps.map((stage) => ({
+      trackingSteps?.map((stage) => ({
         ...stage,
         isActive: stage.id === activeStep,
       })),
@@ -19,7 +19,7 @@ const Tracking = ({ trackingSteps, activeStep }) => {
 
   return (
     <div className="flex overflow-x-scroll">
-      {trackingDetails.map(({ id, name, isActive, date }) => (
+      {trackingDetails?.map(({ id, name, isActive, date }) => (
         <div key={id} className="mt-3">
           <div className="flex items-center">
             <div
@@ -94,7 +94,7 @@ const ProductTableTab = React.memo(({ setActiveOrder }) => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {currentItems.map((product, index) => (
+              {currentItems?.map((product, index) => (
                 <tr key={product.productID}>
                   <td className="px-6 py-4 text-xs font-medium text-regal-black">
                   {index+=1}

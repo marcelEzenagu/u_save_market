@@ -84,7 +84,7 @@ function PaymentVendor() {
               icon: <LiaBoxSolid />,
               total: "2,498.00",
             },
-          ].map((item) => (
+          ]?.map((item) => (
             <div
               key={item.name}
               className="flex flex-row items-start justify-between p-4 border rounded-md bg-white"
@@ -139,7 +139,7 @@ function PaymentVendor() {
               </div>
               {searchTerm !== '' && (
                 <ul className="absolute left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg max-h-60 overflow-y-auto shadow-lg">
-                  {filteredCustomers.map((customer, index) => (
+                  {filteredCustomers?.map((customer, index) => (
                     <li
                       key={index}
                       className="px-4 py-2 text-xs hover:bg-gray-100 cursor-pointer"
@@ -230,7 +230,7 @@ function ProductTableTab(props) {
             </tr>
           </thead>
           <tbody className="bg-white ">
-            {currentItems.map((product) => (
+            {currentItems?.map((product) => (
               <tr key={product.id}>
                 <td className="px-6 py-2 text-xs font-medium text-regal-black ">
                   <input type="checkbox" />
@@ -361,7 +361,7 @@ function ProductItemTab() {
     <div>
       <div className="grid grid-col-2 sm:grid-cols-4 md:grid-cols-6 px-4">
         {currentItems &&
-          currentItems.map((e) => (
+          currentItems?.map((e) => (
             <div className=" " key={e.id}>
               <ItemsCard item={e} />
             </div>

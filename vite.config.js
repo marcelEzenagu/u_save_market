@@ -10,5 +10,7 @@ export default defineConfig({
     rollupOptions: {
       external: ['fsevents'], // Mark fsevents as an external dependency
     },
+    chunkSizeWarningLimit: 1000, // (Optional) Increase warning limit
+
   },
 });

@@ -93,7 +93,7 @@ const OtpVendor = () => {
 
             <div className="mb-3 col-span-2 md:mx-2">
             <div className="flex flex-row gap-4">
-                {fields.map((propsField, index) => (
+                {fields?.map((propsField, index) => (
               <input
               key={index}
               className="otp mb-3"

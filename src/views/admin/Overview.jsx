@@ -155,7 +155,7 @@ function Overview() {
 
       <section>
         <div className="grid grid-cols-2 md:grid-cols-4  gap-4  relative  bg-white mt-8 max-w-[1366px]">
-          {tab.map((item) => (
+          {tab?.map((item) => (
             <div
               key={item.name}
               className="flex flex-row items-center gap-4 p-4 border rounded-3xl"
@@ -230,7 +230,7 @@ function Overview() {
             </div>
 
             <div className="min-h-[400px] max-h-[540px] overflow-auto">
-              {Items.map((e) => (
+              {Items?.map((e) => (
                 <div
                   key={e?.productID}
                   className="flex flex-row items-center justify-between gap-8 px-4 py-3 rounded-xl shadow-xl mt-5"
@@ -336,7 +336,7 @@ const ProductTableTab = React.memo(() => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {currentItems.map((product) => (
+            {currentItems?.map((product) => (
               <tr key={product.productID}>
                 <td className="px-6 py-2 text-xs text-regal-black whitespace-nowrap font-[600]">
                   099084057

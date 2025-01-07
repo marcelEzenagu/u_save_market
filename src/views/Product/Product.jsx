@@ -303,7 +303,7 @@ function Product() {
      
           {filteredItems?.length > 0 ?
              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
-            {filteredItems.map((item) => ( <ProductCard item={item} key={item.itemID} category={category} />))  }
+            {filteredItems?.map((item) => ( <ProductCard item={item} key={item.itemID} category={category} />))  }
             </div>
              :
           <div className="flex flex-col items-center text-center p-8 w-[500px] mx-auto">
@@ -407,7 +407,7 @@ function FilterDropdown() {
       >
         <div className="absolute right-0 z-10 mt-2  w-full origin-top-right bg-white border border-gray-300 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
-            {options.map((option) => (
+            {options?.map((option) => (
               <div
                 key={option}
                 className="flex flex-row items-center justify-between p-2 hover:bg-gray-100"

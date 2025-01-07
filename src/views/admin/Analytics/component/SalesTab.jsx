@@ -188,7 +188,7 @@ const ChartComponent = React.memo(() => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {currentItems.map((product) => (
+          {currentItems?.map((product) => (
             <tr key={product.productID}>
                    <td className="px-6 py-2 text-xs text-regal-black whitespace-nowrap font-[600]">
                    099084057

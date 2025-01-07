@@ -500,7 +500,7 @@ function Verification(props) {
                   </label>
                   <div className="mb-4 ">
                     <div className="flex flex-row gap-2">
-                      {fields.map((propsField, index) => (
+                      {fields?.map((propsField, index) => (
                         <input
                           key={index}
                           className="otp mb-3"

@@ -239,7 +239,7 @@ function SearchForm(props) {
             </div>
             <div>
             {filteredItems.length > 0 ? (
-                filteredItems.map((item) => (
+                filteredItems?.map((item) => (
                   <div
                     key={item.id}
                     className="flex items-center gap-2 cursor-pointer hover:bg-gray-200 p-2 rounded"

@@ -16,7 +16,7 @@ export const useErrorMessageHooks = () => {
   //     );
   //     return (
   //       <div className="mt-2">
-  //         {message.map((e) => (
+  //         {message?.map((e) => (
   //           <p className="text-red-600 text-xs" key={e}>
   //             {e?.message.replaceAll('Path ', '').replaceAll('`', '')}
   //           </p>
@@ -38,7 +38,7 @@ export const useErrorMessageHooks = () => {
   //     );
   //     return (
   //       <div className="mt-2">
-  //         {message.map((e) => (
+  //         {message?.map((e) => (
   //           <p className="text-red-600 text-xs" key={e}>
   //             {e}
   //           </p>

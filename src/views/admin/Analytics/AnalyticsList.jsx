@@ -39,7 +39,7 @@ function AnalyticsList() {
         <div className="  pt-8 pb-4">
           <div className="flex flex-row items-center justify-between">
             <div>
-              {tabOptions.map((tab) => (
+              {tabOptions?.map((tab) => (
                 <button
                   key={tab.id}
                   className={`shadow-sm rounded-full py-2 px-4 mr-3 hover:text-white hover:bg-regal-black text-xs md:text-xs font-[600] ${

@@ -23,7 +23,7 @@ const PaginatedTable = React.memo(({ columns, data, actions, itemsPerPage = 12 }
         <table className="min-w-full">
           <thead>
             <tr>
-              {columns.map((column) => (
+              {columns?.map((column) => (
                 <th
                   key={column.key}
                   className="px-6 py-4 text-left text-xs font-medium text-nowrap text-regal-black tracking-wider"
@@ -36,7 +36,7 @@ const PaginatedTable = React.memo(({ columns, data, actions, itemsPerPage = 12 }
           <tbody className="bg-white divide-y divide-gray-200">
             {currentItems?.map((item, index) => (
               <tr key={index}>
-                {columns.map((column) => (
+                {columns?.map((column) => (
                   <td
                     key={column.key}
                     className="px-6 py-2 text-xs text-regal-black whitespace-nowrap font-[500]"
@@ -54,7 +54,7 @@ const PaginatedTable = React.memo(({ columns, data, actions, itemsPerPage = 12 }
                       </div>
                       <Menu.Items className="absolute right-0 mt-2 w-40 origin-top-right z-10 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
                         <div className="py-1">
-                          {actions.map((action, idx) => (
+                          {actions?.map((action, idx) => (
                             <Menu.Item key={idx}>
                               {({ active }) => (
                                 <button

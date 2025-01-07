@@ -327,7 +327,7 @@ const InputDate = ({ label }) => (
 const TabOverview = ({ items }) => (
   <section>
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white mt-8 max-w-[1366px]">
-      {items.map((item) => (
+      {items?.map((item) => (
         <div
           key={item.name}
           className="flex items-center gap-4 p-4 border rounded-3xl"
@@ -349,7 +349,7 @@ const TabOverview = ({ items }) => (
 
 const TabButtons = ({ options, activeTab, onTabChange }) => (
   <div>
-    {options.map((tab) => (
+    {options?.map((tab) => (
       <button
         key={tab.id}
         className={`shadow-sm rounded-full py-2 px-4 mr-3 text-xs font-semibold ${

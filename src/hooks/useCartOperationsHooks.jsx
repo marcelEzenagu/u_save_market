@@ -54,7 +54,7 @@ const useCartOperationsHooks = () => {
       return;
     }
     try {
-      const products = cart.map((cartItem) =>
+      const products = cart?.map((cartItem) =>
         cartItem.productID === item.productID
           ? { ...cartItem, quantity: cartItem.quantity + 1 }
           : cartItem
@@ -75,7 +75,7 @@ const useCartOperationsHooks = () => {
         return;
       }
       try {
-        const products = cart.map((cartItem) =>
+        const products = cart?.map((cartItem) =>
           cartItem.productID === item.productID
             ? { ...cartItem, quantity: cartItem.quantity - 1 }
             : cartItem

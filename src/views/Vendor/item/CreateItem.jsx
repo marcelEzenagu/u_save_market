@@ -218,7 +218,7 @@ function CreateItem() {
               </ul>
             </div>
             <div className="md:col-span-3 flex flex-col px-4 py-4 gap-4">
-              {tabs.map((e, i) => (
+              {tabs?.map((e, i) => (
                 <div
                   className=" border shadow-sm bg-white py-4 md:py-6  rounded-md "
                   key={i}
@@ -275,7 +275,7 @@ function CreateItem() {
                   <option disabled value="">
                     Select Status
                   </option>
-                  {statusOptions.map((option) => (
+                  {statusOptions?.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>

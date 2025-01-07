@@ -79,7 +79,7 @@ function AgentListComponent({
       <main className="p-4">
         <section>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 relative mt-8">
-            {tabs.map((item) => (
+            {tabs?.map((item) => (
               <div
                 key={item.name}
                 className="flex bg-white flex-row items-center gap-4 p-4 border rounded-xl"
@@ -103,7 +103,7 @@ function AgentListComponent({
         <section className="p-4 mt-8 bg-white">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div>
-              {tabOptions.map((tab) => (
+              {tabOptions?.map((tab) => (
                 <button
                   key={tab.id}
                   className={`shadow-sm rounded-full py-2 px-4 mr-3 hover:text-white hover:bg-regal-black text-xs md:text-xs font-[600] ${
@@ -201,7 +201,7 @@ const ProductTableTab = React.memo(({ data, columns, header }) => (
       <table className="min-w-full">
         <thead>
           <tr>
-            {columns.map((col, index) => (
+            {columns?.map((col, index) => (
               <th
                 key={index}
                 className={`px-6 py-4 text-left text-xs font-medium text-nowrap text-regal-black tracking-wider`}
@@ -214,7 +214,7 @@ const ProductTableTab = React.memo(({ data, columns, header }) => (
         <tbody>
           {data?.map((item, rowIndex) => (
             <tr key={rowIndex} className="bg-white">
-              {columns.map((col, colIndex) => (
+              {columns?.map((col, colIndex) => (
                 <td key={colIndex} className="px-6 py-4 text-left text-xs font-medium text-nowrap text-regal-black truncate max-w-[150px]">
                   {/* Special rendering logic for "status" or any custom field */}
                   {col.key === "status" ? (

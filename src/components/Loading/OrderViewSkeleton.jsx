@@ -27,7 +27,7 @@ function OrderViewSkeleton() {
 
     <div className="rounded-md border p-5 mt-4 space-y-4">
     <div className="mt-5  pt-4 flex flex-row gap-4 overflow-x-scroll">
-    {[1, 2, 3, 4, 5].map((e) => (
+    {[1, 2, 3, 4, 5]?.map((e) => (
           <div className="w-[170px]">
             <div className="w-[170px]">
               {" "}
@@ -44,7 +44,7 @@ function OrderViewSkeleton() {
     </div>
 
     <div className="rounded-md border p-5 mt-4 space-y-4">
-    {[1,2,3,4,5,6].map((e)=>(
+    {[1,2,3,4,5,6]?.map((e)=>(
             <div className="flex justify-between">
             <div className="h-6 bg-gray-200 rounded w-1/6"></div>
             <div className="h-4 bg-gray-200 rounded w-2/4"></div>

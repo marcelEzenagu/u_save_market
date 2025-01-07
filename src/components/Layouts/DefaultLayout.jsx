@@ -62,7 +62,7 @@ function DefaultLayout() {
       {tab && (
         <div className="w-full py-3 px-1 md:px-4 hidden lg:block border-b-[1px] bg-white">
           <div className="max-w-[1200px] flex flex-row items-center gap-2 md:gap-8 mx-auto md:px-4">
-            {dataCategory.map((e, i) => (
+            {dataCategory?.map((e, i) => (
               <Link
                 to={`/products?group=${e.name?.toLowerCase()}`}
                 className="flex flex-row items-center gap-1 md:gap-2 cursor-pointer"

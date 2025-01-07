@@ -26,7 +26,7 @@ function GridBox() {
           <div key={category.id} className="category-container mb-8">
             <h2 className="text-lg font-bold mb-4">{category.name}</h2>
             <div className={`grid grid-cols-2  ${ category.subcat.length == 4 ? 'md:grid-cols-4' : 'md:grid-cols-3' } gap-4`}>
-              {category?.subcat.map((sub, subIndex) => {
+              {category?.subcat?.map((sub, subIndex) => {
                 let additionalClass = '';
                 let additionalClass3 = '';
 

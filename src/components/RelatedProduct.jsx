@@ -13,7 +13,7 @@ function RelatedProduct({ Items, cols, category }) {
               cols == "5" ? "lg:grid-cols-5" : "lg:grid-cols-4"
             } gap-4 `}
           >
-            {Items.map((item) => (
+            {Items?.map((item) => (
               <ProductCard
                 item={item}
                 key={item.productID}

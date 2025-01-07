@@ -20,7 +20,7 @@ const TabComponent = React.memo(
   ({ tabs, activeTab, setActiveTab, data, handleChange }) => {
     return (
       <>
-        {tabs.map((tab) => {
+        {tabs?.map((tab) => {
           const Component = tab.component;
             return (
               <div

@@ -157,7 +157,7 @@ const totalOrders = Object.values(orderCounts).reduce((accumulator, currentValue
               total: orderCounts?.returned,
               percentage: "+3%",
             },
-          ].map((item) => (
+          ]?.map((item) => (
             <div
               key={item.name}
               className="flex flex-row items-start justify-between p-4"
@@ -430,7 +430,7 @@ function ProductItemTab() {
     <div>
       <div className="grid grid-col-2 sm:grid-cols-4 md:grid-cols-6 px-4">
         {currentItems &&
-          currentItems.map((e) => (
+          currentItems?.map((e) => (
             <div className=" " key={e.id}>
               <ItemsCard item={e} />
             </div>

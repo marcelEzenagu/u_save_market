@@ -103,7 +103,7 @@ function OrderView() {
             </div>
 
             <div className="flex my-4 overflow-x-scroll ">
-              {orderTracking.map((e) => (
+              {orderTracking?.map((e) => (
                 <div key={e.id} className="mt-3">
                   <div className="flex flex-row items-center ">
                     <div
@@ -154,7 +154,7 @@ function OrderView() {
             </div>
             <div className="mt-5  flex flex-row gap-4 overflow-x-scroll">
               {orderData.items &&
-                orderData.items.map((e) => (
+                orderData.items?.map((e) => (
                   <div className="w-[170px]" key={e.id}>
                     <input type="checkbox" 
                       name="itemCheck"

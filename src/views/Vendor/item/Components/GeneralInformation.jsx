@@ -94,7 +94,7 @@ function GeneralInformation({handleChange, data, handleErrorMessagesList, setDat
               name="productID"
             className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black">
             <option value="">Select Product</option>
-                {products.map((cat,indx) => (
+                {products?.map((cat,indx) => (
                   <option key={indx} value={cat.productID}>
                     {cat.productName.toUpperCase()}
                   </option>
@@ -144,7 +144,7 @@ function GeneralInformation({handleChange, data, handleErrorMessagesList, setDat
             name="itemCategory"
              className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black">
             <option value="">Select Category</option>
-                {categories.map((cat) => (
+                {categories?.map((cat) => (
                   <option key={cat.id} value={cat.categoryID}>
                     {cat.categoryName}
                   </option>
@@ -174,7 +174,7 @@ function GeneralInformation({handleChange, data, handleErrorMessagesList, setDat
                disabled={true}
             className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black">
             <option value="">Select Category</option>
-                {subCategories.map((cat) => (
+                {subCategories?.map((cat) => (
                   <option key={cat.id} value={cat.subCategoryID}>
                     {cat.subCategoryName}
                   </option>
@@ -208,7 +208,7 @@ function GeneralInformation({handleChange, data, handleErrorMessagesList, setDat
           {searchTerm && (
             <ul className="absolute w-full bg-white border mt-1 z-10 max-h-40 overflow-y-auto">
               {filteredCountries.length > 0 ? (
-                filteredCountries.map((country) => (
+                filteredCountries?.map((country) => (
                   <li
                     key={country.id}
                     onClick={() => handleSelectCountry(country.name)}

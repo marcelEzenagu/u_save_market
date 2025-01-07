@@ -42,10 +42,10 @@ function Navigation({countries,successResponse}) {
     fetch('https://restcountries.com/v3.1/all')
     .then(response => response.json())
     .then(data => {
-  const countriesWithCurrency = data.map(country => ({
+  const countriesWithCurrency = data?.map(country => ({
     name: country.name.common, 
     currency: country.currencies
-      ? Object.keys(country.currencies).map(code => ({
+      ? Object.keys(country.currencies)?.map(code => ({
           code,
           name: country.currencies[code]?.name,
           symbol: country.currencies[code]?.symbol
@@ -260,7 +260,7 @@ function Navigation({countries,successResponse}) {
               }            </div>
             <div className=" flex flex-col items-start gap-6 px-4 mb-10">
               {dataCategory &&
-                dataCategory.map((e, i) => (
+                dataCategory?.map((e, i) => (
                   <Link
                     to={`/products?name=${e.name?.toLowerCase()}`}
                     className="flex flex-row items-center gap-1 md:gap-2 cursor-pointer"
@@ -346,7 +346,7 @@ const SearchForm = React.memo(({preferredCountry}) => {
             {isLoading && <p className="text-center">Loading...</p>}
             {isError && <p className="text-red-500 text-center">Error fetching results.</p>}
             {searchItems?.length > 0 ? (
-              searchItems.map((item) => (
+              searchItems?.map((item) => (
                 <div key={item.itemID} className="flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer">
                   <IoSearchOutline />
                   <p className="text-xs font-[400]">{item.itemName}</p>
@@ -437,7 +437,7 @@ const SearchFormMobile = React.memo(({preferredCountry, showMessage }) => {
                 {isLoading && <p className="text-center p-2">Loading...</p>}
                 {isError && <p className="text-red-500 text-center p-2">Error fetching results.</p>}
                 {searchItems?.length > 0 && isLoading == false ? (
-                  searchItems.map((result) => (
+                  searchItems?.map((result) => (
                     <div
                       key={result.itemID}
                      className="flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer"

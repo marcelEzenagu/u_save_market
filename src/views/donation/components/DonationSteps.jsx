@@ -30,7 +30,7 @@ export default function DonationSteps({ steps,confirm }) {
   return (
     <div className="flex flex-col mt-11 max-w-full leading-none w-[670px] max-md:mt-10">
       <div className="flex z-10 gap-10 items-center text-lg leading-loose text-center text-zinc-500">
-        {steps.map((step) => (
+        {steps?.map((step) => (
           <div key={step.id} className="flex cursor-pointer flex-col self-stretch my-auto whitespace-nowrap w-[197px]">
             <div
                   onClick={() => setActive(step.id)}

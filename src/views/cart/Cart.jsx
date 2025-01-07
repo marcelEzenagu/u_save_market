@@ -262,7 +262,7 @@ function Cart() {
         <div className="mb-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:gap-8">
             <div className="border shadow-sm bg-white md:p-4 rounded-md col-span-2">
-              {Items.map((item) => (
+              {Items?.map((item) => (
                 <CartItem
                   key={item.itemID}
                   item={item}

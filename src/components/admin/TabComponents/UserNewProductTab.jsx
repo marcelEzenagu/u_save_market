@@ -56,7 +56,7 @@ function UserNewProductTab() {
           {currentItems.length > 0 ? (
             <div>
               <div className="grid grid-cols-2 md:grid-col-5 lg:grid-cols-5 2xl:grid-cols-7">
-                {currentItems.map((e) => (
+                {currentItems?.map((e) => (
                     <AdminProductCard
                       item={e}
                       handleProductClick={() => handleProductClick(e)} 

@@ -199,7 +199,7 @@ function ItemView() {
             {/* Sidebar Tabs */}
             <div className="">
               <ul className="flex flex-col items-start space-y-4 px-8 py-4 animate-fade-in ">
-                {tabs.map((e, index) => (
+                {tabs?.map((e, index) => (
                   <li key={index} className="relative w-full">
                     <h6
                       className={`text-regal-light-gray text-xs py-2 font-[400] after:scale-y-0 cursor-pointer ${
@@ -219,7 +219,7 @@ function ItemView() {
 
             {/* Active Tab Content */}
             <div className="md:col-span-3 flex flex-col px-4 py-4 gap-4">
-              {tabs.map((e, i) => (
+              {tabs?.map((e, i) => (
                 <div key={i} className="border shadow-sm bg-white py-4 md:py-6 rounded-md">
                   <div className="px-4 md:px-4">
                     <div className="flex flex-row items-center justify-between">
@@ -268,7 +268,7 @@ function ItemView() {
                   <option disabled value="">
                     Select Status
                   </option>
-                  {statusOptions.map((option) => (
+                  {statusOptions?.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>

@@ -136,7 +136,7 @@ function OrderList() {
 
       <section>
         <div className="grid grid-cols-2 md:grid-cols-4  gap-4  relative  bg-white mt-8 max-w-[1366px]">
-          {tab.map((item) => (
+          {tab?.map((item) => (
             <div
               key={item.name}
               className="flex flex-row items-center gap-4 p-4 border rounded-3xl"
@@ -162,7 +162,7 @@ function OrderList() {
       <div className="p-4 md:px-8 md:pt-8 pb-4 ">
       <div className="flex flex-row items-center justify-between">
         <div>
-          {tabOptions.map((tab) => (
+          {tabOptions?.map((tab) => (
             <button
               key={tab.id}
               className={`shadow-sm rounded-full py-2 px-4 mr-3 hover:text-white hover:bg-regal-black text-xs md:text-xs font-[600] ${
@@ -288,7 +288,7 @@ const ProductTableTab = React.memo(({setActiveOrder}) => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {currentItems.map((product) => (
+              {currentItems?.map((product) => (
                 <tr key={product.productID}>
                   <td className="px-6 py-4 text-xs font-medium text-regal-black">
                     <input type="checkbox" />

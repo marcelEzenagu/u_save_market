@@ -130,9 +130,9 @@ export const getCookie = (cname) => {
 export const getItemsAsString = (items) => {
   if (!items || !Array.isArray(items) || items.length == 0) return "";
   return items
-    .map((item) => item.substitutesList)
+    ?.map((item) => item.substitutesList)
     .reduce((item, next) => item.concat(next), [])
-    .map((item) => capitalizeFirstLetter(item.name))
+    ?.map((item) => capitalizeFirstLetter(item.name))
     .slice(0, 3)
     .join(", ");
 };
@@ -141,7 +141,7 @@ export const getFlatItemsAsString = (items, customName) => {
   if (!items || !Array.isArray(items) || items.length == 0) return "";
   return (
     items
-      .map((item) =>
+      ?.map((item) =>
         capitalizeFirstLetter(customName ? item[customName] : item.name)
       )
       .slice(0, 2)
@@ -157,7 +157,7 @@ export const getFlatItemsAsStringOrder = (items, customName) => {
   if (!items || !Array.isArray(items) || items.length == 0) return "";
   return (
     items
-      .map((item) =>
+      ?.map((item) =>
         capitalizeFirstLetter(customName ? item[customName] : item.name)
       )
       .slice(0, 3)
@@ -174,7 +174,7 @@ export const parseJwt = (token) => {
     window
       .atob(base64)
       .split("")
-      .map(function (c) {
+      ?.map(function (c) {
         return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
       })
       .join("")

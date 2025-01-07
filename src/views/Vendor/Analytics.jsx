@@ -140,7 +140,7 @@ function Analytics() {
       </div>
       <section>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-          {chartData.map((e, index) => (
+          {chartData?.map((e, index) => (
             <div className="rounded-md border bg-white p-5" key={index}>
               <LineChartComponent
                 header={e?.header}

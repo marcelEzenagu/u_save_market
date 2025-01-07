@@ -44,7 +44,7 @@ function UserAddressTab() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {currentItems.map((e, index) => (
+            {currentItems?.map((e, index) => (
               <tr key={index}>
                 <td className="px-6 py-3 text-xs font-medium text-regal-black">
                   <input type="checkbox" />

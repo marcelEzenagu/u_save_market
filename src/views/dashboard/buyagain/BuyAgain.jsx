@@ -12,7 +12,7 @@ function BuyAgain() {
                 {Items.length > 0 ? 
                 (
                     <div >
-                        {[1,2,3].map((e)=> (
+                        {[1,2,3]?.map((e)=> (
                             <OrderCard key={e}/>
                         ))}
                     </div>
@@ -68,7 +68,7 @@ function OrderCard() {
   
           <div className="mt-5 border-t flex flex-row gap-4 overflow-x-scroll">
             {Items &&
-              Items.map((e,indx) => (
+              Items?.map((e,indx) => (
                 <div className="w-[170px]" key={indx}>
                   <ItemsCard item={e} />
                 </div>

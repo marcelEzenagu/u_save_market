@@ -160,7 +160,7 @@ const ItemList = () => {
           <table className="min-w-full">
           <thead>
             <tr>
-              {columns.map((column) => (
+              {columns?.map((column) => (
                 <th
                   key={column.key}
                   className="px-6 py-4 text-left text-xs font-medium text-nowrap text-regal-black tracking-wider"
@@ -175,14 +175,14 @@ const ItemList = () => {
           {items.data?.map((item, index) => (
 
           <tr key={index}>
-                {columns.map((column) => (
+                {columns?.map((column) => (
                   <td
                     key={column.key}
                     className="px-6 py-2 text-xs text-regal-black whitespace-nowrap font-[500]"
                   >
                     {
                       column.key == "itemSupportedCountries" ?
-                      item[column.key].map((country, index) => (
+                      item[column.key]?.map((country, index) => (
             
                         <span key={index} 
                         className="text-xs text-regal-light-gray mb-3 px-0.5">
@@ -202,7 +202,7 @@ const ItemList = () => {
                   <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
                     
                     <Menu>
-                        {actions.map((action, idx) => ( 
+                        {actions?.map((action, idx) => ( 
                             <Menu.Item >
                               {({ active }) => (
                                 <button
@@ -258,7 +258,7 @@ const InputDate = ({ label }) => (
 const TabOverview = ({ items }) => (
   <section>
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white mt-8 max-w-[1366px]">
-      {items.map((item) => (
+      {items?.map((item) => (
         <div
           key={item.name}
           className="flex items-center gap-4 p-4 border rounded-3xl"
@@ -280,7 +280,7 @@ const TabOverview = ({ items }) => (
 
 const TabButtons = ({ options, activeTab, onTabChange }) => (
   <div>
-    {options.map((tab) => (
+    {options?.map((tab) => (
       <button
         key={tab.id}
         className={`shadow-sm rounded-full py-2 px-4 mr-3 text-xs font-semibold ${

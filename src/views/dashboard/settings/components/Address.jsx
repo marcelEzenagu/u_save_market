@@ -34,7 +34,7 @@ function Address() {
       </div>
       {address.length > 0 && (
         <section className="grid md:grid-cols-2 gap-4">
-          {address.map((e, i) => (
+          {address?.map((e, i) => (
             <div
               className="rounded-md border p-5 mt-3 flex flex-row items-start justify-between animate-fade-in"
               key={i}
@@ -240,7 +240,7 @@ function EditAddress(props) {
                         {/* Dropdown menu */}
                         {isOpenSelect && (
                           <ul className="absolute left-0 w-full bg-white border border-gray-300 rounded-md mt-2 z-10 max-h-60 overflow-y-auto">
-                            {countries.map((country, index) => (
+                            {countries?.map((country, index) => (
                               <li
                                 key={index}
                                 onClick={() => handleSelect(country)}
@@ -478,7 +478,7 @@ function AddAddress(props) {
                         {/* Dropdown menu */}
                         {isOpenSelect && (
                           <ul className="absolute left-0 w-full bg-white border border-gray-300 rounded-md mt-2 z-10 max-h-60 overflow-y-auto">
-                            {countries.map((country, index) => (
+                            {countries?.map((country, index) => (
                               <li
                                 key={index}
                                 onClick={() => handleSelect(country)}

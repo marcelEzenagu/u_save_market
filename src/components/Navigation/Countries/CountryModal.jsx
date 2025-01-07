@@ -85,7 +85,7 @@ const Modal = ({
             />
             <p className="text-red-700 text-sm mt-4 mb-1">{errorMsg}</p>
             <ul className="max-h-[50vh] lg:max-h-[300px] overflow-y-scroll w-full">
-              {filteredCountries.map((country) => (
+              {filteredCountries?.map((country) => (
                 <li
                   key={country.name}
                   className="flex items-center py-2 my-2 px-2 cursor-pointer hover:font-[700] hover:text-regal-blue hover:bg-regal-secondary-light"

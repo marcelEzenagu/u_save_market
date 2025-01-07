@@ -55,7 +55,7 @@ function DefaultPage () {
     return  <div className='p-4'>
         <h6 className='text-regal-black text-sm md:text-xl font-bold'>Settings</h6>
          <section className='grid md:grid-cols-2 gap-4'>
-             {Links.map((e,i) => (
+             {Links?.map((e,i) => (
                     <div className="rounded-md border p-5 mt-3 flex flex-row items-center justify-between animate-fade-in" key={i}
                    
                     >

@@ -35,14 +35,14 @@ const Notifications = () => {
     <div>
       <h2>Shipments</h2>
       <ul>
-        {shipments.map((shipment, index) => (
+        {shipments?.map((shipment, index) => (
           <li key={index}>{shipment.name} - {shipment.status}</li>
         ))}
       </ul>
 
       <h2>Orders</h2>
       <ul>
-        {orders.map((order, index) => (
+        {orders?.map((order, index) => (
           <li key={index}>{order.id} - {order.status}</li>
         ))}
       </ul>

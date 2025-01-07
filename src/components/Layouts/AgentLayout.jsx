@@ -189,7 +189,7 @@ function AgentLayout() {
 
               <nav className="flex-1 mt-5 mb-8 ">
                 <ul className="space-y-4 text-sm ml-3">
-                  {sidebarLinks.map((link) => (
+                  {sidebarLinks?.map((link) => (
                     <li key={link.id} className="relative">
                       <Link
                         to={link.url}

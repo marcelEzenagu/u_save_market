@@ -20,7 +20,7 @@ function PaymentOverview() {
   ];
   const trackingDetails = useMemo(
     () =>
-      orderTracking.map((stage) => ({
+      orderTracking?.map((stage) => ({
         ...stage,
         isActive: stage.id === "1", // Example: logic to highlight active stage
       })),
@@ -210,7 +210,7 @@ const ProductTableTab = React.memo(({ setActiveOrder }) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {currentItems.map((product, index) => (
+            {currentItems?.map((product, index) => (
               <tr key={product.productID}>
                 <td className="px-6 py-4 text-xs font-medium text-regal-black">
                 {index+=1}

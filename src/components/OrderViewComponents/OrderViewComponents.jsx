@@ -82,7 +82,7 @@ function OrderViewComponents({ order, setTrackOrderDetails,setActiveOrder }) {
 
   const trackingDetails = useMemo(
     () =>
-      orderTracking.map((stage) => ({
+      orderTracking?.map((stage) => ({
         ...stage,
         isActive: stage.id === "1", // Example: logic to highlight active stage
       })),
@@ -163,7 +163,7 @@ const TrackingComponent = ({ trackingDetails, setTrackOrderDetails }) => (
       </button>
     </div>
     <div className="flex my-4 overflow-x-scroll">
-      {trackingDetails.map(({ id, name, isActive }) => (
+      {trackingDetails?.map(({ id, name, isActive }) => (
         <div key={id} className="mt-3">
           <div className="flex items-center">
             <div
@@ -220,7 +220,7 @@ const OrderItems = ({ products }) => {
       </div>
 
       <div className="mt-5 flex gap-4 overflow-x-scroll">
-        {products.map((item, index) => (
+        {products?.map((item, index) => (
           <div className="w-[170px]" key={index}>
             <ItemsCard item={item} />
           </div>
@@ -237,7 +237,7 @@ const OrderItems = ({ products }) => {
             </div>
 
             <div className="max-h-[500px] md:max-h-[700px] grid grid-cols-2 overflow-y-auto">
-              {products.map((item, index) => (
+              {products?.map((item, index) => (
                 <div className="mb-4" key={index}>
                   <ItemsCard item={item} />
                 </div>

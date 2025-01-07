@@ -43,7 +43,7 @@ function TabsView({ tabs, userInfo, url }) {
             <section>
                 <nav className="flex flex-row items-center justify-between px-4 mt-5 py-3 border-b mb-2">
                     <ul className="hidden lg:flex flex-row items-center space-x-1 animate-fade-in">
-                        {tabs.map((tab, index) => (
+                        {tabs?.map((tab, index) => (
                             <li key={index} className="relative w-full">
                                 <button
                                     onClick={() => setActive(tab.id)}

@@ -97,7 +97,7 @@ useEffect(()=>{
                   {/* Dropdown menu */}
                   {isOpenSelect && (
                     <ul className="absolute left-0 pl-4 pr-8 bg-white border text-nowrap shadow-sm rounded-md mt-2 z-10 max-h-60 overflow-y-auto">
-                      {dropdownOptions.map((option) => (
+                      {dropdownOptions?.map((option) => (
                         <li
                           key={option}
                           className="py-2 flex flex-row items-center justify-between"

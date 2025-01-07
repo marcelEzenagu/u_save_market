@@ -125,7 +125,7 @@ function Home() {
       { name: 'New Customers', icon: <FaUserPlus />, total: combinedData?.totalNewCustomers, percentage: '+5%' },
       { name: 'Total sections', icon: <LiaBoxSolid />, total:  combinedData?.totalSections, percentage: '+3%' },
       { name: 'Total Products', icon: <LiaBoxSolid />, total:  combinedData?.totalItems, percentage: '+3%' },
-    ].map((item) => (
+    ]?.map((item) => (
       <div key={item.name} className="flex flex-row items-start justify-between p-4">
         <div className="flex flex-col gap-2">
           <div className="text-xs md:text-sm font-[400]">{item.name}</div>
@@ -225,7 +225,7 @@ const BestSeller = () => {
           </tr>
         </thead>
         <tbody className="bg-white ">
-          {currentItems.map((product) => (
+          {currentItems?.map((product) => (
             <tr key={product.id}>
               <td className="px-6 py-2 whitespace-nowrap">
                 <img
@@ -337,7 +337,7 @@ const Orders = () => {
               </tr>
             </thead>
             <tbody className="bg-white ">
-              {currentItems.map((product) => (
+              {currentItems?.map((product) => (
                 <tr key={product.id}>
                         <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
                         199090879

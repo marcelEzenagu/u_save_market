@@ -208,7 +208,7 @@ function ProductTableTab ({filteredItems}) {
           </tr>
         </thead>
         <tbody className="bg-white ">
-          {currentItems.map((product) => (
+          {currentItems?.map((product) => (
             <tr key={product.id}>
                   <td className="px-6 py-2 text-xs font-medium text-regal-black ">
                   <input type="checkbox" />
@@ -329,7 +329,7 @@ return (
   <div>
       <div className="grid grid-col-2 sm:grid-cols-4 md:grid-cols-6 px-4">
       {currentItems &&
-                currentItems.map((e) => (
+                currentItems?.map((e) => (
                   <div className="mt-4" key={e.id}>
                     <ItemsCard item={e} />
                   </div>

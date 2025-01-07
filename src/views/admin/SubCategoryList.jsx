@@ -268,7 +268,7 @@ const DropdownDiv = ({dropdownOptions, setSelectedCategory, isLoading, error}) =
               {'All Categories'}
             </button>
         </li>
-        {dropdownOptions.map((option, index) => (
+        {dropdownOptions?.map((option, index) => (
           <li
             key={index}
             className="py-2 flex flex-row items-center justify-between"

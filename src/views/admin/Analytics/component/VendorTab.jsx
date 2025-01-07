@@ -92,7 +92,7 @@ function VendorTab() {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {currentItems.map((product) => (
+          {currentItems?.map((product) => (
             <tr key={product.productID}>
                     <td className="px-6 py-2 text-xs text-regal-black whitespace-nowrap font-[600]">
                 <div className="flex  items-center gap-2">

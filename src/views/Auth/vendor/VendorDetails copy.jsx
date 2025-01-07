@@ -660,7 +660,7 @@ const ProgressFormPage = () => {
                     {/* Dropdown menu */}
                     {isOpenSelect && (
                       <ul className="absolute left-0 w-full bg-white border border-gray-300 rounded-md mt-2 z-10 max-h-60 overflow-y-auto">
-                        {countries.map((country, index) => (
+                        {countries?.map((country, index) => (
                           <li
                             key={index}
                             onClick={() => handleSelect(country)}
@@ -817,7 +817,7 @@ const ProgressFormPage = () => {
                     {/* Dropdown menu */}
                     {isOpenSelect && (
                       <ul className="absolute left-0 w-full bg-white border border-gray-300 rounded-md mt-2 z-10 max-h-60 overflow-y-auto">
-                        {countries.map((country, index) => (
+                        {countries?.map((country, index) => (
                           <li
                             key={index}
                             onClick={() => handleSelect(country)}
@@ -1292,7 +1292,7 @@ const SearchableDropdown = ({ options, onSelect }) => {
     .filter((country) =>
       country?.name?.toLowerCase().includes(search?.toLowerCase())
     )
-    .map((country) => country.name);
+    ?.map((country) => country.name);
 
   // Handle country selection
   const handleSelect = (country) => {
@@ -1327,7 +1327,7 @@ const SearchableDropdown = ({ options, onSelect }) => {
           }}
         >
           {filteredCountries.length > 0 ? (
-            filteredCountries.map((country, index) => (
+            filteredCountries?.map((country, index) => (
               <li
                 key={index}
                 onClick={() => handleSelect(country)}

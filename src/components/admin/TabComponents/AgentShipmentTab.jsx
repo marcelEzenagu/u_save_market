@@ -35,7 +35,7 @@ function AgentShipmentTab({data:userData}) {
     <div className="p-4 md:px-8 md:pt-8 pb-4 animate-fade-in">
       <div className="flex flex-row items-center justify-between">
         <div>
-          {tabOptions.map((tab) => (
+          {tabOptions?.map((tab) => (
             <button
               key={tab.id}
               className={`shadow-sm rounded-full py-2 px-4 mr-3 hover:text-white hover:bg-regal-black text-xs md:text-xs font-[600] ${
@@ -170,7 +170,7 @@ const ProductTableTab = React.memo(({setActiveOrder}) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {currentItems.map((product) => (
+            {currentItems?.map((product) => (
               <tr key={product.productID}>
                 <td className="px-6 py-4 text-xs font-medium text-regal-black">
                   <input type="checkbox" />

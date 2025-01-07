@@ -8,7 +8,7 @@ export default class News extends Component {
     this.state = {
       posts: Array(4)
         .fill()
-        .map(() => ({
+        ?.map(() => ({
           createdAt: "12th April 2025",
           title: "Africa debit for 2024 April 2025",
           content: "logrm dnjhbre wdjbyudfbre 4rfueijvf cvrevtr hsthr sdur ",
@@ -45,7 +45,7 @@ export default class News extends Component {
                 <p className="text-blue-500">Read More</p>
               </div>
               <div>
-                {posts.map((post) => (
+                {posts?.map((post) => (
                   <Card data={post} />
                 ))}
               </div>

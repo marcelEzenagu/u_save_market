@@ -8,7 +8,7 @@ function UserSavedItemsTab() {
             {Items.length > 0 ? 
             (
                 <div className='grid grid-cols-2 md:grid-col-5 lg:grid-cols-5 2xl:grid-cols-7'>
-                    {Items.map((e)=> (
+                    {Items?.map((e)=> (
                         <UserSavedCard item={e} key={e?.id}/>
                     ))}
                 </div>

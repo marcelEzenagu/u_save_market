@@ -9,7 +9,7 @@ function SkeletonOrderCard() {
         <div className="h-3 bg-gray-300 rounded w-1/5"></div>
       </div>
       <div className="mt-5 border-t pt-4 flex flex-row gap-4 overflow-x-scroll">
-        {[1, 2, 3, 4, 5].map((e) => (
+        {[1, 2, 3, 4, 5]?.map((e) => (
           <div className="w-[170px]">
             <div className="w-[170px]">
               {" "}

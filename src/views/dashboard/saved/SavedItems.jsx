@@ -11,7 +11,7 @@ function SavedItems() {
             {wishList.length > 0 ? 
             (
                 <div className='grid grid-cols-2 md:grid-cols-5'>
-                    {wishList.map((e)=> (
+                    {wishList?.map((e)=> (
                         <SaveCard item={e} key={e?.id}/>
                     ))}
                 </div>

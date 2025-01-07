@@ -399,7 +399,7 @@ function AdminLayout() {
           {/* Links Section */}
           <nav className="flex-1 mt-5 mb-8 ">
             <ul className="space-y-4 text-sm ml-3">
-              {sidebarLinks.map((link) => (
+              {sidebarLinks?.map((link) => (
                 <li key={link.id}>
                   <div className="relative">
                     {link?.children?.length > 0 ? (
@@ -481,7 +481,7 @@ function AdminLayout() {
                   {isActive?.name.toLowerCase() === link?.name.toLowerCase() &&
                   link?.children?.length > 0 ? (
                     <ul className="flex flex-col mt-2 gap-2 pl-9  justify-center">
-                      {link?.children.map((i) => (
+                      {link?.children?.map((i) => (
                         <li className="text-regal-black " key={i?.id}>
                           <Link
                             to={i.url}
