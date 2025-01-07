@@ -10,7 +10,7 @@ const baseQuery = fetchBaseQuery({
   prepareHeaders: (headers, { getState }) => {
     //We are attaching the AccessToken to every Request that we make to the api
     const token = getState().auth.token === null ? getSecureCookie("accessToken") : getState().auth.token;
-   console.log("accessToken===",token)
+   console.log("accessToken @ apiSlice===",token)
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
     }
@@ -19,7 +19,8 @@ const baseQuery = fetchBaseQuery({
 });
 
 //We want to wrap our baseQuery so if it fails we can re-attempt after
-// sending the refresh Token and getting a new AccessToken
+// sending the refresh Token and getting a new 
+// n
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
  
