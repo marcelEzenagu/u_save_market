@@ -448,94 +448,10 @@ const Router = createBrowserRouter([
         ]
     },
     {
-        path:'/admin/',
-        element:<AdminAuthLayout/>,
-        children: [
-            {
-                path: '/admin/',
-                element : <Navigate to='/admin/login'/>
-            },
-            {
-                path: '/admin/login',
-                element :  <LoginAdmin/>
-            },
-        ]
-    },
-    {
-        path:'/admin/',
-        element:<AdminLayout/>,
-        children: [
-            {
-                path: '/admin/',
-                element : <Navigate to='/admin/overview'/>
-            },
-            {
-                path:'/admin/vendors',
-                element : <VendorList/>
-            },
-            {
-                path:'/admin/categories',
-                element : <CategoryList/>
-            },
-            {
-                path:'/admin/subcategories',
-                element : <SubCategoryList/>
-            },
-            {
-                path:'/admin/vendors/:id',
-                element:<VendorView/>
-            },
-            {
-                path:'/admin/overview',
-                element : <Overview/>
-            },
-            {
-                path:'/admin/users',
-                element : <UsersList/>,
-            },
-            {
-                path:'/admin/users/:id',
-                element:<UserView/>
-            },
-            {
-                path:'/admin/agents',
-                element : <AgentsList/>,
-            },
-            {
-                path:'/admin/products',
-                element : <ProductList/>,
-            },
-            {
-                path:'/admin/items',
-                element : <ItemList/>,
-            },
-            {
-                path:'/admin/agents/:id',
-                element:<AgentView/>
-            },
-            {
-                path:'/admin/orders',
-                element:<OrderList/>
-            },
-            {
-                path:'/admin/payments',
-                element:<PaymentList/>
-            },
-            {
-                path:'/admin/analytics',
-                element:<AnalyticsList/>
-            }
-        
-        ]
-    },
-    {
         path: '*',
 
         element: <Notfound />
     }
-
-    // <Route component={NotFound} />
-
 ]);
 
 export default Router
