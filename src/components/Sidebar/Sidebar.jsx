@@ -49,7 +49,7 @@ const FilterSider = ({name,categories}) => {
     return (
       <div>
           <div>
-              <h5 className="text-md font-[700] mb-2 capitalize">{name}</h5>
+              <h5 className="text-md font-[700] mb-2 capitalize">{name} </h5>
               <div className='flex flex-col items-start mb-16'>
               {data.length && data?.map((e)=> (
                       <div key={e.id}>
@@ -59,7 +59,7 @@ const FilterSider = ({name,categories}) => {
                       }}
                       >
                           {/* <img src={e.image} alt="" className='w-6 h-6'/> */}
-                          <Link to={`/products?category=${e.name.toLowerCase()}`} className='text-sm capitalize font-[600] w-[180px] truncate whitespace-nowrap'>{e.name}</Link>
+                          <Link to={`/products?category=${e.name.toLowerCase()}`} className='text-sm capitalize font-[600] w-[180px] truncate whitespace-nowrap'>{e.name} </Link>
                       </div>
                       {categories.length  && active === e.name.toLowerCase() ?  categories?.map((i) => (
                               <div key={i.id} className='flex items-center p-2 gap-2'>
@@ -93,11 +93,10 @@ function DefaultSidebar ({name,categories}) {
   
     return (
       <div>
-        {categories.length && 
           <div>
               <h5 className="text-md font-[700] mb-2">CATEGORIES</h5>
               <div className='flex flex-col items-start mb-16'>
-              {categories?.map((e)=> (
+                {categories.length ? categories?.map((e)=> (
                       <div key={e.id}>
                       <div className={`flex items-center w-full rounded-md my-1 py-1 p-2 gap-2 hover:bg-active-gray ${active === e.id && 'bg-active-gray'}`}
                         onClick={()=> {
@@ -117,11 +116,12 @@ function DefaultSidebar ({name,categories}) {
                           </div>
                       )) : ''}
                   </div>
-              ))}
+              ))
+            :""
+            }
               </div>  
              <BottomLinks/>
           </div> 
-        }   
       </div>
     ) 
 }
