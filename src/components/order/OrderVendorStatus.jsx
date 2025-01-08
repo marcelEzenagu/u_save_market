@@ -10,6 +10,13 @@ function OrderVendorStatus(props) {
                 >
                      processing
                 </span> );
+        case 'accepted':
+            return (
+                <span
+                    className={`inline-block px-2 py-1 text-xs  text-regal-sky-blue rounded-full bg-regal-secondary-light`}
+                >
+                     accepted
+                </span> );
         case  'new':
             return (
                 <span

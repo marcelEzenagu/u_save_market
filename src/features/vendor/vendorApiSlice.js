@@ -28,6 +28,26 @@ export const vendorApiSlice = apiSlice.injectEndpoints({
         }),
        
 
+        getVendorBestSellers: builder.query({
+            query: (data) => {
+                const { daysDifference = '',limit,page } = data;
+                return  {url: `vendors/best-sellers?daysDifference=${daysDifference}&limit=${limit}&page=${page}`,
+                };
+            },
+            invalidatesTags:['vendor'],
+        }),
+        getRecentVendorOrders: builder.query({
+            query: (data) => {
+                const { daysDifference = '',limit,page } = data;
+                return  {url: `vendors/recent-orders?daysDifference=${daysDifference}&limit=${limit}&page=${page}`,
+                };
+            },
+            invalidatesTags:['vendor'],
+        }),
+
+      
+
+
         getVendorOrders: builder.query({
             query: (data) => {
                 const { status = '', daysDifference = '' } = data;
@@ -36,6 +56,7 @@ export const vendorApiSlice = apiSlice.injectEndpoints({
             },
             invalidatesTags:['vendor'],
         }),
+
         getVendorStats: builder.query({
             query: (data) => {
                 const { daysDifference = '' } = data;
@@ -45,6 +66,7 @@ export const vendorApiSlice = apiSlice.injectEndpoints({
             invalidatesTags:['vendor'],
 
         }),
+
         completeOrder: builder.mutation({
             // query: (data) => ({
             //         url: `vendors/complete-order`,
@@ -73,5 +95,7 @@ export const {
     useGetVendorStatsQuery,
     useCompleteOrderMutation,
     useGetVendorOrdersQuery, 
+    useGetVendorBestSellersQuery, 
+    useGetRecentVendorOrdersQuery, 
     useUpdateVendorProfileMutation, 
     useUpdateVendorProfilePictureMutation} = vendorApiSlice
