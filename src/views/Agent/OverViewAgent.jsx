@@ -350,7 +350,7 @@ const ProductTableTab = React.memo(({ setActiveOrder,option }) => {
 
       <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-between mt-4">
         <h6 className="text-xs text-regal-crum-gray">
-          Showing {currentItems?.length} items out of {data?.length} results
+          Showing {currentItems?.length} items out of {total} results
           found
         </h6>
 
