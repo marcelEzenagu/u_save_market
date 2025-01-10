@@ -45,6 +45,14 @@ export const agentApiSlice = apiSlice.injectEndpoints({
             } ,
             providesTags: ['agent']
         }),
+        getRecentAgentShipments: builder.query({
+            query: (data) => {
+                const { daysDifference = '',limit,page } = data;
+
+                return {url:`agents/recent-shipments?daysDifference=${daysDifference}&limit=${limit}&page=${page}`,
+            }},
+        providesTags: ['agent']
+        }),
 
 
     })
@@ -52,4 +60,5 @@ export const agentApiSlice = apiSlice.injectEndpoints({
 
 export const {useViewAgentQuery,
     useAcceptShipmentMutation,
+    useGetRecentAgentShipmentsQuery,
     useFindAllOpenShipmentQuery, useUpdateAgentProfileMutation, useUpdateAgentProfilePictureMutation} = agentApiSlice

@@ -13,10 +13,15 @@ import { Menu } from "@headlessui/react";
 import { FiBarChart } from "react-icons/fi";
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { useGetRecentAgentShipmentsQuery } from "../../features/agent/agentApiSlice";
+import DateFilter from "../../components/DateFilter";
 // Register the necessary components for the chart
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function OverViewAgent() {
+
+    const [option, setOption] = useState("7 days ago");
+  
     const [dropdownOption, setDropdownOption] = useState("This Month");
     const [isOpenSelect, setIsOpenSelect] = useState(false);
   const tab = useMemo(
@@ -55,10 +60,13 @@ function OverViewAgent() {
 
   const user = useSelector((state) => state.auth?.user);
 
-  console.log("OverViewAgent===",user)
-  const handleOptionChange = (option) => {
-    setDropdownOption(option);
+  const handleOptionChange = (optionChange) => {
+    setDropdownOption(optionChange);
     setIsOpenSelect(false);
+  };
+
+  const handleRangeChange = (value) => {
+    setOption(value);
   };
 
   return (
@@ -83,6 +91,9 @@ function OverViewAgent() {
                   <h5 className="text-regal-black text-xl md:text-2xl font-[700]">
                     Overview
                   </h5>
+
+                  <DateFilter onDateRangeChange={handleRangeChange} />
+
                 </div>
               </div>
             </main>
@@ -172,6 +183,10 @@ function OverViewAgent() {
                       products: [],
                     })
                   }
+                  option={option}
+
+
+
                 />
               </section>
             </main>
@@ -183,16 +198,19 @@ function OverViewAgent() {
   );
 }
 
-const ProductTableTab = React.memo(({ setActiveOrder }) => {
-  const itemsPerPage = 12;
-  const [itemOffset, setItemOffset] = useState(0);
-
+const ProductTableTab = React.memo(({ setActiveOrder,option }) => {
+   const itemsPerPage = 12;
+  const [itemOffset, setItemOffset] = useState(0);  
+  const { data: recentShipments = {}, isloading, error } = useGetRecentAgentShipmentsQuery({daysDifference:option,limit:itemsPerPage});
+  
+  console.log("RE==recentShipments",recentShipments)
+  const {data,total,currentPage,totalPages} = recentShipments
   const endOffset = itemOffset + itemsPerPage;
-  const currentItems = Items.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(Items.length / itemsPerPage);
+  const currentItems = data && data?.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(data && data?.length / itemsPerPage);
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % Items.length;
+    const newOffset = (event.selected * itemsPerPage) % data && data?.length;
     setItemOffset(newOffset);
   };
 
@@ -227,24 +245,27 @@ const ProductTableTab = React.memo(({ setActiveOrder }) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {currentItems?.map((product) => (
-              <tr key={product.productID}>
+              <tr key={product.id}>
                 <td className="px-6 py-2 text-xs text-regal-black whitespace-nowrap font-[600]">
-                  099084057
+                  {product.orderID}
                 </td>
                 <td className="px-6 py-2 text-xs text-regal-black whitespace-nowrap font-[600]">
-                  2nd Aug, 2023
+                  {product.createdAt}
                 </td>
-                <td className="px-6 py-2 max-w-[200px] truncate whitespace-nowrap text-xs text-regal-black font-[600]">
-                  Kabul, Afghanistan
+                <td className="px-6 py-2 max-w-[3200px] truncate whitespace-nowrap text-xs text-regal-black font-[600]">
+                  {product.destination}
                 </td>
                 <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black font-[600]">
-                  22nd Aug, 2023
+                  {product.estimatedDeliveryDate}
                 </td>
                 <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black font-[600]">
-                  12 Items
+                  {product.items.length}
                 </td>
                 <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-price-dark font-[600]">
-                  <OrderVendorStatus />
+                  <OrderVendorStatus
+                    status={product.status}
+
+                  />
                 </td>
                 <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
                   <Menu
@@ -324,9 +345,12 @@ const ProductTableTab = React.memo(({ setActiveOrder }) => {
         </table>
       </div>
 
+{
+  data &&
+
       <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-between mt-4">
         <h6 className="text-xs text-regal-crum-gray">
-          Showing {currentItems.length} items out of {Items.length} results
+          Showing {currentItems?.length} items out of {data?.length} results
           found
         </h6>
 
@@ -346,6 +370,7 @@ const ProductTableTab = React.memo(({ setActiveOrder }) => {
           activeClassName="border border-regal-sky-blue text-white bg-regal-sky-blue font-[500]"
         />
       </div>
+}
     </div>
   );
 });

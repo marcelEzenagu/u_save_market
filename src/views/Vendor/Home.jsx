@@ -199,7 +199,6 @@ const BestSeller = ({option}) => {
   // (This could be items from props; or items loaded in a local state
   // from an API endpoint with useEffect and useState)
   const endOffset = itemOffset + itemsPerPage;
-  console.log(`Loading best-sellers items from ${itemOffset} to ${endOffset}`);
 
  const currentItems = data && data?.slice(itemOffset, itemsPerPage);
   const pageCount = Math.ceil(data?.length / itemsPerPage);
