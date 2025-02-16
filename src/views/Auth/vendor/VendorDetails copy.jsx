@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import Logo from "../../../assets/images/nav/logo.webp";
 import { Link, useNavigate } from "react-router-dom";
-// import { countries } from "../../../data/mockData";
 import { SlArrowDown } from "react-icons/sl";
 import { IoCameraOutline } from "react-icons/io5";
 import { MdCloudUpload } from "react-icons/md";

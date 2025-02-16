@@ -11,19 +11,26 @@ import OrderViewComponents from "../../components/OrderViewComponents/OrderViewC
 import { SlArrowDown } from "react-icons/sl";
 import { Menu } from "@headlessui/react";
 import { FiBarChart } from "react-icons/fi";
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 import { useGetRecentAgentShipmentsQuery } from "../../features/agent/agentApiSlice";
 import DateFilter from "../../components/DateFilter";
 // Register the necessary components for the chart
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function OverViewAgent() {
+  const [option, setOption] = useState("7 days ago");
 
-    const [option, setOption] = useState("7 days ago");
-  
-    const [dropdownOption, setDropdownOption] = useState("This Month");
-    const [isOpenSelect, setIsOpenSelect] = useState(false);
+  const [dropdownOption, setDropdownOption] = useState("This Month");
+  const [isOpenSelect, setIsOpenSelect] = useState(false);
   const tab = useMemo(
     () => [
       {
@@ -71,140 +78,136 @@ function OverViewAgent() {
 
   return (
     <div>
-      {!user.isVerified ?
-          <main className="bg-regal-auth-bg-color h-screen mt-4 flex flex-col items-center justify-center">
-            <div className="text-3xl font-bold text-orange-600 bg-regal-auth-bg-color">
-              <span className="py-3">
-                Your approval is pending, 
-              </span>
-              <br/>
-              <span>
-              we would email you once the process is completed.
-              </span>
+      {!user.isVerified ? (
+        <main className="bg-regal-auth-bg-color h-screen mt-4 flex flex-col items-center justify-center">
+          <div className="text-3xl font-bold text-orange-600 bg-regal-auth-bg-color">
+            <span className="py-3">Your approval is pending,</span>
+            <br />
+            <span>we would email you once the process is completed.</span>
+          </div>
+        </main>
+      ) : (
+        <>
+          <main className=" bg-regal-auth-bg-color my-auto">
+            <div className="bg-white p-4 md:p-6">
+              <div className="flex flex-row items-center justify-between">
+                <h5 className="text-regal-black text-xl md:text-2xl font-[700]">
+                  Overview
+                </h5>
+
+                <DateFilter onDateRangeChange={handleRangeChange} />
+              </div>
             </div>
           </main>
-          :
-          <>
-            <main className=" bg-regal-auth-bg-color my-auto">
-              <div className="bg-white p-4 md:p-6">
-                <div className="flex flex-row items-center justify-between">
-                  <h5 className="text-regal-black text-xl md:text-2xl font-[700]">
-                    Overview
-                  </h5>
-
-                  <DateFilter onDateRangeChange={handleRangeChange} />
-
-                </div>
-              </div>
-            </main>
-            <main className="p-4 ">
-              <section>
-                <div className="grid grid-cols-2 md:grid-cols-4  gap-4  relative   mt-8">
-                  {tab?.map((item) => (
+          <main className="p-4 ">
+            <section>
+              <div className="grid grid-cols-2 md:grid-cols-4  gap-4  relative   mt-8">
+                {tab?.map((item) => (
+                  <div
+                    key={item.name}
+                    className="flex bg-white flex-row items-center gap-4 p-4 border rounded-xl"
+                  >
                     <div
-                      key={item.name}
-                      className="flex bg-white flex-row items-center gap-4 p-4 border rounded-xl"
+                      className={`w-12 h-12 rounded-md ${item.color} ${item?.bgColor} flex items-center justify-center text-sm`}
                     >
-                      <div
-                        className={`w-12 h-12 rounded-md ${item.color} ${item?.bgColor} flex items-center justify-center text-sm`}
-                      >
-                        {item.icon}
+                      {item.icon}
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <div className="text-xs font-[600] text-regal-crum-gray">
+                        {item.name}
                       </div>
-                      <div className="flex flex-col gap-1">
-                        <div className="text-xs font-[600] text-regal-crum-gray">
-                          {item.name}
-                        </div>
-                        <div className="text-lg  font-bold text-regal-black">
-                          {item.total}
-                        </div>
+                      <div className="text-lg  font-bold text-regal-black">
+                        {item.total}
                       </div>
                     </div>
-                  ))}
-                </div>
-              </section>
-
-              <section className="p-4 mt-8 bg-white" >
-
-                      <div className="flex flex-row justify-between">
-                      <h6 className="text-sm md:text-lg text-regal-black font-[500] ">Shipments</h6>
-                      <div className="relative md:pr-5">
-                    <button
-                      type="button"
-                      onClick={() => setIsOpenSelect(!isOpenSelect)}
-                      className="w-full text-xs flex justify-between items-center border rounded-sm py-2 px-3 ml-4 bg-transparent text-gray-700"
-                    >
-                      {dropdownOption}
-                      <SlArrowDown className="text-xs" />
-                    </button>
-
-                    {isOpenSelect && (
-                      <ul className="absolute left-0 pl-4 pr-8 bg-white border text-nowrap shadow-sm rounded-md mt-2 z-10 max-h-60 overflow-y-auto">
-                        <li className="py-2">
-                          <button
-                            type="button"
-                            className={`text-xs ${
-                              dropdownOption === "This Month"
-                                ? "text-regal-blue font-[600]"
-                                : ""
-                            }`}
-                            onClick={() => handleOptionChange("This Month")}
-                          >
-                            This Month
-                          </button>
-                        </li>
-                        <li className="py-2">
-                          <button
-                            type="button"
-                            className={`text-xs ${
-                              dropdownOption === "Disabled Users"
-                                ? "text-regal-blue font-[600]"
-                                : ""
-                            }`}
-                            onClick={() => handleOptionChange("Disabled Users")}
-                          >
-                            Disabled Users
-                          </button>
-                        </li>
-                      </ul>
-                    )}
                   </div>
-                      </div>
+                ))}
+              </div>
+            </section>
 
-                      <SlimBarChart />
+            <section className="p-4 mt-8 bg-white">
+              <div className="flex flex-row justify-between">
+                <h6 className="text-sm md:text-lg text-regal-black font-[500] ">
+                  Shipments
+                </h6>
+                <div className="relative md:pr-5">
+                  <button
+                    type="button"
+                    onClick={() => setIsOpenSelect(!isOpenSelect)}
+                    className="w-full text-xs flex justify-between items-center border rounded-sm py-2 px-3 ml-4 bg-transparent text-gray-700"
+                  >
+                    {dropdownOption}
+                    <SlArrowDown className="text-xs" />
+                  </button>
 
-              </section>
+                  {isOpenSelect && (
+                    <ul className="absolute left-0 pl-4 pr-8 bg-white border text-nowrap shadow-sm rounded-md mt-2 z-10 max-h-60 overflow-y-auto">
+                      <li className="py-2">
+                        <button
+                          type="button"
+                          className={`text-xs ${
+                            dropdownOption === "This Month"
+                              ? "text-regal-blue font-[600]"
+                              : ""
+                          }`}
+                          onClick={() => handleOptionChange("This Month")}
+                        >
+                          This Month
+                        </button>
+                      </li>
+                      <li className="py-2">
+                        <button
+                          type="button"
+                          className={`text-xs ${
+                            dropdownOption === "Disabled Users"
+                              ? "text-regal-blue font-[600]"
+                              : ""
+                          }`}
+                          onClick={() => handleOptionChange("Disabled Users")}
+                        >
+                          Disabled Users
+                        </button>
+                      </li>
+                    </ul>
+                  )}
+                </div>
+              </div>
 
-              <section className="rounded-2xl border animate-fade-in mt-8 bg-white">
-                  <h6 className="text-sm md:text-lg text-regal-black font-[500] mt-4 px-4">Shipments</h6>
-                <ProductTableTab
-                  setActiveOrder={() =>
-                    setActiveOrder({
-                      orderID: "1892423",
-                      products: [],
-                    })
-                  }
-                  option={option}
+              <SlimBarChart />
+            </section>
 
-
-
-                />
-              </section>
-            </main>
-          
-          </>
-      }
-
+            <section className="rounded-2xl border animate-fade-in mt-8 bg-white">
+              <h6 className="text-sm md:text-lg text-regal-black font-[500] mt-4 px-4">
+                Shipments
+              </h6>
+              <ProductTableTab
+                setActiveOrder={() =>
+                  setActiveOrder({
+                    orderID: "1892423",
+                    products: [],
+                  })
+                }
+                option={option}
+              />
+            </section>
+          </main>
+        </>
+      )}
     </div>
   );
 }
 
-const ProductTableTab = React.memo(({ setActiveOrder,option }) => {
-   const itemsPerPage = 12;
-  const [itemOffset, setItemOffset] = useState(0);  
-  const { data: recentShipments = {}, isloading, error } = useGetRecentAgentShipmentsQuery({daysDifference:option,limit:itemsPerPage});
-  
-  console.log("RE==recentShipments",recentShipments)
-  const {data,total,currentPage,totalPages} = recentShipments
+const ProductTableTab = React.memo(({ setActiveOrder, option }) => {
+  const itemsPerPage = 12;
+  const [itemOffset, setItemOffset] = useState(0);
+  const {
+    data: recentShipments = {},
+    isloading,
+    error,
+  } = useGetRecentAgentShipmentsQuery({ daysDifference: option, limit: itemsPerPage });
+
+  console.log("RE==recentShipments", recentShipments);
+  const { data, total, currentPage, totalPages } = recentShipments;
   const endOffset = itemOffset + itemsPerPage;
   const currentItems = data && data?.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(data && data?.length / itemsPerPage);
@@ -262,16 +265,10 @@ const ProductTableTab = React.memo(({ setActiveOrder,option }) => {
                   {product.items.length}
                 </td>
                 <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-price-dark font-[600]">
-                  <OrderVendorStatus
-                    status={product.status}
-
-                  />
+                  <OrderVendorStatus status={product.status} />
                 </td>
                 <td className="px-6 py-2 whitespace-nowrap text-xs text-regal-black">
-                  <Menu
-                    as="button"
-                    className="relative inline-block text-right"
-                  >
+                  <Menu as="button" className="relative inline-block text-right">
                     <div>
                       <Menu.Button className=" rounded-full text-sm md:text-lg   focus:outline-none">
                         <PiDotsThreeOutline />
@@ -345,99 +342,108 @@ const ProductTableTab = React.memo(({ setActiveOrder,option }) => {
         </table>
       </div>
 
-{
-  data &&
+      {data && (
+        <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-between mt-4">
+          <h6 className="text-xs text-regal-crum-gray">
+            Showing {currentItems?.length} items out of {total} results found
+          </h6>
 
-      <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-between mt-4">
-        <h6 className="text-xs text-regal-crum-gray">
-          Showing {currentItems?.length} items out of {total} results
-          found
-        </h6>
-
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel=" >"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={pageCount}
-          previousLabel="< "
-          pageClassName="py-1 px-2 rounded-md text-xs md:text-sm mx-2 border border-gray-200 text-regal-paginate-color"
-          previousClassName="py-1 px-2 text-regal-paginate-color rounded-md text-xs md:text-sm mx-2"
-          nextLinkClassName="py-1 px-2 text-regal-paginate-color rounded-md text-xs md:text-sm mx-2"
-          breakClassName="page-item"
-          breakLinkClassName="text-xs md:text-sm mx-2 py-1 px-2"
-          containerClassName="flex flex-row items-center justify-end"
-          activeClassName="border border-regal-sky-blue text-white bg-regal-sky-blue font-[500]"
-        />
-      </div>
-}
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel=" >"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+            previousLabel="< "
+            pageClassName="py-1 px-2 rounded-md text-xs md:text-sm mx-2 border border-gray-200 text-regal-paginate-color"
+            previousClassName="py-1 px-2 text-regal-paginate-color rounded-md text-xs md:text-sm mx-2"
+            nextLinkClassName="py-1 px-2 text-regal-paginate-color rounded-md text-xs md:text-sm mx-2"
+            breakClassName="page-item"
+            breakLinkClassName="text-xs md:text-sm mx-2 py-1 px-2"
+            containerClassName="flex flex-row items-center justify-end"
+            activeClassName="border border-regal-sky-blue text-white bg-regal-sky-blue font-[500]"
+          />
+        </div>
+      )}
     </div>
   );
 });
 
 const SlimBarChart = () => {
-    // Data for the chart
-    const data = {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      datasets: [
-        {
-          label: 'Total',
-          data: [50, 60, 70, 85, 90, 95, 100, 110, 120, 130, 140, 150], // Example data for total
-          backgroundColor: 'rgba(157, 223, 245, 1)',
-          borderRadius: 10, // Rounded edges
-          barPercentage: 0.5, // Slim bars
-          categoryPercentage: 0.5, // Slim bars
-        },
-        {
-          label: 'Completed',
-          data: [30, 45, 55, 75, 80, 85, 90, 95, 100, 105, 110, 120], // Example data for completed
-          backgroundColor: 'rgba(2, 152, 202, 1)',
-          borderRadius: 10, // Rounded edges
-          barPercentage: 0.5, // Slim bars
-          categoryPercentage: 0.5, // Slim bars
-        },
-      ],
-    };
-  
-    // Options for the chart
-    const options = {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: {
-            usePointStyle: true, // Makes the legend icon circular
-            pointStyle: 'circle',
-            padding: 20, // Adds padding between legend items
-            font: {
-              size: 12, // Adjust font size if needed
-            },
-            boxWidth: 10, // Adjust size of the legend box
-          },
-        },
+  // Data for the chart
+  const data = {
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    datasets: [
+      {
+        label: "Total",
+        data: [50, 60, 70, 85, 90, 95, 100, 110, 120, 130, 140, 150], // Example data for total
+        backgroundColor: "rgba(157, 223, 245, 1)",
+        borderRadius: 10, // Rounded edges
+        barPercentage: 0.5, // Slim bars
+        categoryPercentage: 0.5, // Slim bars
       },
-      scales: {
-        x: {
-          beginAtZero: true,
-          grid: {
-            display: false, // Hides grid lines for the x-axis
-          },
-        },
-        y: {
-          beginAtZero: true,
-          grid: {
-            display: false, // Hides horizontal grid lines
-          },
-        },
+      {
+        label: "Completed",
+        data: [30, 45, 55, 75, 80, 85, 90, 95, 100, 105, 110, 120], // Example data for completed
+        backgroundColor: "rgba(2, 152, 202, 1)",
+        borderRadius: 10, // Rounded edges
+        barPercentage: 0.5, // Slim bars
+        categoryPercentage: 0.5, // Slim bars
       },
-    };
-  
-    return (
-      <div className="w-full">
-        <Bar data={data} options={options} />
-      </div>
-    );
+    ],
   };
-  
+
+  // Options for the chart
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          usePointStyle: true, // Makes the legend icon circular
+          pointStyle: "circle",
+          padding: 20, // Adds padding between legend items
+          font: {
+            size: 12, // Adjust font size if needed
+          },
+          boxWidth: 10, // Adjust size of the legend box
+        },
+      },
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        grid: {
+          display: false, // Hides grid lines for the x-axis
+        },
+      },
+      y: {
+        beginAtZero: true,
+        grid: {
+          display: false, // Hides horizontal grid lines
+        },
+      },
+    },
+  };
+
+  return (
+    <div className="w-full">
+      <Bar data={data} options={options} />
+    </div>
+  );
+};
 
 export default OverViewAgent;

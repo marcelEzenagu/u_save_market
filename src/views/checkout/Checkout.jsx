@@ -12,7 +12,13 @@ import LoadingScreen from "../../components/Loading/LoadingScreen";
 import { useGetUserCartQuery } from "../../features/cart/cartApiSlice";
 import { numberWithCommas } from "../../utils";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements, useStripe, PaymentElement, useElements, CardElement } from "@stripe/react-stripe-js";
+import {
+  Elements,
+  useStripe,
+  PaymentElement,
+  useElements,
+  CardElement,
+} from "@stripe/react-stripe-js";
 import { useToaster } from "../../components/ToasterContext";
 const stripePromise = loadStripe(import.meta.env.VITE_APP_STRIPE_KEY);
 
@@ -22,136 +28,137 @@ const TabComponent = React.memo(
       <>
         {tabs?.map((tab) => {
           const Component = tab.component;
-            return (
-              <div
-                className="border shadow-sm bg-white py-4 md:py-6 rounded-xl"
-                key={tab.id}
-              >
-                <div className="px-4 md:px-6">
-                  <div className="flex flex-row items-center justify-between">
-                    <h6 className="text-regal-blue text-sm md:text-[16px] mb-4 font-[700]">
-                      {tab.id}.{tab.name}
-                    </h6>
-                    {tab.id !== activeTab && (
-                      <button
-                        className="text-regal-sky-blue text-xs md:text-sm mb-4 font-[700] active:scale-95"
-                        onClick={() => setActiveTab(tab.id)}
-                      >
-                        Show more
-                      </button>
-                    )}
-                  </div>
-                  <h6 className="text-regal-light-gray text-xs md:text-sm">
-                    {tab.details}
+          return (
+            <div
+              className="border shadow-sm bg-white py-4 md:py-6 rounded-xl"
+              key={tab.id}
+            >
+              <div className="px-4 md:px-6">
+                <div className="flex flex-row items-center justify-between">
+                  <h6 className="text-regal-blue text-sm md:text-[16px] mb-4 font-[700]">
+                    {tab.id}.{tab.name}
                   </h6>
+                  {tab.id !== activeTab && (
+                    <button
+                      className="text-regal-sky-blue text-xs md:text-sm mb-4 font-[700] active:scale-95"
+                      onClick={() => setActiveTab(tab.id)}
+                    >
+                      Show more
+                    </button>
+                  )}
                 </div>
-                {tab.id === activeTab && (
-                  <Component
-                    data={data}
-                    handleChange={handleChange}
-                    setActiveTab={setActiveTab}
-                  />
-                )}
+                <h6 className="text-regal-light-gray text-xs md:text-sm">
+                  {tab.details}
+                </h6>
               </div>
-            );
+              {tab.id === activeTab && (
+                <Component
+                  data={data}
+                  handleChange={handleChange}
+                  setActiveTab={setActiveTab}
+                />
+              )}
+            </div>
+          );
         })}
       </>
     );
   }
 );
 
-const OrderSummary = React.memo(({ cartDetails, data, estTotal, total,  loadingPayment }) => {
-  const exchangeRate = useSelector((state)=> state?.auth?.exchangeRate);
-  console.log("estTotal:: ",estTotal)
-  console.log("data:: ",data)
+const OrderSummary = React.memo(
+  ({ cartDetails, data, estTotal, total, loadingPayment }) => {
+    const exchangeRate = useSelector((state) => state?.auth?.exchangeRate);
 
-  console.log("exchangeRate=====",exchangeRate)
-  return (
-    <div className="border shadow-sm bg-white py-4 mt-5 md:mt-0 rounded-xl ">
-      {cartDetails?.loading ? (
-        <div className="text-center">Loading...</div>
-      ) : (
-        <>
-          <h5 className="text-sm text-regal-blue font-[700] px-4">
-            Order Summary
-          </h5>
-          <div className="flex flex-row justify-between items-start m-4">
-            <div>
-              <h6 className="text-sm font-[500] text-regal-black">Subtotal</h6>
-              <p className="text-xs font-[500] text-regal-light-gray">
-                {cartDetails?.products?.length} items
+    return (
+      <div className="border shadow-sm bg-white py-4 mt-5 md:mt-0 rounded-xl ">
+        {cartDetails?.loading ? (
+          <div className="text-center">Loading...</div>
+        ) : (
+          <>
+            <h5 className="text-sm text-regal-blue font-[700] px-4">Order Summary</h5>
+            <div className="flex flex-row justify-between items-start m-4">
+              <div>
+                <h6 className="text-sm font-[500] text-regal-black">Subtotal</h6>
+                <p className="text-xs font-[500] text-regal-light-gray">
+                  {cartDetails?.products?.length} items
+                </p>
+              </div>
+              <p className="text-sm font-[600] text-regal-black">
+                {exchangeRate?.currency}{" "}
+                {numberWithCommas((total * exchangeRate?.rate).toFixed(2))}{" "}
               </p>
             </div>
-            <p className="text-sm font-[600] text-regal-black">
-              {exchangeRate?.currency}{' '}{ numberWithCommas((total * exchangeRate?.rate).toFixed(2))}{" "}
-
-            </p>
-          </div>
-          <div className="flex flex-row justify-between items-start m-4">
-            <div>
-              <h6 className="text-sm font-[500] text-regal-black">
-                Estimated Shipping
-              </h6>
-              <p className="text-xs font-[500] text-regal-light-gray">
-                {cartDetails?.products?.length} items
+            <div className="flex flex-row justify-between items-start m-4">
+              <div>
+                <h6 className="text-sm font-[500] text-regal-black">
+                  Estimated Shipping
+                </h6>
+                <p className="text-xs font-[500] text-regal-light-gray">
+                  {cartDetails?.products?.length} items
+                </p>
+              </div>
+              <p className="text-sm font-[600] text-regal-black">
+                {/* ₦{numberWithCommas(data?.shippingPay)} */}
+                {exchangeRate?.currency}{" "}
+                {numberWithCommas((data?.shippingPay * exchangeRate?.rate).toFixed(2))}{" "}
               </p>
             </div>
-            <p className="text-sm font-[600] text-regal-black">
-              {/* ₦{numberWithCommas(data?.shippingPay)} */}
-              {exchangeRate?.currency}{' '}{ numberWithCommas((data?.shippingPay * exchangeRate?.rate).toFixed(2))}{" "}
-
-            </p>
-          </div>
-          <div className="flex flex-row justify-between items-start py-4 border-t">
-            <div className="px-4">
-              <h6 className="text-sm font-[500] text-regal-black">Est.Total</h6>
+            <div className="flex flex-row justify-between items-start py-4 border-t">
+              <div className="px-4">
+                <h6 className="text-sm font-[500] text-regal-black">Est.Total</h6>
+              </div>
+              <p className="text-lg font-[600] text-regal-black px-4">
+                {/* ₦{numberWithCommas(estTotal)} */}
+                {exchangeRate?.currency}{" "}
+                {numberWithCommas(
+                  ((total + data?.shippingPay) * exchangeRate?.rate).toFixed(2)
+                )}{" "}
+              </p>
             </div>
-            <p className="text-lg font-[600] text-regal-black px-4">
-              {/* ₦{numberWithCommas(estTotal)} */}
-              {exchangeRate?.currency}{' '}{ numberWithCommas(((total + data?.shippingPay)* exchangeRate?.rate).toFixed(2))}{" "}
-
-            </p>
-          </div>
-          <div className="px-4 py-2 w-full">
-            {cartDetails?.products?.length > 0 && (
-              <button disabled={loadingPayment}  type="submit"
-               className="text-sm bg-regal-sky-blue text-white px-4 py-2 font-semibold w-full rounded-md hover:bg-blue-600">
-               {loadingPayment ? "Processing..." : "Pay now"}  
-              </button>
-            )}
-          </div>
-        </>
-      )}
-    </div>
-  );
-});
-
+            <div className="px-4 py-2 w-full">
+              {cartDetails?.products?.length > 0 && (
+                <button
+                  disabled={loadingPayment}
+                  type="submit"
+                  className="text-sm bg-regal-sky-blue text-white px-4 py-2 font-semibold w-full rounded-md hover:bg-blue-600"
+                >
+                  {loadingPayment ? "Processing..." : "Pay now"}
+                </button>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
+);
 
 const PaymentDetails = () => {
   const paymentElementOptions = {
-    layout: "tabs"
-  }
+    layout: "tabs",
+  };
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
-      <h6 className="text-regal-blue text-sm md:text-[16px] mb-4 font-[700]">3. Payment Details</h6>
+      <h6 className="text-regal-blue text-sm md:text-[16px] mb-4 font-[700]">
+        3. Payment Details
+      </h6>
       <label className="block text-sm font-medium text-regal-black mb-2">
         Credit or debit card
       </label>
       <div className=" mb-4">
-      <PaymentElement id="payment-element" options={paymentElementOptions} />
-      {/* <CardElement options={paymentElementOptions} /> */}
+        <PaymentElement id="payment-element" options={paymentElementOptions} />
+        {/* <CardElement options={paymentElementOptions} /> */}
       </div>
     </div>
   );
 };
 
-
-function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
+function Checkout({ clientSecret, estTotal, cartDetails, total, data, setData }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("1");
   const [loadingPayment, setLoadingPayment] = useState(false);
   const userData = useSelector(selectCurrentUser);
-
 
   const { showToast } = useToaster();
   const stripe = useStripe();
@@ -169,32 +176,28 @@ function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
     }
   }, [userData]);
 
-  const handleChange = (section,e) => {
-    console.log("e.target.name",e.target.name)
-    if(!section){
+  const handleChange = (section, e) => {
+    console.log("e.target.name", e.target.name);
+    if (!section) {
       setData((prevData) => ({
         ...prevData,
         [e.target.name]: e.target.value,
-        
       }));
-    }else{
+    } else {
       setData((prevData) => ({
         ...prevData,
-      [section]: { ...prevData[section],   [e.target.name]:  e.target.value }
-        
+        [section]: { ...prevData[section], [e.target.name]: e.target.value },
       }));
-
     }
-  }
+  };
 
   const oldhandleChange = useCallback((e) => {
-    console.log("e.target.name",e.target.value)
+    console.log("e.target.name", e.target.value);
     setData((prevData) => ({
       ...prevData,
       [e.target.name]: e.target.value,
     }));
   }, []);
-
 
   const validateForm = useCallback((formData) => {
     const requiredFields = [
@@ -218,32 +221,29 @@ function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
     return true;
   }, []);
 
-
-
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-  
+
       if (!stripe || !elements) {
         conso3le.log("Stripe.js has not loaded yet.");
         return;
       }
-  
+
       if (validateForm(data)) {
         try {
           if (cartDetails?.products?.length > 0) {
-
-            console.log("DATA::: ",data)
+            console.log("DATA::: ", data);
             localStorage.setItem("checkoutDetails", JSON.stringify(data));
             setLoadingPayment(true);
-  
+
             const { error } = await stripe.confirmPayment({
               elements,
               confirmParams: {
                 return_url: `${window.location.origin}/payment-success`, // Correctly formatted return URL
               },
             });
-  
+
             if (error) {
               showToast(error.message);
             } else {
@@ -255,16 +255,15 @@ function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
         } catch (error) {
           console.log(error);
           setLoadingPayment(false);
-          showToast("Something went wrong while processing the payment. Please try again later.", "error");
+          showToast(
+            "Something went wrong while processing the payment. Please try again later.",
+            "error"
+          );
         }
       }
     },
     [data, cartDetails, elements, stripe, navigate]
   );
-  
-  
-  
-  
 
   const tabs = useMemo(
     () => [
@@ -290,7 +289,6 @@ function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
     ],
     []
   );
-
 
   return (
     <div>
@@ -319,14 +317,17 @@ function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
                 setActiveTab={setActiveTab}
                 data={data}
                 handleChange={handleChange}
-               
               />
               <PaymentDetails clientSecret={clientSecret} />
             </div>
             <div>
-              <OrderSummary  loadingPayment={loadingPayment} cartDetails={cartDetails} data={data} total={total} estTotal={estTotal} />
-
-            
+              <OrderSummary
+                loadingPayment={loadingPayment}
+                cartDetails={cartDetails}
+                data={data}
+                total={total}
+                estTotal={estTotal}
+              />
             </div>
           </form>
         </div>
@@ -337,17 +338,12 @@ function Checkout({clientSecret, estTotal, cartDetails, total, data, setData}) {
 }
 
 export default function CheckoutWrapper() {
-  
   const [clientSecret, setClientSecret] = useState("");
   const { isLoading, isAuthenticated } = useAuth();
-  const token = useSelector(state => state?.auth?.token);
-  const cartData = useSelector(state => state?.cart)
+  const token = useSelector((state) => state?.auth?.token);
+  const cartData = useSelector((state) => state?.cart);
 
-  const {
-    data: cartDetails,
-    isLoading: loading,
-    refetch,
-  } = useGetUserCartQuery();
+  const { data: cartDetails, isLoading: loading, refetch } = useGetUserCartQuery();
 
   const [data, setData] = useState({
     // firstName: "",
@@ -359,7 +355,7 @@ export default function CheckoutWrapper() {
     // city: "",
     // state: "",
     // zipCode: "",
-    shippingDetails:{ 
+    shippingDetails: {
       firstName: "",
       lastName: "",
       phoneNumber: "",
@@ -367,98 +363,102 @@ export default function CheckoutWrapper() {
       street: "",
       country: "",
       city: "",
-      isDefault:false,
+      isDefault: false,
       state: "",
-      zipCode: "",},
+      zipCode: "",
+    },
 
-      billingDetails:{ 
+    billingDetails: {
       firstName: "",
       lastName: "",
       phoneNumber: "",
       email: "",
-      isDefault:false,
+      isDefault: false,
       street: "",
       country: "",
       city: "",
       state: "",
-      zipCode: "",},
-      paymentDetails:{ 
-        cvv: "",
-        expiry: "",
-        cardNumber: "",
-        cardHolderName: "",
-      isDefault:false,},
-    
+      zipCode: "",
+    },
+    paymentDetails: {
+      cvv: "",
+      expiry: "",
+      cardNumber: "",
+      cardHolderName: "",
+      isDefault: false,
+    },
+
     // companyName: "",
     // shippingPay: 0,
   });
   const total = useMemo(() => {
     return cartDetails?.products?.reduce(
-      (acc, item) => acc + (item.newPrice ? item.newPrice :item.salesPrice) * item?.quantity,
+      (acc, item) =>
+        acc + (item.newPrice ? item.newPrice : item.salesPrice) * item?.quantity,
       0
     );
   }, [cartDetails]);
- 
 
   const estTotal = useMemo(() => total + data?.shippingPay, [total]);
- 
-  useEffect(()=>{
-    const getClientKey  = async () => {
-      if(total){
-        console.log("CART---total::: ",total)
-        console.log("CART---estTotal::: ",estTotal)
+
+  useEffect(() => {
+    const getClientKey = async () => {
+      if (total) {
+        console.log("CART---total::: ", total);
+        console.log("CART---estTotal::: ", estTotal);
 
         const body = { products: cartDetails?.products, totalCost: total };
-        console.log("BODY::",body)
-        // return 
+        console.log("BODY::", body);
+        // return
         const headers = {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         };
         const response = await fetch(
-          `${import.meta.env.VITE_APP_API_URL}orders/pay-intent`, 
+          `${import.meta.env.VITE_APP_API_URL}orders/pay-intent`,
           {
             method: "POST",
             headers: headers,
             body: JSON.stringify(body),
           }
         );
-  
+
         const { clientSecret } = await response.json();
         setClientSecret(clientSecret);
       }
-    }
+    };
 
     getClientKey();
   }, [cartDetails]);
 
-
   const appearance = {
-    theme: 'stripe',
+    theme: "stripe",
   };
 
   if (isLoading || !isAuthenticated || loading) {
     return <LoadingScreen />;
   }
 
-  if(clientSecret){
+  if (clientSecret) {
     return (
-      <Elements options={{   
-        clientSecret,
-        appearance, }} stripe={stripePromise}>
-        <Checkout 
-          clientSecret={clientSecret} 
-          cartDetails={cartDetails}  
-          setData={setData} 
-          data={data} 
-          estTotal={estTotal} 
-          total={total} 
+      <Elements
+        options={{
+          clientSecret,
+          appearance,
+        }}
+        stripe={stripePromise}
+      >
+        <Checkout
+          clientSecret={clientSecret}
+          cartDetails={cartDetails}
+          setData={setData}
+          data={data}
+          estTotal={estTotal}
+          total={total}
         />
-
       </Elements>
     );
-  }else{
+  } else {
     return <LoadingScreen />;
   }
-
 }
