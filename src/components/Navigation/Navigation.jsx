@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import Logo from "../../assets/images/nav/logo.webp";
 import Globe from "../../assets/images/nav/icons/globe.webp";
-import { IoCloseOutline, IoSearchOutline,IoCloseCircleOutline } from "react-icons/io5";
+import { IoCloseOutline, IoSearchOutline, IoCloseCircleOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import CountryModal from "./Countries/CountryModal";
 import AuthModal from "./Auth/Auth";
@@ -18,101 +18,117 @@ import { setWishList } from "../../features/user/userSlice";
 import BottomLinks from "../Sidebar/BottomLinks";
 import { useGetCountriesQuery } from "../../features/auth/authApiSlice";
 import { useSearchItemsQuery } from "../../features/item/itemApiSlice";
-function Navigation({countries,successResponse,data}) {
+
+function Navigation({ countries, successResponse, data }) {
   const [mobileDropdown, setMobileDropdown] = useState(false);
   const [activeUser, setActiveuser] = useState(false);
   const user = useSelector(selectCurrentUser);
   const [showMessage, setShowMessage] = useState(false);
-  const preferredCountry = useSelector(
-    (state) => state?.auth?.preferredCountry
-  ) || "Nigeria"
+  const preferredCountry =
+    useSelector((state) => state?.auth?.preferredCountry) || "Nigeria";
   const dispatch = useDispatch();
   const { data: whishList, isSuccess } = useUserWishListQuery(user, {
     skip: !user,
   });
 
   const [countriesWithCurrency, setCountriesWithCurrency] = useState([]);
-  
+
   // useEffect(()=>{
   //   if(countries?.length){
   //     localStorage.setItem("countries",JSON.stringify(countries))
   //   }
   // },[])
 
-    useEffect(()=>{
-   
-  const countriesWithCurrency = data?.map(country => ({
-    name: country.name.common, 
-    currency: country.currencies
-      ? Object.keys(country.currencies)?.map(code => ({
-          code,
-          name: country.currencies[code]?.name,
-          symbol: country.currencies[code]?.symbol
-        }))
-      : null, 
-  }));
+  useEffect(() => {
+    const countriesWithCurrency = data?.map((country) => ({
+      name: country.name.common,
+      currency: country.currencies
+        ? Object.keys(country.currencies)?.map((code) => ({
+            code,
+            name: country.currencies[code]?.name,
+            symbol: country.currencies[code]?.symbol,
+          }))
+        : null,
+    }));
 
-  setCountriesWithCurrency(countriesWithCurrency);
+    setCountriesWithCurrency(countriesWithCurrency);
+    localStorage.setItem("countries", countriesWithCurrency);
+    console.log(localStorage.getItem("countries"), " countr)");
 
     // })
     // .catch(error => {
     //   console.error('Error fetching countries:', error);
     // });
-  }, [])
+  }, []);
 
-  useEffect(()=> {
-      if (successResponse && countries && countriesWithCurrency.length > 0) {
-      const filteredCountries = countries?.map(country => {
-        const restCountries =  countriesWithCurrency?.find(c => c?.name?.toLowerCase() === country?.name?.toLowerCase());
+  useEffect(() => {
+    if (successResponse && countries && countriesWithCurrency.length > 0) {
+      const filteredCountries = countries?.map((country) => {
+        const restCountries = countriesWithCurrency?.find(
+          (c) => c?.name?.toLowerCase() === country?.name?.toLowerCase()
+        );
         if (restCountries) {
           return {
             ...restCountries,
-            code : country?.code,
-            currency_code : country?.currency_code,
-            name : restCountries?.name,
+            code: country?.code,
+            currency_code: country?.currency_code,
+            name: restCountries?.name,
             number: country?.dialCode,
-            currency:  restCountries?.currency?.length > 0 ?  restCountries?.currency[0]?.symbol : country?.currency_code,
-            currencyName : restCountries?.currency?.length > 0 ?  restCountries?.currency[0]?.name : country?.name,
-            flag: !country?.flag ? country?.flag : `https://flagcdn.com/w320/${country?.code?.toLowerCase()}.png`,
-          }
-        } else{
+            currency:
+              restCountries?.currency?.length > 0
+                ? restCountries?.currency[0]?.symbol
+                : country?.currency_code,
+            currencyName:
+              restCountries?.currency?.length > 0
+                ? restCountries?.currency[0]?.name
+                : country?.name,
+            flag: !country?.flag
+              ? country?.flag
+              : `https://flagcdn.com/w320/${country?.code?.toLowerCase()}.png`,
+          };
+        } else {
           return {
             ...country,
             currency: country?.currency_code,
             currencyName: country?.name,
-            flag: !country?.flag ? country?.flag : `https://flagcdn.com/w320/${country?.code?.toLowerCase()}.png`,
-          }
+            flag: !country?.flag
+              ? country?.flag
+              : `https://flagcdn.com/w320/${country?.code?.toLowerCase()}.png`,
+          };
         }
-      })
+      });
 
       dispatch(setCountries(filteredCountries));
-
-      }
+    }
   }, [countries, successResponse, countriesWithCurrency]);
 
   useEffect(() => {
     if (user) {
       if (isSuccess && whishList) {
-        const filteredProducts = whishList?.map(product => {
-          const matchingItem = Items?.find(item => item.productID === product?.itemID);
-          
-          if (matchingItem) {
-            return {
-              ...matchingItem,
-              productID: matchingItem.productID,
-              id: product.id  // Include the id from itemsIDArray
-            };
-          }
-          
-          return null;
-        }).filter(product => product !== null);
+        const filteredProducts = whishList
+          ?.map((product) => {
+            const matchingItem = Items?.find(
+              (item) => item.productID === product?.itemID
+            );
+
+            if (matchingItem) {
+              return {
+                ...matchingItem,
+                productID: matchingItem.productID,
+                id: product.id, // Include the id from itemsIDArray
+              };
+            }
+
+            return null;
+          })
+          .filter((product) => product !== null);
         dispatch(setWishList(filteredProducts || []));
       } else {
         dispatch(setWishList([]));
       }
     }
   }, [whishList, isSuccess, dispatch]);
- 
+
   useLayoutEffect(() => {
     if (user !== null) {
       setActiveuser(true);
@@ -127,7 +143,7 @@ function Navigation({countries,successResponse,data}) {
     } else {
       setShowMessage(false);
     }
-  }, [preferredCountry,showMessage]);
+  }, [preferredCountry, showMessage]);
 
   useEffect(() => {
     const lspc = JSON.parse(localStorage.getItem("preferredCountry"));
@@ -137,21 +153,21 @@ function Navigation({countries,successResponse,data}) {
         setMobileDropdown(true);
       }
     }
-    if (!preferredCountry ) {
-      if(!lspc && !user ){
+    if (!preferredCountry) {
+      if (!lspc && !user) {
         setMobileDropdown(true);
       }
     }
   }, [preferredCountry, user, dispatch]);
 
   useEffect(() => {
-    if(user && !preferredCountry ){
+    if (user && !preferredCountry) {
       setMobileDropdown(true);
     }
-    if(user && preferredCountry){
+    if (user && preferredCountry) {
       setMobileDropdown(false);
     }
-  }, [user, preferredCountry])
+  }, [user, preferredCountry]);
 
   const onToggle = () => {
     setMobileDropdown(!mobileDropdown);
@@ -171,8 +187,8 @@ function Navigation({countries,successResponse,data}) {
     };
   }, []);
 
-  console.log("countries:",countries)
-  console.log("countriesWithCurrency===",countriesWithCurrency)
+  console.log("countries:", countries);
+  console.log("countriesWithCurrency===", countriesWithCurrency);
 
   return (
     <header className="sticky top-0  z-50 ">
@@ -211,34 +227,23 @@ function Navigation({countries,successResponse,data}) {
             </button>
 
             <Link to="/">
-              <img
-                src={Logo}
-                alt=""
-                className=" w-[100px] md:w-[140px] lg:w-[150px]"
-              />
+              <img src={Logo} alt="" className=" w-[100px] md:w-[140px] lg:w-[150px]" />
             </Link>
-            <SearchForm  preferredCountry={preferredCountry}/>
+            <SearchForm preferredCountry={preferredCountry} />
           </div>
 
           <div className="flex flex-row-reverse lg:flex-row items-center gap-4">
             {activeUser && user !== null ? <UserDropdown /> : <AuthModal />}
 
+            <div className="hidden lg:block">{countries?.length && <CountryModal />}</div>
             <div className="hidden lg:block">
-              {
-                countries?.length &&
-
-                <CountryModal />
-              }
-            </div>
-            <div className="hidden lg:block">
-              {
-                countriesWithCurrency?.length &&
-                <CurrencyModal />
-
-              }
+              {countriesWithCurrency?.length && <CurrencyModal />}
             </div>
             <CartDropdown />
-            <SearchFormMobile preferredCountry={preferredCountry}  showMessage={showMessage}/>
+            <SearchFormMobile
+              preferredCountry={preferredCountry}
+              showMessage={showMessage}
+            />
           </div>
         </div>
         <div className="xl:hidden">
@@ -249,17 +254,9 @@ function Navigation({countries,successResponse,data}) {
             }   flex-col bg-white items-start self-end py-8 space-y-6  sm:self-center w-full h-[100vh] drop-shadow-md`}
           >
             <div className="flex flex-col gap-3 px-4 pb-5 w-full border-b">
-{
-                countries?.length &&
-
-                <CountryModal />
-              }
-
-              {
-                countriesWithCurrency?.length &&
-                <CurrencyModal />
-
-              }            </div>
+              {countries?.length && <CountryModal />}
+              {countriesWithCurrency?.length && <CurrencyModal />}{" "}
+            </div>
             <div className=" flex flex-col items-start gap-6 px-4 mb-10">
               {dataCategory &&
                 dataCategory?.map((e, i) => (
@@ -279,10 +276,9 @@ function Navigation({countries,successResponse,data}) {
                 ))}
             </div>
 
-                  <div className="px-4">
-                    <BottomLinks/>
-                  </div>
-
+            <div className="px-4">
+              <BottomLinks />
+            </div>
           </div>
         </div>
       </nav>
@@ -290,10 +286,18 @@ function Navigation({countries,successResponse,data}) {
   );
 }
 
-const SearchForm = React.memo(({preferredCountry}) => {
+const SearchForm = React.memo(({ preferredCountry }) => {
   const [query, setQuery] = useState(""); // State to track the input value
   const dropdownRef = useRef(null);
-  const { data: searchItems, isLoading, isError } = useSearchItemsQuery({searchTerm : query,  country : preferredCountry?.name?.toLowerCase(), filter : "" }); // Use the search query hook
+  const {
+    data: searchItems,
+    isLoading,
+    isError,
+  } = useSearchItemsQuery({
+    searchTerm: query,
+    country: preferredCountry?.name?.toLowerCase(),
+    filter: "",
+  }); // Use the search query hook
 
   // Handle input change
   const handleChange = (event) => {
@@ -335,21 +339,27 @@ const SearchForm = React.memo(({preferredCountry}) => {
         </button>
         {query && ( // Show dropdown only if query is not empty
           <div className="absolute top-16 z-50 bg-white p-4 w-full rounded-xl left-1/2 -translate-x-1/2 flex flex-col gap-2 shadow-md">
-            
             <div className="flex flex-row justify-between items-center gap-2 py-2">
               <p className="text-sm font-[600]">Recent searches </p>
-              <button className="text-sm font-[600] text-regal-sky-blue" 
-              onClick={()=>{
-                setQuery("");
-              }}>
+              <button
+                className="text-sm font-[600] text-regal-sky-blue"
+                onClick={() => {
+                  setQuery("");
+                }}
+              >
                 Clear
               </button>
             </div>
             {isLoading && <p className="text-center">Loading...</p>}
-            {isError && <p className="text-red-500 text-center">Error fetching results.</p>}
+            {isError && (
+              <p className="text-red-500 text-center">Error fetching results.</p>
+            )}
             {searchItems?.length > 0 ? (
               searchItems?.map((item) => (
-                <div key={item.itemID} className="flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer">
+                <div
+                  key={item.itemID}
+                  className="flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer"
+                >
                   <IoSearchOutline />
                   <p className="text-xs font-[400]">{item.itemName}</p>
                 </div>
@@ -364,10 +374,18 @@ const SearchForm = React.memo(({preferredCountry}) => {
   );
 });
 
-const SearchFormMobile = React.memo(({preferredCountry, showMessage }) => {
+const SearchFormMobile = React.memo(({ preferredCountry, showMessage }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { data: searchItems, isLoading, isError } = useSearchItemsQuery({searchTerm : searchQuery, country : preferredCountry?.name?.toLowerCase(), filter : ""}); // Use the search query hook
+  const {
+    data: searchItems,
+    isLoading,
+    isError,
+  } = useSearchItemsQuery({
+    searchTerm: searchQuery,
+    country: preferredCountry?.name?.toLowerCase(),
+    filter: "",
+  }); // Use the search query hook
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -427,24 +445,28 @@ const SearchFormMobile = React.memo(({preferredCountry, showMessage }) => {
             {/* Search Results Dropdown */}
             {searchQuery && (
               <div className="bg-white border border-gray-300 rounded-lg shadow-lg mx-4">
-                     <div className="flex flex-row justify-between items-center gap-2 py-2 px-2">
-              <p className="text-sm font-[600]">Recent searches </p>
-              <button className="text-sm font-[600] text-regal-sky-blue" 
-              onClick={()=>{
-                setSearchQuery("");
-              }}>
-                Clear
-              </button>
-            </div>
+                <div className="flex flex-row justify-between items-center gap-2 py-2 px-2">
+                  <p className="text-sm font-[600]">Recent searches </p>
+                  <button
+                    className="text-sm font-[600] text-regal-sky-blue"
+                    onClick={() => {
+                      setSearchQuery("");
+                    }}
+                  >
+                    Clear
+                  </button>
+                </div>
                 {isLoading && <p className="text-center p-2">Loading...</p>}
-                {isError && <p className="text-red-500 text-center p-2">Error fetching results.</p>}
+                {isError && (
+                  <p className="text-red-500 text-center p-2">Error fetching results.</p>
+                )}
                 {searchItems?.length > 0 && isLoading == false ? (
                   searchItems?.map((result) => (
                     <div
                       key={result.itemID}
-                     className="flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer"
+                      className="flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer"
                     >
-                         <IoSearchOutline />
+                      <IoSearchOutline />
                       {result?.itemName}
                     </div>
                   ))

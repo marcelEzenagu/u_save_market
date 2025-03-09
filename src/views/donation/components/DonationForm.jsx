@@ -8,7 +8,6 @@ export default function DonationForm() {
   const [data, setData] = useState({
     amount: 0,
     isAnonymous: false,
-
     currency: "usd",
     frequency: "",
     firstName: "",
