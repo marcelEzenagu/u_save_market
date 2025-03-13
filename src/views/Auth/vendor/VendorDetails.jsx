@@ -1,4 +1,4 @@
-import React, { useState, useRef,useMemo, useEffect, useLayoutEffect } from "react";
+import React, { useState, useRef, useMemo, useEffect, useLayoutEffect } from "react";
 import Logo from "../../../assets/images/nav/logo.webp";
 import { Link, useNavigate } from "react-router-dom";
 // import { countries } from "../../../data/mockData";
@@ -26,10 +26,21 @@ const ProgressFormPage = () => {
   const [images, setImages] = useState({});
   const countries = JSON.parse(localStorage.getItem("countries"));
   const [video, setVideo] = useState(null);
-  const {errMsg, data,errorMessagesList, setData, handleError, setErrMsg, dispatch, navigate, setErrorMessagesList, handleErrorMessagesList} = useErrorMessageHooks();
+  const {
+    errMsg,
+    data,
+    errorMessagesList,
+    setData,
+    handleError,
+    setErrMsg,
+    dispatch,
+    navigate,
+    setErrorMessagesList,
+    handleErrorMessagesList,
+  } = useErrorMessageHooks();
 
   const handleCountrySelect = (country) => {
-    console.log("COUNTRY=handleCountrySelect:: =",country)
+    console.log("COUNTRY=handleCountrySelect:: =", country);
 
     setBody((prev) => ({
       ...prev,
@@ -37,9 +48,9 @@ const ProgressFormPage = () => {
     }));
   };
 
- const clearVideo = ()=>{
-    setVideo(null)
-  }
+  const clearVideo = () => {
+    setVideo(null);
+  };
   const [body, setBody] = useState({
     profilePicture: "",
     fullName: "",
@@ -78,23 +89,20 @@ const ProgressFormPage = () => {
     error: uploadErr,
     handleFileChange,
   } = useProfileUploadHooks();
-  
-  
+
   useEffect(() => {
-  
     if (body.country) {
       const filtered = countries.filter(
         (country) => country.name?.toLowerCase() === body.country.toLowerCase()
       );
-      console.log("FILTERED:: ", filtered);
-  
+
       // Only update selectedCountry if it's different
       if (!selectedCountry || filtered[0]?.name !== selectedCountry.name) {
         setSelectedCountry(filtered[0] || null);
       }
     }
-  }, [body.country, countries]); 
-  
+  }, [body.country, countries]);
+
   const [updateVendor, isLoading] = useUpdateVendorProfileMutation();
   const user = useSelector((state) => state.auth?.user);
   const [recording, setRecording] = useState(false);
@@ -113,14 +121,13 @@ const ProgressFormPage = () => {
   const startTimer = () => {
     timerRef.current = setInterval(() => {
       setElapsedTime((prev) => {
-        
         if (prev + 1 >= MAX_DURATION) {
           // Stop recording when max duration is reached
           stopRecording();
-          alert('Maximum recording time of 1 minute reached.');
+          alert("Maximum recording time of 1 minute reached.");
           return prev; // Prevent further updates after stop
         }
-        return prev + 1;      
+        return prev + 1;
       });
     }, 1000);
   };
@@ -135,8 +142,10 @@ const ProgressFormPage = () => {
     try {
       setVideoBase64(null);
 
-
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
       videoRef.current.srcObject = stream;
 
       const mediaRecorder = new MediaRecorder(stream);
@@ -147,7 +156,7 @@ const ProgressFormPage = () => {
       };
 
       mediaRecorder.onstop = async () => {
-        const blob = new Blob(chunks.current, { type: 'video/webm' });
+        const blob = new Blob(chunks.current, { type: "video/webm" });
         chunks.current = [];
 
         // Convert the blob to Base64
@@ -162,7 +171,7 @@ const ProgressFormPage = () => {
       setRecording(true);
       startTimer();
     } catch (err) {
-      console.error('Error accessing media devices:', err);
+      console.error("Error accessing media devices:", err);
     }
   };
 
@@ -178,14 +187,14 @@ const ProgressFormPage = () => {
   const clearRecording = () => {
     setVideoBase64(null);
     setElapsedTime(0);
-    setRecording(false)
+    setRecording(false);
   };
 
   const pauseRecording = () => {
     if (mediaRecorderRef.current && recording) {
       mediaRecorderRef.current.pause();
       setPaused(true);
-      
+
       clearInterval(timerRef.current);
     }
   };
@@ -216,15 +225,14 @@ const ProgressFormPage = () => {
     try {
       let req = {
         ...body,
-        videoVerification: videoBase64
-      }
-    if (!videoBase64) return alert('No video to upload');
+        videoVerification: videoBase64,
+      };
+      if (!videoBase64) return alert("No video to upload");
 
-
-      const response = await updateVendor(req).unwrap()
+      const response = await updateVendor(req).unwrap();
       console.log("response======", response);
     } catch (err) {
-      console.error('Upload failed:', err);
+      console.error("Upload failed:", err);
     }
   };
 
@@ -304,7 +312,6 @@ const ProgressFormPage = () => {
 
   const handleNext = () => {
     if (step < StepDetails.length) setStep(step + 1);
-    
   };
 
   const handlePrevious = () => {
@@ -312,41 +319,44 @@ const ProgressFormPage = () => {
   };
 
   const handleComplete = async () => {
-    try{
+    try {
+      setBody((prev) => ({
+        ...prev,
+        isLoading: true,
+      }));
 
-    
-    const req = {
-      ...body,
-      profilePicture: images.profilePicture,
-      cacDocument: images.cacDocument,
-      idDocumentFront: images.idDocumentFront,
-      idDocumentBack: images.idDocumentBack,
-      processVideo: video
-
-    };
-    const res = await updateVendor(req).unwrap();
-    if (res.hasAcknowleged) {
-      navigate("/vendor/registration/successful");
+      const req = {
+        ...body,
+        profilePicture: images.profilePicture,
+        cacDocument: images.cacDocument,
+        idDocumentFront: images.idDocumentFront,
+        idDocumentBack: images.idDocumentBack,
+        processVideo: video,
+      };
+      const res = await updateVendor(req).unwrap();
+      if (res.hasAcknowleged) {
+        navigate("/vendor/registration/successful");
+      }
+    } catch (e) {
+      setBody((prev) => ({
+        ...prev,
+        isLoading: false,
+      }));
+      console.log("ERROR======", e);
+      setErrorMessagesList(e);
+      // handleErrorMessagesList("onboarding Vendor")
     }
-    console.log("res======", res);
-  }catch(e){
-    console.log("ERROR======", e);
-    setErrorMessagesList(e)
-    // handleErrorMessagesList("onboarding Vendor")
-
-  }
   };
 
   const handlePhoneChange = (event) => {
     const { name, value } = event.target;
 
-    if(name == "phoneNumber"){
+    if (name == "phoneNumber") {
       setBody((prev) => ({
         ...prev,
         [name]: `${selectedCountry.number}-${value}`,
       }));
-
-    }else if (name =="businessPhoneNumber"){
+    } else if (name == "businessPhoneNumber") {
       setBody((prev) => ({
         ...prev,
         [name]: `${selectedBusinessCountry.number}-${value}`,
@@ -399,12 +409,12 @@ const ProgressFormPage = () => {
   };
 
   const handleSelection = (e) => {
-    const {name,value} = e.target
+    const { name, value } = e.target;
     setSelectedId(value);
-    setBody(prev => ({
+    setBody((prev) => ({
       ...prev,
-      [name]:value
-    }))
+      [name]: value,
+    }));
   };
 
   const handleDrop = (event) => {
@@ -427,7 +437,7 @@ const ProgressFormPage = () => {
   const handleImage = async (e) => {
     const { name } = e.target;
 
-    console.log("NAME===",name)
+    console.log("NAME===", name);
     const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
 
     setError("");
@@ -438,9 +448,7 @@ const ProgressFormPage = () => {
         return;
       }
       if (file.size > MAX_FILE_SIZE) {
-        setError(
-          "File size exceeds the 2MB limit. Please choose a smaller file."
-        );
+        setError("File size exceeds the 2MB limit. Please choose a smaller file.");
       }
       if (file) {
         const reader = new FileReader();
@@ -468,7 +476,7 @@ const ProgressFormPage = () => {
   const handleImageSelect = async (e) => {
     const { name } = e.target;
 
-    console.log("NAME===",name)
+    console.log("NAME===", name);
     const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
 
     setError("");
@@ -479,9 +487,7 @@ const ProgressFormPage = () => {
         return;
       }
       if (file.size > MAX_FILE_SIZE) {
-        setError(
-          "File size exceeds the 2MB limit. Please choose a smaller file."
-        );
+        setError("File size exceeds the 2MB limit. Please choose a smaller file.");
       }
       if (file) {
         const reader = new FileReader();
@@ -509,8 +515,8 @@ const ProgressFormPage = () => {
   const handleVideoSelect = async (e) => {
     const { name } = e.target;
 
-    console.log("NAME===",name)
-    const MAX_FILE_SIZE = 50 * 1024 * 1024 ; // 50MB in bytes
+    console.log("NAME===", name);
+    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB in bytes
 
     setError("");
     const file = e.target.files[0]; // Get the selected file
@@ -520,9 +526,7 @@ const ProgressFormPage = () => {
         return;
       }
       if (file.size > MAX_FILE_SIZE) {
-        setError(
-          "File size exceeds the 50MB limit. Please choose a smaller file."
-        );
+        setError("File size exceeds the 50MB limit. Please choose a smaller file.");
       }
       if (file) {
         const reader = new FileReader();
@@ -532,7 +536,7 @@ const ProgressFormPage = () => {
           const base64String = reader.result; // Get the base64 string
           // setBase64String(base64String);
           // setImagePreview(base64String); // Set image preview
-          setVideo( base64String);
+          setVideo(base64String);
         };
         // Read the file as a Data URL (which contains the base64 string)
         reader.readAsDataURL(file);
@@ -648,40 +652,38 @@ const ProgressFormPage = () => {
               </div>
             </div>
 
-              {
-                (user?.firstName || user?.lastName)&&
-                          <div className="mb-4">
-                            <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
-                              Full Name
-                            </label>
+            {(user?.firstName || user?.lastName) && (
+              <div className="mb-4">
+                <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
+                  Full Name
+                </label>
 
-                            <div className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black">
-                              {user?.firstName.toUpperCase()} {user?.lastName.toUpperCase()}
-                            </div>
+                <div className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black">
+                  {user?.firstName.toUpperCase()} {user?.lastName.toUpperCase()}
+                </div>
 
-                            {/* <input
+                {/* <input
                               type="text"
                               placeholder="Enter full name"
                               value={storeName}
                               onChange={(e) => setStoreName(e.target.value)}
                               className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
                             /> */}
-                          </div>
-
-              }
+              </div>
+            )}
             <div className="mb-4">
               <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
                 Country
               </label>
 
               {/* {!body.country ? ( */}
-                <SearchableDropdown
-                  options={countries}
-                  onSelect={handleCountrySelect}
-                  selected_country={body.country}
-                />
+              <SearchableDropdown
+                options={countries}
+                onSelect={handleCountrySelect}
+                selected_country={body.country}
+              />
               {/* // ) : ( */}
-                {/* <input
+              {/* <input
                   type="text"
                   placeholder="Enter country"
                   readOnly
@@ -733,9 +735,7 @@ const ProgressFormPage = () => {
                             onClick={() => handleSelect(country)}
                             className="flex items-center text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer"
                           >
-                            <span className="w-6 h-6 mr-2 text-lg">
-                              {country.flag}
-                            </span>
+                            <span className="w-6 h-6 mr-2 text-lg">{country.flag}</span>
                             {country.number}
                           </li>
                         ))}
@@ -891,9 +891,7 @@ const ProgressFormPage = () => {
                             onClick={() => handleSelect(country)}
                             className="flex items-center text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer"
                           >
-                            <span className="w-6 h-6 mr-2 text-lg">
-                              {country.flag}
-                            </span>
+                            <span className="w-6 h-6 mr-2 text-lg">{country.flag}</span>
                             {country.number}
                           </li>
                         ))}
@@ -906,7 +904,6 @@ const ProgressFormPage = () => {
                   name="businessPhoneNumber"
                   id="businessPhoneNumber"
                   value={body.businessPhoneNumber.split("-")[1]}
-
                   onChange={handlePhoneChange}
                   className="w-full p-3 pl-28 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
                   placeholder="Enter phone number"
@@ -916,40 +913,37 @@ const ProgressFormPage = () => {
 
             <hr className="mt-5 mb-8 border-[1.2px]" />
 
-{/* {
+            {/* {
   body.cacNumber && */}
             <div>
-            <div className="mt-4">
-            <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
-              CAC Registration Number
-            </label>
+              <div className="mt-4">
+                <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
+                  CAC Registration Number
+                </label>
 
-            <input
-              type="text"
-              name="cacNumber"
-              onChange={handleChange}
-              value={body.cacNumber}
-              className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
-              placeholder="Enter your CAC Registration Number"
-            />
-          </div>
-              <h5 className="text-sm font-[600] text-regal-black">
-                Document Uploads
-              </h5>
+                <input
+                  type="text"
+                  name="cacNumber"
+                  onChange={handleChange}
+                  value={body.cacNumber}
+                  className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
+                  placeholder="Enter your CAC Registration Number"
+                />
+              </div>
+              <h5 className="text-sm font-[600] text-regal-black">Document Uploads</h5>
               <div className="mt-4">
                 <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
                   CAC Document Image
                 </label>
 
                 {images.cacDocument ? (
-                  
                   <div className="flex flex-row items-center justify-between mt-4">
                     <img
                       src={images.cacDocument}
                       alt="Profile"
                       className="w-[200px] h-[200px] rounded-lg object-cover border border-gray-300"
                     />
-                  
+
                     <button
                       onClick={() => clearFile("cacDocument")}
                       className="flex items-center px-4 py-1 space-x-1 border-[1.5px] text-regal-light-gray border-regal-light-gray rounded-md"
@@ -993,10 +987,10 @@ const ProgressFormPage = () => {
                 )}
               </div>
             </div>
-             
+
             <div className="mt-4">
               <label className="block text-sm md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
-              Production Process Video
+                Production Process Video
               </label>
 
               {video ? (
@@ -1012,9 +1006,7 @@ const ProgressFormPage = () => {
                     className="flex items-center px-4 py-1 space-x-1 border-[1.5px] text-regal-light-gray border-regal-light-gray rounded-md"
                   >
                     <PiTrash className="text-lg" />
-                    <span className="font-[600] text-[10px] md:text-xs py-1">
-                      Remove
-                    </span>
+                    <span className="font-[600] text-[10px] md:text-xs py-1">Remove</span>
                   </button>
                 </div>
               ) : (
@@ -1049,7 +1041,7 @@ const ProgressFormPage = () => {
                 </>
               )}
             </div>
-{/* } */}
+            {/* } */}
           </div>
         );
       case 3:
@@ -1075,7 +1067,7 @@ const ProgressFormPage = () => {
               <input
                 type="text"
                 name="businessBankAccountName"
-                placeholder="Enter bank Name"
+                placeholder="Enter Account Name"
                 value={body.businessBankAccountName}
                 onChange={handleChange}
                 className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
@@ -1092,10 +1084,10 @@ const ProgressFormPage = () => {
               <input
                 type="number"
                 name="businessBankAccount"
-                placeholder="Enter bank Name"
+                placeholder="Enter Account Number"
                 value={body.businessBankAccount}
                 onChange={handleNumberChange}
-                className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
+                className="w-full no-spinner p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
               />
             </div>
           </div>
@@ -1132,7 +1124,7 @@ const ProgressFormPage = () => {
   const renderFormFields = () => {
     let formField;
 
-    if (selectedId == "drivers_license"){
+    if (selectedId == "drivers_license") {
       formField = (
         <div>
           <div className="mt-4">
@@ -1151,8 +1143,7 @@ const ProgressFormPage = () => {
           </div>
         </div>
       );
-
-    }else if (selectedId == "passport"){
+    } else if (selectedId == "passport") {
       formField = (
         <div>
           <div className="mt-4">
@@ -1161,7 +1152,6 @@ const ProgressFormPage = () => {
             </label>
             <input
               type="text"
-
               name="idDocumentNumber"
               onChange={handleChange}
               value={body.idDocumentNumber}
@@ -1183,30 +1173,26 @@ const ProgressFormPage = () => {
           </div>
         </div>
       );
-
-  
-  }else if (selectedId == "national_id"){
-    formField = (
-      <div>
-        <div className="mt-4">
-          <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
-            National ID Number
-          </label>
-          <input
-            type="text"
-
-            name="idDocumentNumber"
-            onChange={handleChange}
-            value={body.idDocumentNumber}
-            className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
-            placeholder="Enter your National ID Number"
-          />
+    } else if (selectedId == "national_id") {
+      formField = (
+        <div>
+          <div className="mt-4">
+            <label className="block text-xs md:text-[12px] font-[400]  leading-6 mb-2 text-regal-black">
+              National ID Number
+            </label>
+            <input
+              type="text"
+              name="idDocumentNumber"
+              onChange={handleChange}
+              value={body.idDocumentNumber}
+              className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
+              placeholder="Enter your National ID Number"
+            />
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
 
-  }
-     
     return (
       <div>
         {formField}
@@ -1230,9 +1216,7 @@ const ProgressFormPage = () => {
                     className="flex items-center px-4 py-1 space-x-1 border-[1.5px] text-regal-light-gray border-regal-light-gray rounded-md"
                   >
                     <PiTrash className="text-lg" />
-                    <span className="font-[600] text-[10px] md:text-xs py-1">
-                      Remove
-                    </span>
+                    <span className="font-[600] text-[10px] md:text-xs py-1">Remove</span>
                   </button>
                 </div>
               ) : (
@@ -1280,9 +1264,7 @@ const ProgressFormPage = () => {
                     className="flex items-center px-4 py-1 space-x-1 border-[1.5px] text-regal-light-gray border-regal-light-gray rounded-md"
                   >
                     <PiTrash className="text-lg" />
-                    <span className="font-[600] text-[10px] md:text-xs py-1">
-                      Remove
-                    </span>
+                    <span className="font-[600] text-[10px] md:text-xs py-1">Remove</span>
                   </button>
                 </div>
               ) : (
@@ -1319,7 +1301,7 @@ const ProgressFormPage = () => {
     );
   };
 
-  console.log("BODY===",body)
+  console.log("BODY===", body);
 
   return (
     <div className="p-2 md:p-8 max-w-[1366px] mx-auto">
@@ -1354,13 +1336,11 @@ const ProgressFormPage = () => {
           </div>
         </div>
       </div>
-      {
-        errMsg &&
+      {errMsg && (
         <div className="text-red-400 text-center">
-            <p className="text-red-600 text-xs">{ errMsg}</p>
-            </div>
-
-      }
+          <p className="text-red-600 text-xs">{errMsg}</p>
+        </div>
+      )}
       {/* Progress Bar & Navigation */}
       <div>
         <div className="flex-1 h-2 my-8 bg-gray-300 rounded-full">
@@ -1385,8 +1365,10 @@ const ProgressFormPage = () => {
 
           <button
             type="button"
-            onClick={step === StepDetails.length ? handleComplete: handleNext}
-            disabled={step === StepDetails.length && !body.hasAcknowleged}
+            onClick={step === StepDetails.length ? handleComplete : handleNext}
+            disabled={
+              (step === StepDetails.length && !body.hasAcknowleged) || body.isLoading
+            }
             className={`px-4 md:px-14 py-2 rounded-md  border text-xs md:text-sm font-[500]  ${
               step === StepDetails.length && !body.hasAcknowleged
                 ? "border-regal-sky-blue text-regal-sky-blue "
@@ -1403,25 +1385,30 @@ const ProgressFormPage = () => {
   );
 };
 
-const SearchableDropdown = ({ options, onSelect,selected_country }) => {
+const SearchableDropdown = ({ options, onSelect, selected_country }) => {
   const [search, setSearch] = useState(""); // State to manage search input
   const [selectedCountry, setSelectedCountry] = useState(null); // State to track selected country
 
   // Filter countries based on the search input
   const filteredCountries = options
-    .filter((country) =>
-      country?.name?.toLowerCase().includes(search?.toLowerCase())
-    )
+    .filter((country) => country?.name?.toLowerCase().includes(search?.toLowerCase()))
     ?.map((country) => country.name);
 
   // Handle country selection
   const handleSelect = (country) => {
-    console.log("COUNTRY:: =",country)
+    console.log("COUNTRY:: =", country);
     setSelectedCountry(country);
     setSearch(""); // Reset search input after selecting
     onSelect(country); // Call the onSelect callback with the selected country
   };
-  console.log("COUNTRY-selected_country:: =",selected_country, "search==",search,"selectedCountry" ,selectedCountry)
+  console.log(
+    "COUNTRY-selected_country:: =",
+    selected_country,
+    "search==",
+    search,
+    "selectedCountry",
+    selectedCountry
+  );
 
   return (
     <div>
@@ -1429,10 +1416,9 @@ const SearchableDropdown = ({ options, onSelect,selected_country }) => {
       <input
         type="text"
         placeholder="Type to search..."
-        value={search ? search :selected_country  || selectedCountry}
+        value={search ? search : selected_country || selectedCountry}
         onChange={(e) => setSearch(e.target.value)}
         className="w-full p-3 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-md bg-transparent text-regal-black"
-
         style={{ marginBottom: "10px", width: "100%", padding: "8px" }}
       />
 
@@ -1455,8 +1441,7 @@ const SearchableDropdown = ({ options, onSelect,selected_country }) => {
                 style={{
                   padding: "8px",
                   cursor: "pointer",
-                  backgroundColor:
-                    selectedCountry === country ? "#f0f0f0" : "white",
+                  backgroundColor: selectedCountry === country ? "#f0f0f0" : "white",
                 }}
               >
                 {country}

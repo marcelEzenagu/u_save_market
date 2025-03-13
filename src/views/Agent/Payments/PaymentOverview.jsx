@@ -100,7 +100,7 @@ function PaymentOverview() {
                   </label>
                   <input
                     type="text"
-                    className="w-full p-3 md:p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
+                    className="w-full no-spinner p-3 md:p-4 text-xs md:text-[12px] border font-[300] focus:outline-regal-blue rounded-lg bg-transparent text-regal-black"
                     placeholder="Enter Account Number"
                   />
                 </div>

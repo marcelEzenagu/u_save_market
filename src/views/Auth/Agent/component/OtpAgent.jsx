@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from "react";
 import RightImage from "../../../../assets/images/vendor/Auth/otp.webp";
 import { Link } from "react-router-dom";
-import {useSelector} from 'react-redux'
+import { useSelector } from "react-redux";
 import Logo from "../../../../assets/images/nav/logo.webp";
-import { Timer } from "../../../../components/Timer"
-import { usePinInput } from "react-pin-input-hook"
-import {useResendOTPMutation, useVerifyAgentEmailMutation, useVerifyOtpAgentMutation } from "../../../../features/auth/authApiSlice";
-import {useErrorMessageHooks} from "../../../../hooks/useErrorMessageHooks";
+import { Timer } from "../../../../components/Timer";
+import { usePinInput } from "react-pin-input-hook";
+import {
+  useResendOTPMutation,
+  useVerifyAgentEmailMutation,
+  useVerifyOtpAgentMutation,
+} from "../../../../features/auth/authApiSlice";
+import { useErrorMessageHooks } from "../../../../hooks/useErrorMessageHooks";
 import { setVerifiedDetails } from "../../../../features/auth/authSlice";
 import { setCookie } from "../../../../utils";
-const OtpAgent = ({otpType,handleNext}) => {
+import OTPInput from "../../../../components/OtpInput";
+const OtpAgent = ({ otpType, handleNext }) => {
   const [intervals, setIntervals] = useState([]);
-  const [verifyOtp, {isLoading}] = useVerifyOtpAgentMutation()
-  const [verifyEmail,{ isLoading: e_loading }] = useVerifyAgentEmailMutation()
+  const [verifyOtp, { isLoading }] = useVerifyOtpAgentMutation();
+  const [verifyEmail, { isLoading: e_loading }] = useVerifyAgentEmailMutation();
   const [resendOTP, { isLoading: loading }] = useResendOTPMutation();
   let { verifiedDetails } = useSelector((state) => state.auth);
 
@@ -28,63 +33,76 @@ const OtpAgent = ({otpType,handleNext}) => {
     handleError,
     setData,
     data,
-    } = useErrorMessageHooks();
+  } = useErrorMessageHooks();
 
-    const { fields, clear } = usePinInput({
-      onComplete: OTP => {
-        setData(OTP)
-      },
-    })
-    
-    const handleResendOtp = async () => {
-      setErrMsg("");
-      setErrorMessagesList([]);
-      if (!email){
-        const enteredEmail = window.prompt("Please enter your email:");
-        if (enteredEmail !== null) { // Ensure user didn't cancel the prompt
-          setEmail(enteredEmail)
-        }
-        
-      }
-      setErrMsg("");
-      setErrorMessagesList([]);
-      try {
-        const userData = await resendOTP({email,resendType:otpType}).unwrap();
-        dispatch(setVerifiedDetails({...verifiedDetails, requestID : userData?.requestID,email}));
-      }catch (err) {
-        console.log(err);
-        handleError(err, 'OTP');
+  const handleOTPChange = (otp) => {
+    setData(otp);
+  };
+
+  const { fields, clear } = usePinInput({
+    onComplete: (OTP) => {
+      setData(OTP);
+    },
+  });
+
+  const handleResendOtp = async () => {
+    setErrMsg("");
+    setErrorMessagesList([]);
+    if (!email) {
+      const enteredEmail = window.prompt("Please enter your email:");
+      if (enteredEmail !== null) {
+        // Ensure user didn't cancel the prompt
+        setEmail(enteredEmail);
       }
     }
-
-    const handleSubmit = async (e) => {
-      e.preventDefault()
-      setErrMsg("");
-      setErrorMessagesList([]);
-      console.log(otpType,"otpType")
-      console.log("verifiedDetails===3=",verifiedDetails,otpType,"otpType")
-      // return
-      try {
-        console.log("CHECKING",otpType,otpType == "reset-password",otpType == "email-verification")
-
-        if(otpType == "reset-password"){          
-          const {access_data} = await verifyOtp({ otp : data, requestID : verifiedDetails?.requestID, email}).unwrap();
-          dispatch(setVerifiedDetails({...verifiedDetails, token: access_data?.access_token }))
-          navigate('/agent/reset-password')
-          
-        }else if(otpType == "email-verification"){
-          const res = await verifyEmail({ otp : data, requestID : verifiedDetails?.requestID, email}).unwrap();
-          const {access_data} = res
-          setCookie("accessToken", access_data?.access_token)
-
-          dispatch(setVerifiedDetails({...verifiedDetails, token: access_data?.access_token }))
-          handleNext()
-        }
-      }catch (err) {
-        console.log(err);
-        handleError(err, 'OTP');
+    setErrMsg("");
+    setErrorMessagesList([]);
+    try {
+      const userData = await resendOTP({ email, resendType: otpType }).unwrap();
+      dispatch(
+        setVerifiedDetails({ ...verifiedDetails, requestID: userData?.requestID, email })
+      );
+    } catch (err) {
+      console.log(err);
+      handleError(err, "OTP");
     }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrMsg("");
+    setErrorMessagesList([]);
+    // return
+    try {
+      if (otpType == "reset-password") {
+        const { access_data } = await verifyOtp({
+          otp: data,
+          requestID: verifiedDetails?.requestID,
+          email,
+        }).unwrap();
+        dispatch(
+          setVerifiedDetails({ ...verifiedDetails, token: access_data?.access_token })
+        );
+        navigate("/agent/reset-password");
+      } else if (otpType == "email-verification") {
+        const res = await verifyEmail({
+          otp: data,
+          requestID: verifiedDetails?.requestID,
+          email,
+        }).unwrap();
+        const { access_data } = res;
+        setCookie("accessToken", access_data?.access_token);
+
+        dispatch(
+          setVerifiedDetails({ ...verifiedDetails, token: access_data?.access_token })
+        );
+        handleNext();
+      }
+    } catch (err) {
+      console.log(err);
+      handleError(err, "OTP");
     }
+  };
 
   const registerInterval = (id) => {
     setIntervals(intervals.concat([id]));
@@ -96,18 +114,18 @@ const OtpAgent = ({otpType,handleNext}) => {
 
   return (
     <div className="animated fadeInDown mt-14 md:w-[450px] mx-auto">
-    <h1 className="text-2xl md:text-[30px] font-bold text-center mb-5 w-[350px] mx-auto ">
-    Verify your email
-          </h1>
-          {/* Description Text */}
-          <p className="text-center text-xs md:text-sm text-regal-light-gray mb-8 font-[400]">
-          We’ve sent a code to your email  {verifiedDetails?.email}
-          </p>
+      <h1 className="text-2xl md:text-[30px] font-bold text-center mb-5 w-[350px] mx-auto ">
+        Verify your email
+      </h1>
+      {/* Description Text */}
+      <p className="text-center text-xs md:text-sm text-regal-light-gray mb-8 font-[400]">
+        We’ve sent a code to your email {verifiedDetails?.email}
+      </p>
 
-            <div className="mb-3 col-span-2 md:mx-2">
-            <div className="flex flex-row gap-4 md:pl-2">
-                {fields?.map((propsField, index) => (
-              <input
+      <div className="mb-3 col-span-2 md:mx-2">
+        <div className="flex flex-row gap-4 md:pl-2">
+          {/* {fields?.map((propsField, index) => (
+            <input
               key={index}
               className="otp mb-3"
               type="text"
@@ -115,42 +133,42 @@ const OtpAgent = ({otpType,handleNext}) => {
               {...propsField}
               maxLength={1}
               placeholder=""
-              />
-            ))}
-                </div>
-            <Timer
-              id={data}
-              registerInterval={registerInterval}
-              clearTimer={clearTimer}
+              onChange={(e) => this.handleChange(e, index)}
+              onKeyDown={(e) => this.handleKeyDown(e, index)}
             />
-            {intervals.length == 0 ? (
-            <p className="text-sm mt-4">
-              Didn’t receive the code?{" "}
-              <button className="text-sm text-regal-blue "
-                   onClick={handleResendOtp}
-                  type="button"
-                  disabled={loading}
-
-                 >
-                   {loading ? 'sending Otp...': 'Send again'}
-                 </button>
-            </p>
-          ) : (
-            ""
-          )}
-            </div>
-            {handleErrorMessagesList("otp")}
-
-            {/* <p className="text-red-600 text-xs">{errMsg && errMsg}</p> */}
-            <div className="w-full ">
-            <button className="mt-10 text-xs md:text-[12px] bg-regal-sky-blue text-white px-4  py-3 font-semibold w-full rounded-md hover:bg-blue-600  "
-            type="submit"
-            disabled={isLoading}
-            onClick={handleSubmit}
+          ))} */}
+          <OTPInput length={6} onChange={handleOTPChange} />
+        </div>
+        <Timer id={data} registerInterval={registerInterval} clearTimer={clearTimer} />
+        {intervals.length == 0 ? (
+          <p className="text-sm mt-4">
+            Didn’t receive the code?{" "}
+            <button
+              className="text-sm text-regal-blue "
+              onClick={handleResendOtp}
+              type="button"
+              disabled={loading}
             >
-                 {isLoading ? 'Confirming...' : 'Confirm PIN'}
-              </button>
-            </div>
+              {loading ? "sending Otp..." : "Send again"}
+            </button>
+          </p>
+        ) : (
+          ""
+        )}
+      </div>
+      {handleErrorMessagesList("otp")}
+
+      {/* <p className="text-red-600 text-xs">{errMsg && errMsg}</p> */}
+      <div className="w-full ">
+        <button
+          className="mt-10 text-xs md:text-[12px] bg-regal-sky-blue text-white px-4  py-3 font-semibold w-full rounded-md hover:bg-blue-600  "
+          type="submit"
+          disabled={isLoading}
+          onClick={handleSubmit}
+        >
+          {isLoading ? "Confirming..." : "Confirm PIN"}
+        </button>
+      </div>
     </div>
   );
 };
