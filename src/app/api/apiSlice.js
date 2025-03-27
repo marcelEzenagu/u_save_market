@@ -5,12 +5,15 @@ import { getSecureCookie } from "../../utils";
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_APP_API_URL,
   // Using the Credentials :"include", we are Attaching the Credentials to the Cookie with every request
-  
+
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     //We are attaching the AccessToken to every Request that we make to the api
-    const token = getState().auth.token === null ? getSecureCookie("accessToken") : getState().auth.token;
-   console.log("accessToken @ apiSlice===",token)
+    const token =
+      getState().auth.token === null
+        ? getSecureCookie("accessToken")
+        : getState().auth.token;
+    console.log("accessToken @ apiSlice===", token);
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
     }
@@ -19,14 +22,13 @@ const baseQuery = fetchBaseQuery({
 });
 
 //We want to wrap our baseQuery so if it fails we can re-attempt after
-// sending the refresh Token and getting a new 
+// sending the refresh Token and getting a new
 // n
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
- 
   let result = await baseQuery(args, api, extraOptions);
   if (result?.error?.status === 401) {
-    console.log("sending refresh Token");
+    console.log("Sending refresh Token");
     const refreshResult = await baseQuery("/refresh", api, extraOptions);
     console.log(refreshResult);
     if (refreshResult?.data) {
@@ -36,7 +38,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     } else {
       //getting a 401 unauthorized error
       api.dispatch(logOut());
-      
     }
   }
   return result;
