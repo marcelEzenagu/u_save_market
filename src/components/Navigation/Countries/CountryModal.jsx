@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Location from "../../../assets/images/nav/icons/location.webp";
 import { IoCloseCircleOutline } from "react-icons/io5";
-import { useGetCountriesQuery, useUpdateUserMutation } from "../../../features/auth/authApiSlice";
+import {
+  useGetCountriesQuery,
+  useUpdateUserMutation,
+} from "../../../features/auth/authApiSlice";
 import { setCountry, setCurrency } from "../../../features/auth/authSlice";
 import { FaCheckCircle } from "react-icons/fa";
 
@@ -17,11 +20,10 @@ const Modal = ({
   const [search, setSearch] = useState("");
   const countries = useSelector((state) => state?.auth?.countries);
   const [pickedCountry, setPickedCountry] = useState(preferredCountry);
- 
+
   const filteredCountries = countries?.filter(
     (country) =>
-      search === "" ||
-      country?.name?.toLowerCase()?.includes(search?.toLowerCase())
+      search === "" || country?.name?.toLowerCase()?.includes(search?.toLowerCase())
   );
 
   useEffect(() => {
@@ -37,13 +39,12 @@ const Modal = ({
           onClose();
         }
       };
-  
+
       document.addEventListener("mousedown", handleClickOutside);
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }
-
   }, [onClose, preferredCountry]);
 
   const handleSelectedCountry = () => {
@@ -66,9 +67,6 @@ const Modal = ({
               <IoCloseCircleOutline className="text-xl text-regal-black" />
             </button>
           </div>
-{
-  filteredCountries.length
-  &&
           <div className="lg:pt-12 lg:pb-8 p-4 lg:p-8 relative">
             <h2 className="text-lg lg:text-xl font-bold text-regal-blue mb-2 lg:mb-3">
               Choose Country
@@ -83,37 +81,38 @@ const Modal = ({
               onChange={(e) => setSearch(e.target.value)}
               className="w-full py-4 px-4 border text-xs md:text-[14px] rounded-lg mb-4"
             />
-            <p className="text-red-700 text-sm mt-4 mb-1">{errorMsg}</p>
             <ul className="max-h-[50vh] lg:max-h-[300px] overflow-y-scroll w-full">
-              {filteredCountries?.map((country) => (
-                <li
-                  key={country.name}
-                  className="flex items-center py-2 my-2 px-2 cursor-pointer hover:font-[700] hover:text-regal-blue hover:bg-regal-secondary-light"
-                  onClick={() => setPickedCountry(country)}
-                >
-
-                  <img
-                    src={country?.flag}
-                    alt={country?.name}
-                    className="w-8 h-4 mr-2"
-                  />
-                  <span className="text-sm font-[400] w-full flex flex-row items-center justify-between">
-                    {country.name}{" "}
-                    {pickedCountry?.name?.toLowerCase() ===
-                      country?.name?.toLowerCase() && (
-                      <FaCheckCircle className="text-xl text-green-600" />
-                    )}
-                  </span>
-                </li>
-              ))}
+              {filteredCountries.length ? (
+                filteredCountries.map((country) => (
+                  <li
+                    key={country.name}
+                    className="flex items-center py-2 my-2 px-2 cursor-pointer hover:font-[700] hover:text-regal-blue hover:bg-regal-secondary-light"
+                    onClick={() => setPickedCountry(country)}
+                  >
+                    <img
+                      src={country?.flag}
+                      alt={country?.name}
+                      className="w-8 h-4 mr-2"
+                    />
+                    <span className="text-sm font-[400] w-full flex flex-row items-center justify-between">
+                      {country.name}{" "}
+                      {pickedCountry &&
+                        pickedCountry.name?.toLowerCase() ===
+                          country.name?.toLowerCase() && (
+                          <FaCheckCircle className="text-xl text-green-600" />
+                        )}
+                    </span>
+                  </li>
+                ))
+              ) : (
+                <div>
+                  <p className="text-sm text-center my-12">
+                    The country you are searching for is not Supported{" "}
+                  </p>
+                </div>
+              )}
             </ul>
-            {search !== "" && filteredCountries.length === 0 ?
-            <div>
-              <p className='text-sm text-center my-12'>The country you are searching for is not Supported </p>
-            </div> : ""}
           </div>
-}
-
           <div className=" w-full px-4 pb-8 bg-white">
             {pickedCountry && (
               <button
@@ -141,16 +140,15 @@ function CountryModal() {
   const [errorMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(true); // Track loading state
 
-  const countries = localStorage.getItem("countries")
+  const countries = localStorage.getItem("countries");
 
-  console.log("CountryModal=DATA--CountryModal",countries)
+  // console.log("CountryModal=DATA--CountryModal", countries);
   useEffect(() => {
     // if (countries.length) {
     if (countries) {
-        setLoading(false); 
+      setLoading(false);
     }
-}, []);
-
+  }, []);
 
   useEffect(() => {
     const lspc = JSON.parse(localStorage.getItem("preferredCountry"));
@@ -186,9 +184,7 @@ function CountryModal() {
         setIsModalOpen(false);
       } catch (err) {
         if (err?.status >= 400 && err?.status <= 404) {
-          setErrMsg(
-            err?.data?.message || "Failed to update user preferred country"
-          );
+          setErrMsg(err?.data?.message || "Failed to update user preferred country");
         } else if (err?.status >= 500) {
           setErrMsg(err?.data?.message || "Server error");
         } else {
@@ -206,44 +202,39 @@ function CountryModal() {
 
     // Avoid window.location.reload() if possible; handle state updates instead.
   };
- 
 
-// if (loading) {
-//     // Show a loading view or return null to render nothing
-//     return 
-// }
+  // if (loading) {
+  //     // Show a loading view or return null to render nothing
+  //     return
+  // }
   return (
     <>
+      {loading ? (
+        <p>Loading countries...</p>
+      ) : (
+        <>
+          <button
+            className="flex items-center hover:text-regal-blue text-sm xl:text-sm text-regal-black cursor-pointer font-[500]"
+            onClick={() => setIsModalOpen(true)}
+          >
+            <img
+              src={preferredCountry?.flag || Location}
+              alt="Location"
+              className="w-4 md:w-6  mr-1 xl:mr-2"
+            />
+            {preferredCountry?.name || "Enter Country"}
+          </button>
 
-    {
-loading ?
-
-<p>Loading countries...</p>
-:
-<>
-
-      <button
-        className="flex items-center hover:text-regal-blue text-sm xl:text-sm text-regal-black cursor-pointer font-[500]"
-        onClick={() => setIsModalOpen(true)}
-      >
-        <img
-          src={preferredCountry?.flag || Location}
-          alt="Location"
-          className="w-4 md:w-6  mr-1 xl:mr-2"
-        />
-        {preferredCountry?.name || "Enter Country"}
-      </button>
-
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onCountrySelect={handleCountrySelect}
-        errorMsg={errorMsg}
-        preferredCountry={preferredCountry}
-        isLoading={isLoading}
-      />
-    </>
-    }
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onCountrySelect={handleCountrySelect}
+            errorMsg={errorMsg}
+            preferredCountry={preferredCountry}
+            isLoading={isLoading}
+          />
+        </>
+      )}
     </>
   );
 }

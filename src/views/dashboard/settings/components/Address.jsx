@@ -10,9 +10,9 @@ import { Link } from "react-router-dom";
 function Address() {
   const [isModalOpenEditAddress, setIsModalOpenEditAddress] = useState(false);
   const [isModalOpenAddAddress, setIsModalOpenAddAddress] = useState(false);
-  const [isModalOpenDeleteAddress, setIsModalOpenDeleteAddress] =
-    useState(false);
-  const address = [1, 2, 3, 4];
+  const [isModalOpenDeleteAddress, setIsModalOpenDeleteAddress] = useState(false);
+  const address = [];
+  // const address = [1, 2, 3, 4];
   return (
     <div className="p-4">
       <div className="flex flex-row items-center justify-between mb-4">
@@ -41,13 +41,13 @@ function Address() {
             >
               <div className="flex flex-col gap-4 ">
                 <h6 className="font-[400] text-regal-black text-xs md:text-sm">
-                  MIKE ABA
+                  {e.name}
                 </h6>
                 <h6 className="font-[700] text-regal-black text-xs md:text-sm max-w-72">
-                  Idugboe Estate, off Elf Road, Ogunu, Sweden
+                  {e.address}
                 </h6>
                 <p className="font-[400] text-regal-black text-xs md:text-sm">
-                  +46-754-8781234
+                  {e.phone}
                 </p>
               </div>
               <div className="flex flex-col h-full justify-between">
@@ -148,7 +148,6 @@ function EditAddress(props) {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-    
         props.setIsModalOpen(false);
       }
     };
@@ -382,11 +381,7 @@ function AddAddress(props) {
   const dropdownaddRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        dropdownaddRef.current &&
-        !dropdownaddRef.current.contains(event.target)
-      ) {
-   
+      if (dropdownaddRef.current && !dropdownaddRef.current.contains(event.target)) {
         props.setIsModalOpen(false);
       }
     };
@@ -617,10 +612,7 @@ function DeleteAddress(props) {
   const dropdownaddRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        dropdownaddRef.current &&
-        !dropdownaddRef.current.contains(event.target)
-      ) {
+      if (dropdownaddRef.current && !dropdownaddRef.current.contains(event.target)) {
         props.setIsModalOpen(false);
       }
     };
@@ -632,14 +624,16 @@ function DeleteAddress(props) {
   }, []);
   return (
     isModalOpen && (
-      <div className="fixed inset-0 bg-black w-full bg-opacity-75  z-50 flex justify-center items-center animated fadeInDown" ref={dropdownaddRef}>
+      <div
+        className="fixed inset-0 bg-black w-full bg-opacity-75  z-50 flex justify-center items-center animated fadeInDown"
+        ref={dropdownaddRef}
+      >
         <div className="bg-white p-5 md:p-14 rounded-lg shadow-lg w-[350px] md:w-[500px] text-center ">
           <img src={Cancelicon} alt="" className="w-32 mx-auto mb-2" />
           <h2 className="text-xl font-bold mb-2">Delete Address</h2>
           <p className="text-regal-black text-sm mt-4 mb-6">
-            Are you sure you want to delete this address? All information
-            regarding it would be removed as well but you can add it back
-            anytime
+            Are you sure you want to delete this address? All information regarding it
+            would be removed as well but you can add it back anytime
           </p>
 
           {/* Buttons in flex-col with gap */}

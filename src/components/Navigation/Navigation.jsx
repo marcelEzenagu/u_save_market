@@ -187,8 +187,8 @@ function Navigation({ countries, successResponse, data }) {
     };
   }, []);
 
-  console.log("countries:", countries);
-  console.log("countriesWithCurrency===", countriesWithCurrency);
+  // console.log("countries:", countries);
+  // console.log("countriesWithCurrency===", countriesWithCurrency);
 
   return (
     <header className="sticky top-0  z-50 ">

@@ -5,7 +5,7 @@ import NoCardicon from "../../../../assets/images/settings/nocard.png";
 import MasterCard from "../../../../assets/images/settings/mastercard.png";
 import Cancelicon from "../../../../assets/images/order/cancel.png";
 import { countries } from "../../../../data/mockData";
-import Card from '../../../../assets/images/checkout/card.png'
+import Card from "../../../../assets/images/checkout/card.png";
 import { SlArrowDown } from "react-icons/sl";
 import { HiOutlineArrowLeft } from "react-icons/hi2";
 import { Link } from "react-router-dom";
@@ -13,11 +13,17 @@ function PaymentMethod() {
   const [isModalOpenEditCard, setIsModalOpenEditCard] = useState(false);
   const [isModalOpenAddCard, setIsModalOpenAddCard] = useState(false);
   const [isModalOpenDeleteCard, setIsModalOpenDeleteCard] = useState(false);
-  const Card = [1, 2, 3, 4];
+  const Card = [];
   return (
     <div className="p-4">
       <div className="flex flex-row items-center justify-between mb-4">
-        <Link to="/settings" className="text-regal-black text-sm md:text-xl  gap-2 flex items-center font-bold cursor-pointer">  <HiOutlineArrowLeft/>  Card</Link>
+        <Link
+          to="/settings"
+          className="text-regal-black text-sm md:text-xl  gap-2 flex items-center font-bold cursor-pointer"
+        >
+          {" "}
+          <HiOutlineArrowLeft /> Card
+        </Link>
         <button
           onClick={() => {
             setIsModalOpenAddCard(true);
@@ -37,10 +43,10 @@ function PaymentMethod() {
               <div className="flex flex-col gap-4 ">
                 <img src={MasterCard} alt="" className="w-8" />
                 <h6 className="font-[700] text-regal-black text-xs md:text-sm max-w-72">
-                  **** **** **** 1357
+                  {i.cardNumber}
                 </h6>
                 <p className="font-[400] text-regal-black text-xs md:text-sm">
-                  Expires 23/22
+                  {i.cardHolderName}
                 </p>
               </div>
               <div className="flex flex-col h-full justify-between">
@@ -159,9 +165,7 @@ function EditCard(props) {
             className="bg-white py-2 px-2  md:p-6 rounded-lg shadow-lg w-[350px] md:w-[700px] "
             ref={dropdownRef}
           >
-            <h1 className="text-sm md:text-lg font-[700] text-regal-black">
-              Edit Card
-            </h1>
+            <h1 className="text-sm md:text-lg font-[700] text-regal-black">Edit Card</h1>
 
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4  mt-5">
@@ -367,12 +371,10 @@ function AddCard(props) {
   }, [props.isModalOpen]);
 
   const dropdownaddRef = useRef(null);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        dropdownaddRef.current &&
-        !dropdownaddRef.current.contains(event.target)
-      ) {
+      if (dropdownaddRef.current && !dropdownaddRef.current.contains(event.target)) {
         props.setIsModalOpen(false);
       }
     };
@@ -391,9 +393,7 @@ function AddCard(props) {
             className="bg-white py-3 px-4  md:p-6 rounded-lg shadow-lg w-[350px] md:w-[700px] "
             ref={dropdownaddRef}
           >
-            <h1 className="text-sm md:text-lg  font-[700] text-regal-black">
-              Add Card
-            </h1>
+            <h1 className="text-sm md:text-lg  font-[700] text-regal-black">Add Card</h1>
 
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4  mt-3">
@@ -499,10 +499,7 @@ function DeleteCard(props) {
   const dropdownaddRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        dropdownaddRef.current &&
-        !dropdownaddRef.current.contains(event.target)
-      ) {
+      if (dropdownaddRef.current && !dropdownaddRef.current.contains(event.target)) {
         props.setIsModalOpen(false);
       }
     };
@@ -514,13 +511,15 @@ function DeleteCard(props) {
   }, []);
   return (
     isModalOpen && (
-      <div className="fixed inset-0 bg-black w-full bg-opacity-75  z-50 flex justify-center items-center animated fadeInDown" ref={dropdownaddRef}>
+      <div
+        className="fixed inset-0 bg-black w-full bg-opacity-75  z-50 flex justify-center items-center animated fadeInDown"
+        ref={dropdownaddRef}
+      >
         <div className="bg-white p-5 md:p-14 rounded-lg shadow-lg w-[350px] md:w-[450px] text-center ">
           <img src={Cancelicon} alt="" className="w-32 mx-auto mb-2" />
           <h2 className="text-xl font-bold mb-2">Delete Card</h2>
           <p className="text-regal-black text-sm mt-4 mb-6">
-          Are you sure you want to delete this card? 
-          You can add it back anytime
+            Are you sure you want to delete this card? You can add it back anytime
           </p>
 
           {/* Buttons in flex-col with gap */}
