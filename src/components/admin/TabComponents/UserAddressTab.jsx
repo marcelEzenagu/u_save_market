@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { countries } from "../../../data/mockData";
 import ReactPaginate from "react-paginate";
 import { SlArrowDown } from "react-icons/sl";
+import SearchableDropdown from "@/components/common";
+
 function UserAddressTab() {
   const itemsPerPage = 12;
   const [itemOffset, setItemOffset] = useState(0);
@@ -16,6 +18,8 @@ function UserAddressTab() {
 
   const [isModalAddressDetails, setIsModalAddressDetails] = useState(false);
   const [isModalOpenAddAddress, setIsModalOpenAddAddress] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(countries[0] || null);
+
   return (
     <div className="p-4 md:px-8 md:pt-2 pb-4 animate-fade-in">
         <div className="min-h-[500px]">
@@ -193,14 +197,14 @@ function AddressDetails(props) {
                     >
                       Country
                     </label>
-                    <select
-                      name="Country"
-                      id="Country"
-                      placeholder="Enter Country"
-                      className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
-                    >
-                      <option value="">Enter Country</option>
-                    </select>
+                    <SearchableDropdown
+                      options={countries}
+                      onSelect={(country) => setSelectedCountry(country)}
+                      selectedValue={selectedCountry}
+                      displayKey="name"
+                      valueKey="name"
+                      placeholder="Select country"
+                    />
                   </div>
                   <div className="mb-1">
                     <label
@@ -329,14 +333,14 @@ function AddressDetails(props) {
                     >
                       Country
                     </label>
-                    <select
-                      name="Country"
-                      id="Country"
-                      placeholder="Enter Country"
-                      className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
-                    >
-                      <option value="">Enter Country</option>
-                    </select>
+                    <SearchableDropdown
+                      options={countries}
+                      onSelect={(country) => setSelectedCountry(country)}
+                      selectedValue={selectedCountry}
+                      displayKey="name"
+                      valueKey="name"
+                      placeholder="Select country"
+                    />
                   </div>
                   <div className="mb-1">
                     <label
