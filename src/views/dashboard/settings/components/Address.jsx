@@ -7,6 +7,8 @@ import { countries } from "../../../../data/mockData";
 import { SlArrowDown } from "react-icons/sl";
 import { HiOutlineArrowLeft } from "react-icons/hi2";
 import { Link } from "react-router-dom";
+import SearchableDropdown from "../../../../components/common/SearchableDropdown";
+
 function Address() {
   const [isModalOpenEditAddress, setIsModalOpenEditAddress] = useState(false);
   const [isModalOpenAddAddress, setIsModalOpenAddAddress] = useState(false);
@@ -289,14 +291,14 @@ function EditAddress(props) {
                   >
                     Country
                   </label>
-                  <select
-                    name="Country"
-                    id="Country"
-                    placeholder="Enter Country"
-                    className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
-                  >
-                    <option value="">Enter Country</option>
-                  </select>
+                  <SearchableDropdown
+                      options={countries}
+                      onSelect={(country) => setSelectedCountry(country)}
+                      selectedValue={selectedCountry}
+                      displayKey="name"
+                      valueKey="name"
+                      placeholder="Select country"
+                    />
                 </div>
                 <div className="mb-1">
                   <label
@@ -523,14 +525,14 @@ function AddAddress(props) {
                   >
                     Country
                   </label>
-                  <select
-                    name="Country"
-                    id="Country"
-                    placeholder="Enter Country"
-                    className="w-full p-3 text-xs md:text-sm border  focus:outline-none rounded-md bg-transparent text-regal-crum-gray"
-                  >
-                    <option value="">Enter Country</option>
-                  </select>
+                  <SearchableDropdown
+                      options={countries}
+                      onSelect={(country) => setSelectedCountry(country)}
+                      selectedValue={selectedCountry}
+                      displayKey="name"
+                      valueKey="name"
+                      placeholder="Select country"
+                    />
                 </div>
                 <div className="mb-1">
                   <label
